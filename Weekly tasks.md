@@ -2,4 +2,5 @@
 - [ ] data balancing
 - [ ] PUDO model performance
 - [ ] interleaving model
-- [ ] dashboard
+- [ ] dashboard - pudo, parking events
+- [ ] model release
