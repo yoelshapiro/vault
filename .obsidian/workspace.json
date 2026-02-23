@@ -218,9 +218,33 @@
               "icon": "excalidraw-icon",
               "title": "model_release.excalidraw"
             }
+          },
+          {
+            "id": "86a3e0933df53f5a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "```.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "```"
+            }
           }
         ],
-        "currentTab": 14
+        "currentTab": 15
       }
     ],
     "direction": "vertical"
@@ -395,14 +419,15 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "5c9f965d66127133",
+  "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "Excalidraw/model_release.excalidraw.md",
+    "```.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-bazel-runtime-install-layout.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-skill-local-installer.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-si-config-migration-merge-main-conflict.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-model-skill-tree-foundations.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-model-info-finder-skill-split.md",
-    "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-flyte-status-logs-skill.md",
     "agent_tasks/2026/02/Week-4/2026-02-21-si-config-migration-conflict-skill.md",
     "agent_tasks/2026/02/Week-4",
@@ -423,7 +448,6 @@
     "agent_tasks/2026/02/Week-3/2026-02-17-remove-interleaving-stopping-codegen.md",
     "agent_tasks/2026/02/Week-3/2026-02-17-naive-stopping-mode-project-page-and-newsletter.md",
     "agent_tasks/2026/02/Week-3/2026-02-17-naive-stopping-mode-hazard-stacked-pr.md",
-    "newsletters/newsletter_inference-visualization-tool.md",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "projects/projects.json",
