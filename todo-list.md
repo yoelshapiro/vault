@@ -1,4 +1,4 @@
-- [ ] interlieving with latest
+- [x] interlieving with latest
 - [ ] stopping mode train
 - [ ] classifiers
 - [ ] end of route augmentation
