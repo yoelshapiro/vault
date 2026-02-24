@@ -8,6 +8,16 @@
 ## 2026-02
 > [!note] 2026-02
 
+> #### 2026-02-24 — End-of-route polyline shortening project + wiring investigation
+- Topic: kick off route-shortening augmentation project and trace exact pre-rasterization insertion points
+- Labels: #parking #end-of-route #route-shortening #augmentation #otf #planning
+- Branch: boris/train/pudo_15_02_26
+- PR: none
+- Change type: docs/planning
+- Areas: `projects/`, `projects.md`, `projects/projects.json`, `projects/active-project.txt`, `agent_tasks/2026/02/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-polyline-shortening-investigation]]: created/activated project `parking-end-of-route-polyline-shortening-augmentation`, validated that clipping must happen in `RouteMapFetcher._fetch_route_map` (not post-`MAP_ROUTE` blackout), mapped required parking metadata (`PARKING_STOP_ROUTE_INDEX/FRACTION`) and route clipping behavior by comparing current branch with `boris/stopping_mode`.
+
 > #### 2026-02-24 — End-of-route map blackout project kickoff
 - Topic: initialize a new project for parking end-of-route augmentation using blackout-only map mutation
 - Labels: #parking #end-of-route #augmentation #otf #planning
