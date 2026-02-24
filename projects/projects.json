@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Parking end-of-route map blackout augmentation",
+      "slug": "parking-end-of-route-map-blackout-augmentation",
+      "path": "/home/borisindelman/git/vault/projects/parking-end-of-route-map-blackout-augmentation.md",
+      "status": "active",
+      "phase": "Phase 1",
+      "last_updated": "2026-02-24"
+    },
+    {
       "name": "Parking stopping_mode naive heuristic",
       "slug": "parking-stopping-mode-naive-heuristic",
       "path": "/home/borisindelman/git/vault/projects/parking-stopping-mode-naive-heuristic.md",
