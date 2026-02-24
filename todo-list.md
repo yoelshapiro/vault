@@ -1,4 +1,4 @@
 - [x] interlieving with latest
 - [ ] stopping mode train
 - [ ] classifiers
-- [ ] end of route augmentation
+- [ ] end of route map blackout augmentation (port blackout-only path)

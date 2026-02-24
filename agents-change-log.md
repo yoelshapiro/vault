@@ -8,6 +8,16 @@
 ## 2026-02
 > [!note] 2026-02
 
+> #### 2026-02-24 — End-of-route map blackout project kickoff
+- Topic: initialize a new project for parking end-of-route augmentation using blackout-only map mutation
+- Labels: #parking #end-of-route #augmentation #otf #planning
+- Branch: boris/train/pudo_15_02_26
+- PR: none
+- Change type: docs/planning
+- Areas: `projects/`, `projects.md`, `projects/projects.json`, `projects/active-project.txt`, `agent_tasks/2026/02/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-map-blackout-project-kickoff]]: created project page `parking-end-of-route-map-blackout-augmentation`, set it active, reviewed previous `parking-stopping-mode-dilc` context, and extracted blackout-vs-route-shortening split from `boris/stopping_mode` PR `#93171` (`a912c7c` vs `974ce33+`) to define a blackout-only port plan.
+
 > #### 2026-02-22 — Obs Flyte runtime install layout for Bazel target
 - Topic: keep skill source in `~/.codex` and install only runtime `BUILD` + Python into `WayveCode/.ai/skills` for `bazel run`
 - Labels: #skill #flyte #bazel #tooling
