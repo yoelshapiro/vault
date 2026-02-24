@@ -225,7 +225,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Weekly tasks.md",
+                "file": "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -240,7 +240,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Weekly tasks"
+              "title": "newsletter_interleaving-models-in-parking-deployment-wrapper"
             }
           }
         ],
@@ -421,8 +421,8 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
-    "todo-list.md",
     "Weekly tasks.md",
+    "todo-list.md",
     "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-bazel-runtime-install-layout.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-skill-local-installer.md",
