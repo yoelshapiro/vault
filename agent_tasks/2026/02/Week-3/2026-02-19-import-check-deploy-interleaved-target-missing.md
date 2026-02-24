@@ -69,3 +69,11 @@ Outcome:
 Notes:
 - Non-fatal warning in ONNX artefact upload path (`OnnxExportAsset.path=None`) because ONNX export is disabled.
 - Core model trace + checkpoint + configs uploaded successfully.
+
+## Notion newsletter update (default flow switch)
+- Updated page: `Newsletter: Interleaving Models in the Parking Deployment Wrapper`
+- Changes made:
+  - Section 2: switched default branch to `boris/interleaved/updated_pudo_15_02_26` and marked old branch as historical reference.
+  - Section 3: switched default deploy command to the M26.0.0 flow (`session_2026_02_15_13_01_33...`, wrapper/wrapper, `--upload`).
+  - Kept meter-to-pixel conversion subsection unchanged.
+  - Section 7: converted to historical context for M25.0.0 (`boris/train/parking_pudo_interleaving_w_radar` + old command/session).

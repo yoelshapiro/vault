@@ -660,3 +660,13 @@
 - Areas: deployment runtime + Training API upload
 - Changes:
   - [[agent_tasks/2026/02/Week-3/2026-02-19-import-check-deploy-interleaved-target-missing]]: executed `--upload` run, confirmed successful model upload and session registration.
+
+#### 2026-02-24 — Notion default flow update (M26.0.0)
+- Topic: Newsletter alignment to new default interleaving workflow
+- Labels: #docs #notion #interleaving #parking #pudo
+- Branch: `boris/interleaved/updated_pudo_15_02_26`
+- PR: none
+- Change type: content update
+- Areas: Notion newsletter page
+- Changes:
+  - [[agent_tasks/2026/02/Week-3/2026-02-19-import-check-deploy-interleaved-target-missing]]: set Sections 2/3 to M26.0.0 default branch/command, preserved conversion section, and moved previous M25.0.0 flow to historical Section 7.
