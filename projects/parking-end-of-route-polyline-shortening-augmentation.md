@@ -7,12 +7,12 @@
 
 ## Status
 - **Phase:** Phase 1
-- **Status:** active | paused | archived
+- **Status:** active
 - **Last updated:** 2026-02-24
 - **Current priorities:**
-  - Trace where stop location can be stored in parking augmentation.
-  - Understand route/polyline generation and representation path in OTF.
-  - Define deterministic algorithm for clipping route at stop location.
+  - Finalize stop-point signal written from parking augmentation.
+  - Add route clipping in route-map fetcher before rasterization.
+  - Decide whether to use stop lat/lon projection or stop route index/fraction as primary signal.
 - **Blockers:**
   - None
 
@@ -28,30 +28,40 @@
 
 ## Design
 - **Approach:**
-  - Capture stop location when parking mode is activated.
-  - Propagate stop location to map-route augmentation step.
-  - Clip route polylines to stop point by removing downstream segments and truncating closest segment at projected point.
+  - Capture stop signal at parking augmentation time (currently available lookahead gear/speed; can be extended with stop route position).
+  - Route shortening must run in `RouteMapFetcher._fetch_route_map` before `generate_route_map_from_config` (once map image is produced in OTF, polyline geometry is no longer available).
+  - Clip route polyline and aligned speed-limits to a computed stop point, then render route map from the clipped polyline.
 - **Key decisions:**
-  - Use geometric projection on nearest polyline segment to define clipping point.
-  - Filter route by along-route ordering relative to clipped segment.
+  - Route is represented as a single encoded polyline (`F.ROUTE_POLYLINE`) plus current location (`F.ROUTE_POLYLINE_LOCATION_INDEX`, `F.ROUTE_POLYLINE_LOCATION_DIST_TRAVELLED_PCT`), not multiple independent polylines.
+  - Preferred robust stop representation is stop route index/fraction (already used in prior `boris/stopping_mode` implementation); fallback can project stop lat/lon onto nearest route segment.
 - **Open questions:**
-  - Best coordinate frame for stop location vs route polylines at augmentation time.
-  - Where to persist stop location key with minimal schema impact.
+  - Whether to keep deterministic clipping or add bounded jitter near stop.
+  - Whether to keep current parking mode active during route-shortened samples (for this project likely yes).
 
 ## Build Phases
 - **Phase:** Phase 1
-  - **Goal:** Confirm data flow and polyline geometry implementation points.
+  - **Goal:** Confirm data flow and clipping algorithm insertion points.
   - **Work items:**
-    - Read parking augmentation stop-trigger logic.
-    - Read OTF map route insertion and polyline rendering path.
-    - Draft clipping algorithm and failure handling.
+    - Parking: `insert_parking_data` currently uses additional lookahead gear/speed only; extend to store stop metadata.
+    - OTF: `insert_map_data` calls `dp.fetch_route_map(...)`; augment `fetch_route_map` options to enable shortening.
+    - Routes: implement clipping in `wayve/ai/lib/data/pipes/routes.py` using current route progress and stop point projection.
   - **Validation:**
-    - Code walkthrough notes + candidate unit test plan.
+    - Unit tests in `wayve/ai/lib/test/data/pipes/test_generate_route_map.py` for clipping behavior.
+    - Datamodule tests verifying parking metadata and shortened route map integration.
 
 ## Decisions
 - **2026-02-24:**
   - **Decision:** Start as a separate project from blackout augmentation.
   - **Rationale:** Keeps scope explicit while reusing prior understanding.
+- **2026-02-24:**
+  - **Decision:** Perform shortening in route-map fetcher (pre-rasterization), not in post-map OTF transform.
+  - **Rationale:** Post-`MAP_ROUTE` stage only has pixels, while clipping requires route polyline geometry.
+- **2026-02-24:**
+  - **Decision:** Reuse prior stopping-mode pattern (`PARKING_STOP_ROUTE_INDEX/FRACTION`) as baseline.
+  - **Rationale:** It aligns with existing route indexing fields and avoids noisy geodesic nearest-segment search.
 
 ## Notes
-- Initial investigation only. No implementation yet.
+- Investigation summary:
+  - `insert_map_data` -> `fetch_route_map` -> decode `F.ROUTE_POLYLINE` -> `generate_route_map_from_config`.
+  - Current blackout path in OTF is after map generation and cannot support geometric clipping.
+  - Prior `boris/stopping_mode` branch already implemented route shortening logic in `RouteMapFetcher` and parking metadata plumbing; this can be ported/adapted.
