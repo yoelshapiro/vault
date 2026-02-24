@@ -2,6 +2,7 @@
 
 | Project                                                                                                         | Status   | Phase   | Last updated | no  |
 | --------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------------ | --- |
+| [Parking end-of-route polyline shortening augmentation](projects/parking-end-of-route-polyline-shortening-augmentation) | active   | Phase 1 | 2026-02-24   | no  |
 | [Parking end-of-route map blackout augmentation](projects/parking-end-of-route-map-blackout-augmentation)       | active   | Phase 1 | 2026-02-24   | no  |
 | [Parking stopping_mode naive heuristic](projects/parking-stopping-mode-naive-heuristic)                         | active   | Phase 3 | 2026-02-17   | no  |
 | [PUDO update to January driving release 2026.5.4](projects/pudo-update-january-driving-release-2026-5-4)        | active   | Phase 1 | 2026-02-11   | no  |
