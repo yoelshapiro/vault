@@ -225,7 +225,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/parking-end-of-route-map-blackout-augmentation.md",
+                "file": "projects/parking-end-of-route-polyline-shortening-augmentation.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -240,7 +240,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "parking-end-of-route-map-blackout-augmentation"
+              "title": "parking-end-of-route-polyline-shortening-augmentation"
             }
           }
         ],
@@ -421,11 +421,12 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/02/Week-4/2026-02-24-route-shortening-implementation-index-fraction.md",
+    "projects.md",
+    "projects/parking-end-of-route-map-blackout-augmentation.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-polyline-shortening-investigation.md",
     "projects/parking-end-of-route-polyline-shortening-augmentation.md",
-    "projects.md",
     "projects/pudo-update-january-driving-release-2026-5-4.md",
-    "projects/parking-end-of-route-map-blackout-augmentation.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-map-blackout-project-kickoff.md",
     "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
     "Weekly tasks.md",
@@ -447,7 +448,6 @@
     "agent_tasks/2026/02/Week-3/2026-02-18-notion-add-top-warning.md",
     "agent_tasks/2026/02/Week-3/2026-02-18-notion-radar-baseline-deploy-section.md",
     "agent_tasks/2026/02/Week-3/2026-02-18-interleaved-rl-baseline-deploy-hotfix.md",
-    "projects/parking-stopping-mode-naive-heuristic.md",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "projects/projects.json",
