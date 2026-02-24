@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-polyline-shortening-investigation.md",
     "projects/parking-end-of-route-polyline-shortening-augmentation.md",
     "projects.md",
     "projects/pudo-update-january-driving-release-2026-5-4.md",
@@ -447,7 +448,6 @@
     "agent_tasks/2026/02/Week-3/2026-02-18-notion-radar-baseline-deploy-section.md",
     "agent_tasks/2026/02/Week-3/2026-02-18-interleaved-rl-baseline-deploy-hotfix.md",
     "projects/parking-stopping-mode-naive-heuristic.md",
-    "newsletters/newsletter_parking-stopping-mode-naive-heuristic.md",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "projects/projects.json",
