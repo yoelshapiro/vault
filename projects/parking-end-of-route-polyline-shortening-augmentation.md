@@ -10,9 +10,9 @@
 - **Status:** active
 - **Last updated:** 2026-02-24
 - **Current priorities:**
-  - Finalize stop-point signal written from parking augmentation.
-  - Add route clipping in route-map fetcher before rasterization.
-  - Decide whether to use stop lat/lon projection or stop route index/fraction as primary signal.
+  - Validate route-shortening behavior qualitatively on training samples.
+  - Confirm no regression on datasets with missing route-location columns.
+  - Decide whether to keep blackout flag path enabled long-term.
 - **Blockers:**
   - None
 
@@ -59,6 +59,20 @@
 - **2026-02-24:**
   - **Decision:** Reuse prior stopping-mode pattern (`PARKING_STOP_ROUTE_INDEX/FRACTION`) as baseline.
   - **Rationale:** It aligns with existing route indexing fields and avoids noisy geodesic nearest-segment search.
+- **2026-02-24:**
+  - **Decision:** Implement deterministic clipping only; do not include fallback distance heuristic or random pullback.
+  - **Rationale:** Keep behavior debuggable and avoid non-deterministic end-point errors seen in previous branch interpolation flow.
+
+## Implementation Update
+- Implemented:
+  - parking stop route metadata extraction (`index+fraction`) via `insert_parking_stop_route_position`.
+  - route clipping in `RouteMapFetcher` using deterministic interpolation at stop point.
+  - OTF wiring to compute stop metadata before map generation and pass shortening flag through route map options.
+  - parking config default switched to route shortening (`enable_route_shortening_for_parking=True`) and blackout disabled.
+- Validation:
+  - parking datapipe target passed with focused tests.
+  - selected OTF hook tests passed (coverage gate prevents filtered-target success status).
+  - lib route-map test target blocked by private registry auth in this environment (`azure-storage/azurite` 401).
 
 ## Notes
 - Investigation summary:

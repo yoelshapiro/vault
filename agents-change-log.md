@@ -8,6 +8,16 @@
 ## 2026-02
 > [!note] 2026-02
 
+> #### 2026-02-24 — End-of-route route-shortening implementation (index/fraction path)
+- Topic: replace blackout-first parking augmentation with deterministic route polyline shortening
+- Labels: #parking #end-of-route #route-shortening #otf #route-map #implementation
+- Branch: boris/train/pudo_15_02_26
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/data/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/si/datamodules/`, `wayve/ai/si/configs/parking/`, `wayve/ai/*/test/`
+- Changes:
+  - [[agent_tasks/2026/02/Week-4/2026-02-24-route-shortening-implementation-index-fraction]]: added parking stop route metadata keys and extraction logic, wired OTF pre-map stop-position computation with `route_map_options.enable_route_shortening_for_parking`, added deterministic route clipping/interpolation in `RouteMapFetcher` (no jitter/fallback), updated parking config to shortening-on blackout-off, and added focused tests for parking and OTF hooks.
+
 > #### 2026-02-24 — End-of-route polyline shortening project + wiring investigation
 - Topic: kick off route-shortening augmentation project and trace exact pre-rasterization insertion points
 - Labels: #parking #end-of-route #route-shortening #augmentation #otf #planning
