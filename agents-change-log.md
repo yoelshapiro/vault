@@ -8,6 +8,17 @@
 ## 2026-02
 > [!note] 2026-02
 
+
+> #### 2026-02-25 — Interleaving stopping wrapper map blackout on park mode
+- Topic: blackout `map_route` in interleaving stopping deployment wrapper whenever park mode is active at inference
+- Labels: #parking #pudo #deployment #interleaving #map-route #blackout
+- Branch: boris/interleaved/updated_pudo_15_02_26
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/deployment/interleaving_stopping_wrapper.py`
+- Changes:
+  - [[agent_tasks/2026/02/Week-4/2026-02-25-interleaving-stopping-wrapper-map-blackout-on-park-mode]]: added TorchScript map blackout helper and wired blackout when `initiate_auto_park` is on for both baseline/primary model calls (including warmup), plus timestamped blackout logging and switch-print visibility.
+
 > #### 2026-02-24 — End-of-route route-shortening implementation (index/fraction path)
 - Topic: replace blackout-first parking augmentation with deterministic route polyline shortening
 - Labels: #parking #end-of-route #route-shortening #otf #route-map #implementation
