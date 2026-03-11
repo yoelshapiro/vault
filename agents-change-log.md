@@ -1,9 +1,24 @@
 # Codex Change Log — WayveCode
 
 ## Table of Contents
+- [2026-03](#2026-03)
 - [2026-02](#2026-02)
 - [2026-01](#2026-01)
 - [2025-12](#2025-12)
+
+## 2026-03
+> [!note] 2026-03
+
+
+> #### 2026-03-11 — Route-shortening-only port on fresh main branch
+- Topic: create fresh branch from latest main and port only parking route-shortening logic from `fc4d866506e851487bde7c0e7d11b76846db8eec`
+- Labels: #parking #route-shortening #otf #route-map #augmentation
+- Branch: 03-11-park-route-shortening-augmentation
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/datamodules/`, `wayve/ai/zoo/data/`, `wayve/ai/lib/data/pipes/`, tests
+- Changes:
+  - [[agent_tasks/2026/03/Week-2/2026-03-11-park-route-shortening-augmentation-port]]: ported route-shortening wiring only (no blackout), added parking stop route metadata extraction (`index`/`fraction`), enabled route clipping in route-map fetch, and added focused tests for parking and OTF hooks on top of current `main` architecture.
 
 ## 2026-02
 > [!note] 2026-02
