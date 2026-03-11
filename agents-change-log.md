@@ -10,6 +10,16 @@
 > [!note] 2026-03
 
 
+> #### 2026-03-11 — Port interleaved wrapper onto soham parking-training branch
+- Topic: fork from `soham/parking-training` and add only the interleaved deploy/wrapper code from `boris/interleaved/updated_pudo_15_02_26`
+- Labels: #parking #pudo #interleaving #deployment #radar
+- Branch: 03-11-parking-interleaved-wrapper
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/`, `wayve/ai/zoo/deployment/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-2/2026-03-11-parking-interleaved-wrapper-port]]: added `deploy_interleaved_models.py` and `interleaving_stopping_wrapper.py`, wired corresponding BUILD targets only, validated with Bazel build, and pushed upstream branch without opening a PR.
+
 > #### 2026-03-11 — Route-shortening-only port on fresh main branch
 - Topic: create fresh branch from latest main and port only parking route-shortening logic from `fc4d866506e851487bde7c0e7d11b76846db8eec`
 - Labels: #parking #route-shortening #otf #route-map #augmentation
