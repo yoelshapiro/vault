@@ -225,7 +225,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/parking-end-of-route-polyline-shortening-augmentation.md",
+                "file": "projects/fox-mitten.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -240,7 +240,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "parking-end-of-route-polyline-shortening-augmentation"
+              "title": "fox-mitten"
             }
           }
         ],
@@ -421,16 +421,16 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "projects.md",
+    "projects/parking-end-of-route-polyline-shortening-augmentation.md",
     "projects/fox-mitten.md",
     "agent_tasks/2026/03/Week-2/2026-03-11-park-route-shortening-augmentation-port.md",
     "agent_tasks/2026/03/Week-2",
     "agent_tasks/2026/03",
     "agent_tasks/2026/02/Week-4/2026-02-25-interleaving-stopping-wrapper-map-blackout-on-park-mode.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-route-shortening-implementation-index-fraction.md",
-    "projects.md",
     "projects/parking-end-of-route-map-blackout-augmentation.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-polyline-shortening-investigation.md",
-    "projects/parking-end-of-route-polyline-shortening-augmentation.md",
     "projects/pudo-update-january-driving-release-2026-5-4.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-map-blackout-project-kickoff.md",
     "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
