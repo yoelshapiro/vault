@@ -66,3 +66,12 @@
 
 ## Notes
 - Initial project scope provided by Boris on 2026-03-11.
+- 2026-03-11 investigation: MCAP reading entry points and PUDO-relevant signals identified.
+  - Topic listing/readers:
+    - `wayve/robot/tools/mcap_utils/read_mcap_topics.py`
+    - `wayve/robot/tools/mcap_utils/read_mcap.py`
+    - `wayve/prototypes/robotics/vehicle_dynamics/datahub/mcap_loader/mcap_loader.py`
+  - Likely PUDO control/vehicle topics in AV data logs:
+    - `/robot/control/dbw_command` (`DriveByWireCommand`: `acceleration_mpss`, `gear_command`)
+    - `/robot/control/controller_state` (`TrajectoryControllerStateV2`: internal acceleration-related fields)
+    - `/robot/vehicle_driver/vehicle_state` (`VehicleStateV2`: `drive_position`, `accelerator_pedal_pct`)
