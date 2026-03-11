@@ -3,6 +3,8 @@
 ## Context
 - User request: create a new branch from latest `main` and port only the route-shortening logic from commit `fc4d866506e851487bde7c0e7d11b76846db8eec`.
 - New branch: `03-11-park-route-shortening-augmentation` (from `origin/main`).
+- Commit: `17be8b49c46`
+- PR: `#100620`
 - Scope explicitly excluded blackout/deployment wrapper behavior.
 
 ## What changed
@@ -35,5 +37,4 @@
   - blocked by external registry auth (`wayve.azurecr.io` 401 for azurite image fetch).
 
 ## Notes
-- No commits were made.
 - Working tree contains unrelated untracked items that pre-existed (`.ai/skills/obs-flyte-execution/`, `.claude/plugins/`, `wayve/ai/parking/test.ipynb`, `wayve/ai/si/configs/parking/`).
