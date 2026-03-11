@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-2/2026-03-11-parking-interleaved-wrapper-port.md",
     "projects.md",
     "projects/parking-end-of-route-polyline-shortening-augmentation.md",
     "projects/fox-mitten.md",
@@ -449,7 +450,6 @@
     "agent_tasks/2026/02/Week-3/2026-02-18-copy-interleaving-files-to-updated-pudo-branch.md",
     "agent_tasks/2026/02/Week-3/2026-02-18-branch-merge-planning-interleaving-vs-pudo.md",
     "agent_tasks/2026/02/Week-3/2026-02-18-notion-mermaid-align-no-event-output.md",
-    "agent_tasks/2026/02/Week-3/2026-02-18-notion-remove-interleaved-id-event-usage.md",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "projects/projects.json",
