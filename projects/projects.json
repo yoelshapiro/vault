@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Fox Mitten",
+      "slug": "fox-mitten",
+      "path": "/home/borisindelman/git/vault/projects/fox-mitten.md",
+      "status": "active",
+      "phase": "Phase 1",
+      "last_updated": "2026-03-11"
+    },
+    {
       "name": "Parking end-of-route polyline shortening augmentation",
       "slug": "parking-end-of-route-polyline-shortening-augmentation",
       "path": "/home/borisindelman/git/vault/projects/parking-end-of-route-polyline-shortening-augmentation.md",
