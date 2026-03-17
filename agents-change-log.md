@@ -745,3 +745,13 @@
 - Areas: Notion newsletter page
 - Changes:
   - [[agent_tasks/2026/02/Week-3/2026-02-19-import-check-deploy-interleaved-target-missing]]: set Sections 2/3 to M26.0.0 default branch/command, preserved conversion section, and moved previous M25.0.0 flow to historical Section 7.
+
+#### 2026-03-17 — Parking BC config: add 2026.5.11-aligned release mode
+- Topic: Parking training config update
+- Labels: #parking #si #config #bc
+- Branch: current working branch
+- PR: none
+- Change type: config update
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-17-parking-config-add-2026-5-11-release]]: added Dec-2025/FA3 parking model config and new mode `parking_bc_train_release_2026_5_11` while keeping `parking_bc_train_release_2026_5_4` unchanged.
