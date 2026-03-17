@@ -9,6 +9,15 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-17 — Interleaved deploy TD3 legacy kwargs compatibility
+- Topic: make `deploy_interleaved_models` tolerate legacy TD3 config kwargs and complete deployment for parking interleaving run.
+- Labels: #parking #pudo #interleaving #deployment #td3 #compatibility
+- Branch: boris/interleaved/updated_pudo_15_02_26
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-17-interleaved-deploy-legacy-td3-compat]]: added deploy-time TD3 top-level unknown-kwarg pruning in `deploy_interleaved_models.py` (including `apply_activation_checkpointing`-style legacy fields), reran the exact Bazel command successfully, and verified `model-000100000.torchscript` under the suffixed session directory.
 
 > #### 2026-03-11 — Port interleaved wrapper onto soham parking-training branch
 - Topic: fork from `soham/parking-training` and add only the interleaved deploy/wrapper code from `boris/interleaved/updated_pudo_15_02_26`
