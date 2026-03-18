@@ -755,3 +755,13 @@
 - Areas: `wayve/ai/si/configs/parking/parking_config.py`
 - Changes:
   - [[agent_tasks/2026/03/Week-3/2026-03-17-parking-config-add-2026-5-11-release]]: added Dec-2025/FA3 parking model config and new mode `parking_bc_train_release_2026_5_11` while keeping `parking_bc_train_release_2026_5_4` unchanged.
+
+#### 2026-03-17 — Route-shortening merge audit across branches
+- Topic: Merge correctness review (`pudo_route_augmentations` into `pudo_170326`)
+- Labels: #parking #pudo #route-shortening #deployment #merge
+- Branch: `parking/training/pudo_170326`
+- PR: none
+- Change type: analysis/audit
+- Areas: `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/zoo/deployment/deployment_wrapper.py`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-17-route-shortening-merge-audit]]: compared old validated branch against merged branch and flagged deployment blackout regression.
