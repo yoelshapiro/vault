@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-3/2026-03-17-route-shortening-merge-audit.md",
     "agent_tasks/2026/03/Week-3/2026-03-17-parking-config-add-2026-5-11-release.md",
     "projects/fox-mitten.md",
     "agent_tasks/2026/03/Week-3/2026-03-17-interleaved-deploy-legacy-td3-compat.md",
@@ -450,7 +451,6 @@
     "agent_tasks/2026/02/Week-4/2026-02-21-si-config-migration-conflict-skill.md",
     "agent_tasks/2026/02/Week-4",
     "agent_tasks/2026/02/Week-3/2026-02-19-import-check-deploy-interleaved-target-missing.md",
-    "agent_tasks/2026/02/Week-3/2026-02-18-copy-interleaving-files-to-updated-pudo-branch.md",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "projects/projects.json",
