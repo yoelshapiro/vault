@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-18 — Merge conflict resolution for `zmurez/si_interleave_control`
+- Topic: resolve in-progress merge conflict into parking training branch while preserving parking and interleave control wiring.
+- Labels: #parking #pudo #interleaving #merge-conflict #si
+- Branch: parking/training/pudo_170326
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/models/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-18-si-interleave-control-merge-conflict-resolution]]: resolved the only unmerged file (`training.py`) and kept `driving_controls_keys` as the union of parking controls (`INITIATE_AUTO_PARKING`, `PARKING_DIRECTION`, `ENABLE_SHIFT_BY_WIRE`) plus `DILC_MODE` for interleave behavior control.
+
 > #### 2026-03-17 — Interleaved deploy TD3 legacy kwargs compatibility
 - Topic: make `deploy_interleaved_models` tolerate legacy TD3 config kwargs and complete deployment for parking interleaving run.
 - Labels: #parking #pudo #interleaving #deployment #td3 #compatibility
