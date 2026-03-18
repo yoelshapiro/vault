@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-18 — BC config migration v29 gap fix
+- Topic: fix SI deploy failure caused by BC config version/migration map mismatch at v29.
+- Labels: #si #config #migrations #bc #deployment
+- Branch: parking/training/pudo_170326
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/configs/versioning/`, `wayve/ai/si/test/data/sample_configs/bc/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-18-bc-config-migration-v29-gap-fix]]: restored `migrate_to_v29` and map entry `29` in `bc_migrations.py`, regenerated `bc/v29.yaml`, and validated with `//wayve/ai/si:test_config_py_test -k=bc_migrations`.
+
 > #### 2026-03-18 — Merge conflict resolution for `zmurez/si_interleave_control`
 - Topic: resolve in-progress merge conflict into parking training branch while preserving parking and interleave control wiring.
 - Labels: #parking #pudo #interleaving #merge-conflict #si
