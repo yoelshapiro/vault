@@ -81,6 +81,15 @@
 - Baseline reference commit:
   - `wayve/ai/zoo/data/parking.py` @ `97769ac4b44b378645646934b9e0f901bfa13400`
   - Pipeline sequence includes `augment_unparking_gear` and optional `strip_leading_standstill` around lines 1104-1119 in that revision.
+- Data source + datamodule comparison (2026-03-20):
+  - Wonjoon reference mode (`5aa61a5...` line ~589) uses `parking_window_bc_diffusion_with_driving_datamodule_cfg`.
+  - That datamodule mixes driving buckets + generated parking-window buckets from `2026_02_17_21_44_12_server_parking` (`parking_window_gc*` and `unparking_window_gc*` families).
+  - In that config, `augment_gear_direction=False` (explicitly changed in `5aa61a5...`).
+  - Current local config at `2bd1f412149` does not use the parking-window datamodule for release modes; it uses `parking_bc_datamodule_cfg` with roots:
+    - `parking/dev/2026_03_15_11_14_01_server_parking_pudo_buckets_bc` (driving)
+    - `parking/dev/2026_03_17_11_14_18_root_parking_pudo_unpudo_with_av_buckets` (PUDO/UNPUDO/UNPARK)
+  - Current local config keeps `augment_gear_direction=True`.
+  - Conclusion: model behavior differences are confounded by both augmentation logic and a materially different training mixture.
 - Experiment ledger template (update per run):
   - run name
   - what changed

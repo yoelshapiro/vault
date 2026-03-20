@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-20 — Parking datamodule/materialization comparison for gear-augmentation debugging
+- Topic: compare Wonjoon reference setup vs current local parking setup to identify confounders in reverse/unparking behavior.
+- Labels: #parking #unparking #datamodule #materialization #gear #ablation
+- Branch: parking/training/pudo
+- PR: none
+- Change type: docs/analysis
+- Areas: `wayve/ai/si/configs/parking/`, `projects/`, `agent_tasks/2026/03/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-20-parking-datamodule-materialization-comparison]]: validated that Wonjoon used parking-window buckets (`2026_02_17_21_44_12_server_parking`) with `augment_gear_direction=False`, while current local release modes use different roots (`2026_03_15...` + `2026_03_17...`) and `augment_gear_direction=True`; documented this as a key confounder for reverse/unparking comparisons.
+
 > #### 2026-03-20 — Parking/unparking gear augmentation project kickoff
 - Topic: initialize a new project to improve reverse/unparking behavior via gear-focused augmentation with explicit safety-aware ablations.
 - Labels: #parking #unparking #gear #augmentation #planning #ablation
