@@ -2,6 +2,7 @@
 
 | Project                                                                                                         | Status   | Phase   | Last updated | no  |
 | --------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------------ | --- |
+| [Parking unparking gear augmentation](projects/parking-unparking-gear-augmentation)                            | active   | Phase 1 | 2026-03-20   | no  |
 | [Fox Mitten](projects/fox-mitten)                                                                              | active   | Phase 1 | 2026-03-11   | no  |
 | [Parking end-of-route polyline shortening augmentation](projects/parking-end-of-route-polyline-shortening-augmentation) | active   | Phase 1 | 2026-02-24   | no  |
 | [Parking end-of-route map blackout augmentation](projects/parking-end-of-route-map-blackout-augmentation)       | active   | Phase 1 | 2026-02-24   | no  |

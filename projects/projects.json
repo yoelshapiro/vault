@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Parking unparking gear augmentation",
+      "slug": "parking-unparking-gear-augmentation",
+      "path": "/home/borisindelman/git/vault/projects/parking-unparking-gear-augmentation.md",
+      "status": "active",
+      "phase": "Phase 1",
+      "last_updated": "2026-03-20"
+    },
+    {
       "name": "Fox Mitten",
       "slug": "fox-mitten",
       "path": "/home/borisindelman/git/vault/projects/fox-mitten.md",
