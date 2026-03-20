@@ -39,6 +39,16 @@
 - Changes:
   - [[agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff]]: created and activated project `parking-unparking-gear-augmentation`, summarized baseline behavior from `97769ac...` parking augmentation stack, and defined a controlled A0-A5 ablation plan with explicit keep/drop safety criteria.
 
+> #### 2026-03-20 — Parking/unparking gear augmentation implementation (isolated worktree branch)
+- Topic: implement reference-style standstill parking gear augmentation in current OTF pipeline, behind train-time toggles.
+- Labels: #parking #unparking #gear #augmentation #otf #training
+- Branch: 03-20-parking-unparking-gear-augmentation
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/data/`, `wayve/ai/si/datamodules/`, `wayve/ai/si/configs/parking/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation]]: added `insert_parking_gear_augmentation` (parked-vs-drive sampling + optional leading-standstill strip), wired new datamodule args through OTF make path, enabled config defaults for parking modes, and added targeted parking/OTF tests.
+
 > #### 2026-03-18 — BC config migration v29 gap fix
 - Topic: fix SI deploy failure caused by BC config version/migration map mismatch at v29.
 - Labels: #si #config #migrations #bc #deployment
