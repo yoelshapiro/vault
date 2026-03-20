@@ -225,7 +225,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/interleaving-models-in-parking-deployment-wrapper.md",
+                "file": "projects/parking-unparking-gear-augmentation.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -240,7 +240,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "interleaving-models-in-parking-deployment-wrapper"
+              "title": "parking-unparking-gear-augmentation"
             }
           }
         ],
@@ -421,8 +421,11 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
-    "projects/parking-unparking-gear-augmentation.md",
+    "agent_tasks/2026/03/Week-3/2026-03-20-parking-datamodule-materialization-comparison.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
+    "projects/parking-unparking-gear-augmentation.md",
+    "projects.md",
+    "projects/interleaving-models-in-parking-deployment-wrapper.md",
     "agent_tasks/2026/03/Week-3/2026-03-18-bc-config-migration-v29-gap-fix.md",
     "agent_tasks/2026/03/Week-3/2026-03-18-si-interleave-control-merge-conflict-resolution.md",
     "agent_tasks/2026/03/Week-3/2026-03-17-route-shortening-merge-audit.md",
@@ -431,7 +434,6 @@
     "agent_tasks/2026/03/Week-3/2026-03-17-interleaved-deploy-legacy-td3-compat.md",
     "agent_tasks/2026/03/Week-3",
     "agent_tasks/2026/03/Week-2/2026-03-11-parking-interleaved-wrapper-port.md",
-    "projects.md",
     "projects/parking-end-of-route-polyline-shortening-augmentation.md",
     "agent_tasks/2026/03/Week-2/2026-03-11-park-route-shortening-augmentation-port.md",
     "agent_tasks/2026/03/Week-2",
@@ -448,8 +450,6 @@
     "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-bazel-runtime-install-layout.md",
     "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-skill-local-installer.md",
-    "agent_tasks/2026/02/Week-4/2026-02-22-si-config-migration-merge-main-conflict.md",
-    "agent_tasks/2026/02/Week-4/2026-02-22-model-skill-tree-foundations.md",
     "agent_tasks/2026/02/Week-4",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
