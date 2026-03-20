@@ -2,3 +2,4 @@
 - [ ] stopping mode train
 - [ ] classifiers
 - [ ] end of route map blackout augmentation (port blackout-only path)
+- [ ] parking/unparking gear augmentation ablations (A0-A5)

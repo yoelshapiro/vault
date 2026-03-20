@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-20 — Parking/unparking gear augmentation project kickoff
+- Topic: initialize a new project to improve reverse/unparking behavior via gear-focused augmentation with explicit safety-aware ablations.
+- Labels: #parking #unparking #gear #augmentation #planning #ablation
+- Branch: boris/train/pudo_route_augmentations
+- PR: none
+- Change type: docs/planning
+- Areas: `projects/`, `projects.md`, `projects/projects.json`, `projects/active-project.txt`, `agent_tasks/2026/03/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff]]: created and activated project `parking-unparking-gear-augmentation`, summarized baseline behavior from `97769ac...` parking augmentation stack, and defined a controlled A0-A5 ablation plan with explicit keep/drop safety criteria.
+
 > #### 2026-03-18 — BC config migration v29 gap fix
 - Topic: fix SI deploy failure caused by BC config version/migration map mismatch at v29.
 - Labels: #si #config #migrations #bc #deployment
