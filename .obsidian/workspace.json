@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-interleave-group-export-and-torchscript-gear-optional-fix.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-datamodule-materialization-comparison.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
@@ -449,7 +450,6 @@
     "Weekly tasks.md",
     "todo-list.md",
     "Excalidraw/model_release.excalidraw.md",
-    "agent_tasks/2026/02/Week-4/2026-02-22-obs-flyte-bazel-runtime-install-layout.md",
     "agent_tasks/2026/02/Week-4",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
