@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-20 — Interleave group export + TorchScript Optional gear fix
+- Topic: make parking interleave group appear in `gen2_inference_config` and fix TorchScript compile failure in interleave wrapper gear handling.
+- Labels: #parking #pudo #interleaving #deployment #torchscript
+- Branch: parking/training/pudo
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/models/`, `wayve/ai/zoo/deployment/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-20-interleave-group-export-and-torchscript-gear-optional-fix]]: propagated `interleave_control_group` into `DeploymentConfig.interleave_group` during deployment model preparation, fixed Optional tensor handling for `policy_gear_position` in `_wrap_with_interleave_control`, and added regression coverage for config propagation.
+
 > #### 2026-03-20 — Parking datamodule/materialization comparison for gear-augmentation debugging
 - Topic: compare Wonjoon reference setup vs current local parking setup to identify confounders in reverse/unparking behavior.
 - Labels: #parking #unparking #datamodule #materialization #gear #ablation
