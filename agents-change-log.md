@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-21 — Parking branch deep-dive comparison vs route-augmentation reference
+- Topic: deep comparison of parking training/deployment pipeline between current branch and validated reference branch to isolate likely behavior drift.
+- Labels: #parking #pudo #route-shortening #otf #deployment #interleaving #debugging
+- Branch: parking/training/pudo
+- PR: none
+- Change type: docs/analysis
+- Areas: `wayve/ai/zoo/data/`, `wayve/ai/si/datamodules/`, `wayve/ai/si/models/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/lib/interfaces*`, `wayve/ai/si/configs/parking/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive]]: enumerated all relevant parking training files, compared core deltas against `boris/train/pudo_route_augmentations`, and highlighted the highest-risk mismatch candidates (`sign_speed_by_gear` gating, data-root drift, interleave/deploy behavior, and expanded loss surface).
+
 > #### 2026-03-20 — Interleave group export + TorchScript Optional gear fix
 - Topic: make parking interleave group appear in `gen2_inference_config` and fix TorchScript compile failure in interleave wrapper gear handling.
 - Labels: #parking #pudo #interleaving #deployment #torchscript
