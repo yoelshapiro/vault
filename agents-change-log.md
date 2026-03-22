@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-22 — Parking wrapper selection + preprocess parity fix
+- Topic: restore parking deployment-wrapper preprocess parity and ensure parking-capable models select the parking wrapper.
+- Labels: #parking #pudo #deployment #interleaving #wrapper-selection
+- Branch: `parking/training/pudo`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/deployment/`, `wayve/ai/si/models/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-22-parking-wrapper-selection-and-preprocess-fix]]: restored behavior/customization + grouped-navigation + indicator-memory processing in `ParkingDeploymentWrapperImpl`, re-added parking-required inputs (`driving_parameters` + grouped nav tensors), and moved `enable_parking` wrapper selection ahead of generic behavior+navigation selection to prevent parking-wrapper bypass.
+
 > #### 2026-03-22 — Port parking gear + route-jitter augmentations onto PUDO route-augmentation base
 - Topic: apply the previously validated parking/unparking gear and route-jitter augmentations on top of `boris/train/pudo_route_augmentations` only.
 - Labels: #parking #unparking #gear #route-shortening #augmentation #otf
