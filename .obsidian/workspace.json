@@ -225,7 +225,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/parking-unparking-gear-augmentation.md",
+                "file": "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -240,7 +240,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "parking-unparking-gear-augmentation"
+              "title": "2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive"
             }
           }
         ],
@@ -421,13 +421,16 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
+    "agent_tasks/2026/03/Week-4",
+    "agents-change-log.md",
+    "projects.md",
+    "projects/parking-unparking-gear-augmentation.md",
     "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-interleave-group-export-and-torchscript-gear-optional-fix.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-datamodule-materialization-comparison.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
-    "projects/parking-unparking-gear-augmentation.md",
-    "projects.md",
     "projects/interleaving-models-in-parking-deployment-wrapper.md",
     "agent_tasks/2026/03/Week-3/2026-03-18-bc-config-migration-v29-gap-fix.md",
     "agent_tasks/2026/03/Week-3/2026-03-18-si-interleave-control-merge-conflict-resolution.md",
@@ -448,15 +451,12 @@
     "projects/pudo-update-january-driving-release-2026-5-4.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-map-blackout-project-kickoff.md",
     "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
-    "Weekly tasks.md",
-    "todo-list.md",
     "agent_tasks/2026/02/Week-4",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "projects/projects.json",
     "projects/active-project.txt",
     "projects",
-    "newsletters",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
