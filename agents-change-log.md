@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-22 — Port parking gear + route-jitter augmentations onto PUDO route-augmentation base
+- Topic: apply the previously validated parking/unparking gear and route-jitter augmentations on top of `boris/train/pudo_route_augmentations` only.
+- Labels: #parking #unparking #gear #route-shortening #augmentation #otf
+- Branch: `boris/train/pudo_route_augmentations_gear_park_aug`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/data/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/si/datamodules/`, `wayve/ai/si/configs/parking/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations]]: cherry-picked and conflict-resolved augmentation commits (`ace24ca3f87`, `35a456168cc`, `a6a37f744fb`), excluded notebook payload, and validated focused parking/otf tests (with noted coverage/auth caveats).
+
 > #### 2026-03-21 — Parking branch deep-dive comparison vs route-augmentation reference
 - Topic: deep comparison of parking training/deployment pipeline between current branch and validated reference branch to isolate likely behavior drift.
 - Labels: #parking #pudo #route-shortening #otf #deployment #interleaving #debugging
