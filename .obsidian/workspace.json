@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-4/2026-03-23-bc-config-migration-v30-conflict-resolution.md",
     "agent_tasks/2026/03/Week-4/2026-03-22-parking-wrapper-selection-and-preprocess-fix.md",
     "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
     "agent_tasks/2026/03/Week-4",
@@ -450,7 +451,6 @@
     "projects/parking-end-of-route-map-blackout-augmentation.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-polyline-shortening-investigation.md",
     "projects/pudo-update-january-driving-release-2026-5-4.md",
-    "agent_tasks/2026/02/Week-4/2026-02-24-end-of-route-map-blackout-project-kickoff.md",
     "agent_tasks/2026/02/Week-4",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
