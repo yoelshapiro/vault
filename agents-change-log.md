@@ -905,3 +905,13 @@
 - Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`
 - Changes:
   - [[agent_tasks/2026/03/Week-4/2026-03-23-parking-config-pr-add-wrapper-nav-radar-wiring]]: added missing grouped-nav/radar/behavior wiring in `ParkingDeploymentWrapperImpl`.
+
+#### 2026-03-23 — Route branch: add end-of-route parking wrapper support
+- Topic: Parking wrapper end-of-route activation
+- Labels: #parking #deployment #wrapper #route-shortening
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: #102690
+- Change type: code fix
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-23-route-shortening-branch-add-end-of-route-parking-wrapper]]: added `enable_end_of_route_parking` wiring and end-of-route parking mask logic to `ParkingDeploymentWrapperImpl`.
