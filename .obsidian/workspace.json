@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-4/2026-03-23-route-shortening-jitter-probability-update.md",
     "agent_tasks/2026/03/Week-4/2026-03-23-split-parking-prs-route-shortening-and-config.md",
     "agent_tasks/2026/03/Week-4/2026-03-23-remove-end-of-route-blackout-option.md",
     "agent_tasks/2026/03/Week-4/2026-03-23-bc-config-migration-v30-conflict-resolution.md",
@@ -450,7 +451,6 @@
     "agent_tasks/2026/03",
     "agent_tasks/2026/02/Week-4/2026-02-25-interleaving-stopping-wrapper-map-blackout-on-park-mode.md",
     "agent_tasks/2026/02/Week-4/2026-02-24-route-shortening-implementation-index-fraction.md",
-    "projects/parking-end-of-route-map-blackout-augmentation.md",
     "agent_tasks/2026/02/Week-4",
     "agent_tasks/2026/02/Week-3",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
