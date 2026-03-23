@@ -885,3 +885,13 @@
 - Areas: `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/zoo/data/keys.py`, `wayve/ai/si/configs/parking/parking_config.py`
 - Changes:
   - [[agent_tasks/2026/03/Week-4/2026-03-23-split-parking-prs-route-shortening-and-config]]: created two focused branches from main and opened separate PRs for route logic vs config updates.
+
+#### 2026-03-23 — Route-shortening robustness update (jitter + apply probability)
+- Topic: Parking route-shortening robustness controls
+- Labels: #parking #pudo #route-shortening #augmentation
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: #102690
+- Change type: code update + PR description update
+- Areas: `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`, `wayve/ai/zoo/data/parking.py`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-23-route-shortening-jitter-probability-update]]: added route-shortening jitter/probability defaults and improved docstrings; left changes uncommitted for review.
