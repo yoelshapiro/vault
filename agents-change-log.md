@@ -875,3 +875,13 @@
 - Areas: `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/test/data/sample_configs/bc/v30.yaml`
 - Changes:
   - [[agent_tasks/2026/03/Week-4/2026-03-23-remove-end-of-route-blackout-option]]: removed `enable_end_of_route_blackout` option/wiring and deleted unused blackout datapipe helpers.
+
+#### 2026-03-23 — Split parking work into route-shortening PR + config PR
+- Topic: PR split for parking workstream
+- Labels: #parking #pudo #route-shortening #config #pr
+- Branch: `boris/03-23-park-route-shortening-v2`, `boris/03-23-parking-config-updates-v2`
+- PR: #102690, #102691
+- Change type: code split / PR preparation
+- Areas: `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/zoo/data/keys.py`, `wayve/ai/si/configs/parking/parking_config.py`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-23-split-parking-prs-route-shortening-and-config]]: created two focused branches from main and opened separate PRs for route logic vs config updates.
