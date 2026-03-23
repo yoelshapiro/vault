@@ -865,3 +865,13 @@
 - Areas: `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/zoo/deployment/deployment_wrapper.py`
 - Changes:
   - [[agent_tasks/2026/03/Week-3/2026-03-17-route-shortening-merge-audit]]: compared old validated branch against merged branch and flagged deployment blackout regression.
+
+#### 2026-03-23 — Remove end-of-route blackout option
+- Topic: Parking route augmentation cleanup
+- Labels: #parking #pudo #route-shortening #cleanup
+- Branch: `parking/training/pudo`
+- PR: none
+- Change type: code cleanup
+- Areas: `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/test/data/sample_configs/bc/v30.yaml`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-23-remove-end-of-route-blackout-option]]: removed `enable_end_of_route_blackout` option/wiring and deleted unused blackout datapipe helpers.
