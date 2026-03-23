@@ -895,3 +895,13 @@
 - Areas: `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`, `wayve/ai/zoo/data/parking.py`
 - Changes:
   - [[agent_tasks/2026/03/Week-4/2026-03-23-route-shortening-jitter-probability-update]]: added route-shortening jitter/probability defaults and improved docstrings; left changes uncommitted for review.
+
+#### 2026-03-23 — Parking wrapper nav/radar wiring added to config PR branch
+- Topic: Parking deployment wrapper parity fix
+- Labels: #parking #deployment #wrapper #navigation #radar
+- Branch: `boris/03-23-parking-config-updates-v2`
+- PR: #102691
+- Change type: code fix + PR description update
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-23-parking-config-pr-add-wrapper-nav-radar-wiring]]: added missing grouped-nav/radar/behavior wiring in `ParkingDeploymentWrapperImpl`.
