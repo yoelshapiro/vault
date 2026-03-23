@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-23 — BC config migration v29 conflict resolution to v30
+- Topic: resolve BC migration version collision and lingering merge markers in migration code/sample snapshots.
+- Labels: #si #config #migrations #bc #merge-conflict
+- Branch: `parking/training/pudo`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/config.py`, `wayve/ai/si/configs/versioning/`, `wayve/ai/si/test/data/sample_configs/bc/`, `wayve/ai/si/test/test_config_inputs/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-23-bc-config-migration-v30-conflict-resolution]]: kept `v29` aligned with `origin/main` (`use_temporal_rope`), moved branch-local parking/gear migration logic to new `v30`, bumped BC version to 30, restored clean `v29.yaml` from `origin/main`, generated `v30.yaml`, and validated BC/RL migration test slices.
+
 > #### 2026-03-22 — Parking wrapper selection + preprocess parity fix
 - Topic: restore parking deployment-wrapper preprocess parity and ensure parking-capable models select the parking wrapper.
 - Labels: #parking #pudo #deployment #interleaving #wrapper-selection
