@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-24 — SI group interleave control presubmit failure fixes
+- Topic: fix deterministic test/lint regressions from presubmit build `434358` on `03-20-si-group-interleave-control-support`.
+- Labels: #si #interleaving #deployment #tests #lint
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/deployment/`, `wayve/ai/zoo/deployment/test/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-24-si-group-interleave-control-presubmit-fixes]]: restored backward-compatible wrapper helper methods used by SI tests, updated unsupported-control test expectation to use a truly unknown key, fixed safety-wrapper test inputs for required gear tensor, and cleaned interleave-control test lint warnings.
+
 > #### 2026-03-23 — BC config migration v29 conflict resolution to v30
 - Topic: resolve BC migration version collision and lingering merge markers in migration code/sample snapshots.
 - Labels: #si #config #migrations #bc #merge-conflict
