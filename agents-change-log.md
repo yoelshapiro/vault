@@ -915,3 +915,13 @@
 - Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`
 - Changes:
   - [[agent_tasks/2026/03/Week-4/2026-03-23-route-shortening-branch-add-end-of-route-parking-wrapper]]: added `enable_end_of_route_parking` wiring and end-of-route parking mask logic to `ParkingDeploymentWrapperImpl`.
+
+#### 2026-03-24 — Route-shortening PR CI failures triage/fix
+- Topic: Presubmit failures on route-shortening branch
+- Labels: #parking #pudo #route-shortening #ci #buildkite
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: #102690
+- Change type: bug fix + baseline snapshot update
+- Areas: `wayve/ai/zoo/data/parking.py`, `wayve/ai/si/test/test_config_inputs/reference_bc.yaml`, `wayve/ai/si/test/test_config_inputs/reference_bc_alpha2.yaml`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-24-route-shortening-pr-ci-failures-fix]]: debugged Buildkite #434402 failures with `$obs-buildkite-jobs`, fixed parking boundary logic, and updated baseline BC config snapshots for new route-shortening OTF defaults.
