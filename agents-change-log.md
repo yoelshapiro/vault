@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-25 — Route-shortening patch coverage improvements
+- Topic: increase patch coverage for route-shortening and parking-related code paths in routes, OTF datamodule plumbing, and parking deployment wrapper behavior.
+- Labels: #parking #route-shortening #coverage #tests #otf #deployment
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/lib/test/data/pipes/`, `wayve/ai/si/datamodules/test/`, `wayve/ai/zoo/deployment/test/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-4/2026-03-25-route-shortening-coverage-fixes]]: added focused unit tests for route clipping boundaries and parking-anchor application, OTF train/val route-shortening forwarding and map-option mutation, interpolation lookahead keys, and parking end-of-route mask behavior in deployment wrapper controls.
+
 > #### 2026-03-24 — SI group interleave control presubmit failure fixes
 - Topic: fix deterministic test/lint regressions from presubmit build `434358` on `03-20-si-group-interleave-control-support`.
 - Labels: #si #interleaving #deployment #tests #lint
