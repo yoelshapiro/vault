@@ -421,6 +421,7 @@
   },
   "active": "86a3e0933df53f5a",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-4/2026-03-25-route-shortening-coverage-fixes.md",
     "agent_tasks/2026/03/Week-4/2026-03-24-si-group-interleave-control-presubmit-fixes.md",
     "agent_tasks/2026/03/Week-4/2026-03-24-route-shortening-pr-ci-failures-fix.md",
     "agent_tasks/2026/03/Week-4/2026-03-23-route-shortening-branch-add-end-of-route-parking-wrapper.md",
@@ -448,7 +449,6 @@
     "projects/fox-mitten.md",
     "agent_tasks/2026/03/Week-3/2026-03-17-interleaved-deploy-legacy-td3-compat.md",
     "agent_tasks/2026/03/Week-3",
-    "agent_tasks/2026/03/Week-2/2026-03-11-parking-interleaved-wrapper-port.md",
     "agent_tasks/2026/03/Week-2",
     "agent_tasks/2026/03",
     "agent_tasks/2026/02/Week-4",
