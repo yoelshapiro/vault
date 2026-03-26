@@ -242,9 +242,33 @@
               "icon": "lucide-file",
               "title": "2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive"
             }
+          },
+          {
+            "id": "8b25f0cae0957e09",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Tom Boris.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Tom Boris"
+            }
           }
         ],
-        "currentTab": 15
+        "currentTab": 16
       }
     ],
     "direction": "vertical"
@@ -419,8 +443,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "86a3e0933df53f5a",
+  "active": "8b25f0cae0957e09",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
+    "Tom Boris.md",
     "agent_tasks/2026/03/Week-4/2026-03-25-route-shortening-coverage-fixes.md",
     "agent_tasks/2026/03/Week-4/2026-03-24-si-group-interleave-control-presubmit-fixes.md",
     "agent_tasks/2026/03/Week-4/2026-03-24-route-shortening-pr-ci-failures-fix.md",
@@ -436,7 +462,6 @@
     "agents-change-log.md",
     "projects.md",
     "projects/parking-unparking-gear-augmentation.md",
-    "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-interleave-group-export-and-torchscript-gear-optional-fix.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-datamodule-materialization-comparison.md",
@@ -447,7 +472,6 @@
     "agent_tasks/2026/03/Week-3/2026-03-17-route-shortening-merge-audit.md",
     "agent_tasks/2026/03/Week-3/2026-03-17-parking-config-add-2026-5-11-release.md",
     "projects/fox-mitten.md",
-    "agent_tasks/2026/03/Week-3/2026-03-17-interleaved-deploy-legacy-td3-compat.md",
     "agent_tasks/2026/03/Week-3",
     "agent_tasks/2026/03/Week-2",
     "agent_tasks/2026/03",
