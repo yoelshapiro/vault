@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-29 — Interleaved model visibility in Foxglove + Databricks timeline mapping
+- Topic: trace Console active-model inference path for interleaved runs, identify Foxglove gap, and add transformed-MCAP support for interleaved event visibility.
+- Labels: #interleaving #foxglove #console #databricks #inference #model-episodes
+- Branch: `main`
+- PR: none
+- Change type: code + investigation
+- Areas: `wayve/frontends/console/`, `wayve/services/databricks_api/`, `wayve/services/foxglove_adaptor/gen2/`, `wayve/services/data/lakehouse/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-5/2026-03-29-foxglove-interleaved-model-topic]]: confirmed Console reads interleaved segments from Databricks-backed `raw__inference.model_episodes`, verified inference publishes `/robot/inference/interleaved_event`, added `InterleavedEventTransformer` so transformed MCAPs preserve model-switch events for Foxglove, and validated with `bazel test //wayve/services/foxglove_adaptor/gen2:py_test`.
+
 > #### 2026-03-25 — Route-shortening patch coverage improvements
 - Topic: increase patch coverage for route-shortening and parking-related code paths in routes, OTF datamodule plumbing, and parking deployment wrapper behavior.
 - Labels: #parking #route-shortening #coverage #tests #otf #deployment
