@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-31 — Parking augmentation design review doc for Wonjoon refactor PR
+- Topic: produce a design-first review document for parking augmentation refactor (`wonjoongoo/parking-new-data-aug`, PR #101237) covering architecture, modes, data contracts, augmentations, and review concerns.
+- Labels: #parking #design-review #augmentation #otf #wfm #pr-review
+- Branch: `wonjoongoo/parking-new-data-aug`
+- PR: #101237
+- Change type: docs/analysis
+- Areas: parking data pipeline design, config/migration design, visualization/readability for review
+- Changes:
+  - [[agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review]]: added a code-agnostic design review with Mermaid diagrams, existing-vs-proposed framing, required extended table contracts, mode/state logic, full augmentation catalog, and reviewer-style remarks for ambiguous decisions.
+
 > #### 2026-03-31 — Radar inference config propagation fix for SI deploy
 - Topic: fix radar inference config propagation so deployed Gen2 DMI input config preserves radar feature list and points-per-scan instead of defaulting to empty/zero.
 - Labels: #parking #pudo #radar #deploy #si #dmi #inference-config
