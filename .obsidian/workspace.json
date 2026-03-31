@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
+                "file": "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-03-20-parking-unparking-gear-augmentation-kickoff"
+              "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
             }
           }
         ],
@@ -493,10 +493,12 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/03/Week-5/2026-03-31-parking-pudo-radar-dmi-defaults-followup.md",
+    "agents-change-log.md",
+    "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
     "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/03/Week-5/2026-03-31-radar-inference-config-propagation-fix.md",
     "projects/parking-unparking-gear-augmentation.md",
-    "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
     "projects.md",
     "Untitled 1.md",
     "Untitled.md",
@@ -516,11 +518,9 @@
     "agent_tasks/2026/03/Week-4/2026-03-22-parking-wrapper-selection-and-preprocess-fix.md",
     "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
     "agent_tasks/2026/03/Week-4",
-    "agents-change-log.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-interleave-group-export-and-torchscript-gear-optional-fix.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-datamodule-materialization-comparison.md",
-    "projects/interleaving-models-in-parking-deployment-wrapper.md",
     "agent_tasks/2026/03/Week-3",
     "agent_tasks/2026/03/Week-2",
     "agent_tasks/2026/03",
