@@ -9,6 +9,16 @@
 ## 2026-03
 > [!note] 2026-03
 
+> #### 2026-03-31 — Radar inference config propagation fix for SI deploy
+- Topic: fix radar inference config propagation so deployed Gen2 DMI input config preserves radar feature list and points-per-scan instead of defaulting to empty/zero.
+- Labels: #parking #pudo #radar #deploy #si #dmi #inference-config
+- Branch: `main`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/lib/`, `wayve/ai/si/`
+- Changes:
+  - [[agent_tasks/2026/03/Week-5/2026-03-31-radar-inference-config-propagation-fix]]: extended `DeploymentConfig` and DMI input entry generation for radar fields, added policy_io load/save roundtrip support, added deploy-time fallback from `datamodule` radar settings for legacy sessions, and added focused regression tests.
+
 > #### 2026-03-29 — Interleaved model visibility in Foxglove + Databricks timeline mapping
 - Topic: trace Console active-model inference path for interleaved runs, identify Foxglove gap, and add transformed-MCAP support for interleaved event visibility.
 - Labels: #interleaving #foxglove #console #databricks #inference #model-episodes
