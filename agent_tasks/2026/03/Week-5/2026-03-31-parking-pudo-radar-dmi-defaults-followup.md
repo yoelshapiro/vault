@@ -38,4 +38,5 @@ Generated Gen2 inference config could carry empty radar feature list and `points
 
 ## Validation
 - `python -m compileall wayve/ai/lib/interfaces_v2.py wayve/ai/lib/test/test_interface_v2.py wayve/ai/si/deploy.py` passed.
-- Bazel targeted test run started but is still expensive after action-cache reset; final green status not yet confirmed in this note.
+- `bazel test //wayve/ai/lib:test_lib_py_test --test_arg=--cov-fail-under=0 --test_arg=-k --test_arg="test_create_input_entries_sets_default_radar_shape_and_features or test_create_input_entries_respects_custom_radar_shape_and_features"` passed.
+- Note: running the same target without `--cov-fail-under=0` fails the target-level coverage gate when only two tests are selected via `-k` (expected for narrow slices).
