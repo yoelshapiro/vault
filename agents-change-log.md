@@ -20,6 +20,16 @@
 - Changes:
   - [[agent_tasks/2026/04/Week-1/2026-04-02-gear-wrapper-rollback]]: restored legacy waypoint postprocessing for non-parking wrappers, kept/validated gear handling in parking and interleave paths, re-enabled interleave waypoint clamping with policy-gear precedence for parking outputs, and updated related tests (`lss`, interleave-control, safety wrapper).
 
+> #### 2026-04-02 — Training export defaults for interleave control
+- Topic: make training checkpoint export paths pass interleave-control flags explicitly so ingested models always export interleave metadata (parking vs driving group) without relying on deploy CLI.
+- Labels: #si #training #deployment #interleaving #parking #ingestion #tests
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: #102398
+- Change type: code
+- Areas: `wayve/ai/si/models/`, `wayve/ai/si/offline_rl/`, `wayve/ai/si/test/models/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-1/2026-04-02-training-interleave-control-defaults]]: updated SI training and offline-RL callback export paths to pass `enable_interleave_control=True` with parking-aware group selection, and added regression tests for `BcTrainingModule.to_deployable_model()` interleave-group defaults.
+
 ## 2026-03
 > [!note] 2026-03
 
