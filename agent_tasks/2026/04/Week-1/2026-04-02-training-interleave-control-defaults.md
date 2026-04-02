@@ -23,7 +23,7 @@ Ensure training-produced deployable models set interleave control only for parki
 - Added direct unit coverage for end-of-route helper in `wayve/ai/zoo/deployment/test/test_interleave_control_wrapper.py`:
   - threshold behavior around `END_OF_ROUTE_THRESHOLD` (below / boundary / above)
   - verifies `_is_end_of_route` ignores the third route-map channel.
-- Follow-up: moved base-wrapper-only constants/helper coverage into dedicated `wayve/ai/zoo/deployment/test/test_deployment_wrapper_base.py` and removed them from interleave-specific tests.
+- Follow-up: moved base-wrapper-only constants/helper coverage into existing deployment test suite `wayve/ai/si/test/models/test_deployment.py` and removed them from interleave-specific tests.
 
 ## Validation
 - `python -m py_compile wayve/ai/si/models/training.py wayve/ai/si/models/offline_rl.py wayve/ai/si/offline_rl/bc_rl_combined.py wayve/ai/si/test/models/test_training.py` (pass)
