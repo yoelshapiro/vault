@@ -20,9 +20,13 @@ Ensure training-produced deployable models set interleave control only for parki
 - Added regression tests in `wayve/ai/si/test/models/test_training.py`:
   - verifies driving exports do not pass interleave kwargs.
   - verifies parking export model sets interleave group to `"parking"`.
+- Added direct unit coverage for end-of-route helper in `wayve/ai/zoo/deployment/test/test_interleave_control_wrapper.py`:
+  - threshold behavior around `END_OF_ROUTE_THRESHOLD` (below / boundary / above)
+  - verifies `_is_end_of_route` ignores the third route-map channel.
 
 ## Validation
 - `python -m py_compile wayve/ai/si/models/training.py wayve/ai/si/models/offline_rl.py wayve/ai/si/offline_rl/bc_rl_combined.py wayve/ai/si/test/models/test_training.py` (pass)
+- `python -m py_compile wayve/ai/zoo/deployment/test/test_interleave_control_wrapper.py` (pass)
 - Bazel test execution was blocked by registry auth while fetching Azurite image:
   - `https://wayve.azurecr.io/oauth2/token?... repository:azure-storage/azurite:pull ...` returned `401 Unauthorized`.
 
