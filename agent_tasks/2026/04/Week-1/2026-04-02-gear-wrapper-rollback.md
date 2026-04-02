@@ -22,6 +22,7 @@ Also required:
 - Updated `_wrap_with_interleave_control` to:
   - clamp `policy_waypoints` using gear in interleave mode
   - preserve `base_output.policy_gear_position` when provided (parking-interleave path)
+  - use predicted policy gear (when available) for driving interleave forward-gear gating as well
   - validate `policy_gear_position` values when present
   - otherwise fall back to latest validated `vehicle_gear_position`
 - Preserved parking-wrapper gear input path (`vehicle_gear_position`) and parking-specific postprocessing.
@@ -32,6 +33,7 @@ Also required:
   - `wayve/ai/si/test/interfaces/test_lss_wrapper.py`
 - Updated interleave test to construct a valid base output with gear field:
   - `wayve/ai/zoo/deployment/test/test_interleave_control_wrapper.py`
+  - added regression test that driving interleave uses predicted gear for both handover decision and waypoint clamp
 - Updated safety wrapper test fixture to stop passing removed gear kwarg:
   - `wayve/ai/zoo/deployment/test/test_safety_wrapper.py`
 
