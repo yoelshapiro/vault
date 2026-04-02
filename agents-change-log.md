@@ -1,10 +1,24 @@
 # Codex Change Log — WayveCode
 
 ## Table of Contents
+- [2026-04](#2026-04)
 - [2026-03](#2026-03)
 - [2026-02](#2026-02)
 - [2026-01](#2026-01)
 - [2025-12](#2025-12)
+
+## 2026-04
+> [!note] 2026-04
+
+> #### 2026-04-02 — Rollback global gear wrapper plumbing to parking + interleave only
+- Topic: revert broad `vehicle_gear_position` input/output propagation from generic deployment wrappers while preserving incident-safe gear handling for parking and interleave control flows.
+- Labels: #si #deployment #interleaving #parking #gear #incident-hardening #tests
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: #102398
+- Change type: code
+- Areas: `wayve/ai/zoo/deployment/`, `wayve/ai/si/test/interfaces/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-1/2026-04-02-gear-wrapper-rollback]]: restored legacy waypoint postprocessing for non-parking wrappers, kept/validated gear handling in parking and interleave paths, re-enabled interleave waypoint clamping with policy-gear precedence for parking outputs, and updated related tests (`lss`, interleave-control, safety wrapper).
 
 ## 2026-03
 > [!note] 2026-03
