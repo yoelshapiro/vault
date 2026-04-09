@@ -1,9 +1,9 @@
 {
   "projects": [
     {
-      "name": "Zak PUDO Training Proposal",
-      "slug": "zak-pudo-training-proposal",
-      "path": "/home/borisindelman/git/vault/projects/zak-pudo-training-proposal.md",
+      "name": "Pin Location Augmentation",
+      "slug": "pin-location-augmentation",
+      "path": "/home/borisindelman/git/vault/projects/pin-location-augmentation.md",
       "status": "active",
       "phase": "Phase 1",
       "last_updated": "2026-04-09"
