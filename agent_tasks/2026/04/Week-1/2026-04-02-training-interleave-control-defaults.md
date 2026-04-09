@@ -20,6 +20,16 @@ Ensure training-produced deployable models set interleave control only for parki
 - Added regression tests in `wayve/ai/si/test/models/test_training.py`:
   - verifies driving exports do not pass interleave kwargs.
   - verifies parking export model sets interleave group to `"parking"`.
+- Addressed Becky PR comments:
+  - `wayve/ai/si/models/deployment.py`:
+    - require `deployment_config` when `enable_interleave_control=True` (fail fast).
+    - merged interleave-group/config synchronization into one readable conditional flow.
+    - updated docstring to explicitly state `deployment_config` is required for interleave control.
+  - `wayve/ai/si/models/training.py`:
+    - replaced `dict.fromkeys(...)->tuple(...)` with explicit ordered list construction + dedupe.
+  - Added focused tests:
+    - `wayve/ai/si/test/models/test_deployment.py`: interleave requires deployment config.
+    - `wayve/ai/si/test/models/test_training.py`: driving-controls key order + dedup for parking/behavior-control combinations.
 - Added direct unit coverage for end-of-route helper in `wayve/ai/zoo/deployment/test/test_interleave_control_wrapper.py`:
   - threshold behavior around `END_OF_ROUTE_THRESHOLD` (below / boundary / above)
   - verifies `_is_end_of_route` ignores the third route-map channel.
@@ -28,6 +38,7 @@ Ensure training-produced deployable models set interleave control only for parki
 ## Validation
 - `python -m py_compile wayve/ai/si/models/training.py wayve/ai/si/models/offline_rl.py wayve/ai/si/offline_rl/bc_rl_combined.py wayve/ai/si/test/models/test_training.py` (pass)
 - `python -m py_compile wayve/ai/zoo/deployment/test/test_interleave_control_wrapper.py` (pass)
+- `python -m py_compile wayve/ai/si/models/deployment.py wayve/ai/si/models/training.py wayve/ai/si/test/models/test_deployment.py wayve/ai/si/test/models/test_training.py` (pass)
 - Bazel test execution was blocked by registry auth while fetching Azurite image:
   - `https://wayve.azurecr.io/oauth2/token?... repository:azure-storage/azurite:pull ...` returned `401 Unauthorized`.
 
