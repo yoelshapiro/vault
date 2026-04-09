@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects.md",
+                "file": "projects/zak-pudo-training-proposal.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "projects"
+              "title": "zak-pudo-training-proposal"
             }
           }
         ],
@@ -475,8 +475,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -493,11 +492,11 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects.md",
     "agent_tasks/2026/04/Week-2/2026-04-09-zak-pudo-training-proposal-kickoff.md",
     "agent_tasks/2026/04/Week-2",
     "projects/zak-pudo-training-proposal.md",
     "projects/parking-unparking-gear-augmentation.md",
-    "projects.md",
     "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/04/Week-1/2026-04-02-training-interleave-control-defaults.md",
     "agent_tasks/2026/04/Week-1/2026-04-02-gear-wrapper-rollback.md",
