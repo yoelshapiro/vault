@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
+                "file": "projects.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
+              "title": "projects"
             }
           }
         ],
@@ -493,6 +493,10 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects/zak-pudo-training-proposal.md",
+    "projects/parking-unparking-gear-augmentation.md",
+    "projects.md",
+    "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/04/Week-1/2026-04-02-training-interleave-control-defaults.md",
     "agent_tasks/2026/04/Week-1/2026-04-02-gear-wrapper-rollback.md",
     "agent_tasks/2026/04/Week-1",
@@ -500,10 +504,7 @@
     "agent_tasks/2026/03/Week-5/2026-03-31-parking-pudo-radar-dmi-defaults-followup.md",
     "agents-change-log.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
-    "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/03/Week-5/2026-03-31-radar-inference-config-propagation-fix.md",
-    "projects/parking-unparking-gear-augmentation.md",
-    "projects.md",
     "Untitled 1.md",
     "Untitled.md",
     "Tom Boris.md",
@@ -522,7 +523,6 @@
     "agent_tasks/2026/03/Week-4/2026-03-22-parking-wrapper-selection-and-preprocess-fix.md",
     "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
     "agent_tasks/2026/03/Week-4",
-    "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3",
     "agent_tasks/2026/03/Week-2",
     "agent_tasks/2026/03",
