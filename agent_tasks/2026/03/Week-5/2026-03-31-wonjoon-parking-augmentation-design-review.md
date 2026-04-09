@@ -1,273 +1,304 @@
-# Parking Augmentation Design Review (Wonjoon Proposal)
+# Parking Augmentation Review Deck (Wonjoon PR)
 
-## Intent
-This design introduces a dedicated parking augmentation stage in the data pipeline so parking and unparking behavior can be trained explicitly, instead of being weakly inferred from generic driving signals.
+## Slide 1: What this deck does
+This is a guided walkthrough of the parking augmentation design in Wonjoon’s PR, from the simplest possible approach to the full proposed system.
 
-The proposal expands parking from a single boolean gate into a richer maneuver context:
-- explicit parking vs unparking mode signaling,
-- parking timing/distance metadata,
-- optional stopping intent label,
-- parking goal pose and policy path targets,
-- targeted gear/path augmentations for standstill and transition moments.
+Goal:
+- show what problem each step solves,
+- show which method(s) implement that step,
+- show why each step was necessary.
 
-## Existing Baseline (Before This Proposal)
-Before this work, parking handling was narrow:
-- parking context was essentially a binary parking-window signal,
-- stopping intent had limited coupling to parking context,
-- no explicit unparking mode label,
-- no dedicated parking goal pose target,
-- no policy-path sampling tailored to parking goals,
-- no standstill-focused parking/unparking augmentations.
+---
 
-This caused two gaps:
-1. Parking-specific edge cases (standstill, P/N transitions, reverse-out) were underrepresented.
-2. The model had weaker supervision for the distinction between “approaching parking”, “already parked”, and “actively unparking”.
+## Slide 2: The simplest possible parking solution
+### Basic idea
+Label a sample as parking if neutral gear appears soon in lookahead.
 
-## What Is Added
-### 1) New parking interface outputs
-The augmentation stage now produces a structured parking context:
-- `parking_mode` (active parking context for this sample)
-- `unparking_mode` (active unparking context)
+### Methods
+- `_compute_parking_mode(...)`
+- `insert_parking_data(...)`
+
+### Why this is attractive
+- very small implementation surface,
+- easy to reason about,
+- low coupling to the rest of the pipeline.
+
+### Limitation
+It only answers one question: “parking mode on/off?”
+
+```mermaid
+flowchart LR
+    A[gear + speed in lookahead] --> B[_compute_parking_mode]
+    B --> C[parking_mode bool]
+    C --> D[insert_parking_data writes label]
+```
+
+---
+
+## Slide 3: Problem 1 with the simple approach
+### What breaks
+A single boolean cannot separate:
+- approaching parking,
+- currently parked,
+- exiting parking (unparking).
+
+This collapses distinct behaviors into one supervision signal.
+
+### Design need
+Introduce explicit maneuver state, not just one gate.
+
+---
+
+## Slide 4: Expansion 1 - richer maneuver state
+### Methods
+- `ParkingModeResult` (state container)
+- `add_parking_mode(...)`
+- `_augment_parked_mode(...)`
+
+### What was added
+- `parking_mode`
+- `unparking_mode`
+- internal `parked_mode`
 - `parking_start_time_delta`
 - `parking_end_time_delta`
 - `parking_goal_distance`
-- optional `parking_pose` and `parking_pose_gt`
-- optional `policy_path`
-- optional `stopping_mode`
 
-### 2) Unified parking configuration object
-Parking behavior is controlled by a single nested parking config object rather than scattered flat fields.
+### Why it matters
+Now the model can distinguish “start parking” from “leave parking”.
 
-It includes:
-- detection thresholds (lookahead/time/distance/min duration),
-- gear/sign handling strategy,
-- standstill and unparking augmentations,
-- optional stopping-mode generation,
-- goal dropout,
-- policy-path sampling controls.
+```mermaid
+stateDiagram-v2
+    [*] --> Drive
+    Drive --> ParkingApproach: entry within threshold
+    ParkingApproach --> Parked: inside neutral segment
+    Parked --> Unparking: sampled exit / valid path
+    Parked --> ParkingApproach: stay-parked training branch
+    Unparking --> Drive: exit maneuver complete
+```
 
-### 3) Pipeline-level architecture change
-Parking is now a staged augmentation block with internal scratch state, enabling:
-- deterministic stage ordering,
-- reuse of computed signals across stages,
-- optional features without repeated table scans.
+---
 
-### 4) OTF + WFM integration parity
-Both OTF and WFM pipelines can invoke the same parking block with dynamic origin/lookahead behavior, reducing divergence between training stacks.
+## Slide 5: Problem 2 - raw gear is noisy around standstill and shifts
+### What breaks
+Raw gear can be delayed/noisy. Parking boundaries become unstable.
 
-### 5) Config migration path
-Legacy flat parking config fields are migrated to the nested parking config object (config version bump), preserving backward compatibility for older experiments.
+### Design need
+Create a cleaner gear signal for parking logic.
 
-## Required Extended Table/Data Contracts
-To enable the full parking pipeline, the table must provide (directly or via standard preprocessing):
+---
 
-### Mandatory signals
-- Origin index for the sample.
-- Timestamp series.
-- Gear direction series.
-- Speed series.
-- Cumulative distance (or equivalent traveled-distance series).
-- Vehicle and policy index mappings for output alignment.
+## Slide 6: Expansion 2 - gear normalization and parking scratch state
+### Methods
+- `fill_parking_scratch_table(...)`
+- `_reconstruct_gear_from_speed(...)`
+- `_build_expanded_gear(...)`
 
-### Required for dynamic lookahead behavior
-- Inferred per-sample frequency (or equivalent way to compute lookahead indices from seconds).
+### What was added
+- speed-derived D/R recovery,
+- long P/N segment preservation,
+- neutral-segment expansion across near-standstill frames,
+- scratch-table staging so downstream steps share consistent derived signals.
 
-### Required for pose/path-dependent parking outputs
-- Odometry source context.
-- Path pose/curvature (for fallback path sampling), or sufficient pose data to reconstruct relative parking trajectory.
-
-### Optional but used when available
-- Indicator light state (for stopping-mode hazard rule).
-- Run identifier (for structured skip/drop diagnostics).
-
-## Mode Semantics
-### Conceptual states
-The design uses three maneuver concepts:
-- `parking_mode`: sample belongs to a parking maneuver context.
-- `parked_mode` (internal decision state): origin lies inside a neutral parked segment.
-- `unparking_mode`: sample belongs to parking-exit context.
-
-### State priority
-Detection and augmentation operate in this order:
-1. Detect if currently parked.
-2. Else detect upcoming parking entry (time/distance thresholds).
-3. Else detect unparking after prior parked segment.
-4. Apply parked-origin branching augmentation (stay parked vs unpark) based on path feasibility and configured probability.
+### Why it matters
+Parking state transitions become more physically aligned, less CAN-noise driven.
 
 ```mermaid
 flowchart TD
-    A[Sample at origin] --> B{Inside parked segment?}
-    B -- Yes --> C[parked_mode=true]
-    B -- No --> D{Upcoming parked entry within thresholds?}
-    D -- Yes --> E[parking_mode=true]
-    D -- No --> F{After parked segment with exit pattern?}
-    F -- Yes --> G[unparking_mode=true]
-    F -- No --> H[No parking context]
-
-    C --> I{Enough future path and sampled as unpark?}
-    I -- Yes --> G
-    I -- No --> E
+    A[raw gear + speed + timestamps] --> B[_reconstruct_gear_from_speed]
+    B --> C[_build_expanded_gear]
+    C --> D[fill_parking_scratch_table]
+    D --> E[stable gear/time/dist context for all later steps]
 ```
 
-## End-to-End Augmentation Pipeline
+---
+
+## Slide 7: Problem 3 - parking needs geometric targets, not only mode labels
+### What breaks
+Boolean mode labels do not tell the model where to end up.
+
+### Design need
+Provide parking-goal pose + policy path supervision.
+
+---
+
+## Slide 8: Expansion 3 - goal pose and policy path
+### Methods
+- `compute_policy_path(...)`
+- `_sample_policy_path_from_poses(...)`
+
+### What was added
+- `parking_pose` target,
+- `policy_path` sampled in fixed distance steps,
+- fallback from additional parking poses to path poses,
+- clamping around parking goal distance.
+
+### Why it matters
+The model gets geometry to execute parking maneuvers, not just mode flags.
+
 ```mermaid
 flowchart LR
-    T[(Table + base data)] --> S1[Resolve indices + gather parking signals]
-    S1 --> S2[Compute maneuver state + parking metadata]
-    S2 --> S3{Stopping mode enabled?}
-    S3 -- Yes --> S4[Assign stopping mode]
-    S3 -- No --> S5
-    S4 --> S5{Policy path enabled?}
-    S5 -- Yes --> S6[Sample policy path + parking pose]
-    S5 -- No --> S7
-    S6 --> S7[Unparking gear augmentation]
-    S7 --> S8{Strip leading standstill enabled?}
-    S8 -- Yes --> S9[Re-time and re-sample policy trajectory]
-    S8 -- No --> S10
-    S9 --> S10[Clamp policy at first neutral]
-    S10 --> S11{Standstill gear augmentation enabled?}
-    S11 -- Yes --> S12[Randomize vehicle gear at standstill]
-    S11 -- No --> S13
-    S12 --> S13{Goal dropout enabled?}
-    S13 -- Yes --> S14[Save GT goal + optional dropout]
-    S13 -- No --> O
-    S14 --> O[(Final augmented sample)]
+    A[pose trajectory candidates] --> B[_sample_policy_path_from_poses]
+    B --> C[policy_path]
+    B --> D[parking_pose]
+    C --> E[training target]
+    D --> E
 ```
 
-## Augmentation Catalogue and Rationale
-### A) Gear reconstruction from speed (optional)
-Goal: reduce sensitivity to noisy raw gear signals.
+---
 
-Rationale:
-- derive D/R from signed speed dynamics,
-- preserve only sufficiently long neutral segments,
-- backfill unknown spans for continuity.
+## Slide 9: Problem 4 - stationary prefixes dominate parking windows
+### What breaks
+Long standstill prefixes weaken motion-learning signal and can conflict with transition timing.
 
-Why this approach:
-- robust to CAN irregularities without requiring external labels.
+### Design need
+Re-time policy targets around movement onset while avoiding conflicts with pre-intervention augmentation.
 
-Alternative considered:
-- trust raw gear entirely.
-- rejected because parking detection quality becomes highly dependent on gear-signal hygiene.
+---
 
-### B) Neutral-segment expansion around near-standstill
-Goal: include shift-lag periods where vehicle is effectively in parking transition but gear reporting is late/early.
+## Slide 10: Expansion 4 - standstill handling and policy clamping
+### Methods
+- `strip_leading_standstill(...)`
+- `_pre_intervention_would_fire(...)`
+- `clamp_policy_at_first_neutral(...)`
 
-Why:
-- better alignment between physical behavior and semantic mode boundary.
+### What was added
+- skip/guard logic when pre-intervention would overwrite same targets,
+- trajectory retiming from movement onset,
+- clamp future policy frames after first neutral in parking context.
 
-### C) Parked-origin branching
-Goal: teach both “remain parked” and “start unparking” behavior from parked-origin samples.
+### Why it matters
+Targets stay physically coherent and less biased toward idle behavior.
 
-Why:
-- parked origins are ambiguous supervision points in real data.
-- controlled branching broadens supervision without needing extra manual labels.
+---
 
-### D) Unparking gear augmentation
-Goal: improve gear-target robustness immediately after parked states.
+## Slide 11: Problem 5 - gear supervision still has confounders
+### What breaks
+At standstill and parked-origin exits, gear labels can remain brittle.
 
-Why:
-- initial unparking frames are often standstill-heavy and under-informative.
-- augmentation injects plausible D/R alternatives while preserving scenario context.
+### Design need
+Add targeted gear augmentations specifically for parking/unparking contexts.
 
-### E) Leading standstill stripping
-Goal: reduce long stationary prefixes so policy trajectory starts near movement onset.
+---
 
-Why:
-- avoids over-training on idle pre-motion frames.
-- improves path/speed signal density around actual maneuver execution.
+## Slide 12: Expansion 5 - gear augmentations for parking edge cases
+### Methods
+- `augment_unparking_gear(...)`
+- `augment_standstill_gear(...)`
 
-### F) Clamp policy trajectory at first neutral
-Goal: keep downstream policy targets physically consistent once parking neutral is reached.
+### What was added
+- unparking branch augmentation of segment/current gear,
+- standstill-time vehicle-gear randomization in parking mode.
 
-Why:
-- prevents contradictory post-stop policy targets after parking completion.
+### Why it matters
+Reduces spurious coupling like “standstill always means one gear class”.
 
-### G) Standstill gear randomization during parking
-Goal: break brittle correlation between standstill and specific gear class.
+---
 
-Why:
-- prevents overfitting to a single standstill-gear pattern.
+## Slide 13: Problem 6 - parking goal may be missing/noisy in production
+### Design need
+Train for robustness to missing goal signal.
 
-### H) Parking goal dropout
-Goal: make goal-conditioned behavior robust to missing/invalid goal targets.
+### Expansion 6 method
+- `apply_parking_goal_dropout(...)`
 
-Why:
-- production conditions can have incomplete goal signal availability.
+### What was added
+- keep pre-dropout `parking_pose_gt`,
+- optionally drop `parking_pose` to NaN by probability.
 
-### I) Stopping mode assignment
-Goal: provide stop-type supervision (`PUDO` vs `PARK`) with parking-context dependence.
+### Why it matters
+Model is less brittle when goal signal is incomplete.
 
-Current policy:
-- in parking context: hazard-based mapping,
-- outside parking context: randomized PUDO/PARK to discourage misuse.
+---
 
-## Why This Design, Not Simpler Alternatives
-### Option 1: Keep only binary parking_mode
-Rejected because it cannot express parked-vs-unparking supervision, goal targets, or transition timing.
+## Slide 14: Optional stopping intent branch
+### Methods
+- `set_stopping_mode(...)`
 
-### Option 2: Add labels but no augmentation
-Rejected because naturally logged parking transitions are sparse and skewed; model would still underfit critical edge cases.
+### What was added
+- optional `stopping_mode` generation:
+  - parking context: hazard-informed,
+  - non-parking context: randomized PUDO/PARK in current design.
 
-### Option 3: Hard deterministic parked behavior (never branch)
-Rejected because parked origins represent both “stay parked” and “exit” futures; deterministic behavior creates bias.
+### Why it matters
+Adds stop-style conditioning pathway tied to parking/stopping behavior.
 
-### Option 4: Separate OTF and WFM parking implementations
-Rejected to avoid semantic drift and duplicated maintenance burden.
+---
 
-## Reviewer Remarks (Ambiguities / Risks)
-### Reviewer remark 1: parked vs parking state overlap is semantically confusing
-The design allows “parked-origin samples that are forced into parking_mode for training.”
-This is useful operationally, but terminology can mislead because `parked_mode` and `parking_mode` are no longer mutually intuitive.
+## Slide 15: Full Wonjoon pipeline (final form)
+### Orchestrator
+- `insert_parking_data(...)`
 
-Suggested refinement:
-- define explicit training intent enum (e.g., `PARK_STAY`, `PARK_ENTRY`, `PARK_EXIT`) to avoid overloaded booleans.
+### Ordered stages
+1. initialize scratch
+2. `fill_parking_scratch_table`
+3. `add_parking_mode`
+4. optional `set_stopping_mode`
+5. optional `compute_policy_path`
+6. `augment_unparking_gear`
+7. optional `strip_leading_standstill`
+8. `clamp_policy_at_first_neutral`
+9. optional `augment_standstill_gear`
+10. optional `apply_parking_goal_dropout`
+11. drop scratch
 
-### Reviewer remark 2: unparking detection currently emphasizes reverse-out exits
-This can miss valid forward-out unparking behavior (head-first exits).
+```mermaid
+flowchart LR
+    A[(table,data)] --> B[init scratch]
+    B --> C[fill_parking_scratch_table]
+    C --> D[add_parking_mode]
+    D --> E{enable_stopping_mode}
+    E -- yes --> F[set_stopping_mode]
+    E -- no --> G
+    F --> G{policy_path enabled}
+    G -- yes --> H[compute_policy_path]
+    G -- no --> I
+    H --> I[augment_unparking_gear]
+    I --> J{strip_leading_standstill}
+    J -- yes --> K[strip_leading_standstill]
+    J -- no --> L
+    K --> L[clamp_policy_at_first_neutral]
+    L --> M{augment_standstill_gear}
+    M -- yes --> N[augment_standstill_gear]
+    M -- no --> O
+    N --> O{goal dropout}
+    O -- yes --> P[apply_parking_goal_dropout]
+    O -- no --> Q
+    P --> Q[drop scratch]
+    Q --> R[(augmented output)]
+```
 
-Suggested refinement:
-- support both forward and reverse exit signatures with confidence scoring.
+---
 
-### Reviewer remark 3: random stopping mode outside parking may introduce synthetic label noise
-Randomization protects against shortcut learning, but it can blur genuine drive-level stop intent semantics.
+## Slide 16: Integration beyond parking.py
+### Pipeline wiring
+- OTF integration: `make_driving_datapipe(...)` / OTF parking config plumbing
+- WFM integration: `_add_parking_data(...)` in WFM pipe
 
-Suggested refinement:
-- add an explicit “unavailable/unknown” stop-intent class instead of forced random assignment.
+### Config expansion
+- schema-level parking options expanded (parking mode config),
+- nested parking config adoption + config migration path.
 
-### Reviewer remark 4: goal-dropout should remain safe when policy-path generation is disabled
-Goal-dropout logic depends on parking-goal pose availability; this dependency should be explicit in design to avoid silent runtime coupling.
+### Why this matters
+The proposal is not just a local heuristic; it becomes a configurable subsystem used consistently in both training paths.
 
-Suggested refinement:
-- always initialize goal tensors independently of policy-path enablement.
+---
 
-### Reviewer remark 5: standstill stripping and other time-axis augmentations can conflict with pre-intervention logic
-The design includes safeguards, but ordering semantics are subtle and easy to regress.
+## Slide 17: Reviewer remarks (the critical ones)
+1. `parked_mode` vs `parking_mode` semantics can still confuse readers.
+2. Unparking detection currently favors reverse-out signatures.
+3. Random non-parking stop-mode assignment may inject synthetic label noise.
+4. Augmentation ordering is powerful but easy to regress without strict contract tests.
 
-Suggested refinement:
-- formalize augmentation precedence in one policy table and enforce it with pipeline-level contract tests.
+---
 
-### Reviewer remark 6: gear reconstruction assumptions differ by platform
-Some platforms rely on sign-by-gear while others reconstruct gear from speed; this is valid but easy to misconfigure.
+## Slide 18: Final takeaway
+Wonjoon’s PR is best understood as a sequence of targeted expansions:
+- start from simple parking detection,
+- add state semantics,
+- stabilize gear context,
+- add geometric targets,
+- harden transition-time augmentation,
+- add robustness features,
+- package it as a configurable, cross-pipeline parking subsystem.
 
-Suggested refinement:
-- encode platform defaults centrally and validate incompatible settings early.
-
-## Rollout and Validation Strategy
-### What should be validated before broad adoption
-- Mode distribution shifts (parking/parked/unparking proportions).
-- Gear label consistency around standstill and maneuver boundaries.
-- Policy-path/parking-goal availability rates.
-- Path resampling stability near run boundaries.
-- Regression checks for non-parking driving quality.
-
-### Suggested acceptance criteria
-- No increase in sample-drop rate from parking stage.
-- Stable or improved parking-exit behavior in offline eval slices.
-- No degradation in generic driving policy metrics.
-- Visualization parity: parking context and gear trajectories are inspectable in the parking-focused plotter.
-
-## Summary
-Wonjoon’s proposal is a meaningful expansion from binary parking detection to a full parking maneuver supervision framework, with explicit mode semantics, richer targets, and targeted augmentations for real-world parking edge cases.
-
-The architecture is directionally strong, especially the unified config and cross-pipeline integration. The main review concerns are semantic clarity of modes, forward-unparking coverage, and tighter contracts around augmentation ordering and goal/dropout dependencies.
+That is why the final design looks much larger than the original heuristic: each layer directly addresses a failure mode of the simpler layer before it.
