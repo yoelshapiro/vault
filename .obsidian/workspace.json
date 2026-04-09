@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/zak-pudo-training-proposal.md",
+                "file": "projects.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "zak-pudo-training-proposal"
+              "title": "projects"
             }
           }
         ],
@@ -490,8 +490,9 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "117f440063e12be8",
+  "active": "a6cdcc3493cdeb21",
   "lastOpenFiles": [
+    "projects/pin-location-augmentation.md",
     "projects.md",
     "agent_tasks/2026/04/Week-2/2026-04-09-zak-pudo-training-proposal-kickoff.md",
     "agent_tasks/2026/04/Week-2",
@@ -521,7 +522,6 @@
     "agent_tasks/2026/03/Week-4/2026-03-23-split-parking-prs-route-shortening-and-config.md",
     "agent_tasks/2026/03/Week-4/2026-03-23-remove-end-of-route-blackout-option.md",
     "agent_tasks/2026/03/Week-4/2026-03-23-bc-config-migration-v30-conflict-resolution.md",
-    "agent_tasks/2026/03/Week-4/2026-03-22-parking-wrapper-selection-and-preprocess-fix.md",
     "agent_tasks/2026/03/Week-4",
     "agent_tasks/2026/03/Week-3",
     "agent_tasks/2026/03/Week-2",
