@@ -1,6 +1,6 @@
-# Parking Augmentation Review Deck (Wonjoon PR)
+# Parking Augmentation Design Walkthrough (Wonjoon PR)
 
-## Slide 1: What this deck does
+## What this walkthrough covers
 This is a guided walkthrough of the parking augmentation design in Wonjoon’s PR, from the simplest possible approach to the full proposed system.
 
 Goal:
@@ -10,7 +10,7 @@ Goal:
 
 ---
 
-## Slide 2: The simplest possible parking solution
+## The simplest possible parking solution
 ### Basic idea
 Label a sample as parking if neutral gear appears soon in lookahead.
 
@@ -35,7 +35,7 @@ flowchart LR
 
 ---
 
-## Slide 3: Problem 1 with the simple approach
+## Problem 1 with the simple approach
 ### What breaks
 A single boolean cannot separate:
 - approaching parking,
@@ -49,7 +49,7 @@ Introduce explicit maneuver state, not just one gate.
 
 ---
 
-## Slide 4: Expansion 1 - richer maneuver state
+## Expansion 1 - richer maneuver state
 ### Methods
 - `ParkingModeResult` (state container)
 - `add_parking_mode(...)`
@@ -78,7 +78,7 @@ stateDiagram-v2
 
 ---
 
-## Slide 5: Problem 2 - raw gear is noisy around standstill and shifts
+## Problem 2 - raw gear is noisy around standstill and shifts
 ### What breaks
 Raw gear can be delayed/noisy. Parking boundaries become unstable.
 
@@ -87,7 +87,7 @@ Create a cleaner gear signal for parking logic.
 
 ---
 
-## Slide 6: Expansion 2 - gear normalization and parking scratch state
+## Expansion 2 - gear normalization and parking scratch state
 ### Methods
 - `fill_parking_scratch_table(...)`
 - `_reconstruct_gear_from_speed(...)`
@@ -112,7 +112,7 @@ flowchart TD
 
 ---
 
-## Slide 7: Problem 3 - parking needs geometric targets, not only mode labels
+## Problem 3 - parking needs geometric targets, not only mode labels
 ### What breaks
 Boolean mode labels do not tell the model where to end up.
 
@@ -121,7 +121,7 @@ Provide parking-goal pose + policy path supervision.
 
 ---
 
-## Slide 8: Expansion 3 - goal pose and policy path
+## Expansion 3 - goal pose and policy path
 ### Methods
 - `compute_policy_path(...)`
 - `_sample_policy_path_from_poses(...)`
@@ -146,7 +146,7 @@ flowchart LR
 
 ---
 
-## Slide 9: Problem 4 - stationary prefixes dominate parking windows
+## Problem 4 - stationary prefixes dominate parking windows
 ### What breaks
 Long standstill prefixes weaken motion-learning signal and can conflict with transition timing.
 
@@ -155,7 +155,7 @@ Re-time policy targets around movement onset while avoiding conflicts with pre-i
 
 ---
 
-## Slide 10: Expansion 4 - standstill handling and policy clamping
+## Expansion 4 - standstill handling and policy clamping
 ### Methods
 - `strip_leading_standstill(...)`
 - `_pre_intervention_would_fire(...)`
@@ -171,7 +171,7 @@ Targets stay physically coherent and less biased toward idle behavior.
 
 ---
 
-## Slide 11: Problem 5 - gear supervision still has confounders
+## Problem 5 - gear supervision still has confounders
 ### What breaks
 At standstill and parked-origin exits, gear labels can remain brittle.
 
@@ -180,7 +180,7 @@ Add targeted gear augmentations specifically for parking/unparking contexts.
 
 ---
 
-## Slide 12: Expansion 5 - gear augmentations for parking edge cases
+## Expansion 5 - gear augmentations for parking edge cases
 ### Methods
 - `augment_unparking_gear(...)`
 - `augment_standstill_gear(...)`
@@ -194,7 +194,7 @@ Reduces spurious coupling like “standstill always means one gear class”.
 
 ---
 
-## Slide 13: Problem 6 - parking goal may be missing/noisy in production
+## Problem 6 - parking goal may be missing/noisy in production
 ### Design need
 Train for robustness to missing goal signal.
 
@@ -210,7 +210,7 @@ Model is less brittle when goal signal is incomplete.
 
 ---
 
-## Slide 14: Optional stopping intent branch
+## Optional stopping intent branch
 ### Methods
 - `set_stopping_mode(...)`
 
@@ -224,7 +224,7 @@ Adds stop-style conditioning pathway tied to parking/stopping behavior.
 
 ---
 
-## Slide 15: Full Wonjoon pipeline (final form)
+## Full Wonjoon pipeline (final form)
 ### Orchestrator
 - `insert_parking_data(...)`
 
@@ -269,7 +269,7 @@ flowchart LR
 
 ---
 
-## Slide 16: Integration beyond parking.py
+## Integration beyond parking.py
 ### Pipeline wiring
 - OTF integration: `make_driving_datapipe(...)` / OTF parking config plumbing
 - WFM integration: `_add_parking_data(...)` in WFM pipe
@@ -283,7 +283,7 @@ The proposal is not just a local heuristic; it becomes a configurable subsystem 
 
 ---
 
-## Slide 17: Reviewer remarks (the critical ones)
+## Additional thoughts (the critical ones)
 1. `parked_mode` vs `parking_mode` semantics can still confuse readers.
 2. Unparking detection currently favors reverse-out signatures.
 3. Random non-parking stop-mode assignment may inject synthetic label noise.
@@ -291,7 +291,7 @@ The proposal is not just a local heuristic; it becomes a configurable subsystem 
 
 ---
 
-## Slide 18: Final takeaway
+## Final takeaway
 Wonjoon’s PR is best understood as a sequence of targeted expansions:
 - start from simple parking detection,
 - add state semantics,
