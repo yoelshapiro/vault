@@ -2,7 +2,7 @@
 
 | Project                                                                                                         | Status   | Phase   | Last updated | no  |
 | --------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------------ | --- |
-| [Zak PUDO Training Proposal](projects/zak-pudo-training-proposal)                                              | active   | Phase 1 | 2026-04-09   | no  |
+| [Pin Location Augmentation](projects/pin-location-augmentation)                                                | active   | Phase 1 | 2026-04-09   | no  |
 | [Parking unparking gear augmentation](projects/parking-unparking-gear-augmentation)                            | active   | Phase 1 | 2026-03-20   | no  |
 | [Fox Mitten](projects/fox-mitten)                                                                              | active   | Phase 1 | 2026-03-11   | no  |
 | [Parking end-of-route polyline shortening augmentation](projects/parking-end-of-route-polyline-shortening-augmentation) | active   | Phase 1 | 2026-02-24   | no  |
