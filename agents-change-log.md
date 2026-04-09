@@ -18,7 +18,7 @@
 - Change type: docs/planning
 - Areas: `projects/`, `projects.md`, `projects/projects.json`, `projects/active-project.txt`, `agent_tasks/2026/04/Week-2/`
 - Changes:
-  - [[agent_tasks/2026/04/Week-2/2026-04-09-zak-pudo-training-proposal-kickoff]]: created and activated project `zak-pudo-training-proposal`, drafted v1 proposal on top of `parking_config.py` release path (`pudo_bc_D26_3_3_datamodule_cfg` + `parking_bc_release_2026_5_11_cfg` + `parking_bc_train_release_2026_5_11`), and recorded Slack thread access blocker (`invalid_auth_token`) with a pending exact Zak-summary update.
+  - [[agent_tasks/2026/04/Week-2/2026-04-09-zak-pudo-training-proposal-kickoff]]: created and activated project `zak-pudo-training-proposal`, drafted v1 proposal on top of `parking_config.py` release path (`pudo_bc_D26_3_3_datamodule_cfg` + `parking_bc_release_2026_5_11_cfg` + `parking_bc_train_release_2026_5_11`), initially recorded Slack thread access blocker (`invalid_auth_token`), then finalized Zak summary/proposal details from user-provided thread text.
 
 > #### 2026-04-02 — Rollback global gear wrapper plumbing to parking + interleave only
 - Topic: revert broad `vehicle_gear_position` input/output propagation from generic deployment wrappers while preserving incident-safe gear handling for parking and interleave control flows.
