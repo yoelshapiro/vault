@@ -23,7 +23,7 @@ Thread URL:
 
 ## Constraints / blockers
 - Slack MCP read failed with `invalid_auth_token` when trying to read the requested thread.
-- Added a clearly marked placeholder/provisional Zak summary in the project page and flagged it for update once Slack access is restored (or thread text is provided).
+- User provided full thread text directly; project note has been updated to use this as source of truth.
 
 ## Proposal baseline captured
 - Keep first iteration on top of `parking/training/pudo` release config path.
@@ -32,5 +32,22 @@ Thread URL:
   - keep weights fixed and change only dataset root if thread dictates data refresh.
 - Preserve current model/loss structure for first pass to reduce confounders.
 
+## Zak thread summary captured (from user-provided text)
+- First classifier-based PUDO pin-validity labels were integrated and run over recent PUDO runs.
+- Artifacts:
+  - `pudo_pin_valid_before.npz`
+  - `pudo_pin_valid_after.npz`
+- Experimental integration pointers captured from thread:
+  - `wayve/ai/experimental/dataset/annotations.py`
+  - `wayve/ai/experimental/dataset/single_run.py`
+  - `wayve/ai/experimental/configs/mcv_new_phase2.yml`
+- Key concerns identified by Zak:
+  - Event count initially looked too low (~10.8k) and might miss PUDO events.
+  - Distribution too concentrated in short windows (<20m), uncertain if data/label/model issue.
+- After new QM labels and classifier retrain:
+  - total events increased to 13,272
+  - "after" distribution became less skewed (more 25m samples)
+- Additional thread note: hazard-light signal cleanup likely helps and should be considered as a separate ablation.
+
 ## Result
-Project scaffolding is complete and active; proposal v1 skeleton is ready pending exact Slack thread extraction for the final Zak summary.
+Project scaffolding is complete and active; proposal v1 now includes exact thread-derived Zak summary and a concrete SI port plan.
