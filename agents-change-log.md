@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-14 — Zak latest work concepts project (meeting translation)
+- Topic: create a new vault project to translate Zak's latest research meeting into a complete concept glossary and practical follow-up framing.
+- Labels: #research #multimodality #latent-actions #influence-analysis #project-kickoff #docs
+- Branch: none
+- PR: none
+- Change type: docs/planning
+- Areas: `projects/`, `projects.md`, `projects/projects.json`, `projects/active-project.txt`, `agent_tasks/2026/04/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-14-zak-latest-work-concepts-project]]: created and activated `zak-latest-work-concepts`, documented the full concept map from the 2026-04-13 discussion (K-head routing, mode smoothing, discrete-grid tradeoffs, influence-analysis link), and captured concrete validation questions.
+
 > #### 2026-04-09 — Zak PUDO training proposal project kickoff
 - Topic: create a new vault project from a Slack thread request and draft an initial parking/PUDO training proposal aligned to current `parking/training/pudo` config wiring.
 - Labels: #parking #pudo #training #planning #project-kickoff
@@ -1029,4 +1039,3 @@
 - Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/test/test_parking_unit.py`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-14-si-parking-route-shortening-entry-index]]: store parking entry lookahead index in SI path so route-shortening anchor works consistently.
-
