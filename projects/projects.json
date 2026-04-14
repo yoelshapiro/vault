@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Zak latest work concepts",
+      "slug": "zak-latest-work-concepts",
+      "path": "/home/borisindelman/git/vault/projects/zak-latest-work-concepts.md",
+      "status": "active",
+      "phase": "Phase 1",
+      "last_updated": "2026-04-14"
+    },
+    {
       "name": "Pin Location Augmentation",
       "slug": "pin-location-augmentation",
       "path": "/home/borisindelman/git/vault/projects/pin-location-augmentation.md",

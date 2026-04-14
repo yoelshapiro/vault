@@ -2,6 +2,7 @@
 
 | Project                                                                                                         | Status   | Phase   | Last updated | no  |
 | --------------------------------------------------------------------------------------------------------------- | -------- | ------- | ------------ | --- |
+| [Zak latest work concepts](projects/zak-latest-work-concepts)                                                  | active   | Phase 1 | 2026-04-14   | no  |
 | [Pin Location Augmentation](projects/pin-location-augmentation)                                                | active   | Phase 1 | 2026-04-09   | no  |
 | [Parking unparking gear augmentation](projects/parking-unparking-gear-augmentation)                            | active   | Phase 1 | 2026-03-20   | no  |
 | [Fox Mitten](projects/fox-mitten)                                                                              | active   | Phase 1 | 2026-03-11   | no  |
