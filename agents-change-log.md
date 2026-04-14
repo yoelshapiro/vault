@@ -1049,3 +1049,5 @@
 - Areas: `wayve/ai/si/configs/parking/parking_config.py`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-14-parking-config-release-arches]]: added parking model/mode variants for `2026.6.12` and `2026.6.14` based on baseline release architecture pattern; validated config compiles.
+
+- 2026-04-14 | Route shortening PR test coverage | branch: boris/03-23-park-route-shortening-v2 | note: agent_tasks/2026/04/Week-3/2026-04-14-route-shortening-test-coverage.md
