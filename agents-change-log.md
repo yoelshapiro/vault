@@ -1019,3 +1019,14 @@
 - Areas: `wayve/ai/zoo/data/parking.py`, `wayve/ai/si/test/test_config_inputs/reference_bc.yaml`, `wayve/ai/si/test/test_config_inputs/reference_bc_alpha2.yaml`
 - Changes:
   - [[agent_tasks/2026/03/Week-4/2026-03-24-route-shortening-pr-ci-failures-fix]]: debugged Buildkite #434402 failures with `$obs-buildkite-jobs`, fixed parking boundary logic, and updated baseline BC config snapshots for new route-shortening OTF defaults.
+
+#### 2026-04-14 — SI parking path route-shortening compatibility
+- Topic: SI parking route-shortening entry-index wiring
+- Labels: #parking #si #route-shortening #datapipe
+- Branch: `parking/training/pudo`
+- PR: none
+- Change type: code fix + unit tests
+- Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/test/test_parking_unit.py`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-14-si-parking-route-shortening-entry-index]]: store parking entry lookahead index in SI path so route-shortening anchor works consistently.
+
