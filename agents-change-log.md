@@ -1039,3 +1039,13 @@
 - Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/test/test_parking_unit.py`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-14-si-parking-route-shortening-entry-index]]: store parking entry lookahead index in SI path so route-shortening anchor works consistently.
+
+#### 2026-04-14 — Parking config: add 2026.6.x release architectures
+- Topic: Parking BC release architecture parity with baseline release configs
+- Labels: #parking #si #config #release
+- Branch: `parking/training/pudo`
+- PR: none
+- Change type: config update
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-14-parking-config-release-arches]]: added parking model/mode variants for `2026.6.12` and `2026.6.14` based on baseline release architecture pattern; validated config compiles.
