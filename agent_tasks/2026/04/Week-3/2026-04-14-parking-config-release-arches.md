@@ -44,3 +44,12 @@ Both are aligned to baseline Dec25 L10 release architecture pattern:
 
 ## Notes
 - No commit made.
+
+## Additional Update
+- Added derived datamodule alias `parking_bc_D26_3_6_datamodule` by reusing `parking_pudo_bc_datamodule_D26_3_cfg` and overriding top-level nested group ratios:
+  - driving: 0.86
+  - pudo: 0.0
+  - park: 0.15
+  - unpudo: 0.0
+  - unpark: 0.10
+- Implemented via `_override_nested_group_ratios(...)` in `parking_config.py` and registered with `data_store[type[OtfDrivingDataModule]](...)`.
