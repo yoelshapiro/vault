@@ -39,3 +39,7 @@ On branch `03-20-si-group-interleave-control-support`, simplify interleave gear 
   - `//wayve/ai/zoo/deployment:test_deployment_py_test` (filtered to interleave/codegen) passed.
   - `//wayve/ai/zoo/deployment:test_deployment_py_lint_flake8` passed.
   - `//wayve/ai/zoo/deployment:test_deployment_py_lint_pylint` passed.
+- TorchScript compatibility follow-up:
+  - Removed `isinstance(base_output, DrivingOutputWithGearOutput)` runtime check from `_wrap_with_interleave_control`.
+  - Parking path now directly reads `base_output.policy_gear_position`.
+  - Updated missing-gear regression test to assert `AttributeError` on missing `policy_gear_position`.
