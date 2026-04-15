@@ -28,3 +28,9 @@ Fix swapped naming/mix assignment between `parking_bc_datamodule_D26_3_6_cfg` an
 
 ## Notes
 - Commit: `8cc32aaec63`
+
+## Follow-up update
+- Commit: `0dba67afe8c`
+- Normalized top-level override totals to `1.0` as requested:
+  - `parking_bc_datamodule_D26_3_6_cfg`: driving set to `0.75` (`0.75 + 0.15 + 0.10 = 1.0`).
+  - `pudo_bc_datamodule_D26_3_6_cfg`: driving set to `0.89` and pudo corrected to `0.07` (`0.89 + 0.07 + 0.02 + 0.02 = 1.0`).
