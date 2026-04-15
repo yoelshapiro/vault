@@ -27,3 +27,15 @@ On branch `03-20-si-group-interleave-control-support`, simplify interleave gear 
   - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_pylint --test_output=errors`
 - Known unrelated branch issue observed:
   - `//wayve/ai/zoo/deployment:test_deployment_mypy` fails in `test_behavior_customization.py` due to existing typing mismatch for `driving_controls_keys=(999,)`.
+
+## Follow-up alignment (same day)
+- Aligned implementation to Boris' edited approach:
+  - `_wrap_with_interleave_control` now uses `base_output` type directly:
+    - parking group requires `DrivingOutputWithGearOutput` and takes `base_output.policy_gear_position`
+    - driving group uses latest input `vehicle_gear_position`
+  - `DrivingOutputWithGearOutput` moved from `deployment_wrapper.py` to `io.py` and imported where needed.
+  - codegen interleave wrapper call fixed to avoid malformed call when `driving_controls` is absent.
+- Validation:
+  - `//wayve/ai/zoo/deployment:test_deployment_py_test` (filtered to interleave/codegen) passed.
+  - `//wayve/ai/zoo/deployment:test_deployment_py_lint_flake8` passed.
+  - `//wayve/ai/zoo/deployment:test_deployment_py_lint_pylint` passed.
