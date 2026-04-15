@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-15 — Interleave gear source simplified by interleave group
+- Topic: simplify interleave gear-source selection so driving uses input gear and parking uses model-output gear.
+- Labels: #si #interleaving #deployment #parking #gear #codegen #tests
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/zoo/deployment/`, `wayve/ai/zoo/deployment/test/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-15-interleave-gear-source-by-group]]: updated wrapper/runtime and codegen to select gear by interleave group (driving=input gear, parking=output gear), added fast-fail when parking output gear is missing, and aligned interleave wrapper tests to the new contract.
+
 > #### 2026-04-14 — Zak latest work concepts project (meeting translation)
 - Topic: create a new vault project to translate Zak's latest research meeting into a complete concept glossary and practical follow-up framing.
 - Labels: #research #multimodality #latent-actions #influence-analysis #project-kickoff #docs
