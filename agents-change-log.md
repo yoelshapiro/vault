@@ -1081,3 +1081,13 @@
 - Areas: `wayve/ai/si/configs/parking/parking_config.py`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-15-parking-d26-3-6-datamodule-mix-fix]]: corrected mapping between parking/pudo D26_3_6 datamodule aliases and fixed `0.2 -> 0.02` for `unpudo`/`unpark` in the pudo-focused config.
+
+#### 2026-04-15 — Route-shortening jitter options wired through parking config
+- Topic: Add parking distance/stop jitter controls for route-shortening robustness
+- Labels: #parking #si #route-shortening #augmentation
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: #102690
+- Change type: code update + tests
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/zoo/data/test/test_parking.py`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-15-route-shortening-jitter-config-wiring]]: added config knobs for detection/stop jitter and wired them end-to-end into route shortening.
