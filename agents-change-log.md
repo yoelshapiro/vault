@@ -1061,3 +1061,13 @@
   - [[agent_tasks/2026/04/Week-3/2026-04-14-parking-config-release-arches]]: added parking model/mode variants for `2026.6.12` and `2026.6.14` based on baseline release architecture pattern; validated config compiles.
 
 - 2026-04-14 | Route shortening PR test coverage | branch: boris/03-23-park-route-shortening-v2 | note: agent_tasks/2026/04/Week-3/2026-04-14-route-shortening-test-coverage.md
+
+#### 2026-04-15 — Parking CODEOWNERS precedence and membership update
+- Topic: Move parking CODEOWNERS rules below broad SI rule and add parking owners
+- Labels: #parking #codeowners #ownership
+- Branch: `boris/parking-codeowners-order`
+- PR: #106396
+- Change type: metadata/config update
+- Areas: `docs/CODEOWNERS`, `infrastructure/azure/terraform/github_org/teams/prod/team-members/parking-owners.csv`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-15-parking-codeowners-precedence-and-team-update]]: moved parking CODEOWNERS block after broad SI rule and added `ilai-wayve` + `kozdogru` to parking owners.
