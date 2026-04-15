@@ -1071,3 +1071,13 @@
 - Areas: `docs/CODEOWNERS`, `infrastructure/azure/terraform/github_org/teams/prod/team-members/parking-owners.csv`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-15-parking-codeowners-precedence-and-team-update]]: moved parking CODEOWNERS block after broad SI rule and added `ilai-wayve` + `kozdogru` to parking owners.
+
+#### 2026-04-15 — Parking D26_3_6 datamodule naming/weight fix
+- Topic: Fix swapped parking/pudo D26_3_6 datamodule mixes and decimal typo
+- Labels: #parking #si #config #bugfix
+- Branch: `boris/fix-parking-d26-naming-weights`
+- PR: #106451
+- Change type: config bug fix
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-15-parking-d26-3-6-datamodule-mix-fix]]: corrected mapping between parking/pudo D26_3_6 datamodule aliases and fixed `0.2 -> 0.02` for `unpudo`/`unpark` in the pudo-focused config.
