@@ -1116,3 +1116,4 @@
 - Update: moved `manual_gemini_from_run` to standalone package `//wayve/ai/parking/classifiers:manual_gemini_from_run` and validated multimodal image+temporal-clip run on `fme10010/...cd9496c5...`.
 - Update: exported reusable skill bundle to `/home/borisindelman/git/ParingSkills/skills/parking-gemini-run-classifier/` with script copy + usage docs; measured end-to-end runtime `63.00s`.
 - Update: fixed exact-timestamp retrieval in `manual_gemini_from_run` by using MCAP range fetch (`fetch_video_between_timestamps`) for `image_with_temporal_clip`; validated exact timestamp `1776196459133289` for run `fme10003/...96f7e596...`.
+- Update: changed temporal-context image fallback to closest available frame within threshold (`--closest-image-threshold-ms`, default 300ms) and validated on `fme10003/...96f7e596...` at `1776196452713317` with selected frame delta `19.976ms`.

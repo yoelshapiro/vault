@@ -196,3 +196,27 @@ Outcome:
 - Clip duration: `10.000000`
 - Image: `/tmp/manual_gemini_fme10003_1776196459133289_exact_mcap/fme10003__2026-04-14--19-28-09--gen2-av-96f7e596-4cac-4da1-b3b0-a9c02a595444_1776196459133289_left-forward_from_clip_mid.png`
 - Classification: `driving_other` (`confidence=0.9`)
+
+## 2026-04-16 update: closest-frame fallback within threshold (replacing midpoint fallback)
+
+### Code update
+- `image_with_temporal_clip` fallback changed from clip-midpoint image to closest available frame within threshold.
+- New CLI arg:
+  - `--closest-image-threshold-ms` (default `300`)
+- New output metadata:
+  - `combined_image_source`
+  - `combined_image_timestamp_unixus`
+  - `combined_image_delta_ms`
+  - `exact_image_available`
+
+### Validation on requested timestamp
+Run:
+- `run_id`: `fme10003/2026-04-14--19-28-09--gen2-av-96f7e596-4cac-4da1-b3b0-a9c02a595444`
+- `timestamp_unixus`: `1776196452713317`
+- `closest_image_threshold_ms`: `300`
+
+Result:
+- exact frame unavailable at target timestamp
+- closest frame selected at `1776196452733293` (`delta_ms=19.976`)
+- clip + closest image classification succeeded (`driving_other`, confidence `0.9`)
+- output: `/tmp/manual_gemini_fme10003_1776196452713317_exact_mcap_v3/classification_result.json`
