@@ -1114,3 +1114,4 @@
 - Update: extended `manual_gemini_from_run` to support 5-second MP4 clip generation and Gemini video classification (`mode=video|both`), validated on `fme10010/...cd9496c5...` with `parking` output from both image and video paths.
 - Update: added multimodal `image_with_temporal_clip` mode (single Gemini query with timestamp image + centered `-5s/+5s` clip context) and validated on run `fme10010/...cd9496c5...` (`parking`, confidence `0.99`).
 - Update: moved `manual_gemini_from_run` to standalone package `//wayve/ai/parking/classifiers:manual_gemini_from_run` and validated multimodal image+temporal-clip run on `fme10010/...cd9496c5...`.
+- Update: exported reusable skill bundle to `/home/borisindelman/git/ParingSkills/skills/parking-gemini-run-classifier/` with script copy + usage docs; measured end-to-end runtime `63.00s`.
