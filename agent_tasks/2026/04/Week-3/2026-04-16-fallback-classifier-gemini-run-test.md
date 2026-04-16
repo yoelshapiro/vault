@@ -52,3 +52,31 @@ Saved outputs:
 ## Notes
 - This path now provides a direct, repo-local way to classify by run ID without needing external Gemini CLI wrappers.
 - If needed, prompt/model can be overridden via CLI flags in this new utility.
+
+## 2026-04-16 update: video clip classification support
+
+### Code changes
+- Extended `manual_gemini_from_run.py` to support:
+  - `mode`: `images`, `video`, or `both`
+  - 5-second MP4 clip generation from run video stream
+  - Gemini classification from video (`video/mp4`) in addition to image inputs
+- Added build dependency updates for new video path imports.
+
+### Validation command
+```bash
+bazel run //wayve/ai/fallback/classifiers/slow_lane_classifier:manual_gemini_from_run -- \
+  --run-id fme10010/2026-04-15--19-10-20--gen2-av-cd9496c5-ad6e-4dc5-a227-8d9a06b3e089 \
+  --timestamp-unixus 1776280230000000 \
+  --mode both \
+  --video-camera left-forward \
+  --video-duration-seconds 5 \
+  --output-dir /tmp/manual_gemini_fme10010_both
+```
+
+### Validation outcome
+- Generated clip:
+  - `/tmp/manual_gemini_fme10010_both/clip_left-forward_1776280230000000.mp4`
+  - duration verified: `5.000000` seconds
+- Classification outputs:
+  - `classification_from_images.label = parking` (`confidence=0.95`)
+  - `classification_from_video.label = parking` (`confidence=0.99`)
