@@ -325,3 +325,26 @@ Outcome:
   - `illegal_spot_type`: `zigzag`
   - `stationary_at_frame`: `true`
   - `reasoning`: vehicle parked on zigzag lines approaching a pedestrian crossing
+
+## 2026-04-16 update: second strict `back-surround` illegal parking run
+
+Run:
+- `run_id`: `fme20018/2026-03-09--16-03-10--gen2-av-50a81282-e624-496f-b6cb-f973a3324698`
+- `timestamp_unixus`: `1773074102187202`
+- camera: `back-surround`
+- strict fallback disabled
+
+Outcome:
+- `video_clip_camera`: `back-surround`
+- Clip: `/tmp/manual_gemini_fme20018_1773074102187202_illegal_back_surround_strict/clip_back-surround_1773074102187202.mp4`
+- Midpoint image: `/tmp/manual_gemini_fme20018_1773074102187202_illegal_back_surround_strict/fme20018__2026-03-09--16-03-10--gen2-av-50a81282-e624-496f-b6cb-f973a3324698_1773074102187202_back-surround_from_clip_mid.png`
+- JSON: `/tmp/manual_gemini_fme20018_1773074102187202_illegal_back_surround_strict/classification_result.json`
+- Gemini result:
+  - `label`: `not_illegal_parked`
+  - `confidence`: `1.0`
+  - `illegal_spot_type`: `none`
+  - `stationary_at_frame`: `false`
+  - `reasoning`: vehicle is driving in the lane of traffic
+
+Note:
+- The command returned a non-zero shell status only because `/workspace/WayveCode/.bazelpostscript` emitted `You: unbound variable` after the successful run output.
