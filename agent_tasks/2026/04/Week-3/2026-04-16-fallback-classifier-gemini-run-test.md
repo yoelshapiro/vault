@@ -348,3 +348,49 @@ Outcome:
 
 Note:
 - The command returned a non-zero shell status only because `/workspace/WayveCode/.bazelpostscript` emitted `You: unbound variable` after the successful run output.
+
+## 2026-04-16 update: parking-feasibility prompt variant
+
+### Code update
+- Moved Gemini prompt definitions into `wayve/ai/parking/classifiers/manual_gemini_prompts.py`.
+- Added prompt variant:
+  - `--image-with-clip-prompt-variant parking_feasibility`
+- This variant separates:
+  - `vehicle_state_at_frame`
+  - `parking_feasibility`
+- Added prompt-selection unit coverage in:
+  - `wayve/ai/parking/classifiers/test/test_manual_gemini_prompts.py`
+- Synced the skill copy and docs under `/home/borisindelman/git/ParingSkills/skills/parking-gemini-run-classifier/`.
+
+### Validation
+- `bazel test //wayve/ai/parking/classifiers/...` passed after the refactor.
+
+### Example 1: back-surround feasibility result
+Run:
+- `run_id`: `fme20018/2026-03-09--16-03-10--gen2-av-50a81282-e624-496f-b6cb-f973a3324698`
+- `timestamp_unixus`: `1773074102187202`
+- camera: `back-surround`
+- variant: `parking_feasibility`
+
+Outcome:
+- JSON: `/tmp/manual_gemini_fme20018_1773074102187202_parking_feasibility_back_surround/classification_result.json`
+- Gemini result:
+  - `vehicle_state_at_frame`: `driving_other`
+  - `parking_feasibility`: `not_feasible`
+  - `illegal_or_blocking_feature`: `bike_lane`
+  - `feasibility_reason`: `bike lane`
+
+### Example 2: back-surround feasibility result
+Run:
+- `run_id`: `fme20009/2026-03-12--11-02-59--gen2-av-2c601596-0554-4985-89a5-10976a753bef`
+- `timestamp_unixus`: `1773314468490087`
+- camera: `back-surround`
+- variant: `parking_feasibility`
+
+Outcome:
+- JSON: `/tmp/manual_gemini_fme20009_1773314468490087_parking_feasibility_back_surround/classification_result.json`
+- Gemini result:
+  - `vehicle_state_at_frame`: `driving_other`
+  - `parking_feasibility`: `not_feasible`
+  - `illegal_or_blocking_feature`: `live_lane`
+  - `feasibility_reason`: location is in a live lane
