@@ -1101,3 +1101,13 @@
 - Areas: `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/zoo/data/test/test_parking.py`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-15-route-shortening-jitter-config-wiring]]: added config knobs for detection/stop jitter and wired them end-to-end into route shortening.
+
+#### 2026-04-16 — Fallback classifiers Gemini run classification utility
+- Topic: Reuse `fallback/classifiers` tooling for run-id image fetch + Gemini classification
+- Labels: #fallback-classifiers #gemini #vision #robotaxi #debug
+- Branch: `parking/training/pudo`
+- PR: none
+- Change type: tooling + run validation
+- Areas: `wayve/ai/fallback/classifiers/slow_lane_classifier/BUILD`, `wayve/ai/fallback/classifiers/slow_lane_classifier/manual_gemini_from_run.py`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test]]: added `manual_gemini_from_run` bazel target and validated classification on run `fme10010/2026-04-15--19-10-20--gen2-av-cd9496c5-ad6e-4dc5-a227-8d9a06b3e089`.
