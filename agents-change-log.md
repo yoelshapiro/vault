@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-16 — Gemini CLI photo classifier skill for Fox Mitten
+- Topic: add a reusable local Codex skill for Gemini CLI image classification with parking and robotaxi pull-over prompt templates.
+- Labels: #fox-mitten #gemini-cli #skills #pudo #parking #classification
+- Branch: none
+- PR: none
+- Change type: tooling/docs
+- Areas: `~/.codex/skills/gemini-cli-photo-classifier/`, `agent_tasks/2026/04/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-16-gemini-cli-photo-classifier-skill]]: created a new local skill with headless Gemini CLI workflow, strict JSON output schema, parking and pull-over classification templates, env checks, and `npx` fallback guidance.
+
 > #### 2026-04-15 — Interleave gear source simplified by interleave group
 - Topic: simplify interleave gear-source selection so driving uses input gear and parking uses model-output gear.
 - Labels: #si #interleaving #deployment #parking #gear #codegen #tests
