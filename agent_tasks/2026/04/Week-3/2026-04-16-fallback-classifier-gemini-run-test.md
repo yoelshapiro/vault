@@ -80,3 +80,38 @@ bazel run //wayve/ai/fallback/classifiers/slow_lane_classifier:manual_gemini_fro
 - Classification outputs:
   - `classification_from_images.label = parking` (`confidence=0.95`)
   - `classification_from_video.label = parking` (`confidence=0.99`)
+
+## 2026-04-16 update: image + temporal clip multimodal query (`-5s/+5s`)
+
+### Code changes
+- Extended `manual_gemini_from_run.py` with mode:
+  - `image_with_temporal_clip`
+- Added centered temporal clip support around query timestamp:
+  - `context_seconds_each_side` (default `5.0`), producing ~10s clip
+  - clip seek starts at `(timestamp_offset - context_seconds_each_side)`
+- Added single Gemini multimodal request path that sends:
+  - still image at query timestamp
+  - temporal clip around that same timestamp
+- Added output keys:
+  - `combined_image_path`, `combined_image_camera`
+  - `classification_from_image_with_temporal_clip`
+
+### Validation command
+```bash
+bazel run //wayve/ai/fallback/classifiers/slow_lane_classifier:manual_gemini_from_run -- \
+  --run-id fme10010/2026-04-15--19-10-20--gen2-av-cd9496c5-ad6e-4dc5-a227-8d9a06b3e089 \
+  --timestamp-unixus 1776280230000000 \
+  --mode image_with_temporal_clip \
+  --video-camera left-forward \
+  --context-seconds-each-side 5 \
+  --output-dir /tmp/manual_gemini_fme10010_image_temporal
+```
+
+### Validation outcome
+- Generated clip:
+  - `/tmp/manual_gemini_fme10010_image_temporal/clip_left-forward_1776280230000000.mp4`
+  - duration verified: `10.000000` seconds
+- Gemini multimodal output:
+  - `classification_from_image_with_temporal_clip.label = parking`
+  - `confidence = 0.99`
+  - key temporal cue indicates the vehicle remained stationary in the clip.
