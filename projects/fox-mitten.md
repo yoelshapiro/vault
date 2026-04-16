@@ -76,3 +76,5 @@
     - `/robot/control/dbw_command` (`DriveByWireCommand`: `acceleration_mpss`, `gear_command`)
     - `/robot/control/controller_state` (`TrajectoryControllerStateV2`: internal acceleration-related fields)
     - `/robot/vehicle_driver/vehicle_state` (`VehicleStateV2`: `drive_position`, `accelerator_pedal_pct`)
+- 2026-04-16 repo-native classifier update: added `wayve/ai/fallback/classifiers/slow_lane_classifier/manual_gemini_from_run.py` + bazel target `manual_gemini_from_run` to fetch run images with existing `auto_labeler.load_images` fallback and classify with Gemini.
+- 2026-04-16 run test: `fme10010/2026-04-15--19-10-20--gen2-av-cd9496c5-ad6e-4dc5-a227-8d9a06b3e089` classified as `parking` (`confidence=0.95`) using side-camera frames at timestamps `1776280220000000` and `1776280230000000`.
