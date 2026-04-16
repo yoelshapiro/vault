@@ -115,3 +115,38 @@ bazel run //wayve/ai/fallback/classifiers/slow_lane_classifier:manual_gemini_fro
   - `classification_from_image_with_temporal_clip.label = parking`
   - `confidence = 0.99`
   - key temporal cue indicates the vehicle remained stationary in the clip.
+
+## 2026-04-16 update: relocated standalone utility to parking/classifiers
+
+### Code move
+- Moved standalone utility from fallback slow-lane package to parking package:
+  - from: `wayve/ai/fallback/classifiers/slow_lane_classifier/manual_gemini_from_run.py`
+  - to: `wayve/ai/parking/classifiers/manual_gemini_from_run.py`
+- Added new BUILD package:
+  - `wayve/ai/parking/classifiers/BUILD`
+- Removed temporary target wiring from:
+  - `wayve/ai/fallback/classifiers/slow_lane_classifier/BUILD`
+
+### New target
+```bash
+//wayve/ai/parking/classifiers:manual_gemini_from_run
+```
+
+### Validation command
+```bash
+bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
+  --run-id fme10010/2026-04-15--19-10-20--gen2-av-cd9496c5-ad6e-4dc5-a227-8d9a06b3e089 \
+  --timestamp-unixus 1776280230000000 \
+  --mode image_with_temporal_clip \
+  --video-camera left-forward \
+  --context-seconds-each-side 5 \
+  --output-dir /tmp/manual_gemini_fme10010_image_temporal_parking_pkg
+```
+
+### Validation outcome
+- Output JSON:
+  - `/tmp/manual_gemini_fme10010_image_temporal_parking_pkg/classification_result.json`
+- Clip duration:
+  - `10.000000` seconds
+- Combined label:
+  - `parking` (`confidence=0.95`)
