@@ -220,3 +220,37 @@ Result:
 - closest frame selected at `1776196452733293` (`delta_ms=19.976`)
 - clip + closest image classification succeeded (`driving_other`, confidence `0.9`)
 - output: `/tmp/manual_gemini_fme10003_1776196452713317_exact_mcap_v3/classification_result.json`
+
+## 2026-04-16 update: frame-anchored unparking prompt variant
+
+### Code update
+- Added a dedicated `unparking` prompt variant to `wayve/ai/parking/classifiers/manual_gemini_from_run.py` for `mode=image_with_temporal_clip`.
+- New CLI arg:
+  - `--image-with-clip-prompt-variant general|unparking`
+- The `unparking` prompt now explicitly instructs Gemini to:
+  - classify the still image timestamp, not a later state in the clip
+  - state whether motion occurs `before|at|after|none` relative to the frame in question
+  - avoid collapsing “starts moving later” into `driving_other` at the queried frame
+- Synced the updated script copy and usage docs into `/home/borisindelman/git/ParingSkills/skills/parking-gemini-run-classifier/`.
+
+### Validation on exact user timestamp
+Command:
+```bash
+bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
+  --run-id fme10003/2026-04-14--19-28-09--gen2-av-96f7e596-4cac-4da1-b3b0-a9c02a595444 \
+  --timestamp-unixus 1776196452713317 \
+  --mode image_with_temporal_clip \
+  --image-with-clip-prompt-variant unparking \
+  --video-camera left-forward \
+  --context-seconds-each-side 5 \
+  --output-dir /tmp/manual_gemini_fme10003_1776196452713317_unparking_prompt
+```
+
+Outcome:
+- Camera: `left-forward`
+- Output: `/tmp/manual_gemini_fme10003_1776196452713317_unparking_prompt/classification_result.json`
+- Label changed from `driving_other` to `parking`
+- Returned temporal reasoning correctly anchored motion after the frame:
+  - `motion_relative_to_frame`: `after`
+  - `temporal_timeline`: vehicle stationary before and at the still image, starts moving after
+  - `reasoning`: the queried frame was still parked/stationary
