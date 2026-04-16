@@ -163,3 +163,36 @@ bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
 ### Timing snapshot (end-to-end)
 - Timed command: `//wayve/ai/parking/classifiers:manual_gemini_from_run` with `mode=image_with_temporal_clip`.
 - Result: `real_seconds=63.00`, `user_seconds=25.71`, `sys_seconds=12.17`, `max_rss_kb=1422416`.
+
+## 2026-04-16 update: exact-timestamp media fetch fix (no run-start fallback)
+
+### Root cause
+- Previous path depended on console-style blob directory discovery (`fetch_video_approximate`) and fallback image fetches.
+- For run `fme10003/...96f7e596...` at timestamp `1776196459133289`, that path failed with:
+  - `No video directory found in []`
+  - `cv2_read_failed`
+
+### Fix implemented
+- Updated `wayve/ai/parking/classifiers/manual_gemini_from_run.py` for `mode=image_with_temporal_clip` to:
+  - fetch clip bytes using `fetch_video_between_timestamps(...)` across `[timestamp-5s, timestamp+5s]`
+  - write local MP4 clip from MCAP frame ranges
+  - extract midpoint frame from the clip as the still image input
+- This avoids the run-start video URL approximation path for this mode.
+
+### Validation on exact user timestamp
+Command:
+```bash
+bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
+  --run-id fme10003/2026-04-14--19-28-09--gen2-av-96f7e596-4cac-4da1-b3b0-a9c02a595444 \
+  --timestamp-unixus 1776196459133289 \
+  --mode image_with_temporal_clip \
+  --video-camera left-forward \
+  --context-seconds-each-side 5 \
+  --output-dir /tmp/manual_gemini_fme10003_1776196459133289_exact_mcap
+```
+
+Outcome:
+- Clip: `/tmp/manual_gemini_fme10003_1776196459133289_exact_mcap/clip_left-forward_1776196459133289.mp4`
+- Clip duration: `10.000000`
+- Image: `/tmp/manual_gemini_fme10003_1776196459133289_exact_mcap/fme10003__2026-04-14--19-28-09--gen2-av-96f7e596-4cac-4da1-b3b0-a9c02a595444_1776196459133289_left-forward_from_clip_mid.png`
+- Classification: `driving_other` (`confidence=0.9`)
