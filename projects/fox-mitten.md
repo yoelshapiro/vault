@@ -66,6 +66,7 @@
 
 ## Notes
 - Initial project scope provided by Boris on 2026-03-11.
+- 2026-04-16 tooling update: added local Codex skill `gemini-cli-photo-classifier` under `~/.codex/skills/` for basic photo classification via Gemini CLI, including parking and pull-over JSON prompt templates.
 - 2026-03-11 investigation: MCAP reading entry points and PUDO-relevant signals identified.
   - Topic listing/readers:
     - `wayve/robot/tools/mcap_utils/read_mcap_topics.py`
