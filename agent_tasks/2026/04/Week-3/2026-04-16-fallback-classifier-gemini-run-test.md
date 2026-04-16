@@ -150,3 +150,16 @@ bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
   - `10.000000` seconds
 - Combined label:
   - `parking` (`confidence=0.95`)
+
+## 2026-04-16 update: exported standalone skill bundle to ParingSkills
+
+### Export location
+- `/home/borisindelman/git/ParingSkills/skills/parking-gemini-run-classifier/`
+
+### Exported files
+- `manual_gemini_from_run.py` (copied from `wayve/ai/parking/classifiers/`)
+- `SKILL.md` (usage, prerequisites, timed command)
+
+### Timing snapshot (end-to-end)
+- Timed command: `//wayve/ai/parking/classifiers:manual_gemini_from_run` with `mode=image_with_temporal_clip`.
+- Result: `real_seconds=63.00`, `user_seconds=25.71`, `sys_seconds=12.17`, `max_rss_kb=1422416`.
