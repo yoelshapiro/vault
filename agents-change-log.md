@@ -1112,3 +1112,4 @@
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test]]: added `manual_gemini_from_run` bazel target and validated classification on run `fme10010/2026-04-15--19-10-20--gen2-av-cd9496c5-ad6e-4dc5-a227-8d9a06b3e089`.
 - Update: extended `manual_gemini_from_run` to support 5-second MP4 clip generation and Gemini video classification (`mode=video|both`), validated on `fme10010/...cd9496c5...` with `parking` output from both image and video paths.
+- Update: added multimodal `image_with_temporal_clip` mode (single Gemini query with timestamp image + centered `-5s/+5s` clip context) and validated on run `fme10010/...cd9496c5...` (`parking`, confidence `0.99`).
