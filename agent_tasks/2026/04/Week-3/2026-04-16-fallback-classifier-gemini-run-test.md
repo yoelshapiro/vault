@@ -284,3 +284,44 @@ Outcome:
 - error from media lookup: `key__cameras__back_backward__video_file_name`
 - final failure: `RuntimeError: Could not fetch a temporal video clip from any camera`
 - this is the correct behavior under strict-camera mode; the tool no longer falls back to a different camera silently
+
+## 2026-04-16 update: support `back-surround` in shared dataset loaders
+
+### Code update
+- Fixed the shared dataset loader path to accept cameras that exist only as `ReferenceFrame` values, not legacy `CameraPosition` values.
+- Updated:
+  - `wayve/ai/datasets/flyte/column_selector.py`
+  - `wayve/ai/datasets/common/data_loading_utils.py`
+- This specifically unblocked `back-surround` for MCAP image/clip fetches used by `manual_gemini_from_run`.
+- Added regression coverage in:
+  - `wayve/ai/datasets/common/test/test_data_loading_utils.py`
+
+### Validation
+- `bazel test //wayve/ai/parking/classifiers/...` passed.
+- The targeted new dataset test function passed inside the package run, but the direct `//wayve/ai/datasets/common:py_test` target still exits non-zero because that target enforces a package-wide 75% coverage floor unrelated to this change.
+
+### Back-surround illegal parking run
+Command:
+```bash
+bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
+  --run-id fme20018/2026-03-08--17-59-51--gen2-av-8ed0bb08-d612-4887-9bce-e46f1c5b8205 \
+  --timestamp-unixus 1772994892945000 \
+  --mode image_with_temporal_clip \
+  --video-camera back-surround \
+  --no-allow-video-camera-fallback \
+  --context-seconds-each-side 5 \
+  --image-with-clip-prompt "$(cat /tmp/illegal_parking_prompt.txt)" \
+  --output-dir /tmp/manual_gemini_fme20018_1772994892945000_illegal_back_surround_strict
+```
+
+Outcome:
+- `video_clip_camera`: `back-surround`
+- Clip path: `/tmp/manual_gemini_fme20018_1772994892945000_illegal_back_surround_strict/clip_back-surround_1772994892945000.mp4`
+- Midpoint image: `/tmp/manual_gemini_fme20018_1772994892945000_illegal_back_surround_strict/fme20018__2026-03-08--17-59-51--gen2-av-8ed0bb08-d612-4887-9bce-e46f1c5b8205_1772994892945000_back-surround_from_clip_mid.png`
+- JSON: `/tmp/manual_gemini_fme20018_1772994892945000_illegal_back_surround_strict/classification_result.json`
+- Gemini result:
+  - `label`: `illegal_parked`
+  - `confidence`: `0.95`
+  - `illegal_spot_type`: `zigzag`
+  - `stationary_at_frame`: `true`
+  - `reasoning`: vehicle parked on zigzag lines approaching a pedestrian crossing
