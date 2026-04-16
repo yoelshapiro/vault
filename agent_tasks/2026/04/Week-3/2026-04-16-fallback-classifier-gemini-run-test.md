@@ -254,3 +254,33 @@ Outcome:
   - `motion_relative_to_frame`: `after`
   - `temporal_timeline`: vehicle stationary before and at the still image, starts moving after
   - `reasoning`: the queried frame was still parked/stationary
+
+## 2026-04-16 update: strict single-camera clip mode for illegal parking prompt
+
+### Code update
+- Added `allow_camera_fallback` plumbing to the standalone classifier clip fetch path.
+- New CLI flag:
+  - `--no-allow-video-camera-fallback`
+- This prevents `image_with_temporal_clip` from silently switching away from the requested camera when that camera has no clip media.
+
+### Illegal parking prompt run
+Prompt written to:
+- `/tmp/illegal_parking_prompt.txt`
+
+Strict run:
+```bash
+bazel run //wayve/ai/parking/classifiers:manual_gemini_from_run -- \
+  --run-id fme20018/2026-03-08--17-59-51--gen2-av-8ed0bb08-d612-4887-9bce-e46f1c5b8205 \
+  --timestamp-unixus 1772994892945000 \
+  --mode image_with_temporal_clip \
+  --video-camera back-backward \
+  --no-allow-video-camera-fallback \
+  --context-seconds-each-side 5 \
+  --image-with-clip-prompt "$(cat /tmp/illegal_parking_prompt.txt)"
+```
+
+Outcome:
+- strict `back-backward` clip fetch failed
+- error from media lookup: `key__cameras__back_backward__video_file_name`
+- final failure: `RuntimeError: Could not fetch a temporal video clip from any camera`
+- this is the correct behavior under strict-camera mode; the tool no longer falls back to a different camera silently
