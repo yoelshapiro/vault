@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
+                "file": "projects/fox-mitten.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-03-22-port-parking-gear-and-route-jitter-augmentations"
+              "title": "fox-mitten"
             }
           }
         ],
@@ -492,15 +492,18 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
-    "agent_tasks/2026/04/Week-3/2026-04-15-route-shortening-jitter-config-wiring.md",
+    "agent_tasks/2026/04/Week-3/2026-04-16-gemini-cli-photo-classifier-skill.md",
+    "newsletter_index.md",
     "agents-change-log.md",
+    "projects/fox-mitten.md",
+    "projects.md",
+    "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
+    "agent_tasks/2026/04/Week-3/2026-04-15-route-shortening-jitter-config-wiring.md",
     "projects/zak-latest-work-concepts.md",
     "agent_tasks/2026/04/Week-3/2026-04-15-parking-d26-3-6-datamodule-mix-fix.md",
     "agent_tasks/2026/04/Week-3/2026-04-15-parking-codeowners-precedence-and-team-update.md",
     "agent_tasks/2026/04/Week-3/2026-04-15-interleave-gear-source-by-group.md",
     "agent_tasks/2026/04/Week-3/2026-04-14-route-shortening-test-coverage.md",
-    "projects.md",
-    "newsletter_index.md",
     "agent_tasks/2026/04/Week-3/2026-04-14-parking-config-release-arches.md",
     "agent_tasks/2026/04/Week-3/2026-04-14-zak-latest-work-concepts-project.md",
     "agent_tasks/2026/04/Week-3/2026-04-14-si-parking-route-shortening-entry-index.md",
@@ -519,9 +522,6 @@
     "agent_tasks/2026/04",
     "agent_tasks/2026/03/Week-5/2026-03-31-parking-pudo-radar-dmi-defaults-followup.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
-    "agent_tasks/2026/03/Week-5/2026-03-31-radar-inference-config-propagation-fix.md",
-    "Untitled 1.md",
-    "Untitled.md",
     "agent_tasks/2026/03/Week-5",
     "agent_tasks/2026/03/Week-4",
     "agent_tasks/2026/03/Week-3",
