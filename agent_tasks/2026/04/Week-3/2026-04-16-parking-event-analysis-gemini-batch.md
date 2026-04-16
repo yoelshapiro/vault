@@ -11,25 +11,38 @@ After this change, a user can point a script at Databricks table `parking.event_
 ## Progress
 
 - [x] (2026-04-16 13:45Z) Read PLANS guidance and Databricks parking table skill.
-- [in_progress] (2026-04-16 13:45Z) Inspect local parking analysis code and Databricks row shape to define the batch interface.
-- [ ] Design the row-to-prompt mapping for `pudo/park` vs `unpudo/unpark` and decide output schema.
-- [ ] Implement a batch script/library under `wayve/ai/parking/classifiers/`.
-- [ ] Validate with focused tests and one real Databricks-backed sample run.
+- [x] (2026-04-16 13:45Z) Inspect local parking analysis code and Databricks row shape to define the batch interface.
+- [x] (2026-04-16 14:29Z) Define prompt routing: `unpudo -> unparking`, `pudo -> parking_feasibility`.
+- [ ] Implement a Databricks-reading batch script under `wayve/ai/parking/classifiers/`.
+- [x] (2026-04-16 14:29Z) Validate the existing runner on a 20-row manually supplied batch using one shared output folder.
 
 ## Surprises & Discoveries
 
-- Observation: none yet.
-  Evidence: pending.
+- Observation: Strict `back-surround` media fetch succeeded for 19/20 requested rows; one row had no temporal clip media for that camera at the requested timestamp.
+  Evidence: `/tmp/parking_gemini_batch_20260416T140000Z/summary.tsv`, row 6.
+- Observation: Large `back-surround` clips can materially dominate latency even after media fetch succeeds; row 19 wrote a 209 MB clip before waiting on Gemini.
+  Evidence: `/tmp/parking_gemini_batch_20260416T140000Z/19_unpudo_1775349354733310/`.
 
 ## Decision Log
 
 - Decision: Use an ExecPlan because this is a significant new batch feature spanning Databricks access, prompt routing, and Gemini runtime behavior.
   Rationale: Root AGENTS and `PLANS.md` require an ExecPlan for complex features.
   Date/Author: 2026-04-16 / Codex
+- Decision: For the user-supplied batch, reuse the existing single-run classifier rather than introducing a new batch codepath before the prompt semantics were validated.
+  Rationale: This isolates evaluation of prompt routing from implementation risk in a new Databricks integration path.
+  Date/Author: 2026-04-16 / Codex
 
 ## Outcomes & Retrospective
 
-Pending implementation.
+Executed a 20-row batch using the existing standalone runner with strict `back-surround` camera selection and a single shared output folder:
+- Batch folder: `/tmp/parking_gemini_batch_20260416T140000Z`
+- Summary TSV: `/tmp/parking_gemini_batch_20260416T140000Z/summary.tsv`
+- Successes: 19
+- Failures: 1 (`fme20012/...38b8d662...` at `1772987900133306`, no temporal clip media on strict `back-surround`)
+- `unpudo` rows: all 10 successful rows classified as `parking`
+- `pudo` rows: 1 as `parking+feasible`, 8 as `driving_other` with 5 `feasible` and 4 `not_feasible`
+
+This validated that the prompt routing works operationally on a multi-row batch and that the `parking_feasibility` prompt can distinguish "currently driving" from whether the location would be acceptable for parking.
 
 ## Context and Orientation
 
@@ -53,7 +66,8 @@ The planned batch script should be read-only against Databricks by default and w
 
 ## Artifacts and Notes
 
-Pending.
+- Batch output folder: `/tmp/parking_gemini_batch_20260416T140000Z`
+- Batch summary: `/tmp/parking_gemini_batch_20260416T140000Z/summary.tsv`
 
 ## Interfaces and Dependencies
 
