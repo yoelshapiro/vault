@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-19 — Parking unpark route clipping
+- Topic: extend parking route shortening so unparking samples crop the route prefix from the existing stop anchor while keeping the current anchor semantics.
+- Labels: #parking #unpudo #route-shortening #otf #tests
+- Branch: `guy/training/pudo_only_bc_3.0.26_aug_cutoff_boris_unpudo_route_clamping`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/lib/data/pipes/`, `wayve/ai/zoo/data/`, `agent_tasks/2026/04/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-19-parking-unpark-route-clipping]]: added prefix clipping for `UNPARKING_MODE`, reset the cropped route cursor to the new start, emitted stop-route anchors during parking data insertion, and added focused route/parking regression tests.
+
 > #### 2026-04-16 — Gemini CLI photo classifier skill for Fox Mitten
 - Topic: add a reusable local Codex skill for Gemini CLI image classification with parking and robotaxi pull-over prompt templates.
 - Labels: #fox-mitten #gemini-cli #skills #pudo #parking #classification
@@ -1132,4 +1142,3 @@
 - Areas: `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/zoo/data/driving.py`, `wayve/ai/si/configs/parking/parking_config.py`
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-19-parking-otf-drop-risk-review]]: mapped active parking training augmentations, identified true sample-drop points, and ranked likely risks to parking/PUDO/unparking coverage.
-
