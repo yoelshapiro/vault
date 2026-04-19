@@ -12,11 +12,11 @@ The goal is to create a new branch from `parking/training/pudo` that keeps the S
 
 - [x] (2026-04-19 00:00Z) Inspected the source branch `parking/training/pudo`, the current branch `guy/training/pudo_only_bc_3.0.26_aug_cutoff_boris_unpudo_route_clamping`, and the relevant config/datapipe/route files.
 - [x] (2026-04-19 00:00Z) Created branch `boris/parking-training-pudo-unpark-routing` from `parking/training/pudo`.
-- [ ] Port the requested parking config defaults into `wayve/ai/si/configs/parking/parking_config.py` while keeping `ParkingDataConfig` and `use_zoo_dataloader=False`.
-- [ ] Port early path gating into `wayve/ai/si/datamodules/otf.py` and `wayve/ai/si/datamodules/parking.py`.
-- [ ] Extend `wayve/ai/lib/data/pipes/routes.py` to clip the route prefix for `UNPARKING_MODE`.
-- [ ] Add or update focused regression tests.
-- [ ] Run targeted Bazel tests and record outcomes.
+- [x] (2026-04-19 21:00Z) Ported the full bucketed `parking_bc_datamodule_cfg` from `guy/training/pudo_only_bc_3.0.26_aug_cutoff_boris_unpudo_route_clamping` into `wayve/ai/si/configs/parking/parking_config.py`, adapted to `ParkingDataConfig` with `use_zoo_dataloader=False` and the requested defaults, and pointed the parking train modes at the migrated config.
+- [x] (2026-04-19 21:00Z) Ported early path gating into the SI parking path and the OTF datapipe, including path clamping support and bad-path skip support.
+- [x] (2026-04-19 21:00Z) Extended route shortening in `wayve/ai/lib/data/pipes/routes.py` to prefix-clip the route for `UNPARKING_MODE` using the existing stop anchor.
+- [x] (2026-04-19 21:00Z) Added and updated focused regression tests for route prefix clipping, path clamping, early path gating wiring, SI parking anchor emission, and bad-path skip behavior.
+- [x] (2026-04-19 21:00Z) Ran targeted Bazel tests for route clipping, path loading, SI parking behavior, OTF route/early-gating wiring, and zoo bad-path filtering.
 
 ## Surprises & Discoveries
 
@@ -36,7 +36,22 @@ The goal is to create a new branch from `parking/training/pudo` that keeps the S
 
 ## Outcomes & Retrospective
 
-Pending implementation.
+Completed on branch `boris/parking-training-pudo-unpark-routing`.
+
+Key outcomes:
+- Added a migrated `parking_bc_datamodule_cfg` that keeps the full bucket/weight layout from Boris's current branch while adapting the parking backend to the non-zoo `ParkingDataConfig`.
+- Enabled and wired route shortening for both parking and unparking. Parking still suffix-clips to the stop anchor; unparking now prefix-clips from that same anchor.
+- Ported the early path gating fix into the SI parking path so parking-related samples can clamp out-of-range paths and skip bad-path rejection when the temporary early flag is set.
+
+Validation run:
+- `bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py --test_arg=-k --test_arg=shorten_route_polyline --test_arg=--cov-fail-under=0`
+- `bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_load_paths.py --test_arg=-k='''process_path or load_paths''' --test_arg=--cov-fail-under=0`
+- `bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py --test_arg=-k='''entry_index or augment_unparking_gear or strip_leading_standstill''' --test_arg=--cov-fail-under=0`
+- `bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_otf.py --test_arg=-k='''early_path_gating_hook or route_shortening_hook''' --test_arg=--cov-fail-under=0`
+- `bazel test //wayve/ai/zoo:test_data_py_test --test_arg=wayve/ai/zoo/test/data/test_driving.py --test_arg=-k=filter_bad_paths --test_arg=--cov-fail-under=0`
+
+Residual risk:
+- The repo does not expose a dedicated lightweight Bazel target that only imports `wayve/ai/si/configs/parking/parking_config.py`, so the migrated config block is covered indirectly through code-path tests rather than a config-only import test.
 
 ## Context and Orientation
 
