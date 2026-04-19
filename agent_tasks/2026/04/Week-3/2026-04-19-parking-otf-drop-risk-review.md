@@ -59,3 +59,26 @@ The most plausible places where we lose useful parking/PUDO/unparking training e
 - generic `filter_bad_paths`
 - parking `strip_leading_standstill`
 - missed forward-unparking labeling
+
+## Implemented change
+Added an early parking-related gating path so parking/parked/unparking samples are identified before path loading.
+
+Files changed:
+- `wayve/ai/si/datamodules/otf.py`
+- `wayve/ai/zoo/data/parking.py`
+- `wayve/ai/lib/data/pipes/paths.py`
+- `wayve/ai/zoo/data/driving.py`
+- `wayve/ai/lib/test/data/pipes/test_load_paths.py`
+- `wayve/ai/si/datamodules/test/test_otf.py`
+
+Behavior change:
+1. `otf.py` now computes a temporary early parking-related boolean only when `parking_config` and `use_paths` are both enabled.
+2. `paths.py` uses that flag to clamp requested path distances to the available path extent instead of dropping the sample on out-of-range future path requests.
+3. `driving.py::filter_bad_paths` now accepts an optional skip key and bypasses path-vs-policy filtering for flagged parking-related samples.
+4. `parking.py` exposes helpers to add/drop the temporary early parking flag using the same gear reconstruction and parking-mode logic family as the later parking insertion pass.
+
+Validation status:
+- `python -m py_compile` passed for all touched Python files.
+- `//wayve/ai/si/datamodules:py_test` filtered run: target fails coverage gate, but the selected test passed.
+- `//wayve/ai/lib:test_data_lib_py_test` filtered run with `test_lidar_cpp_converter.py` ignored: selected new path tests passed, target still fails coverage gate on the filtered run.
+- `//wayve/ai/lib:test_data_lib_py_test` unignored remains blocked by an unrelated existing lidar protobuf fixture decode error during collection.
