@@ -1143,3 +1143,4 @@
 - Changes:
   - [[agent_tasks/2026/04/Week-3/2026-04-19-parking-otf-drop-risk-review]]: mapped active parking training augmentations, identified true sample-drop points, and ranked likely risks to parking/PUDO/unparking coverage.
 - Update: implemented early parking-related path gating in `otf.py` / `parking.py` / `paths.py` / `driving.py` so parking/parked/unparking samples skip `filter_bad_paths` and clamp short future paths instead of dropping; added focused tests in `test_load_paths.py` and `test_otf.py`.
+- Update: added explicit `ParkingConfig.enable_early_path_gating` flag (default off) and enabled it in `parking_bc_datamodule_cfg` to preserve current parking branch behavior while allowing ablation.

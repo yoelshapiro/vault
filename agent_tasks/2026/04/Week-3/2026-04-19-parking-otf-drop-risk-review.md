@@ -82,3 +82,4 @@ Validation status:
 - `//wayve/ai/si/datamodules:py_test` filtered run: target fails coverage gate, but the selected test passed.
 - `//wayve/ai/lib:test_data_lib_py_test` filtered run with `test_lidar_cpp_converter.py` ignored: selected new path tests passed, target still fails coverage gate on the filtered run.
 - `//wayve/ai/lib:test_data_lib_py_test` unignored remains blocked by an unrelated existing lidar protobuf fixture decode error during collection.
+- Update: added explicit `ParkingConfig.enable_early_path_gating` knob (default off) and enabled it in `parking_bc_datamodule_cfg` so the behavior is ablatable without changing branch-default training behavior.
