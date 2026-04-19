@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/fox-mitten.md",
+                "file": "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "fox-mitten"
+              "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
             }
           }
         ],
@@ -492,13 +492,15 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-3/2026-04-19-parking-otf-drop-risk-review.md",
+    "agents-change-log.md",
+    "projects/fox-mitten.md",
+    "projects.md",
+    "projects/parking-unparking-gear-augmentation.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-parking-event-analysis-gemini-batch.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-gemini-cli-photo-classifier-skill.md",
     "newsletter_index.md",
-    "agents-change-log.md",
-    "projects/fox-mitten.md",
-    "projects.md",
     "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
     "agent_tasks/2026/04/Week-3/2026-04-15-route-shortening-jitter-config-wiring.md",
     "projects/zak-latest-work-concepts.md",
@@ -512,14 +514,12 @@
     "agent_tasks/2026/04/Week-3",
     "projects/pudo-update-january-driving-release-2026-5-4.md",
     "newsletters/newsletter_route-end-parking-trigger.md",
-    "projects/parking-unparking-gear-augmentation.md",
     "projects/pin-location-augmentation.md",
     "projects/zak-pudo-training-proposal.md",
     "agent_tasks/2026/04/Week-2/2026-04-09-zak-pudo-training-proposal-kickoff.md",
     "agent_tasks/2026/04/Week-2",
     "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/04/Week-1/2026-04-02-training-interleave-control-defaults.md",
-    "agent_tasks/2026/04/Week-1/2026-04-02-gear-wrapper-rollback.md",
     "agent_tasks/2026/04/Week-1",
     "agent_tasks/2026/04",
     "agent_tasks/2026/03/Week-5",
