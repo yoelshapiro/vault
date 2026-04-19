@@ -1122,3 +1122,14 @@
 - Update: fixed shared dataset camera-name resolution so `manual_gemini_from_run` can fetch `ReferenceFrame`-only cameras such as `back-surround`; validated strict `back-surround` multimodal illegal-parking classification on `fme20018/...8ed0bb08...` at `1772994892945000` (`illegal_parked`, `zigzag`).
 - Update: added `parking_feasibility` Gemini prompt variant for `manual_gemini_from_run`, refactored prompts into `manual_gemini_prompts.py`, added unit coverage for prompt selection, and validated `back-surround` feasibility outputs on `fme20018/...50a81282...` and `fme20009/...2c601596...`.
 - Update: validated prompt routing on a 20-row manual batch with strict `back-surround` output under `/tmp/parking_gemini_batch_20260416T140000Z`; 19 rows succeeded, 1 failed on missing temporal clip media for that camera, and the batch confirmed `unpudo -> unparking` / `pudo -> parking_feasibility` behavior.
+
+#### 2026-04-19 — Parking OTF sample-drop risk review
+- Topic: Inspect parking BC datapipe for train-time filters and augmentations that can remove or weaken parking/PUDO/unparking supervision.
+- Labels: #parking #si #datapipe #augmentation #data-quality
+- Branch: `guy/training/pudo_only_bc_3.0.26_aug_cutoff_boris_unpudo_route_clamping`
+- PR: none
+- Change type: investigation
+- Areas: `wayve/ai/si/datamodules/otf.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/zoo/data/driving.py`, `wayve/ai/si/configs/parking/parking_config.py`
+- Changes:
+  - [[agent_tasks/2026/04/Week-3/2026-04-19-parking-otf-drop-risk-review]]: mapped active parking training augmentations, identified true sample-drop points, and ranked likely risks to parking/PUDO/unparking coverage.
+
