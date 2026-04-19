@@ -83,3 +83,22 @@ Validation status:
 - `//wayve/ai/lib:test_data_lib_py_test` filtered run with `test_lidar_cpp_converter.py` ignored: selected new path tests passed, target still fails coverage gate on the filtered run.
 - `//wayve/ai/lib:test_data_lib_py_test` unignored remains blocked by an unrelated existing lidar protobuf fixture decode error during collection.
 - Update: added explicit `ParkingConfig.enable_early_path_gating` knob (default off) and enabled it in `parking_bc_datamodule_cfg` so the behavior is ablatable without changing branch-default training behavior.
+
+## Pre-intervention augmentation and unparking
+For parking/unparking, the generic pre-intervention augmentation appears mismatched.
+
+Key findings:
+- Samples more than ~1.2s before disengagement do not get corrected; they are dropped by the augmentor.
+- Samples within ~1.2s of disengagement are rewritten using a generic driving heuristic:
+  - path rejoin target is `2 * distance_to_intervention + 3m`, which collapses to ~`3m` when the car was stationary before takeover
+  - speed is linearly ramped toward a later post-intervention speed sample, pulling motion earlier into the pre-intervention window
+- For straight unparking from standstill, this mostly preserves heading/path geometry but rewrites the timing of motion, teaching low but non-zero creep before takeover rather than wait-then-go.
+
+Assessment:
+- This likely harms unparking learning more than it helps.
+- It both drops many long-wait corrective-action samples and distorts the remaining near-intervention samples.
+
+Recommended direction:
+- Disable `augment_vehicle_preintervention` for parking-related samples (`parking`, `parked`, `unparking`).
+- Keep the augmentation for generic driving if still useful there.
+- If we want to use corrective-action data for unparking, build a parking-specific correction rule rather than reusing the generic driving heuristic.
