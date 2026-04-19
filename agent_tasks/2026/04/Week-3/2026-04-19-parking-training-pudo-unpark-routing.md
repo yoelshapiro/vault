@@ -17,6 +17,8 @@ The goal is to create a new branch from `parking/training/pudo` that keeps the S
 - [x] (2026-04-19 21:00Z) Extended route shortening in `wayve/ai/lib/data/pipes/routes.py` to prefix-clip the route for `UNPARKING_MODE` using the existing stop anchor.
 - [x] (2026-04-19 21:00Z) Added and updated focused regression tests for route prefix clipping, path clamping, early path gating wiring, SI parking anchor emission, and bad-path skip behavior.
 - [x] (2026-04-19 21:00Z) Ran targeted Bazel tests for route clipping, path loading, SI parking behavior, OTF route/early-gating wiring, and zoo bad-path filtering.
+- [x] (2026-04-19 21:48Z) Submitted parking training job `151595` with `+mode=parking_bc_train_release_2026_5_11 +datamodule=parking_bc_datamodule` and monitored it through platform dispatch.
+- [x] (2026-04-19 21:50Z) Recorded the failed run on the Parking/PUDO release page after the job terminated immediately with `healthcheck_failure`.
 
 ## Surprises & Discoveries
 
@@ -52,6 +54,17 @@ Validation run:
 
 Residual risk:
 - The repo does not expose a dedicated lightweight Bazel target that only imports `wayve/ai/si/configs/parking/parking_config.py`, so the migrated config block is covered indirectly through code-path tests rather than a config-only import test.
+- The first training submission on this branch failed before reaching steady-state training due to platform `healthcheck_failure`, so the config has not yet been validated in a live run.
+
+Training run:
+- Job id: `151595`
+- Session id: `session_2026_04_19_21_48_18_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_early_gate`
+- Surfboard nickname: `grateful-tomato-scorpion`
+- Final observed state: `Failed`
+- Failure reason: `healthcheck_failure`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_19_21_48_18_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_early_gate`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Agrateful-tomato-scorpion-151595&from_ts=1775425978643&cols=job_name%2Cnode_rank&live=true`
+- Release row: `https://www.notion.so/34703da5d69a810eaf4bf40872786311`
 
 ## Context and Orientation
 

@@ -18,7 +18,7 @@
 - Change type: code
 - Areas: `wayve/ai/si/configs/parking/`, `wayve/ai/si/datamodules/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/zoo/data/`, `agent_tasks/2026/04/Week-3/`
 - Changes:
-  - [[agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing]]: migrated the full `parking_bc_datamodule_cfg` bucket layout from `guy/training/pudo_only_bc_3.0.26_aug_cutoff_boris_unpudo_route_clamping`, kept `ParkingDataConfig` with `use_zoo_dataloader=False`, enabled route shortening and early path gating, added unparking prefix clipping, and updated focused OTF/path/route regression tests.
+  - [[agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing]]: migrated the full `parking_bc_datamodule_cfg` bucket layout from `guy/training/pudo_only_bc_3.0.26_aug_cutoff_boris_unpudo_route_clamping`, kept `ParkingDataConfig` with `use_zoo_dataloader=False`, enabled route shortening and early path gating, added unparking prefix clipping, updated focused OTF/path/route regression tests, and submitted training job `151595` which failed immediately with `healthcheck_failure`.
 
 > #### 2026-04-19 — Parking unpark route clipping
 - Topic: extend parking route shortening so unparking samples crop the route prefix from the existing stop anchor while keeping the current anchor semantics.
