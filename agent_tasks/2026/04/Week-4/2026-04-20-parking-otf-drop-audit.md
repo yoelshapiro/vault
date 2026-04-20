@@ -120,3 +120,22 @@ Interpretation of the migrated audit:
 2. The second strongest recurring failure mode is `filter_bad_paths` / `path_pose_mismatch`, concentrated in non-driving UNPUDO / UNPARK CA and pre-CA buckets.
 3. `strip_leading_standstill` is visible, but localized rather than global in this sampled migrated pass.
 4. A few buckets still show dropped counts without a fully attributed reason in the sampled ledger, so the harness is good enough for dominant patterns but not yet a mathematically closed accounting of every drop.
+
+
+## 2026-04-20 19:20 UTC Update
+- Added bucket-level parking short-path flagging (`_parking_allow_short_path`) and enabled `allow_short_path_for_parking_buckets=True` in parking configs.
+- Improved audit harness attribution:
+  - split `filter_bad_paths` into `bad_distance_request`, `interpolation_failed`, `path_pose_mismatch`
+  - log `_parking_related_early`, `_parking_allow_short_path`, and `short_path_clamp_active`
+  - added structured parking internal drop reasons for `strip_leading_standstill`, gear reconstruction / parking mode, and policy-path computation
+- Focused datamodule tests passed under `//wayve/ai/si/datamodules:py_test` with filtered selection; Bazel target still fails coverage gate on filtered runs.
+- Running sampled migrated-bucket audit (100 samples per bucket):
+  - output root: `/tmp/parking_otf_drop_audit_migrated_100_v2/parking_bc_datamodule_20260420_191038`
+  - status: still running
+- Existing full migrated-bucket audit also running:
+  - output root: `/tmp/parking_otf_drop_audit_full_migrated/parking_bc_datamodule_20260420_135013`
+  - status: still running
+- Current partial signal from sampled run:
+  - `dc_pudo_uk` still drops on `path_requested_distance_out_of_range` even when `parking_allow_short_path=True` and `short_path_clamp_active=True`
+  - `ca_short_pudo_uk` drops are now attributed to `parking_strip_leading_standstill_failed`
+  - `dc_unpudo_usa` / `dc_unpudo_uk` now show attributed `filter_bad_paths_path_pose_mismatch`
