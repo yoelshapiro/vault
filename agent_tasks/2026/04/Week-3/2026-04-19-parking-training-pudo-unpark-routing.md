@@ -21,6 +21,7 @@ The goal is to create a new branch from `parking/training/pudo` that keeps the S
 - [x] (2026-04-19 21:50Z) Recorded the failed run on the Parking/PUDO release page after the job terminated immediately with `healthcheck_failure`.
 - [x] (2026-04-20 00:00Z) Committed the branch changes as `9cb57bbc352 feat(parking): port pudo datamodule routing changes` and pushed `boris/parking-training-pudo-unpark-routing` to origin.
 - [x] (2026-04-20 00:00Z) Downloaded Surfboard job `151595` logs and root-caused the startup failure to an invalid top-level datamodule kwarg in `parking_bc_datamodule_cfg`.
+- [x] (2026-04-20 04:00Z) Removed the invalid top-level `reconstruct_gear_from_speed` kwarg from `parking_bc_datamodule_cfg`, added a config-load regression test, and validated the exact parking config composition path.
 
 ## Surprises & Discoveries
 
@@ -65,9 +66,14 @@ Training run:
 - Final observed state: `Failed`
 - Failure reason: `healthcheck_failure`
 - Root cause: rank 0 crashed during config registration with `TypeError: Builds_OtfDrivingDataModule.__init__() got an unexpected keyword argument 'reconstruct_gear_from_speed'`. The bad kwarg was added at top level in `wayve/ai/si/configs/parking/parking_config.py` instead of only inside `parking_config=builds(ParkingDataConfig, ...)`.
+- Fix commit: `1940697ea1a fix(parking): remove invalid datamodule kwarg`
 - WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_19_21_48_18_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_early_gate`
 - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Agrateful-tomato-scorpion-151595&from_ts=1775425978643&cols=job_name%2Cnode_rank&live=true`
 - Release row: `https://www.notion.so/34703da5d69a810eaf4bf40872786311`
+
+Follow-up validation:
+- `python3 -m py_compile wayve/ai/si/configs/parking/parking_config.py wayve/ai/si/test/configs/test_config.py`
+- `bazel test //wayve/ai/si:test_config_py_test_core --test_arg=-k=test_parking_release_config_loads`
 
 ## Context and Orientation
 
