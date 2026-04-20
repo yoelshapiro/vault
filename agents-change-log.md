@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-20 — Parking OTF drop audit for PUDO/UNPUDO/UNPARK buckets
+- Topic: audit active parking/PUDO training buckets through the real OTF datapipe, attribute sample drops, and identify whether short future path or path-policy mismatch is removing useful non-driving data.
+- Labels: #parking #pudo #unpudo #unpark #otf #data-audit #path-filtering
+- Branch: none
+- PR: none
+- Change type: tooling/analysis
+- Areas: `wayve/ai/si/scripts/`, `wayve/ai/si/datamodules/`, `wayve/ai/lib/data/pipes/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit]]: added a temporary Bazel-runnable OTF audit harness, sampled `pudo`/`unpudo`/`unpark` leaf buckets through the real datamodule, confirmed hard short-path drops in `dc_pudo_uk`, confirmed `filter_bad_paths` drops in `dc_unpudo_usa_very_short`, `ca_short_unpudo_usa`, `pre_ca_unpudo_usa`, and `dc_unparking_uk_very_short`, and identified one still-unattributed silent drop path in `pre_ca_unpudo_uk`.
+
 > #### 2026-04-19 — Parking training/pudo branch port with migrated bucket config
 - Topic: create a new branch from `parking/training/pudo`, port unparking route clipping and early path gating, and migrate the full bucketed parking datamodule config from Boris's current branch onto the non-zoo parking path.
 - Labels: #parking #pudo #unpudo #training #route-shortening #path-gating #config #tests
