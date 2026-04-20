@@ -319,12 +319,24 @@
             "id": "7dea9896ceb1a3db",
             "type": "leaf",
             "state": {
-              "type": "release-notes",
+              "type": "markdown",
               "state": {
-                "currentVersion": "1.12.7"
+                "file": "agent_tasks/2026/01/Week-1/2026-01-05-parking-bc-vs-release-bc-latent-actions.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "lucide-book-up",
-              "title": "Release Notes 1.12.7"
+              "icon": "lucide-file",
+              "title": "2026-01-05-parking-bc-vs-release-bc-latent-actions"
             }
           }
         ],
@@ -360,7 +372,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "canvas",
+                "query": "gear input",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -381,7 +393,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
