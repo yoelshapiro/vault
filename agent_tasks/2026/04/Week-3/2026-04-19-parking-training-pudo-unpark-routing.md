@@ -190,3 +190,22 @@ Notion release tracking:
 - New release row: `https://www.notion.so/34803da5d69a81e8a50efa0d731d6162`
 - Status set to `In training`
 - To keep the release table clean, moved the two canceled rows from the table into archive page `https://www.notion.so/34803da5d69a8184a537d57cf173f4a4`
+
+## 2026-04-20 short-tag retrigger after artifact-name failure
+
+Long-name startup failure confirmation:
+- Job `151697` failed with `ValueError: Artifact name is longer than 128 characters` for the generated run artifact name.
+- Cause: the prior session tag was still too long even after the deployment-signature fix.
+
+New retrigger:
+- Job id: `151708`
+- Session id: `session_2026_04_20_07_28_22_si_parking_bc_train_release_2026_5_11_sigfix2`
+- Surfboard nickname: `goldfish-sapphire-tessellated`
+- Current observed state: `Dispatched`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_20_07_28_22_si_parking_bc_train_release_2026_5_11_sigfix2`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Agoldfish-sapphire-tessellated-151708&from_ts=1775460779993&cols=job_name%2Cnode_rank&live=true`
+
+Notion cleanup:
+- Marked the failed long-name row as `Canceled`.
+- Created the new active row `https://www.notion.so/34803da5d69a810298ccc1046419cdaa` for job `151708`.
+- Moved the failed long-name row into archive page `https://www.notion.so/34803da5d69a8174ab60c83d075ed6e2` so canceled rows are no longer in the release table.
