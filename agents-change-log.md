@@ -1164,4 +1164,3 @@
 - Update: retriggered parking training as job `151738` / session `session_2026_04_20_09_27_54_si_parking_bc_train_release_2026_5_11_parkwrapfix`; the run reached `Running` with nickname `anteater-rose-heroic`.
 - Update: moved the failed `151708` release row out of the live table into archive page `https://www.notion.so/34803da5d69a81a1a69dc45b9cca1f50` and created the new active release row `https://www.notion.so/34803da5d69a8139abdfd3e5b8813806` for job `151738`.
 
-tail -n 8 /home/borisindelman/git/vault/agents-change-log.md
