@@ -84,3 +84,39 @@ The strongest signals are:
 2. Decide whether `filter_bad_paths` should be bypassed for parking-related and/or pre-CA unparking buckets.
 3. Extend instrumentation to close the remaining silent-drop path for `pre_ca_unpudo_uk`.
 4. If needed, run a larger sampled pass (`50`) or a full pass (`0`) once the remaining silent drop is instrumented.
+
+## Migrated bucket audit (`parking_bc_datamodule`)
+Ran a separate sampled audit over the exact migrated bucket list in `parking_bc_datamodule`:
+
+- Datamodule: `parking_bc_datamodule`
+- Mode: `parking_bc_train_release_2026_5_11`
+- Groups audited: `pudo`, `unpudo`, `unpark`
+- Sampling cap: `100` source samples per bucket
+
+Artifacts:
+- Combined report: `/tmp/parking_otf_drop_audit_migrated_sampled_100_combined.md`
+- PUDO summary source: `/tmp/parking_otf_drop_audit_allbuckets_100/parking_bc_datamodule_20260420_135411/summary.md`
+- UNPUDO summary source: `/tmp/parking_otf_drop_audit_unpudo_100/parking_bc_datamodule_20260420_140207/summary.md`
+- UNPARK summary source: `/tmp/parking_otf_drop_audit_unpark_100/parking_bc_datamodule_20260420_140744/summary.md`
+
+Key findings:
+- `dc_pudo_uk`: `72 / 100` dropped, all `path_requested_distance_out_of_range`
+- `dc_pudo_usa`: `13 / 100` dropped, but the current ledger did not attribute a dominant reason
+- `ca_short_pudo_uk`: `12 / 100` dropped, all `parking_strip_leading_standstill_failed`
+- `pre_ca_pudo_uk`: `16 / 100` dropped, but the current ledger did not attribute a dominant reason
+- `dc_unpudo_usa`: `11 / 100` dropped, visible attributed reason `path_pose_mismatch`
+- `dc_unpudo_uk`: `1 / 100` dropped, `path_pose_mismatch`
+- `ca_short_unpudo_usa`: `7 / 100` dropped, all `path_pose_mismatch`
+- `pre_ca_unpudo_usa`: `21 / 100` dropped, all `path_pose_mismatch`
+- `dc_unparking_uk`: `46 / 100` dropped, dominated by `path_requested_distance_out_of_range` with additional `load_frame_data_exception`
+- `dc_unparking_usa`: `6 / 100` dropped, all `path_pose_mismatch`
+- `ca_short_unparking_usa`: `22 / 100` dropped, all `path_pose_mismatch`
+- `ca_short_unparking_uk`: `20 / 100` dropped, all `path_pose_mismatch`
+- `pre_ca_unparking_usa`: `17 / 100` dropped, almost entirely `path_pose_mismatch`
+- `pre_ca_unparking_uk`: `46 / 100` dropped, all `path_pose_mismatch`
+
+Interpretation of the migrated audit:
+1. The strongest recurring failure mode is still short future path (`path_requested_distance_out_of_range`) in UK driving PUDO and UK driving UNPARK.
+2. The second strongest recurring failure mode is `filter_bad_paths` / `path_pose_mismatch`, concentrated in non-driving UNPUDO / UNPARK CA and pre-CA buckets.
+3. `strip_leading_standstill` is visible, but localized rather than global in this sampled migrated pass.
+4. A few buckets still show dropped counts without a fully attributed reason in the sampled ledger, so the harness is good enough for dominant patterns but not yet a mathematically closed accounting of every drop.
