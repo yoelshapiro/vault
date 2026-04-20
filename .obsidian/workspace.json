@@ -314,9 +314,21 @@
               "icon": "lucide-file",
               "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
             }
+          },
+          {
+            "id": "7dea9896ceb1a3db",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.12.7"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.12.7"
+            }
           }
         ],
-        "currentTab": 18
+        "currentTab": 19
       }
     ],
     "direction": "vertical"
@@ -490,7 +502,7 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "117f440063e12be8",
+  "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing.md",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-unpark-route-clipping.md",
