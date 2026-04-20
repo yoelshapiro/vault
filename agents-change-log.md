@@ -1159,3 +1159,9 @@
 - Update: created new release row `https://www.notion.so/34803da5d69a81e8a50efa0d731d6162` and moved the two canceled rows into archive page `https://www.notion.so/34803da5d69a8184a537d57cf173f4a4` so the active run stays at the top of the release table.
 - Update: confirmed job `151697` failed on WandB artifact-name length (`>128 chars`) caused by the long session tag, then retriggered as job `151708` with short tag `sigfix2`.
 - Update: created active release row `https://www.notion.so/34803da5d69a810298ccc1046419cdaa` for `151708` and moved the failed long-name row into archive page `https://www.notion.so/34803da5d69a8174ab60c83d075ed6e2`.
+- Update: fixed the parking deployment wrapper contract in `wayve/ai/zoo/deployment/deployment_wrapper.py` so it accepts the generic deployment builder kwargs (`behavior_customization`, `deployment_driving_parameters_keys`, `navigation_version_number`) and correctly preprocesses only the supported behavior-control subset while preserving full parking controls for the model.
+- Update: validated the parking startup path locally with `//wayve/ai/zoo/deployment:test_deployment_py_test`, `//wayve/ai/si:test_deployment_wrapper`, and `//wayve/ai/si:test_config_py_test_core` filtered to the parking path, then pushed commit `a2464581b5e8b75bd9201ada976d15b9863cb5e1` to `boris/parking-training-pudo-unpark-routing`.
+- Update: retriggered parking training as job `151738` / session `session_2026_04_20_09_27_54_si_parking_bc_train_release_2026_5_11_parkwrapfix`; the run reached `Running` with nickname `anteater-rose-heroic`.
+- Update: moved the failed `151708` release row out of the live table into archive page `https://www.notion.so/34803da5d69a81a1a69dc45b9cca1f50` and created the new active release row `https://www.notion.so/34803da5d69a8139abdfd3e5b8813806` for job `151738`.
+
+tail -n 8 /home/borisindelman/git/vault/agents-change-log.md

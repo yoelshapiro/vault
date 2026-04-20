@@ -209,3 +209,45 @@ Notion cleanup:
 - Marked the failed long-name row as `Canceled`.
 - Created the new active row `https://www.notion.so/34803da5d69a810298ccc1046419cdaa` for job `151708`.
 - Moved the failed long-name row into archive page `https://www.notion.so/34803da5d69a8174ab60c83d075ed6e2` so canceled rows are no longer in the release table.
+
+## 2026-04-20 parking wrapper contract fix and successful startup rerun
+
+Local root-cause follow-up after job `151708`:
+- Downloaded and inspected Surfboard logs for `151708`.
+- Confirmed the next startup failure was `TypeError: ParkingDeploymentWrapperImpl.__init__() got an unexpected keyword argument 'behavior_customization'`.
+- Verified the parking deployment wrapper was behind the generic deployment builder contract and missing both constructor kwargs and part of the behavior-control preprocessing path.
+
+Code fix:
+- Commit: `a2464581b5e8b75bd9201ada976d15b9863cb5e1`
+- Message: `fix(parking): align deployment wrapper inputs`
+- File: `wayve/ai/zoo/deployment/deployment_wrapper.py`
+- Changes:
+  - added `behavior_customization`, `deployment_driving_parameters_keys`, and `navigation_version_number` to `ParkingDeploymentWrapperImpl.__init__`
+  - added `driving_parameters` handling to the parking wrapper forward path
+  - integrated `BehaviorCustomizerProcessor` for parking deployment
+  - filtered the default behavior-customization control view to the subset it actually supports, while preserving the full parking control tensor for the model
+  - accepted `DILC_MODE` in parking driving-controls mapping without treating it as a parking-specific key
+
+Local validation before retriggering:
+- `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=-k=parking --test_output=errors`
+- `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k=parking --test_output=errors`
+- `bazel test //wayve/ai/si:test_config_py_test_core --test_arg=-k=test_parking_release_config_loads --test_output=errors`
+- `python3 -m py_compile wayve/ai/zoo/deployment/deployment_wrapper.py`
+- Note: `//wayve/ai/si:test_deploy` still fails on an unrelated branch-local import mismatch (`get_video_temporal_cache`) that is outside the parking trainer startup path.
+
+Git state:
+- Pushed `a2464581b5e8b75bd9201ada976d15b9863cb5e1` to `origin/boris/parking-training-pudo-unpark-routing`
+
+New training run:
+- Job id: `151738`
+- Session id: `session_2026_04_20_09_27_54_si_parking_bc_train_release_2026_5_11_parkwrapfix`
+- Surfboard nickname: `anteater-rose-heroic`
+- Current observed state: `Running`
+- Start time: `2026-04-20 09:32 UTC`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_20_09_27_54_si_parking_bc_train_release_2026_5_11_parkwrapfix`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aanteater-rose-heroic-151738&from_ts=1775467967662&cols=job_name%2Cnode_rank&live=true`
+
+Notion release tracking:
+- Moved failed row `goldfish-sapphire-tessellated` (`151708`) out of the live release table into a standalone archive page.
+- Created a new archive page: `https://www.notion.so/34803da5d69a81a1a69dc45b9cca1f50`
+- New active release row for `151738`: `https://www.notion.so/34803da5d69a8139abdfd3e5b8813806`
