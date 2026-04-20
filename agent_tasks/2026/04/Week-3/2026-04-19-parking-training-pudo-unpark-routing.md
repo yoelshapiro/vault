@@ -24,6 +24,8 @@ The goal is to create a new branch from `parking/training/pudo` that keeps the S
 - [x] (2026-04-20 04:00Z) Removed the invalid top-level `reconstruct_gear_from_speed` kwarg from `parking_bc_datamodule_cfg`, added a config-load regression test, and validated the exact parking config composition path.
 - [x] (2026-04-20 05:00Z) Submitted retry job `151669` from fix commit `1940697ea1a` and monitored it until it reached `Running`.
 - [x] (2026-04-20 05:00Z) Created a new Parking/PUDO release row for the retry run with status `In training`.
+- [x] (2026-04-20 05:00Z) Pushed fix commit `1940697ea1a` to `origin/boris/parking-training-pudo-unpark-routing` so the running job provenance matched the remote branch.
+- [x] (2026-04-20 05:00Z) Continued monitoring retry job `151669`; it later failed after startup with a deployment-preparation `TypeError`, and the release row was updated to `Canceled`.
 
 ## Surprises & Discoveries
 
@@ -81,7 +83,8 @@ Retry training run:
 - Job id: `151669`
 - Session id: `session_2026_04_20_04_59_22_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_fix_kwarg`
 - Surfboard nickname: `scintillating-gold-crab`
-- Final observed state: `Running`
+- Final observed state: `Failed`
+- Failure reason: `TypeError: prepare_deployment_model() got an unexpected keyword argument 'fill_default_understeer_coefficient_for_vehicle_platform'; ConnectionResetError: Connection lost`
 - WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_20_04_59_22_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_fix_kwarg`
 - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Ascintillating-gold-crab-151669&from_ts=1775451779880&cols=job_name%2Cnode_rank&live=true`
 - Release row: `https://www.notion.so/34803da5d69a8109b62ad8546b8b3df8`
