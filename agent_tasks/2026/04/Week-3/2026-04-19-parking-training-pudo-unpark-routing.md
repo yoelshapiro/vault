@@ -251,3 +251,48 @@ Notion release tracking:
 - Moved failed row `goldfish-sapphire-tessellated` (`151708`) out of the live release table into a standalone archive page.
 - Created a new archive page: `https://www.notion.so/34803da5d69a81a1a69dc45b9cca1f50`
 - New active release row for `151738`: `https://www.notion.so/34803da5d69a8139abdfd3e5b8813806`
+
+## 2026-04-20 missing shift-by-wire default fix and stable rerun
+
+Remote failure RCA for job `151738`:
+- Downloaded Surfboard logs with `wayvecli job logs 151738 --all` and inspected `rank0.log`.
+- Confirmed the fatal error was not the path-data warnings; the actual crash was:
+  - `KeyError: 'enable_shift_by_wire'`
+  - in `ParkingDeploymentWrapperImpl._postprocess_outputs(...)` while accessing `dict_inputs[DataKeys.ENABLE_SHIFT_BY_WIRE]`.
+- Cause: this parking deployment config does not always provide `ENABLE_SHIFT_BY_WIRE`, but the postprocessing path assumed it was present unconditionally.
+
+Code fix:
+- Commit: `92b1f5417cdcf5777f99f2dc9af09a6fc88fa0c1`
+- Message: `fix(parking): default missing shift-by-wire input`
+- Files:
+  - `wayve/ai/zoo/deployment/deployment_wrapper.py`
+  - `wayve/ai/zoo/deployment/test/test_parking_deployment_wrapper.py`
+- Changes:
+  - default `ENABLE_SHIFT_BY_WIRE` to `False` when absent in parking deployment postprocessing
+  - added a regression test covering the missing-key case
+
+Local validation:
+- `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=-k='parking' --test_output=errors`
+- `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k='parking' --test_output=errors`
+- `bazel test //wayve/ai/si:test_config_py_test_core --test_arg=-k='test_parking_release_config_loads' --test_output=errors`
+
+Git state:
+- Pushed `92b1f5417cdcf5777f99f2dc9af09a6fc88fa0c1` to `origin/boris/parking-training-pudo-unpark-routing`
+
+Notion cleanup:
+- Marked failed row `151738` as `Canceled`
+- Moved failed row `https://www.notion.so/34803da5d69a8139abdfd3e5b8813806` out of the live release table into archive page `https://www.notion.so/34803da5d69a81a1a69dc45b9cca1f50`
+
+New training run:
+- Job id: `151763`
+- Session id: `session_2026_04_20_10_24_37_si_parking_bc_train_release_2026_5_11_shiftwirefix`
+- Surfboard nickname: `ivory-mallard-invaluable`
+- Current observed state after follow-up polling: `Running`
+- Start time: `2026-04-20 10:29 UTC`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_20_10_24_37_si_parking_bc_train_release_2026_5_11_shiftwirefix`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aivory-mallard-invaluable-151763&from_ts=1775471472293&cols=job_name%2Cnode_rank&live=true`
+
+Notion release tracking:
+- New active release row: `https://www.notion.so/34803da5d69a81e1986af27896203024`
+- Status kept at `In training`
+- The new row is the only live row for this experiment lineage; canceled rows were moved out of the release table.
