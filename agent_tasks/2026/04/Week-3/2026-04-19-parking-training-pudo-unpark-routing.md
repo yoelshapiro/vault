@@ -159,3 +159,34 @@ The final implementation must preserve these interfaces:
 - `wayve.ai.lib.data.pipes.routes.RouteMapFetcher` continues to consume `parking_stop_route_index` and `parking_stop_route_fraction` from `data` and must now apply them for both `PARKING_MODE` and `UNPARKING_MODE`.
 
 Revision note: created the initial plan after branch creation and branch/source inspection so the remaining work can proceed against a fixed scope.
+
+## 2026-04-20 deployment signature fix and rerun
+
+Deployment export mismatch fix:
+- Commit: `00768439ca0e22625c236191f2f31f91edad9b34`
+- Message: `fix(parking): sync deployment export signature`
+- File: `wayve/ai/si/models/deployment.py`
+- Change: added `fill_default_understeer_coefficient_for_vehicle_platform: bool = False` to `prepare_deployment_model(...)` so the existing call from `wayve/ai/si/models/training.py` matches the function signature.
+
+Why job `151669` failed:
+- Rank 0 crashed in `checkpoint_and_submit.py -> to_deployable_model() -> prepare_deployment_model()` before the first training step.
+- Exact error: `TypeError: prepare_deployment_model() got an unexpected keyword argument 'fill_default_understeer_coefficient_for_vehicle_platform'`
+- This was a branch-local code mismatch: the body of `prepare_deployment_model(...)` already referenced the flag, but the function signature was missing it.
+
+Local validation:
+- `python3 -m py_compile wayve/ai/si/models/deployment.py`
+- Note: attempted filtered Bazel runs against `//wayve/ai/si:test_deployment_wrapper`, but that target exits non-zero under zero-selected pytest filters on this branch. I used the compile check plus direct code inspection before retriggering.
+
+New training run:
+- Job id: `151697`
+- Session id: `session_2026_04_20_06_55_51_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_fix_deployment_signature`
+- Surfboard nickname: `prudent-blue-sea-cucumber`
+- Status after monitoring: `Running`
+- Start time: `2026-04-20 07:00 UTC`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_20_06_55_51_si_parking_bc_train_release_2026_5_11_parking_bc_cfg_port_unpark_clip_fix_deployment_signature`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aprudent-blue-sea-cucumber-151697&from_ts=1775458840333&cols=job_name%2Cnode_rank&live=true`
+
+Notion release tracking:
+- New release row: `https://www.notion.so/34803da5d69a81e8a50efa0d731d6162`
+- Status set to `In training`
+- To keep the release table clean, moved the two canceled rows from the table into archive page `https://www.notion.so/34803da5d69a8184a537d57cf173f4a4`
