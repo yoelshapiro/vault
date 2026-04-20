@@ -139,3 +139,14 @@ Interpretation of the migrated audit:
   - `dc_pudo_uk` still drops on `path_requested_distance_out_of_range` even when `parking_allow_short_path=True` and `short_path_clamp_active=True`
   - `ca_short_pudo_uk` drops are now attributed to `parking_strip_leading_standstill_failed`
   - `dc_unpudo_usa` / `dc_unpudo_uk` now show attributed `filter_bad_paths_path_pose_mismatch`
+
+
+## 2026-04-20 19:26 UTC Relocation Update
+- Stopped the `/tmp` audit runs.
+- Restarted the sequential audit runner with artifacts under `~/tmp`:
+  - sampled root: `/home/borisindelman/tmp/parking_otf_drop_audit_migrated_100_v3`
+  - full root: `/home/borisindelman/tmp/parking_otf_drop_audit_full_migrated_v3`
+- The runner copies summaries into the vault on completion:
+  - sampled summary target: `agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md`
+  - full summary target: `agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-full.md`
+- Current sampled run session: `12779`
