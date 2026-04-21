@@ -150,3 +150,9 @@ Interpretation of the migrated audit:
   - sampled summary target: `agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md`
   - full summary target: `agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-full.md`
 - Current sampled run session: `12779`
+
+
+## 2026-04-21 Stop Update
+- Stopped the exhaustive full-bucket audit run under `/home/borisindelman/tmp/parking_otf_drop_audit_full_migrated_v3`.
+- Reason: the run was progressing extremely slowly and had still only persisted one completed bucket section while burning CPU for an extended period.
+- Decision artifact remains the completed sampled run (`100` source samples per bucket) and its vault summary.
