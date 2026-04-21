@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/01/Week-1/2026-01-05-parking-bc-vs-release-bc-latent-actions.md",
+                "file": "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-01-05-parking-bc-vs-release-bc-latent-actions"
+              "title": "2026-04-20-parking-otf-drop-audit-sampled-100"
             }
           }
         ],
@@ -372,7 +372,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "gear input",
+                "query": "026-04-20-parking-otf-drop-audit-sampled-100.",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -476,13 +476,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/parking_model_arch.excalidraw",
+                "file": "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of parking_model_arch"
+              "title": "Outline of 2026-04-20-parking-otf-drop-audit-sampled-100"
             }
           },
           {
@@ -496,11 +496,12 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -517,15 +518,17 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
     "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
+    "agents-change-log.md",
+    "projects.md",
+    "Tom Boris.md",
+    "agent_tasks/2026/01/Week-1/2026-01-05-parking-bc-vs-release-bc-latent-actions.md",
+    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
     "agent_tasks/2026/04/Week-4",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing.md",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-unpark-route-clipping.md",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-otf-drop-risk-review.md",
-    "agents-change-log.md",
     "projects/fox-mitten.md",
-    "projects.md",
     "projects/parking-unparking-gear-augmentation.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-parking-event-analysis-gemini-batch.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test.md",
@@ -543,8 +546,6 @@
     "agent_tasks/2026/04/Week-3/2026-04-14-si-parking-route-shortening-entry-index.md",
     "agent_tasks/2026/04/Week-3",
     "projects/pudo-update-january-driving-release-2026-5-4.md",
-    "newsletters/newsletter_route-end-parking-trigger.md",
-    "projects/pin-location-augmentation.md",
     "agent_tasks/2026/04/Week-2",
     "agent_tasks/2026/04/Week-1",
     "agent_tasks/2026/04",
