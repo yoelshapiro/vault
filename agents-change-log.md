@@ -1178,3 +1178,16 @@
 - Update: validated the fix locally with the parking slices of `//wayve/ai/zoo/deployment:test_deployment_py_test`, `//wayve/ai/si:test_deployment_wrapper`, and `//wayve/ai/si:test_config_py_test_core`, then pushed commit `92b1f5417cdcf5777f99f2dc9af09a6fc88fa0c1` to `boris/parking-training-pudo-unpark-routing`.
 - Update: marked failed row `151738` as canceled, moved it out of the live release table into archive page `https://www.notion.so/34803da5d69a81a1a69dc45b9cca1f50`, retriggered as job `151763` / session `session_2026_04_20_10_24_37_si_parking_bc_train_release_2026_5_11_shiftwirefix`, and created the new active row `https://www.notion.so/34803da5d69a81e1986af27896203024`.
 - Update: monitored job `151763` through `Queued -> Dispatched -> Running`; current nickname is `ivory-mallard-invaluable` and the run remained `Running` on an early follow-up poll.
+
+- 2026-04-21 — Parking interleave deploy for `magenta-turtle-bright`
+  - Labels: deploy, parking, interleave-control
+  - Branch: `boris/parking-training-pudo-unpark-routing`
+  - PR: none
+  - Change type: deployment + local hotfix
+  - Areas: `wayve/ai/si/deploy.py`, `wayve/ai/si/models/deployment.py`
+  - Changes:
+    - deployed source session `session_2026_04_20_11_08_37_si_parking_bc_train_release_2026_5_11_jitfix1` with parking interleave control
+    - uploaded output session `session_2026_04_20_11_08_37_si_parking_bc_train_release_2026_5_11_jitfix1__magenta-turtle-bright_interleave_control_v1`
+    - resolved assigned nickname `insightful-magenta-porcupine`
+    - restored missing `get_video_temporal_cache(...)` helper to unblock local deploy path
+  - Note: [[agent_tasks/2026/04/Week-4/2026-04-21-parking-interleave-deploy-magenta-turtle-bright]]
