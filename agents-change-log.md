@@ -1191,3 +1191,14 @@
     - resolved assigned nickname `insightful-magenta-porcupine`
     - restored missing `get_video_temporal_cache(...)` helper to unblock local deploy path
   - Note: [[agent_tasks/2026/04/Week-4/2026-04-21-parking-interleave-deploy-magenta-turtle-bright]]
+
+- 2026-04-21: [Parking OTF Drop Audit: 100 Run IDs per Bucket (Partial)](agent_tasks/2026/04/Week-4/2026-04-21-parking-otf-drop-audit-runids100-summary.md)
+  - Labels: parking, otf, audit, buckets, runid-sampling
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: analysis
+  - Areas: `wayve/ai/si/scripts/parking_otf_drop_audit.py`, parking datamodule buckets
+  - Changes:
+    - summarized partial `100`-run-id-per-bucket audit in readable form
+    - recorded completed vs missing bucket coverage
+    - highlighted highest drop-rate completed buckets and main drop signals
