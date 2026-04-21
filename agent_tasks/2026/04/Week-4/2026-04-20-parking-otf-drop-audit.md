@@ -156,3 +156,17 @@ Interpretation of the migrated audit:
 - Stopped the exhaustive full-bucket audit run under `/home/borisindelman/tmp/parking_otf_drop_audit_full_migrated_v3`.
 - Reason: the run was progressing extremely slowly and had still only persisted one completed bucket section while burning CPU for an extended period.
 - Decision artifact remains the completed sampled run (`100` source samples per bucket) and its vault summary.
+
+
+## 2026-04-21 speed-up pass
+- Patched the Bazel audit harness at `/workspace/WayveCode/wayve/ai/si/scripts/parking_otf_drop_audit.py` to make the audit path intentionally cheaper.
+- Changes:
+  - `keep_ordered=False` in the audit datamodule override.
+  - increased async `buffer_size` from `8` to `64`.
+  - disabled partial flushes by default (`--flush-every-n-source-samples=0`).
+  - default output root moved to `~/tmp/parking_otf_drop_audit`.
+  - added `--bucket-workers` and bucket-level parallelism using `ProcessPoolExecutor` with `spawn` multiprocessing context.
+- Verified with a Bazel smoke run:
+  - `bazel run //wayve/ai/si/scripts:parking_otf_drop_audit -- --config-name parking_bc_datamodule --groups pudo --max-samples-per-bucket 1 --bucket-workers 2 --output-dir /home/borisindelman/tmp/parking_otf_drop_audit_smoke_fast2`
+  - completed successfully and produced summary/jsonl outputs.
+- Important note: the harness was already not loading map/radar/lidar and was already patching `insert_camera_data` to avoid image loading. The main new speedups are ordering/buffering, fewer rewrites, and cross-bucket parallelism.
