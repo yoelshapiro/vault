@@ -170,3 +170,17 @@ Interpretation of the migrated audit:
   - `bazel run //wayve/ai/si/scripts:parking_otf_drop_audit -- --config-name parking_bc_datamodule --groups pudo --max-samples-per-bucket 1 --bucket-workers 2 --output-dir /home/borisindelman/tmp/parking_otf_drop_audit_smoke_fast2`
   - completed successfully and produced summary/jsonl outputs.
 - Important note: the harness was already not loading map/radar/lidar and was already patching `insert_camera_data` to avoid image loading. The main new speedups are ordering/buffering, fewer rewrites, and cross-bucket parallelism.
+
+
+## 2026-04-21 run-id sampling pass
+- Added `--max-run-ids-per-bucket` and `--random-seed` to the audit harness.
+- Implementation is source-stage only:
+  - first pass over bucket metadata collects unique `run_id`s,
+  - samples up to `N` run IDs deterministically,
+  - rebuilds the source pipe filtered to those run IDs,
+  - then runs the normal OTF audit on that reduced source set.
+- Verified with a Bazel smoke run:
+  - `bazel run //wayve/ai/si/scripts:parking_otf_drop_audit -- --config-name parking_bc_datamodule --groups pudo --max-run-ids-per-bucket 1 --max-samples-per-bucket 2 --bucket-workers 2 --output-dir /home/borisindelman/tmp/parking_otf_drop_audit_smoke_runids`
+  - completed successfully and produced summary/jsonl outputs.
+- Machine capacity check: `nproc` and `os.cpu_count()` both report `24` logical CPUs.
+- Practical recommendation for this workload: start with `6-8` bucket workers rather than `24`, because the audit is mixed Azure IO + Python/serialization overhead, not pure CPU work.
