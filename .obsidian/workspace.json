@@ -321,8 +321,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
-                "mode": "source",
+                "file": "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
+                "mode": "preview",
                 "source": false,
                 "backlinks": true,
                 "backlinkOpts": {
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-20-parking-otf-drop-audit-sampled-100"
+              "title": "2026-04-22-unpudo-on-road-analysis-plan"
             }
           }
         ],
@@ -393,8 +393,7 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -476,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
+                "file": "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-20-parking-otf-drop-audit-sampled-100"
+              "title": "Outline of 2026-04-22-unpudo-on-road-analysis-plan"
             }
           },
           {
@@ -496,12 +495,11 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -516,18 +514,18 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "7dea9896ceb1a3db",
+  "active": "a6cdcc3493cdeb21",
   "lastOpenFiles": [
+    "agents-change-log.md",
+    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-parking-otf-drop-audit-runids200-summary.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
     "agent_tasks/2026/04/Week-4/2026-04-21-parking-otf-drop-audit-runids100-summary.md",
     "agent_tasks/2026/04/Week-4/2026-04-21-parking-interleave-deploy-magenta-turtle-bright.md",
     "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
-    "agents-change-log.md",
     "projects.md",
     "Tom Boris.md",
     "agent_tasks/2026/01/Week-1/2026-01-05-parking-bc-vs-release-bc-latent-actions.md",
-    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
     "agent_tasks/2026/04/Week-4",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing.md",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-unpark-route-clipping.md",
