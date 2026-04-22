@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
+                "file": "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52"
+              "title": "2026-04-22-unpudo-on-road-analysis-plan"
             }
           }
         ],
@@ -397,7 +397,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 305.01258087158203
+    "width": 536.012580871582
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
+                "file": "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52"
+              "title": "Outline of 2026-04-22-unpudo-on-road-analysis-plan"
             }
           },
           {
@@ -516,6 +516,30 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "agents-change-log.md",
+    "model_analysis/models/satisfied-amber-moose.md",
+    "model_analysis/models/plum-timeless-beaver.md",
+    "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/models/lively-orange-horse.md",
+    "model_analysis/models/harlequin-excited-greyhound.md",
+    "model_analysis/models/blue-panther-solid.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/apricot-crocodile-uproarious.md",
+    "model_analysis/models/alpaca-chocolate-fearless.md",
+    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-model-analysis-batch.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-20--12-50-45--gen2-av-4433efa2-b85f-49b5-b5ca-0d6e9c3de929.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20018--2026-04-14--20-16-04--gen2-av-592e7fc4-edb5-4b7f-add1-be9879a0bf38.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-19--21-22-24--gen2-av-b9dcf6f2-899e-4787-bf0d-316d419103cb.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-19--18-53-22--gen2-av-ddd40ec5-0a42-467c-90ca-157a762e45c5.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-14--21-16-51--gen2-av-8394ba03-576c-4ae2-b5e9-aa5cb899de80.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-19--19-12-09--gen2-av-a2ff7adf-b899-4426-b9cb-3bdff0ea9636.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-19--19-01-24--gen2-av-d03ace5e-a7f3-4575-b52f-a52764f5c68b.md",
+    "model_analysis/report_cards/2026/04/Week-3",
+    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
+    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
+    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db",
@@ -524,34 +548,10 @@
     "model_analysis/event_packets/satisfied-amber-moose",
     "model_analysis/event_packets",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-batch-relaunch-execplan.md",
-    "model_analysis/models/blue-panther-solid.md",
-    "model_analysis/models/harlequin-excited-greyhound.md",
-    "model_analysis/models/pink-manta-ray-smooth.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-investigation-skill.md",
-    "agents-change-log.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
     "model_analysis/README.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20012--2026-04-21--20-09-51--gen2-av-e0b70f5f-cb4d-4f8b-b0d7-af97a8834fb9.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa.md",
-    "model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md",
     "model_analysis/report_cards/2026/04/Week-4",
     "model_analysis/report_cards/2026/04/Week-2",
-    "model_analysis/report_cards/2026/04",
-    "model_analysis/report_cards/2026",
-    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
-    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-model-analysis-batch.md",
-    "agent_tasks/2026/04/Week-4/2026-04-22-release-page-top14-unpudo-cohort.md",
-    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
-    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-model-analysis-skill.md",
-    "agent_tasks/2026/04/Week-4/2026-04-22-parking-otf-drop-audit-runids200-summary.md",
-    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
-    "agent_tasks/2026/04/Week-4/2026-04-21-parking-otf-drop-audit-runids100-summary.md",
-    "agent_tasks/2026/04/Week-4/2026-04-21-parking-interleave-deploy-magenta-turtle-bright.md",
-    "projects.md",
-    "Tom Boris.md",
-    "agent_tasks/2026/01/Week-1/2026-01-05-parking-bc-vs-release-bc-latent-actions.md",
-    "agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing.md",
-    "agent_tasks/2026/04/Week-3/2026-04-19-parking-unpark-route-clipping.md",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
