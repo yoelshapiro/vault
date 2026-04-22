@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-22 — UNPUDO on-road analysis source discovery and plan
+- Topic: identify the Databricks tables needed to analyze failed and successful UNPUDO on-road events, validate source viability for gear/pedal/navigation timing, and define the first-pass analysis plan.
+- Labels: #parking #unpudo #on-road #databricks #analysis #planning
+- Branch: `main`
+- PR: none
+- Change type: analysis/planning
+- Areas: `parking.pudo_unpudo_unpark_events`, `prod_data_pipeline.raw__gen2`, `prod_data_pipeline.inferred__state`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan]]: confirmed the core event, navigation, controller-state, and trajectory tables; verified that `run_trace.pedal_pos_pct` is unusable for sampled UNPUDO runs; and documented a staged plan for failed-event RCA, route-change timing, and pedal-use analysis.
+
 > #### 2026-04-20 — Parking OTF drop audit for PUDO/UNPUDO/UNPARK buckets
 - Topic: audit active parking/PUDO training buckets through the real OTF datapipe, attribute sample drops, and identify whether short future path or path-policy mismatch is removing useful non-driving data.
 - Labels: #parking #pudo #unpudo #unpark #otf #data-audit #path-filtering
