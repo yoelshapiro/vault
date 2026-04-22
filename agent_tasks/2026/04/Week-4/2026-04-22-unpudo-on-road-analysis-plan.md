@@ -215,3 +215,67 @@ I checked one recent successful UNPUDO and one recent failed UNPUDO against the 
 - The success case is consistent with the intended story: route change first, then gear change, then pedal/motion.
 - The failed case does not currently look like “trajectory too short” from this proxy. The stronger signal is that the route change comes only `2.6s` before gear change, the gear state is unstable before the maneuver, and there is no pedal input after reassignment or after gear change.
 - So for these two examples, the heuristic looks directionally correct, but “late reassignment + no real maneuver initiation” is a stronger failure mode than “short trajectory.”
+
+## AV-only rerun
+
+### Success rerun
+- Run: `fme20009/2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52`
+- Model: `eel-teal-outspoken`
+- Foxglove: [segment](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20009&ds.end=2026-04-21T21%3A43%3A39.133Z&ds.start=2026-04-21T21%3A42%3A24.818Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-21T21%3A42%3A34.818Z)
+- Console: [run](https://console.sso.wayve.ai/run/fme20009/2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52)
+- Route change is still `2026-04-21T21:42:34.818Z`.
+- Actual gear change to `DRIVE` happens before AV at `2026-04-21T21:43:08.790Z`.
+- AV engages at `2026-04-21T21:43:21.640Z`.
+- UNPUDO event start is `2026-04-21T21:43:22.833Z`.
+- First actual motion in AV is `2026-04-21T21:43:22.870Z`, about `1.24s` after AV engagement.
+- Model predicted gear at AV start is `DRIVE`.
+- Actual gear at AV start is already `DRIVE`.
+- Indicator evidence:
+  - actual indicator light is unavailable in this segment
+  - actual indicator switch is `RIGHT_ON`
+  - controller output indicator is `RIGHT_ON`
+  - driving-plan indicators near AV start are `RIGHT_ON`
+- Driver help evidence in AV:
+  - accelerator pedal in AV: `0.0%` max
+  - brake pedal in AV: up to `8.0%` while stationary at the handover
+  - first motion occurs in AV without accelerator pedal input
+
+### Failed rerun
+- Run: `fme20031/2026-04-21--06-19-02--gen2-av-be2ad99b-5967-471c-a413-80a21809f1a2`
+- Model: `maroon-bulldog-sophisticated`
+- Foxglove: [segment](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20031&ds.end=2026-04-21T07%3A16%3A08.583Z&ds.start=2026-04-21T07%3A15%3A23.418Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-21T07%3A15%3A33.418Z)
+- Console: [run](https://console.sso.wayve.ai/run/fme20031/2026-04-21--06-19-02--gen2-av-be2ad99b-5967-471c-a413-80a21809f1a2)
+- Route change is still `2026-04-21T07:15:33.418Z`.
+- AV engages at `2026-04-21T07:15:35.481Z`.
+- Actual gear is still `PARK` at AV start and changes to `DRIVE` at `2026-04-21T07:15:35.953Z`.
+- AV disengages at `2026-04-21T07:15:35.981Z`.
+- That first AV stint lasts about `0.50s`, so this should be treated as a likely accidental or guarded intervention rather than a strong model failure by itself.
+- Model predicted gear at AV start is already `DRIVE`.
+- Actual gear lags the model prediction and only reaches `DRIVE` late in the short AV window.
+- Indicator evidence during the short AV stint:
+  - actual indicator light is unavailable
+  - actual indicator switch is `OFF`
+  - controller output indicator is `OFF`
+  - driving-plan indicators near AV start are `OFF`
+- Driver help / safety evidence during the short AV stint:
+  - accelerator pedal in AV: `0.0%` max
+  - brake pedal in AV: `8.0%` max
+  - max speed in the AV stint: `0.0 m/s`
+  - there is no actual motion before disengagement
+- There is a later successful UNPUDO in the same run, and by the later event start the model still predicts `DRIVE` but now the plan indicators are `RIGHT_ON`.
+
+### Updated takeaway
+- We should score only the AV-owned portion.
+- In the success example, route reassignment and actual gear change both happen before AV, so the correct expectation is that once AV engages it should start UNPUDO almost immediately. That is what happens.
+- In the failed example, the first AV-owned attempt is too short to call a meaningful failure. It is better described as a short interrupted handover:
+  - route change arrives only `2.06s` before AV engagement
+  - AV lasts only `0.50s`
+  - the vehicle does not move
+  - brake remains applied
+- For gear, the model-plan signal is useful:
+  - success: model predicted `DRIVE`, actual gear was already `DRIVE` by AV start
+  - failed short attempt: model predicted `DRIVE`, actual gear was still `PARK` at AV start
+- For gear ownership, these samples do not provide a clean attribution between model-commanded gear and manual driver gear change:
+  - the model plan clearly predicts `DRIVE`
+  - the explicit controller gear-command field sampled here remains `UNKNOWN`
+  - so we can compare model prediction vs actual gear, but not confidently assign who executed the shift
