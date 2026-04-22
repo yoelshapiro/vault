@@ -184,3 +184,34 @@ The minimal working source set for this task is:
     - gear state churns before the gear-change anchor
     - there is no accelerator input after the reassignment or after gear change
   - for this example, the likely issue is not “trajectory too short” but “assignment came too late / maneuver never meaningfully started”
+
+## Readable summary
+I checked one recent successful UNPUDO and one recent failed UNPUDO against the raw navigation and controller-state tables.
+
+**Successful**
+- Run: `fme20009/2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52`
+- Model: `eel-teal-outspoken`
+- Foxglove: [segment](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20009&ds.end=2026-04-21T21%3A43%3A39.133Z&ds.start=2026-04-21T21%3A42%3A24.818Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-21T21%3A42%3A34.818Z)
+- Console: [run](https://console.sso.wayve.ai/run/fme20009/2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52)
+- Route-change signal is clear. At `2026-04-21T21:42:08.868Z` to `2026-04-21T21:42:34.818Z` relative to the maneuver, navigation goes from `2` steps and `0.0m` to destination to `6` steps and `252.98m` to destination. I’m using `2026-04-21T21:42:34.818Z` as the effective reassignment point.
+- Gear change is at `2026-04-21T21:43:08.833Z`. The gear sequence around it is `PARK -> REVERSE -> NEUTRAL -> DRIVE`.
+- Event anchor is at `2026-04-21T21:43:22.833Z`, about `14.0s` after gear change. Event end is `2026-04-21T21:43:29.133Z`.
+- Pedal usage exists. First pedal after route change is about `4.0s` before gear change, and first pedal after gear change is about `9.0s` after gear change. Max pedal after route change is `23.27%`, and after gear change through event end it reaches `5.10%`.
+- Trajectory proxy does not look obviously short: `11` driving-plan steps and `36-38` trajectory waypoints near the event anchor.
+
+**Failed**
+- Run: `fme20031/2026-04-21--06-19-02--gen2-av-be2ad99b-5967-471c-a413-80a21809f1a2`
+- Model: `maroon-bulldog-sophisticated`
+- Foxglove: [segment](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20031&ds.end=2026-04-21T07%3A16%3A08.583Z&ds.start=2026-04-21T07%3A15%3A23.418Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-21T07%3A15%3A33.418Z)
+- Console: [run](https://console.sso.wayve.ai/run/fme20031/2026-04-21--06-19-02--gen2-av-be2ad99b-5967-471c-a413-80a21809f1a2)
+- Event-table failure signal is `has_disengagement_before_gearchange_10s = 1` with `disengagement_what = failed_to_unpudo`.
+- The navigation reassignment is extremely late. At `2026-04-21T07:15:21.018Z` it is still `40.31m` from destination with `2` steps; by `2026-04-21T07:15:33.418Z`, only `2.564s` before gear change, it jumps to `388.37m` with the same terminal instruction.
+- Gear change is at `2026-04-21T07:15:35.983Z`. Before that, the gear state churns: `DRIVE` with pedal at `-20.5s`, then `REVERSE -> NEUTRAL -> DRIVE -> NEUTRAL -> PARK`, then back to `DRIVE` at `-0.022s`.
+- Event anchor is at `2026-04-21T07:15:55.083Z`, about `19.1s` after gear change. Event end is `2026-04-21T07:15:58.583Z`.
+- There is no accelerator input after the route change and no accelerator input after gear change. Max pedal is `0.0%` in both windows.
+- Trajectory proxy is not obviously shorter than the successful case: `11` driving-plan steps and `36-37` trajectory waypoints near the event anchor.
+
+**Takeaway**
+- The success case is consistent with the intended story: route change first, then gear change, then pedal/motion.
+- The failed case does not currently look like “trajectory too short” from this proxy. The stronger signal is that the route change comes only `2.6s` before gear change, the gear state is unstable before the maneuver, and there is no pedal input after reassignment or after gear change.
+- So for these two examples, the heuristic looks directionally correct, but “late reassignment + no real maneuver initiation” is a stronger failure mode than “short trajectory.”
