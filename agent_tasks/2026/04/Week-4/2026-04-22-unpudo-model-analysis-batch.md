@@ -179,3 +179,33 @@ Processing policy:
     - `/home/borisindelman/tmp/model_analysis_databricks_cache`
   - patched `export_model_event_packets.py` so future packet exports keep cache state in `~/tmp` rather than under `vault/model_analysis/event_packets`
   - verified that `vault/model_analysis` no longer contains `cache.db` files
+- `2026-04-22 23:22 UTC`
+  - added `generate_model_reports.py` under the model-analysis skill
+  - the new analyzer reads cached packet JSON and deterministically rewrites:
+    - per-run report cards under `model_analysis/report_cards/...`
+    - per-model index cards under `model_analysis/models/...`
+  - validated the analyzer on the cached `satisfied-amber-moose` packet and refreshed its model card links against the exact run-file anchors
+- `2026-04-22 23:27 UTC`
+  - validated the end-to-end uncached path on `harlequin-excited-greyhound`
+  - exported the full packet with `17` events instead of the earlier single-card partial state
+  - regenerated:
+    - `model_analysis/models/harlequin-excited-greyhound.md`
+    - `model_analysis/report_cards/2026/04/Week-3/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md`
+- `2026-04-22 23:30 UTC`
+  - replaced the exporter's per-run source fetching with per-model windowed source queries
+  - new exporter behavior:
+    - still writes per-run JSON files under `event_packets/<model>/runs/...`
+    - but fetches each telemetry source once per model and splits locally by run
+  - this cuts the Databricks round trips for large models from hundreds of per-run source queries down to one source query per model
+- `2026-04-22 23:33 UTC`
+  - relaunched the active queue with four new workers and isolated `HOME` directories:
+    - `Erdos` on `blue-panther-solid`
+    - `Rawls` on `pink-manta-ray-smooth`
+    - `Banach` on `harlequin-excited-greyhound`
+    - `Anscombe` on `satisfied-amber-moose`
+  - the plan is to feed those same workers the remaining queue in order as each one finishes:
+    - `armadillo-amethyst-squeaky`
+    - `apricot-crocodile-uproarious`
+    - `lively-orange-horse`
+    - `plum-timeless-beaver`
+    - `alpaca-chocolate-fearless`
