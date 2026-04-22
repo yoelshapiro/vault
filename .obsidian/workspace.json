@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/blue-panther-solid.md",
+                "file": "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "blue-panther-solid"
+              "title": "fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/blue-panther-solid.md",
+                "file": "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of blue-panther-solid"
+              "title": "Outline of fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52"
             }
           },
           {
@@ -516,9 +516,10 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "model_analysis/models/pink-manta-ray-smooth.md",
-    "model_analysis/models/harlequin-excited-greyhound.md",
+    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-batch-relaunch-execplan.md",
     "model_analysis/models/blue-panther-solid.md",
+    "model_analysis/models/harlequin-excited-greyhound.md",
+    "model_analysis/models/pink-manta-ray-smooth.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-investigation-skill.md",
     "agents-change-log.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
@@ -549,7 +550,6 @@
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-training-pudo-unpark-routing.md",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-unpark-route-clipping.md",
     "agent_tasks/2026/04/Week-3/2026-04-19-parking-otf-drop-risk-review.md",
-    "projects/fox-mitten.md",
     "agent_tasks/2026/04/Week-3",
     "agent_tasks/2026/04/Week-2",
     "Pasted Image 20260111140517_906.png",
