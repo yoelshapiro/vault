@@ -106,3 +106,4 @@ Processing policy:
 - `2026-04-22 21:21 UTC`
   - found a Databricks helper concurrency issue under parallel workers: `~/.cache/databricks-queries/cache.db` can throw `sqlite3.OperationalError: disk I/O error`
   - mitigation is to run worker Databricks commands with isolated `HOME` directories so each worker gets its own cache DB
+  - because Databricks auth uses Azure CLI state, the isolated `HOME` also needs a symlinked `.azure` directory from `/home/borisindelman/.azure`
