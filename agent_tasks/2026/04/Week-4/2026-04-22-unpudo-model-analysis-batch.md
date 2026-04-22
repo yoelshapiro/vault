@@ -107,3 +107,7 @@ Processing policy:
   - found a Databricks helper concurrency issue under parallel workers: `~/.cache/databricks-queries/cache.db` can throw `sqlite3.OperationalError: disk I/O error`
   - mitigation is to run worker Databricks commands with isolated `HOME` directories so each worker gets its own cache DB
   - because Databricks auth uses Azure CLI state, the isolated `HOME` also needs a symlinked `.azure` directory from `/home/borisindelman/.azure`
+- `2026-04-22 21:32 UTC`
+  - wrote the first real event card locally for `harlequin-excited-greyhound`
+  - created run file `model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md`
+  - created model card `model_analysis/models/harlequin-excited-greyhound.md`

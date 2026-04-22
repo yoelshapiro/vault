@@ -1250,3 +1250,14 @@
     - created a new skill that analyzes one or many models and persists UNPUDO / unparking event cards into the vault
     - defined the vault layout as per-model index cards under `model_analysis/models` and per-run report files under `model_analysis/report_cards/YYYY/MM/Week-N`
     - specified that run files hold the full event cards and model cards link to those event-card headers
+
+- 2026-04-22: [UNPUDO Model Analysis Batch](agent_tasks/2026/04/Week-4/2026-04-22-unpudo-model-analysis-batch.md)
+  - Labels: parking, unpudo, model-analysis, vault, batch
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: analysis + workflow execution
+  - Areas: `vault/model_analysis`, `tools/databricks_queries`
+  - Changes:
+    - built the release-page-derived UNPUDO batch queue in most-recent-model-first order
+    - created the first run report card and model card for `harlequin-excited-greyhound`
+    - fixed `tools/databricks_queries` to allow per-worker cache isolation via `DATABRICKS_QUERIES_CACHE_DIR`
