@@ -55,3 +55,23 @@
   - Mermaid timeline
   - metrics table
   - written summary
+
+## Update: Databricks persistence
+
+- Extended the skill so each analyzed event is also intended to be written to `parking.model_analysis`.
+- Added a shared schema file at:
+  - `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/references/parking_model_analysis_schema.sql`
+- The schema is designed to be common across:
+  - `park`
+  - `pudo`
+  - `unpudo`
+  - `unparking`
+- Required write fields now include:
+  - `event_type`
+  - `event_status`
+  - `pass_fail_statement`
+  - `written_summary`
+  - `event_card_markdown`
+  - `analysis_version`
+  - `written_at_unixus`
+- The schema also stores structured timing, gear, indicator, disengagement, pedal, and link fields so agents can later consume both the summary text and the underlying structured evidence.
