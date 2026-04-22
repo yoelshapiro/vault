@@ -116,3 +116,4 @@ Processing policy:
   - fixed Console link to deep-link on the event timestamp
   - fixed Foxglove to anchor on the event timestamp instead of a guessed route timestamp
   - removed the incorrect route-change claim and replaced it with `no validated route reassignment`
+  - updated the segment-investigation skill so it also handles runs with no navigation change or no `"Arrived at destination"` step without fabricating a route-change story
