@@ -1261,3 +1261,5 @@
     - built the release-page-derived UNPUDO batch queue in most-recent-model-first order
     - created the first run report card and model card for `harlequin-excited-greyhound`
     - fixed `tools/databricks_queries` to allow per-worker cache isolation via `DATABRICKS_QUERIES_CACHE_DIR`
+  - Update:
+    - corrected the first event card so Console deep-links to the event timestamp, Foxglove centers on the event/disengagement window, and route change is only mentioned when a reassignment signal is actually validated
