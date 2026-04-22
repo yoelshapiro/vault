@@ -1237,3 +1237,14 @@
     - standardized the per-event output format as pass/fail bullet, event table, Mermaid timeline, metrics table, and written summary
   - Update:
     - reframed the required per-event output as an event card with metadata first, including model, run id, UTC date/time, event type, disengagement type, console link, and Foxglove link
+
+- 2026-04-22: [UNPUDO / Unpark Model Analysis Skill](agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-model-analysis-skill.md)
+  - Labels: skills, vault, parking, unpudo, unparking, model-analysis
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: tooling + vault workflow documentation
+  - Areas: `~/.codex/skills/unpudo-unpark-model-analysis`, `ParkingSkills/skills/unpudo-unpark-model-analysis`, `vault/model_analysis`
+  - Changes:
+    - created a new skill that analyzes one or many models and persists UNPUDO / unparking event cards into the vault
+    - defined the vault layout as per-model index cards under `model_analysis/models` and per-run report files under `model_analysis/report_cards/YYYY/MM/Week-N`
+    - specified that run files hold the full event cards and model cards link to those event-card headers
