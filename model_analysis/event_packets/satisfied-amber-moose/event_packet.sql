@@ -1,5 +1,5 @@
 
-WITH events AS (
+WITH ranked_events AS (
   SELECT
     concat(e.runID, '|', e.event_type, '|', cast(e.timestamp_unixus AS string)) AS event_key,
     e.runID AS run_id,
@@ -29,6 +29,7 @@ WITH events AS (
     e.disengagement_what_before_gearchange_10s,
     e.disengagement_why_before_gearchange_10s,
     e.disengagement_timestamp_unixus_before_gearchange_10s,
+    row_number() OVER (PARTITION BY lower(e.model_nickname) ORDER BY e.timestamp_unixus DESC) AS event_rank,
     array_min(
       filter(
         array(
@@ -44,6 +45,11 @@ WITH events AS (
     AND lower(e.model_nickname) = lower('satisfied-amber-moose')
     AND e.run_date_iso >= '2026-04-01'
     AND e.run_date_iso <= '2026-04-22'
+),
+events AS (
+  SELECT *
+  FROM ranked_events
+  WHERE event_rank <= 5
 ),
 events_with_diseng AS (
   SELECT
