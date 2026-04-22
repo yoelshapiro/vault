@@ -75,3 +75,23 @@
   - `analysis_version`
   - `written_at_unixus`
 - The schema also stores structured timing, gear, indicator, disengagement, pedal, and link fields so agents can later consume both the summary text and the underlying structured evidence.
+
+## Update: AV-only scoring and resolution
+
+- Tightened the skill so model evaluation is strictly AV-owned:
+  - a maneuver cannot be labeled `pass` unless the credited UNPUDO or unpark segment stays AV-owned
+  - if the vehicle completes the maneuver outside AV, the report must still label it `fail` for model-performance reporting
+- Added a required `resolution` section to each event card with:
+  - final outcome
+  - agreement level
+  - source disengagement type
+  - resolved effective failure type
+  - confidence
+- Updated the event-card requirements so the event table and Mermaid timeline now include, when present:
+  - DBW ownership changes
+  - driver accelerator help during AV
+  - indicator state at maneuver start and end
+- Simplified `event_status` guidance to:
+  - `pass`
+  - `fail`
+  with finer diagnosis carried by `effective_failure_type`

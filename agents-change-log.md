@@ -20,6 +20,16 @@
 - Changes:
   - [[agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan]]: confirmed the core event, navigation, controller-state, and trajectory tables; verified that `run_trace.pedal_pos_pct` is unusable for sampled UNPUDO runs; and documented a staged plan for failed-event RCA, route-change timing, and pedal-use analysis.
 
+> #### 2026-04-22 — UNPUDO / Unpark investigation skill contract tightening
+- Topic: tighten the UNPUDO/unpark event-card skill around AV-only scoring, add explicit resolution output, and require DBW/pedal/indicator state transitions in the event timeline.
+- Labels: #parking #unpudo #unpark #skills #analysis #vault
+- Branch: `main`
+- PR: none
+- Change type: docs/tooling
+- Areas: `~/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/`, `~/git/ParkingSkills/skills/unpudo-unpark-model-analysis/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-investigation-skill]]: updated the skills so non-AV maneuver execution must be scored as `fail` for model performance, added a required `Resolution` section to each event card, simplified `event_status` guidance to `pass`/`fail`, and required DBW transitions, in-AV driver accelerator help, and indicator start/end state in the event table and Mermaid timeline.
+
 > #### 2026-04-20 — Parking OTF drop audit for PUDO/UNPUDO/UNPARK buckets
 - Topic: audit active parking/PUDO training buckets through the real OTF datapipe, attribute sample drops, and identify whether short future path or path-policy mismatch is removing useful non-driving data.
 - Labels: #parking #pudo #unpudo #unpark #otf #data-audit #path-filtering
