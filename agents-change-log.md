@@ -1223,3 +1223,15 @@
     - summarized completed `200`-run-id-per-bucket audit in readable form
     - recorded aggregate failure distribution and worst buckets
     - highlighted remaining attribution gap and next code changes to consider
+
+- 2026-04-22: [UNPUDO / Unpark Investigation Skill](agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-investigation-skill.md)
+  - Labels: skills, parking, unpudo, unparking, databricks
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: tooling + workflow documentation
+  - Areas: `~/.codex/skills/unpudo-unpark-segment-investigation`, `ParkingSkills/skills/unpudo-unpark-segment-investigation`
+  - Changes:
+    - created a new Codex skill for investigating AV-owned UNPUDO and unparking segments from Databricks
+    - documented the authoritative tables and signals for route change, AV ownership, actual gear, predicted gear, indicators, pedals, and trajectory context
+    - defined the evaluation rules for meaningful success, meaningful failure, and short interrupted AV attempts
+    - standardized the per-event output format as pass/fail bullet, event table, Mermaid timeline, metrics table, and written summary
