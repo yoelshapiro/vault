@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa.md",
+                "file": "model_analysis/models/blue-panther-solid.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa"
+              "title": "blue-panther-solid"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa.md",
+                "file": "model_analysis/models/blue-panther-solid.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa"
+              "title": "Outline of blue-panther-solid"
             }
           },
           {
@@ -516,14 +516,14 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
-    "model_analysis/models/blue-panther-solid.md",
     "model_analysis/models/pink-manta-ray-smooth.md",
-    "model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md",
+    "model_analysis/models/blue-panther-solid.md",
+    "model_analysis/models/harlequin-excited-greyhound.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
+    "model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20012--2026-04-21--20-09-51--gen2-av-e0b70f5f-cb4d-4f8b-b0d7-af97a8834fb9.md",
     "model_analysis/report_cards/2026/04/Week-4",
-    "model_analysis/models/harlequin-excited-greyhound.md",
     "model_analysis/README.md",
     "model_analysis/report_cards/2026/04/Week-2",
     "model_analysis/report_cards/2026/04",
