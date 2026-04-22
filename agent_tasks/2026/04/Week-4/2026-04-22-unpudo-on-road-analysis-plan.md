@@ -279,3 +279,85 @@ I checked one recent successful UNPUDO and one recent failed UNPUDO against the 
   - the model plan clearly predicts `DRIVE`
   - the explicit controller gear-command field sampled here remains `UNKNOWN`
   - so we can compare model prediction vs actual gear, but not confidently assign who executed the shift
+
+## AV-only formatted summary
+
+### Success
+- Success: valid AV-owned success. Route and actual gear both changed before AV; once AV engaged, UNPUDO started almost immediately. Foxglove: [success segment](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20009&ds.end=2026-04-21T21%3A43%3A39.133Z&ds.start=2026-04-21T21%3A42%3A24.818Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-21T21%3A42%3A34.818Z)
+
+| Event | Time (UTC) | Delta from route |
+|---|---:|---:|
+| Route change | 2026-04-21 21:42:34.818 | 0.00s |
+| Actual gear -> `DRIVE` | 2026-04-21 21:43:08.790 | 33.97s |
+| AV engage (`is_drive_by_wire=true`) | 2026-04-21 21:43:21.641 | 46.82s |
+| UNPUDO start | 2026-04-21 21:43:22.833 | 48.02s |
+| First motion | 2026-04-21 21:43:22.870 | 48.05s |
+| UNPUDO end | 2026-04-21 21:43:29.133 | 54.32s |
+
+```mermaid
+timeline
+    title Success UNPUDO relative to route change
+    0.00s : Route change
+    33.97s : Actual gear -> DRIVE
+    46.82s : AV engage
+    48.02s : UNPUDO start
+    48.05s : First motion
+    54.32s : UNPUDO end
+```
+
+| Metric | Value |
+|---|---|
+| Predicted gear | model plan = `DRIVE` |
+| Actual gear in AV | already `DRIVE` at AV start |
+| Gear correctness | correct by AV start |
+| Model/controller indicator | `RIGHT_ON` |
+| Actual indicator direction | switch = `RIGHT_ON` |
+| Driver accel help in AV | none, max accel pedal `0.0%` |
+| Brake in AV | present while stationary, max brake pedal `8.0%` |
+| AV -> UNPUDO start | `1.19s` |
+| AV -> first motion | `1.23s` |
+| Route -> AV | `46.82s` |
+
+The AV-owned part looks healthy. The assignment changed and the manual gear change completed before AV, so the right expectation is “engage AV, then start moving immediately,” and that is exactly what happened. There is no driver accelerator help in AV.
+
+### Failed
+- Fail / interrupted: this is not a convincing model failure. The first AV stint lasts only `0.50s`, the car never moves, brake stays applied, and there is a later successful UNPUDO in the same run. Foxglove: [failed segment](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20031&ds.end=2026-04-21T07%3A16%3A08.583Z&ds.start=2026-04-21T07%3A15%3A23.418Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-21T07%3A15%3A33.418Z)
+
+| Event | Time (UTC) | Delta from route |
+|---|---:|---:|
+| Route change | 2026-04-21 07:15:33.418 | 0.00s |
+| AV engage (`is_drive_by_wire=true`) | 2026-04-21 07:15:35.481 | 2.06s |
+| Actual gear still `PARK` at AV start | 2026-04-21 07:15:35.481 | 2.06s |
+| Actual gear -> `DRIVE` | 2026-04-21 07:15:35.953 | 2.53s |
+| AV disengage | 2026-04-21 07:15:35.981 | 2.56s |
+| Later AV re-engage | 2026-04-21 07:15:54.381 | 20.96s |
+| Selected UNPUDO start | 2026-04-21 07:15:55.083 | 21.66s |
+
+```mermaid
+timeline
+    title Failed example relative to route change
+    0.00s : Route change
+    2.06s : AV engage
+    2.53s : Actual gear -> DRIVE
+    2.56s : AV disengage
+    20.96s : Later AV re-engage
+    21.66s : Selected UNPUDO start
+```
+
+| Metric | Value |
+|---|---|
+| Predicted gear | model plan = `DRIVE` |
+| Actual gear in short AV stint | `PARK -> DRIVE` |
+| Gear correctness | model predicted `DRIVE` before actual gear caught up |
+| Model/controller indicator in short AV stint | `OFF` |
+| Actual indicator direction in short AV stint | switch = `OFF` |
+| Driver accel help in AV | none, max accel pedal `0.0%` |
+| Brake in AV | max brake pedal `8.0%` |
+| Motion before disengage | none, max speed `0.0 m/s` |
+| Route -> AV | `2.06s` |
+| AV duration before disengage | `0.50s` |
+
+This should be labeled as a short interrupted handover, not a durable “failed to unpudo” maneuver. The model plan already wanted `DRIVE`, but AV started while actual gear was still `PARK`, then disengaged almost immediately with brake still applied and no motion. There is also a later successful UNPUDO in the same run, which reinforces that this first segment is likely accidental or guarded intervention.
+
+### Summary
+The corrected rule is: score only the AV-owned window. On that basis, the success case is clearly good, and the failed case is mostly an interruption artifact. For gear, `vehicle_driving_plan.drive_position` is the right model-prediction signal, but in these samples the explicit controller gear-command field stays `UNKNOWN`, so we can compare predicted vs actual gear, but we cannot confidently say whether a gear shift in AV was executed by the model or manually by the driver.
