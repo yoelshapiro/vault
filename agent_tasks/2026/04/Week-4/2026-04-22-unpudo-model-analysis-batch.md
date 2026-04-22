@@ -103,3 +103,6 @@ Processing policy:
 - `2026-04-22 21:19 UTC`
   - staged the next packet for `harlequin-excited-greyhound` and `satisfied-amber-moose`
   - both models are currently single-run packets, which should make the next handoff cheaper
+- `2026-04-22 21:21 UTC`
+  - found a Databricks helper concurrency issue under parallel workers: `~/.cache/databricks-queries/cache.db` can throw `sqlite3.OperationalError: disk I/O error`
+  - mitigation is to run worker Databricks commands with isolated `HOME` directories so each worker gets its own cache DB
