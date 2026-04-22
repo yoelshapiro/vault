@@ -42,6 +42,8 @@ The main conclusion is that drop volume is not small. Several parking and unpark
 
 Percentages are shown both as a share of all dropped samples and as a share of all source samples.
 
+`unattributed_drop` is not a native OTF failure reason. It is the remainder computed during post-processing when `dropped = source_seen - output_seen`, but the patched harness did not record an explicit `record_drop(...)` reason for all of those lost samples. In other words, these are real dropped samples whose drop path is still outside the current audit instrumentation.
+
 | Failure type | Count | % of all failures | % of all samples |
 | --- | ---: | ---: | ---: |
 | unattributed_drop | 8,964 | 32.86% | 3.74% |
@@ -53,6 +55,35 @@ Percentages are shown both as a share of all dropped samples and as a share of a
 | parking_strip_leading_standstill_all_speeds_near_zero | 21 | 0.08% | 0.01% |
 | parking_scratch_table_failed | 16 | 0.06% | 0.01% |
 | bad_timestamps | 4 | 0.01% | 0.00% |
+
+## All Buckets
+
+| Bucket | Seen | Yielded | Dropped | Drop Rate |
+| --- | ---: | ---: | ---: | ---: |
+| ca_long_pudo_uk | 1,880 | 1,776 | 104 | 5.53% |
+| ca_long_pudo_usa | 2,988 | 2,725 | 263 | 8.80% |
+| ca_long_unparking_uk | 5,008 | 4,398 | 610 | 12.18% |
+| ca_long_unparking_usa | 25,543 | 21,240 | 4,303 | 16.85% |
+| ca_long_unpudo_uk | 5,155 | 5,085 | 70 | 1.36% |
+| ca_long_unpudo_usa | 21,078 | 21,015 | 63 | 0.30% |
+| ca_short_pudo_uk | 801 | 783 | 18 | 2.25% |
+| ca_short_pudo_usa | 1,274 | 1,222 | 52 | 4.08% |
+| ca_short_unparking_uk | 2,136 | 1,889 | 247 | 11.56% |
+| ca_short_unparking_usa | 10,930 | 9,451 | 1,479 | 13.53% |
+| ca_short_unpudo_uk | 2,188 | 2,159 | 29 | 1.33% |
+| ca_short_unpudo_usa | 9,237 | 9,200 | 37 | 0.40% |
+| dc_pudo_uk | 44,288 | 35,776 | 8,512 | 19.22% |
+| dc_pudo_usa | 44,568 | 37,738 | 6,830 | 15.32% |
+| dc_unparking_uk | 2,653 | 2,103 | 550 | 20.73% |
+| dc_unparking_usa | 3,290 | 2,911 | 379 | 11.52% |
+| dc_unpudo_uk | 20,159 | 19,301 | 858 | 4.26% |
+| dc_unpudo_usa | 15,905 | 14,287 | 1,618 | 10.17% |
+| pre_ca_pudo_uk | 627 | 611 | 16 | 2.55% |
+| pre_ca_pudo_usa | 995 | 952 | 43 | 4.32% |
+| pre_ca_unparking_uk | 1,671 | 1,445 | 226 | 13.52% |
+| pre_ca_unparking_usa | 8,683 | 7,775 | 908 | 10.46% |
+| pre_ca_unpudo_uk | 1,713 | 1,674 | 39 | 2.28% |
+| pre_ca_unpudo_usa | 6,872 | 6,843 | 29 | 0.42% |
 
 ## Highest-Drop Buckets
 
