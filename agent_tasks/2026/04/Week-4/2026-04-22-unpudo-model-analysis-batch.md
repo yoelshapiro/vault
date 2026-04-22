@@ -78,9 +78,28 @@ Processing policy:
 4. `2026-04-21 21:11:11 UTC` in `fme20012/2026-04-21--20-09-51--gen2-av-e0b70f5f-cb4d-4f8b-b0d7-af97a8834fb9`
 5. `2026-04-21 21:08:39 UTC` in `fme20031/2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa`
 
+### `harlequin-excited-greyhound`
+
+1. `2026-04-14 12:37:44 UTC` in `fme20040/2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a`
+2. `2026-04-14 12:35:47 UTC` in `fme20040/2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a`
+3. `2026-04-14 12:29:04 UTC` in `fme20040/2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a`
+4. `2026-04-14 12:24:05 UTC` in `fme20040/2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a`
+5. `2026-04-14 12:21:47 UTC` in `fme20040/2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a`
+
+### `satisfied-amber-moose`
+
+1. `2026-04-20 04:54:01 UTC` in `fme10011/2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919`
+2. `2026-04-20 04:52:51 UTC` in `fme10011/2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919`
+3. `2026-04-20 04:46:46 UTC` in `fme10011/2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919`
+4. `2026-04-20 04:25:56 UTC` in `fme10011/2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919`
+5. `2026-04-20 04:17:55 UTC` in `fme10011/2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919`
+
 ## Status ledger
 
 - `2026-04-22 21:17 UTC`
   - built the ordered active-model queue from the release-page cohort
   - confirmed `9` active models with UNPUDO events
   - prepared the first `2` model packets for parallel event-card generation
+- `2026-04-22 21:19 UTC`
+  - staged the next packet for `harlequin-excited-greyhound` and `satisfied-amber-moose`
+  - both models are currently single-run packets, which should make the next handoff cheaper
