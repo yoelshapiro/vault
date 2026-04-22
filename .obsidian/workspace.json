@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/README.md",
+                "file": "model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/README.md",
+                "file": "model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of README"
+              "title": "Outline of fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a"
             }
           },
           {
@@ -516,16 +516,23 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "model_analysis/models/harlequin-excited-greyhound.md",
+    "model_analysis/README.md",
+    "model_analysis/report_cards/2026/04/Week-2/fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md",
+    "model_analysis/report_cards/2026/04/Week-2",
+    "model_analysis/report_cards/2026/04",
+    "model_analysis/report_cards/2026",
+    "model_analysis/report_cards",
+    "model_analysis/models",
+    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-model-analysis-batch.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-release-page-top14-unpudo-cohort.md",
     "agents-change-log.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
-    "model_analysis/README.md",
     "model_analysis",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-model-analysis-skill.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-investigation-skill.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-parking-otf-drop-audit-runids200-summary.md",
-    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
     "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
     "agent_tasks/2026/04/Week-4/2026-04-21-parking-otf-drop-audit-runids100-summary.md",
     "agent_tasks/2026/04/Week-4/2026-04-21-parking-interleave-deploy-magenta-turtle-bright.md",
@@ -542,16 +549,9 @@
     "agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-gemini-cli-photo-classifier-skill.md",
     "newsletter_index.md",
-    "agent_tasks/2026/03/Week-4/2026-03-22-port-parking-gear-and-route-jitter-augmentations.md",
-    "agent_tasks/2026/04/Week-3/2026-04-15-route-shortening-jitter-config-wiring.md",
     "agent_tasks/2026/04/Week-3",
     "agent_tasks/2026/04/Week-2",
     "agent_tasks/2026/04/Week-1",
-    "agent_tasks/2026/04",
-    "agent_tasks/2026/03/Week-5",
-    "agent_tasks/2026/03/Week-4",
-    "agent_tasks/2026/03/Week-3",
-    "agent_tasks/2026/03/Week-2",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
