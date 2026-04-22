@@ -1212,3 +1212,14 @@
     - summarized partial `100`-run-id-per-bucket audit in readable form
     - recorded completed vs missing bucket coverage
     - highlighted highest drop-rate completed buckets and main drop signals
+
+- 2026-04-22: [Parking OTF Drop Audit: 200 Run IDs per Bucket](agent_tasks/2026/04/Week-4/2026-04-22-parking-otf-drop-audit-runids200-summary.md)
+  - Labels: parking, otf, audit, buckets, runid-sampling
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: analysis
+  - Areas: `wayve/ai/si/scripts/parking_otf_drop_audit.py`, parking datamodule buckets
+  - Changes:
+    - summarized completed `200`-run-id-per-bucket audit in readable form
+    - recorded aggregate failure distribution and worst buckets
+    - highlighted remaining attribution gap and next code changes to consider

@@ -115,3 +115,72 @@ The minimal working source set for this task is:
 - `prod_data_pipeline.inferred__state.trajectory_controller_state`
 
 `prod_data_pipeline.inferred__state.run_trace` should not be used for pedal detection on these UNPUDO runs.
+
+## Validation examples
+### Successful UNPUDO example
+- Run: `fme20009/2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52`
+- Model: `eel-teal-outspoken`
+- Event anchor timestamps:
+  - route change: `2026-04-21T21:42:34.818Z`
+  - gear change: `2026-04-21T21:43:08.833Z`
+  - event start anchor: `2026-04-21T21:43:22.833Z`
+  - event end anchor: `2026-04-21T21:43:29.133Z`
+- Navigation evidence:
+  - at `-59.965s` from gear change: `2` steps, destination distance `0.0m`
+  - at `-34.015s`: `6` steps, destination distance `252.98m`
+  - interpretation: clear route reassignment about `34s` before gear change
+- Controller-state evidence:
+  - remained in `PARK` until the gear change sequence
+  - gear sequence near gear change: `PARK -> REVERSE -> NEUTRAL -> DRIVE` within ~`0.15s`
+  - pedal input:
+    - first pedal after route change: `2026-04-21T21:43:04.831Z` (`~4s` before gear change)
+    - first pedal after gear change: `2026-04-21T21:43:17.842Z` (`~9s` after gear change)
+    - max pedal after route change: `23.27%`
+    - max pedal after gear change through event end: `5.10%`
+- Trajectory proxy at event anchor:
+  - `11` driving-plan steps
+  - `36-38` trajectory waypoints
+  - last driving-plan step around `x=1.4-1.74m`
+- Interpretation:
+  - this looks consistent with a successful UNPUDO
+  - the route update is visible well before the maneuver
+  - there is pedal usage after the reassignment and after the gear change
+
+### Failed UNPUDO example
+- Run: `fme20031/2026-04-21--06-19-02--gen2-av-be2ad99b-5967-471c-a413-80a21809f1a2`
+- Model: `maroon-bulldog-sophisticated`
+- Event anchor timestamps:
+  - route change: `2026-04-21T07:15:33.418Z`
+  - gear change: `2026-04-21T07:15:35.983Z`
+  - event start anchor: `2026-04-21T07:15:55.083Z`
+  - event end anchor: `2026-04-21T07:15:58.583Z`
+- Failure flags from the event table:
+  - `has_disengagement_before_gearchange_10s = 1`
+  - `disengagement_what_any = failed_to_unpudo`
+  - no main-window disengagement and no gear-to-start disengagement
+- Navigation evidence:
+  - at `-14.965s` from gear change: `2` steps, destination distance `40.31m`
+  - at `-2.564s`: `2` steps, destination distance `388.37m`
+  - interpretation: assignment changed only about `2.6s` before gear change, with a very abrupt destination-distance jump
+- Controller-state evidence:
+  - gear sequence before gear change is unstable:
+    - `DRIVE` at `-29.992s`
+    - pedal at `-20.471s` while still in `DRIVE`
+    - then `REVERSE -> NEUTRAL -> DRIVE -> NEUTRAL -> PARK` around `-14.7s` to `-13.8s`
+    - finally back to `DRIVE` at `-0.022s`
+  - pedal input:
+    - no pedal after route change
+    - no pedal after gear change
+    - max pedal after route change through event end: `0.0%`
+    - max pedal after gear change through event end: `0.0%`
+- Trajectory proxy at event anchor:
+  - `11` driving-plan steps
+  - `36-37` trajectory waypoints
+  - last driving-plan step around `x=2.11m`
+- Interpretation:
+  - this does not look like a short-trajectory failure from the available trajectory proxy
+  - the stronger signal is timing and control behavior:
+    - reassignment happens extremely late
+    - gear state churns before the gear-change anchor
+    - there is no accelerator input after the reassignment or after gear change
+  - for this example, the likely issue is not “trajectory too short” but “assignment came too late / maneuver never meaningfully started”
