@@ -1235,3 +1235,5 @@
     - documented the authoritative tables and signals for route change, AV ownership, actual gear, predicted gear, indicators, pedals, and trajectory context
     - defined the evaluation rules for meaningful success, meaningful failure, and short interrupted AV attempts
     - standardized the per-event output format as pass/fail bullet, event table, Mermaid timeline, metrics table, and written summary
+  - Update:
+    - reframed the required per-event output as an event card with metadata first, including model, run id, UTC date/time, event type, disengagement type, console link, and Foxglove link

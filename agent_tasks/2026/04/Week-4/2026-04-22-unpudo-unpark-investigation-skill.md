@@ -36,3 +36,22 @@
 
 - The skill explicitly treats pre-AV route change, gear change, and pedal input as setup rather than model performance.
 - It also warns against overclaiming gear ownership when controller gear-command fields are `UNKNOWN`.
+
+## Update
+
+- Updated the skill output contract to frame each segment as an event card.
+- The event card now starts with metadata:
+  - model
+  - run id
+  - date
+  - time in UTC
+  - event type
+  - disengagement type
+  - console link
+  - Foxglove link
+- After the metadata block, the required sections are:
+  - pass/fail statement
+  - event table
+  - Mermaid timeline
+  - metrics table
+  - written summary
