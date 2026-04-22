@@ -35,30 +35,53 @@ Processing policy:
 
 ## Current worker assignments
 
-### In progress
-
-- `blue-panther-solid`
-  - owner: worker pending
-  - target: latest `5` UNPUDO events
-  - expected run files:
-    - `fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md`
-
-- `pink-manta-ray-smooth`
-  - owner: worker pending
-  - target: latest `5` UNPUDO events
-  - expected run files:
-    - `fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa.md`
-    - `fme20012--2026-04-21--20-09-51--gen2-av-e0b70f5f-cb4d-4f8b-b0d7-af97a8834fb9.md`
-
-### Pending
+### Completed / already written
 
 - `harlequin-excited-greyhound`
+  - run file:
+    - `fme20040--2026-04-14--11-58-50--gen2-av-90560185-3296-43ba-9ec3-6a1693f1514a.md`
+- `blue-panther-solid`
+  - run file:
+    - `fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md`
+- `pink-manta-ray-smooth`
+  - run files:
+    - `fme20031--2026-04-21--20-55-03--gen2-av-6012f067-7eac-4c54-af80-fe1b295980aa.md`
+    - `fme20012--2026-04-21--20-09-51--gen2-av-e0b70f5f-cb4d-4f8b-b0d7-af97a8834fb9.md`
 - `satisfied-amber-moose`
+  - run file:
+    - `fme10011--2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919.md`
+
+### In progress
+
 - `armadillo-amethyst-squeaky`
+  - owner: worker `Darwin` (`019db759-9df7-7bf2-a9e4-3318e5b77893`)
+  - cached packet:
+    - `vault/model_analysis/event_packets/armadillo-amethyst-squeaky/manifest.json`
+  - target run file:
+    - `fme10011--2026-04-19--19-12-09--gen2-av-a2ff7adf-b899-4426-b9cb-3bdff0ea9636.md`
+
 - `apricot-crocodile-uproarious`
-- `lively-orange-horse`
+  - owner: worker `Galileo` (`019db75c-badb-7b82-b0e3-501c98340776`)
+  - cached packet:
+    - `vault/model_analysis/event_packets/apricot-crocodile-uproarious/manifest.json`
+  - target run file:
+    - `fme10003--2026-04-19--19-01-24--gen2-av-d03ace5e-a7f3-4575-b52f-a52764f5c68b.md`
+
 - `plum-timeless-beaver`
+  - owner: worker `Faraday` (`019db75c-c1c3-7c22-a15c-5dd00bfdb69d`)
+  - cached packet:
+    - `vault/model_analysis/event_packets/plum-timeless-beaver/manifest.json`
+  - target run file:
+    - `fme20032--2026-04-20--12-50-45--gen2-av-4433efa2-b85f-49b5-b5ca-0d6e9c3de929.md`
+
+### Exporting packets
+
 - `alpaca-chocolate-fearless`
+- `lively-orange-horse`
+
+### Pending after current exports
+
+- none beyond the active queue above
 
 ## Recent event packets
 
@@ -117,3 +140,42 @@ Processing policy:
   - fixed Foxglove to anchor on the event timestamp instead of a guessed route timestamp
   - removed the incorrect route-change claim and replaced it with `no validated route reassignment`
   - updated the segment-investigation skill so it also handles runs with no navigation change or no `"Arrived at destination"` step without fabricating a route-change story
+- `2026-04-22 22:20 UTC`
+  - closed the stalled first-generation workers and switched the batch to a cache-first flow
+  - added JSON export support to `tools/databricks_queries:execute_query`
+  - added `export_model_event_packets.py` to materialize per-model event packets locally before card generation
+- `2026-04-22 22:33 UTC`
+  - completed the first packet export for `satisfied-amber-moose`
+  - spawned worker `Dirac` to write the run card and model card from cached JSON rather than live Databricks joins
+- `2026-04-22 22:36 UTC`
+  - completed the packet export for `armadillo-amethyst-squeaky`
+  - spawned worker `Darwin` on the cached packet with disjoint write scope
+- `2026-04-22 22:37 UTC`
+  - tightened both UNPUDO analysis skills again:
+    - route-change status is now mandatory for every card: `found`, `not found`, or `unclear`
+    - the event table and Mermaid timeline must make the route-search outcome explicit in the first row/item
+    - model-card links must match the exact run-file H2 anchor, including milliseconds when present
+- `2026-04-22 22:40 UTC`
+  - started concurrent packet exports for:
+    - `apricot-crocodile-uproarious`
+    - `alpaca-chocolate-fearless`
+    - `plum-timeless-beaver`
+    - `lively-orange-horse`
+  - first packet stages completed:
+    - `apricot-crocodile-uproarious/events.json`
+    - `plum-timeless-beaver/events.json`
+- `2026-04-22 22:44 UTC`
+  - `satisfied-amber-moose` report landed:
+    - model card `model_analysis/models/satisfied-amber-moose.md`
+    - run report `model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919.md`
+  - all `5` packet events fail under AV-only scoring
+  - route reassignment was recovered for all `5` events in the stopped pre-event segment
+  - none of the credited maneuvers remained AV-owned at the official start
+- `2026-04-22 22:46 UTC`
+  - packet manifests for `apricot-crocodile-uproarious` and `plum-timeless-beaver` became ready
+  - spawned workers `Galileo` and `Faraday` on those cached packets with disjoint write scopes
+- `2026-04-22 22:50 UTC`
+  - moved Databricks cache files out of the vault and into:
+    - `/home/borisindelman/tmp/model_analysis_databricks_cache`
+  - patched `export_model_event_packets.py` so future packet exports keep cache state in `~/tmp` rather than under `vault/model_analysis/event_packets`
+  - verified that `vault/model_analysis` no longer contains `cache.db` files

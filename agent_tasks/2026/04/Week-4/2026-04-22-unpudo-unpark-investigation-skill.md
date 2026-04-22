@@ -95,3 +95,16 @@
   - `pass`
   - `fail`
   with finer diagnosis carried by `effective_failure_type`
+
+## Update: route-change status and exact event anchors
+
+- Tightened the skill again so route-change search is a required part of every event investigation:
+  - search at least the last `120s` before the event anchor
+  - focus first on the stopped segment after the last PUDO and before first UNPUDO motion
+  - every event card must explicitly report route-change status as:
+    - `found`
+    - `not found`
+    - `unclear`
+- Updated the event-card metadata block to include route-change status.
+- Updated the event table and Mermaid timeline so the first row / first item must make the route-search outcome explicit.
+- Updated the paired model-analysis skill so model-card links must target the exact run-file H2 anchor, including milliseconds when present.

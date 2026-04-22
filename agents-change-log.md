@@ -1249,6 +1249,8 @@
     - reframed the required per-event output as an event card with metadata first, including model, run id, UTC date/time, event type, disengagement type, console link, and Foxglove link
   - Update:
     - extended the skill to persist each analyzed segment into `parking.model_analysis` and added a shared cross-event schema with `event_type`, `written_summary`, and `event_card_markdown` for later agent use
+  - Update:
+    - tightened AV-only scoring, added a required `resolution` section, required DBW / in-AV pedal help / indicator state in the timeline, and made route-change status mandatory as `found`, `not found`, or `unclear`
 
 - 2026-04-22: [UNPUDO / Unpark Model Analysis Skill](agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-model-analysis-skill.md)
   - Labels: skills, vault, parking, unpudo, unparking, model-analysis
@@ -1273,3 +1275,7 @@
     - fixed `tools/databricks_queries` to allow per-worker cache isolation via `DATABRICKS_QUERIES_CACHE_DIR`
   - Update:
     - corrected the first event card so Console deep-links to the event timestamp, Foxglove centers on the event/disengagement window, and route change is only mentioned when a reassignment signal is actually validated
+  - Update:
+    - relaunched the batch with a cache-first exporter that writes per-model event packets locally, then assigns workers against cached JSON with exact event-section anchors in model-card links
+  - Update:
+    - moved the Databricks packet-cache location out of the vault into `~/tmp/model_analysis_databricks_cache` and patched the exporter so future runs do not leave `cache.db` files under `vault/model_analysis`
