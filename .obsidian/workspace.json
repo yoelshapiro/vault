@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
+                "file": "model_analysis/models/blue-panther-solid.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-22-unpudo-on-road-analysis-plan"
+              "title": "blue-panther-solid"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
+                "file": "model_analysis/models/blue-panther-solid.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-22-unpudo-on-road-analysis-plan"
+              "title": "Outline of blue-panther-solid"
             }
           },
           {
@@ -516,16 +516,18 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "agents-change-log.md",
-    "model_analysis/models/satisfied-amber-moose.md",
-    "model_analysis/models/plum-timeless-beaver.md",
-    "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919.md",
     "model_analysis/models/lively-orange-horse.md",
-    "model_analysis/models/harlequin-excited-greyhound.md",
-    "model_analysis/models/blue-panther-solid.md",
-    "model_analysis/models/armadillo-amethyst-squeaky.md",
-    "model_analysis/models/apricot-crocodile-uproarious.md",
+    "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/models/plum-timeless-beaver.md",
+    "model_analysis/models/satisfied-amber-moose.md",
     "model_analysis/models/alpaca-chocolate-fearless.md",
+    "model_analysis/models/apricot-crocodile-uproarious.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/blue-panther-solid.md",
+    "model_analysis/models/harlequin-excited-greyhound.md",
+    "agents-change-log.md",
+    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-model-analysis-batch.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-20--12-50-45--gen2-av-4433efa2-b85f-49b5-b5ca-0d6e9c3de929.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-20--03-53-04--gen2-av-850e5b7c-de73-4684-be82-3d23281dc919.md",
@@ -536,7 +538,6 @@
     "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-19--19-12-09--gen2-av-a2ff7adf-b899-4426-b9cb-3bdff0ea9636.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-19--19-01-24--gen2-av-d03ace5e-a7f3-4575-b52f-a52764f5c68b.md",
     "model_analysis/report_cards/2026/04/Week-3",
-    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-on-road-analysis-plan.md",
     "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
     "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit-sampled-100.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-21--20-53-31--gen2-av-c485ff0d-599e-495f-bee7-17c4a854ab52.md",
@@ -549,7 +550,6 @@
     "model_analysis/event_packets",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-batch-relaunch-execplan.md",
     "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-investigation-skill.md",
-    "model_analysis/README.md",
     "model_analysis/report_cards/2026/04/Week-4",
     "model_analysis/report_cards/2026/04/Week-2",
     "Pasted Image 20260111140517_906.png",
