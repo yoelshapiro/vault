@@ -319,6 +319,26 @@ Processing policy:
     - `DBW at event start (...)`
     - `DBW at event end (...)`
     - any `DBW -> true` / `DBW -> false` transitions in chronological order
+
+- `2026-04-23 07:59 UTC`
+  - added one-off analysis for `mallard-plum-mysterious`
+  - queried the event table first and found `15` relevant events, all on `2026-04-22`
+  - exported that exact day and generated:
+    - model card `model_analysis/models/mallard-plum-mysterious.md`
+    - run report `model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--13-54-22--gen2-av-776e6413-6cfd-4985-8a89-a423678c808d.md`
+    - run report `model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--20-12-43--gen2-av-3e0a8cb2-409e-4489-9145-f4a94365bc6c.md`
+  - counts for this model:
+    - `15` total events
+    - `4` scored
+    - `3` pass
+    - `1` fail
+    - `11` `non-AV`
+    - `0` `accidental`
+  - the generated run cards include:
+    - `DBW at event start (...)`
+    - `DBW at event end (...)`
+    - chronological `DBW -> true / false` transitions
+    - actual indicator transition rows such as `Actual indicator -> left on` and `Actual indicator -> off`
     - `42` runs
     - refreshed model card `model_analysis/models/armadillo-amethyst-squeaky.md`
     - refreshed `42` run reports across `Week-2` and `Week-3`
