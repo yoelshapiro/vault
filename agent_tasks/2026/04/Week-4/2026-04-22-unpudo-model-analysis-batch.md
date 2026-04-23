@@ -257,8 +257,8 @@ Processing policy:
 
 - `2026-04-23 05:22 UTC`
   - changed the model-card scoring logic so detected events that do not start in AV are excluded from pass/fail scoring:
-    - outcome `non-AV` when the event starts outside AV ownership
-    - outcome `accidental` when AV participation is shorter than `2s`
+    - outcome `non-AV` when there is no AV-owned overlap anywhere inside the detected event timeline
+    - outcome `accidental` when there is some AV-owned overlap but it is shorter than `2s`
   - only `pass` and `fail` now contribute to model success-rate summaries
   - model cards explicitly report excluded-event counts alongside scored-event counts
 
@@ -282,6 +282,23 @@ Processing policy:
     - `Analysis Summary` section with comparison metrics, failure profile, excluded-event explanation, success behavior, and written assessment
     - event table with exact UTC timestamp plus `console`, `foxglove`, and `card` links
   - `plum-timeless-beaver` required the long export retry before regeneration; the refreshed manifest now covers `64` runs and `403` events
+
+- `2026-04-23 06:59 UTC`
+  - corrected the `non-AV` interpretation after review:
+    - `non-AV` no longer means “event does not start in AV”
+    - it now means there is no AV-owned overlap anywhere inside the detected event timeline
+    - `accidental` remains the bucket for events with some AV overlap but less than `2s` of AV-owned duration
+  - reran the full cached corpus so every model card and linked run report uses the corrected rule
+  - refreshed model-card totals after the rule correction:
+    - `blue-panther-solid`: `188` events, `27` scored, `18` pass, `9` fail, `151` `non-AV`, `10` `accidental`
+    - `pink-manta-ray-smooth`: `387` events, `80` scored, `69` pass, `11` fail, `290` `non-AV`, `17` `accidental`
+    - `harlequin-excited-greyhound`: `17` events, `13` scored, `11` pass, `2` fail, `2` `non-AV`, `2` `accidental`
+    - `satisfied-amber-moose`: `270` events, `17` scored, `13` pass, `4` fail, `95` `non-AV`, `158` `accidental`
+    - `armadillo-amethyst-squeaky`: `302` events, `73` scored, `66` pass, `7` fail, `88` `non-AV`, `141` `accidental`
+    - `apricot-crocodile-uproarious`: `228` events, `3` scored, `2` pass, `1` fail, `68` `non-AV`, `157` `accidental`
+    - `lively-orange-horse`: `545` events, `46` scored, `41` pass, `5` fail, `139` `non-AV`, `360` `accidental`
+    - `plum-timeless-beaver`: `403` events, `59` scored, `31` pass, `28` fail, `333` `non-AV`, `11` `accidental`
+    - `alpaca-chocolate-fearless`: `13` events, `1` scored, `1` pass, `0` fail, `12` `non-AV`, `0` `accidental`
     - `42` runs
     - refreshed model card `model_analysis/models/armadillo-amethyst-squeaky.md`
     - refreshed `42` run reports across `Week-2` and `Week-3`
