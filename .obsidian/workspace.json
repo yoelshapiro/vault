@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/blue-panther-solid.md",
+                "file": "model_analysis/models/satisfied-amber-moose.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "blue-panther-solid"
+              "title": "satisfied-amber-moose"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/blue-panther-solid.md",
+                "file": "model_analysis/models/satisfied-amber-moose.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of blue-panther-solid"
+              "title": "Outline of satisfied-amber-moose"
             }
           },
           {
@@ -516,6 +516,13 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "model_analysis/models/plum-timeless-beaver.md",
+    "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/models/lively-orange-horse.md",
+    "model_analysis/models/alpaca-chocolate-fearless.md",
+    "model_analysis/models/apricot-crocodile-uproarious.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/blue-panther-solid.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-18--20-01-35--gen2-av-488757f4-84a2-41cf-ba93-f1418f8e3bc7.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-18--16-34-58--gen2-av-e3ddc9a0-8262-4c49-8188-a601fd722cbf.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20018--2026-04-18--20-42-56--gen2-av-af145dd8-fa51-47ca-aac1-2b720e2d7a5c.md",
@@ -535,13 +542,6 @@
     "model_analysis/report_cards/2026/04/Week-3/fme20002--2026-04-18--17-34-19--gen2-av-77b0276e-4dd4-4e7b-9741-57ed2d79f66f.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20002--2026-04-18--16-24-55--gen2-av-cb831ac8-dd40-49b2-8dbd-5e941180dba3.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20002--2026-04-18--15-33-20--gen2-av-4e8801a7-8292-4750-a65c-237f1a683f8e.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-18--13-41-05--gen2-av-90fbabfd-d67a-43b9-914e-033e8f21a341.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-17--13-42-32--gen2-av-a45e9838-2d06-4645-be3f-0ac2b30217e1.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-17--01-24-26--gen2-av-b086790c-ab4a-485a-b03e-af446d59077b.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-16--14-17-15--gen2-av-75aea222-2da3-4f92-a4b7-a7383009bf4e.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-15--15-39-22--gen2-av-1eff82a8-d97f-4d8e-be75-4f5d130fd5f1.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-19--15-59-19--gen2-av-2bf37b53-8628-4edc-b973-f2233dbd6506.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-18--18-58-55--gen2-av-62f298a1-112f-4d7b-bc84-2b5ed06ccca3.md",
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
