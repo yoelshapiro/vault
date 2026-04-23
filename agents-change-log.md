@@ -1334,3 +1334,6 @@
   - Update:
     - refreshed `eel-teal-outspoken` on a fixed cohort of `76` runs, regenerated the full run-complete vault outputs for those runs, and wrote `448` validated rows into `parking.model_analysis`
     - final table counts for `eel-teal-outspoken`: `unpudo` `248` pass / `183` fail / `3` accidental, `unparking` `11` pass / `1` fail / `2` accidental
+  - Update:
+    - added a new incremental `eel-teal-outspoken` expansion workflow that processes one run at a time across `4` workers, merges each completed run into the main packet store, and rewrites the vault outputs after every merged run
+    - fixed worker-level cache contention by isolating both the Databricks disk-cache root and the run-discovery output path per worker
