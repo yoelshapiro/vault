@@ -61,3 +61,18 @@ Requested scope:
 
 ## Commit
 - Commit: `1ea5c61bce81` `feat(parking): port SI routing features into kangaroo`
+
+## Local smoke run
+- Ran a local SI training smoke command against the active release config:
+  - `bazel run //wayve/ai/si:train -- +mode=parking_bc_train_release_2026_5_11 +datamodule=parking_bc_datamodule num_steps=3 datamodule.batch_size=1 num_gpus=1 model.submit_interval=0 dev=True`
+- Result:
+  - the real training binary started successfully
+  - passed config save, checkpoint/model init, Lightning trainer setup, FLOP computation, and distributed setup
+  - entered dataset/map startup and remained CPU-active locally
+- Current observed state during validation:
+  - training process PID `3138143`
+  - cwd `/workspace/WayveCode`
+  - still running after ~8 minutes with ~90% CPU
+- Conclusion:
+  - the ported config does not fail fast on config/model startup
+  - full 3-step completion was not observed within the validation window because local startup was still in progress
