@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/mallard-plum-mysterious.md",
+                "file": "model_analysis/models/eel-teal-outspoken.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "mallard-plum-mysterious"
+              "title": "eel-teal-outspoken"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/mallard-plum-mysterious.md",
+                "file": "model_analysis/models/eel-teal-outspoken.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of mallard-plum-mysterious"
+              "title": "Outline of eel-teal-outspoken"
             }
           },
           {
@@ -514,36 +514,36 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "a6cdcc3493cdeb21",
+  "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-20--19-33-10--gen2-av-7844ba47-afc0-425a-b5ef-a925c0d2c6bc.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-21--19-22-29--gen2-av-317481e0-4c9f-4033-96a4-619458685d04.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-21--17-39-16--gen2-av-1697050f-deec-4607-95bb-d6336f707fa5.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--17-21-28--gen2-av-7d5636db-09bc-474b-8f5b-c67d6e0c2e2c.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--16-45-34--gen2-av-1ab30619-caf1-4f23-b5f0-bb02c1a94628.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--15-19-29--gen2-av-f2bf5f43-ed9b-41c4-9afa-e1dfca8557bb.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--13-48-29--gen2-av-6cc0f9b6-4687-4074-be7f-51de100c4131.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--03-30-38--gen2-av-6002bf44-37af-457e-b5ed-51abfe8ed7c4.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--01-38-48--gen2-av-848a412f-c2ce-4d60-9fe4-1bfec42ba9a3.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--00-46-40--gen2-av-4e748e92-ae67-4a7d-a6f3-3ca72e7d91a4.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-18--00-38-03--gen2-av-1d46e088-452a-4fae-91d8-a6d9885e5160.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-17--22-08-31--gen2-av-9b6f4c60-c9a0-489f-a124-7f7fb87b5298.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-16--03-38-32--gen2-av-7db86d7e-265e-4355-8c1e-c0e5b36b18b5.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-16--01-57-02--gen2-av-6e4c2864-0a40-47ce-bd88-e148d3f375e5.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-15--13-36-23--gen2-av-f1432a3a-2962-4aaf-9fca-bf38ea9b222d.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-19--18-53-28--gen2-av-a33797a9-3dad-4832-9161-f24f5c8b595b.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-19--00-47-38--gen2-av-3f0d5fb3-b27c-4f38-9595-d20a00b51acc.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--02-22-03--gen2-av-ac26e7cc-757e-4a3d-891d-b16e70ae53f1.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--00-20-29--gen2-av-b59cf1a9-c1c4-4f13-8c4b-b24d2db51633.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-15--03-36-08--gen2-av-89e7a3a2-ccf3-4b10-95f1-fc161ac9a449.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-17--17-56-09--gen2-av-665d7037-2186-463c-9a63-7211f1adbc45.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-17--16-12-38--gen2-av-45669217-ec41-4dba-9e0c-e591852a503b.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-15--03-49-30--gen2-av-0a92ebc2-f66b-4a0b-9026-2990942d3433.md",
-    "model_analysis/models/pink-manta-ray-smooth.md",
-    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/mallard-plum-mysterious.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-22--10-07-11--gen2-av-caf34bee-7e98-4920-a00a-d4c61a575147.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-22--08-41-34--gen2-av-226468b9-4162-4768-9cdc-e643f6e5013a.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-22--20-36-18--gen2-av-f9245e43-7437-4ea0-b515-55f4677dd44c.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-22--12-33-52--gen2-av-2404bd00-44c2-4b33-8228-6c8504522a0f.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-22--09-40-31--gen2-av-fcd841b5-277a-4b0a-82da-607e34daf223.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-22--12-10-41--gen2-av-105b10cc-bf96-4f08-833e-04ddba33ad08.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-22--09-31-25--gen2-av-0c95d3db-5acf-4ce2-8629-93c6ca255148.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20030--2026-04-22--09-13-22--gen2-av-ef4a0c73-16a8-4466-a9ac-5d7ebd1cfbf4.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20018--2026-04-22--11-49-25--gen2-av-3941ddaf-bcdc-4027-8704-4a13f3321966.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20018--2026-04-22--08-27-39--gen2-av-59ad9a97-e9da-47d0-aea4-c5a4ad0055d0.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20014--2026-04-21--07-08-10--gen2-av-46bdd422-a390-4198-add1-421dfc3071ab.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20009--2026-04-22--08-29-02--gen2-av-65922491-c7ac-43cc-8af7-cf747e7336c2.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20002--2026-04-22--12-20-12--gen2-av-897668a7-ec43-42aa-ae06-d72a68999bf8.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20002--2026-04-22--10-28-04--gen2-av-51799255-5ec8-4dac-b277-c3ec7bf0cda6.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20002--2026-04-22--09-24-04--gen2-av-5450a3b6-cacc-4aa8-86b2-bbe8fb892253.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--22-14-00--gen2-av-3e7454a0-a1ac-4c1e-968c-b9348a87f1f9.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--19-20-55--gen2-av-67336e24-6e70-4e9e-bb03-507059b38d09.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--16-24-19--gen2-av-c23a3e84-3c79-4aca-9235-ec3d393b1ae7.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--04-20-37--gen2-av-b4460b3d-0bcb-4cf5-b360-360dbd20362a.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--18-59-27--gen2-av-8d981601-d7a8-46ca-9700-9be8e1fb583d.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--05-00-59--gen2-av-bdd143eb-5b0c-4060-9e69-a3ba4145b13f.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--02-39-55--gen2-av-eb435b7c-0065-4b6d-81f5-518fd7e94716.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-19--12-01-01--gen2-av-742dabc2-8b22-4165-8577-5e432f1829a5.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20029--2026-04-19--09-04-12--gen2-av-c67fed38-c47b-4e4b-b311-36cdfde00923.md",
     "model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json",
     "model_analysis/staged_rows",
-    "agent_tasks/2026/04/Week-4/2026-04-23-parking-routing-port-into-kangaroo-route-shorten.md",
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
