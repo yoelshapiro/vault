@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/mallard-plum-mysterious.md",
+                "file": "model_analysis/models/armadillo-amethyst-squeaky.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "mallard-plum-mysterious"
+              "title": "armadillo-amethyst-squeaky"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/mallard-plum-mysterious.md",
+                "file": "model_analysis/models/armadillo-amethyst-squeaky.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of mallard-plum-mysterious"
+              "title": "Outline of armadillo-amethyst-squeaky"
             }
           },
           {
@@ -517,10 +517,14 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--13-38-11--gen2-av-c6787608-2377-49a2-8db2-eb353c1251f9.md",
+    "model_analysis/models/insightful-magenta-porcupine.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-14--22-37-44--gen2-av-8d87ab20-f543-464d-a9ba-376113d03561.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/mallard-plum-mysterious.md",
     "model_analysis/models/pink-manta-ray-smooth.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--13-54-22--gen2-av-776e6413-6cfd-4985-8a89-a423678c808d.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--20-12-43--gen2-av-3e0a8cb2-409e-4489-9145-f4a94365bc6c.md",
-    "model_analysis/models/mallard-plum-mysterious.md",
     "model_analysis/models/sea-cucumber-spectacular-orange.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--16-09-57--gen2-av-97310301-a8d4-4bb7-87aa-6bf157ad09e8.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--03-14-37--gen2-av-4cd403f2-b1b7-4e7c-afe5-42579f71b741.md",
@@ -531,7 +535,6 @@
     "model_analysis/models/satisfied-amber-moose.md",
     "model_analysis/models/plum-timeless-beaver.md",
     "model_analysis/models/lively-orange-horse.md",
-    "model_analysis/models/armadillo-amethyst-squeaky.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-21--08-28-49--gen2-av-39637566-e5c2-44a6-87cc-8c6b8aafa0bd.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-21--07-33-40--gen2-av-c6d477b7-97d3-44af-9484-ef8412cd497a.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-21--07-11-09--gen2-av-7682c037-e88d-4b10-bda6-6c941cd2b835.md",
@@ -540,9 +543,6 @@
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--18-04-59--gen2-av-71f20556-6d74-4553-9f80-2c44392b02ea.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--16-20-45--gen2-av-fbe4e51a-0dd9-4a52-9bc6-eff63f0939cd.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--14-29-25--gen2-av-b8c3ecc9-d0ee-4a65-a4e6-e2fb1efde5f2.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--13-12-06--gen2-av-a10ae110-cb98-456c-87dc-1a25ca1e23c9.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--12-36-31--gen2-av-ce5401ab-e385-431a-9076-a8b813d9a9ab.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--11-45-14--gen2-av-57a723c9-4da1-4756-8053-4fca0a508a4b.md",
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
