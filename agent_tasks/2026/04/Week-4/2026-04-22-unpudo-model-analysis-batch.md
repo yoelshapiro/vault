@@ -529,3 +529,28 @@ Processing policy:
   - current `eel-teal-outspoken` packet coverage at restart time:
     - `84` runs
     - `560` raw events
+
+- `2026-04-23 17:12 UTC`
+  - completed the full `eel-teal-outspoken` packet ingestion and final cleanup pass
+  - confirmed the packet store reached the full source window:
+    - `232` runs
+    - `1306` raw events
+  - ran a full vault refresh from the completed packet store
+  - final refreshed vault counts:
+    - `221` runs with at least one recorded event
+    - `1086` recorded events
+    - `1075` scored events
+    - `717` pass
+    - `358` fail
+    - `11` accidental
+    - `220` skipped `non-av`
+  - verified that the previously stale model card is now current:
+    - `model_analysis/models/eel-teal-outspoken.md`
+  - verified that `8` run reports remain absent by design because those runs contain only `non-av` events and the workflow skips them
+  - reran the full `parking.model_analysis` write from the refreshed card and reports
+  - final table counts written for `eel-teal-outspoken`:
+    - `unpudo`: `666` pass, `354` fail, `8` accidental
+    - `unparking`: `51` pass, `4` fail, `3` accidental
+    - total rows: `1086`
+  - staged final payload for audit at:
+    - `model_analysis/staged_rows/eel-teal-outspoken-final-2026-04-23.json`

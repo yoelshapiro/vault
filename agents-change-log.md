@@ -1349,6 +1349,8 @@
     - fixed worker-level cache contention by isolating both the Databricks disk-cache root and the run-discovery output path per worker
   - Update:
     - made run-by-run processing the documented default for this skill, added per-run `parking.model_analysis` writes via `--run-ids` support in the writer, and restarted the live `eel-teal-outspoken` workers on that updated contract
+  - Update:
+    - completed the full `eel-teal-outspoken` cleanup: refreshed the model card against the completed `232`-run packet store, confirmed `221` runs / `1086` recorded events in the vault, and rewrote `parking.model_analysis` to the matching final counts
 
 - 2026-04-23: [Parking Diffusion Datamodule Driving Root Fix](agent_tasks/2026/04/Week-4/2026-04-23-parking-diffusion-datamodule-driving-root-fix.md)
   - Labels: parking, datamodule, training, data-config, wonjoon
