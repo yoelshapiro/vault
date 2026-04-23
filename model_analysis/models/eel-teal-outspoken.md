@@ -4,16 +4,16 @@
 |---|---|
 | Model | `eel-teal-outspoken` |
 | Authors | `zak` |
-| Runs covered | `81` |
-| Event count | `468` |
-| Scored event count | `463` |
-| Pass count | `271` |
-| Fail count | `192` |
+| Runs covered | `82` |
+| Event count | `473` |
+| Scored event count | `468` |
+| Pass count | `275` |
+| Fail count | `193` |
 | Accidental count | `5` |
-| Route-change found | `417` |
+| Route-change found | `421` |
 | Route-change not found | `2` |
-| Route-change unclear | `49` |
-| Top effective failure types | `not_av_owned` x64, `failed_to_unpudo` x51, `completed_outside_av` x25 |
+| Route-change unclear | `50` |
+| Top effective failure types | `not_av_owned` x64, `failed_to_unpudo` x51, `completed_outside_av` x26 |
 
 ## Analysis Summary
 
@@ -21,41 +21,41 @@
 
 | Metric | Value |
 |---|---|
-| Runs covered | `81` |
-| Scored events | `463` |
+| Runs covered | `82` |
+| Scored events | `468` |
 | Excluded `accidental` events | `5` |
-| Overall success rate | `58.5% (271/463)` |
-| `unpudo` success rate | `57.4% (257/448)` |
+| Overall success rate | `58.8% (275/468)` |
+| `unpudo` success rate | `57.6% (261/453)` |
 | `unparking` success rate | `93.3% (14/15)` |
-| Ownership / handover failures | `52.6% (101/192)` |
-| Short AV-attempt failures | `36.5% (70/192)` |
-| Successful events with no driver accel help | `100.0% (271/271)` |
-| Successful events with route change found | `96.3% (261/271)` |
-| Successful gear alignment at anchor | `100.0% (271/271)` |
+| Ownership / handover failures | `52.8% (102/193)` |
+| Short AV-attempt failures | `36.3% (70/193)` |
+| Successful events with no driver accel help | `100.0% (275/275)` |
+| Successful events with route change found | `96.4% (265/275)` |
+| Successful gear alignment at anchor | `100.0% (275/275)` |
 
 ### Failure Profile
 
-- The scored subset contains `192` failures out of `463` scored events. The dominant effective failure types are `not_av_owned` 33.3% (64/192), `failed_to_unpudo` 26.6% (51/192), `completed_outside_av` 13.0% (25/192).
-- Ownership loss and handover breakage are the main theme: `101` of `192` failures fall into `not_av_owned`, `completed_outside_av`, `driver_completed_maneuver`, or `interrupted_handover`.
-- Route-change evidence inside failed events is `found` in `151`, `not found` in `1`, and `unclear` in `40` cases.
-- Source disengagement labels inside failed events are `failed_to_unpudo` 26.6% (51/192), `failed_to_pudo` 5.2% (10/192), `uncategorised` 4.2% (8/192); anything else is failing from DBW / ownership / gear evidence rather than an explicit source disengagement label.
-- Event-type split: `unparking` is stronger than `unpudo` in this sample: 93.3% (14/15) versus 57.4% (257/448).
+- The scored subset contains `193` failures out of `468` scored events. The dominant effective failure types are `not_av_owned` 33.2% (64/193), `failed_to_unpudo` 26.4% (51/193), `completed_outside_av` 13.5% (26/193).
+- Ownership loss and handover breakage are the main theme: `102` of `193` failures fall into `not_av_owned`, `completed_outside_av`, `driver_completed_maneuver`, or `interrupted_handover`.
+- Route-change evidence inside failed events is `found` in `151`, `not found` in `1`, and `unclear` in `41` cases.
+- Source disengagement labels inside failed events are `failed_to_unpudo` 26.4% (51/193), `failed_to_pudo` 5.2% (10/193), `uncategorised` 4.1% (8/193); anything else is failing from DBW / ownership / gear evidence rather than an explicit source disengagement label.
+- Event-type split: `unparking` is stronger than `unpudo` in this sample: 93.3% (14/15) versus 57.6% (261/453).
 
 ### Success Behavior
 
-- Successful events are distributed as `257` `unpudo` and `14` `unparking`.
-- On successful attempts, route change is recovered in `261` of `271` cases and driver accelerator help is absent in `271` of `271` cases.
-- Gear state stays aligned at the anchor in `271` of `271` comparable passes. Planned-indicator alignment is `24.4% (66/271)`, and controller-indicator alignment is `24.0% (65/271)`.
-- Typical successful timing is median `success baseline -> event start` `13.67s`, median `success baseline -> first motion` `6.86s`, and median AV-owned duration `95.82s`.
+- Successful events are distributed as `261` `unpudo` and `14` `unparking`.
+- On successful attempts, route change is recovered in `265` of `275` cases and driver accelerator help is absent in `275` of `275` cases.
+- Gear state stays aligned at the anchor in `275` of `275` comparable passes. Planned-indicator alignment is `24.0% (66/275)`, and controller-indicator alignment is `23.6% (65/275)`.
+- Typical successful timing is median `success baseline -> event start` `13.67s`, median `success baseline -> first motion` `6.86s`, and median AV-owned duration `98.42s`.
 - Typical successful maneuver shape: common actual gear at the anchor is `DRIVE_POSITION_V2_DRIVE`, common actual indicator is `INDICATORS_STATE_V2_OFF`, and median max AV speed is `4.74 m/s`.
 
 ### Written Assessment
 
-This card covers `468` recorded events across `81` runs, but only `463` of them are scored AV-owned attempts. The remaining `5` `accidental` events are explicitly excluded from the success-rate denominator. Within the scored subset, the overall success rate is `58.5% (271/463)`. `unparking` is stronger than `unpudo` in this sample: 93.3% (14/15) versus 57.4% (257/448).
+This card covers `473` recorded events across `82` runs, but only `468` of them are scored AV-owned attempts. The remaining `5` `accidental` events are explicitly excluded from the success-rate denominator. Within the scored subset, the overall success rate is `58.8% (275/468)`. `unparking` is stronger than `unpudo` in this sample: 93.3% (14/15) versus 57.6% (261/453).
 
-Across the scored failures, route-change evidence is `151` found / `1` not found / `40` unclear, so navigation context is usually present. The failure mix is led by `not_av_owned` 33.3% (64/192), `failed_to_unpudo` 26.6% (51/192), `completed_outside_av` 13.0% (25/192), while the excluded portion is limited to sub-`2s` accidental AV contact rather than true scored failures.
+Across the scored failures, route-change evidence is `151` found / `1` not found / `41` unclear, so navigation context is usually present. The failure mix is led by `not_av_owned` 33.2% (64/193), `failed_to_unpudo` 26.4% (51/193), `completed_outside_av` 13.5% (26/193), while the excluded portion is limited to sub-`2s` accidental AV contact rather than true scored failures.
 
-When this model succeeds, the behavior is consistent: route change is recovered in `261` of `271` successful events, driver accelerator help is absent in `271` of `271`, and gear alignment holds in `271` of `271` comparable passes. The typical successful event starts moving about `6.86s` after the earlier of route change and AV start, reaches a median max AV speed of `4.74 m/s`, and most often begins in gear `DRIVE_POSITION_V2_DRIVE` with indicator state `INDICATORS_STATE_V2_OFF`.
+When this model succeeds, the behavior is consistent: route change is recovered in `265` of `275` successful events, driver accelerator help is absent in `275` of `275`, and gear alignment holds in `275` of `275` comparable passes. The typical successful event starts moving about `6.86s` after the earlier of route change and AV start, reaches a median max AV speed of `4.74 m/s`, and most often begins in gear `DRIVE_POSITION_V2_DRIVE` with indicator state `INDICATORS_STATE_V2_OFF`.
 
 ## Event Cards
 
@@ -349,16 +349,21 @@ When this model succeeds, the behavior is consistent: route change is recovered 
 | `2026-04-22 05:28:13.933 UTC` | `unpudo` | `fail` | `unclear` | `failed_to_pudo` | [console](https://console.sso.wayve.ai/run/fme10010/2026-04-22--05-00-59--gen2-av-bdd143eb-5b0c-4060-9e69-a3ba4145b13f?id=&time-unixus=1776835693933320) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme10010&ds.start=2026-04-22T05%3A27%3A41.907750Z&ds.end=2026-04-22T05%3A28%3A26.383292Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T05%3A28%3A13.933320Z) | [[../report_cards/2026/04/Week-4/fme10010--2026-04-22--05-00-59--gen2-av-bdd143eb-5b0c-4060-9e69-a3ba4145b13f.md#unpudo 2026-04-22 05:28:13.933 UTC\|card]] |
 | `2026-04-22 05:30:17.583 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme10011/2026-04-22--04-20-37--gen2-av-b4460b3d-0bcb-4cf5-b360-360dbd20362a?id=&time-unixus=1776835817583308) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme10011&ds.start=2026-04-22T05%3A29%3A40.818267Z&ds.end=2026-04-22T05%3A31%3A54.242843Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T05%3A30%3A17.583308Z) | [[../report_cards/2026/04/Week-4/fme10011--2026-04-22--04-20-37--gen2-av-b4460b3d-0bcb-4cf5-b360-360dbd20362a.md#unpudo 2026-04-22 05:30:17.583 UTC\|card]] |
 | `2026-04-22 05:30:35.733 UTC` | `unpudo` | `accidental` | `found` | `failed_to_accelerate` | [console](https://console.sso.wayve.ai/run/fme10010/2026-04-22--05-00-59--gen2-av-bdd143eb-5b0c-4060-9e69-a3ba4145b13f?id=&time-unixus=1776835835733318) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme10010&ds.start=2026-04-22T05%3A29%3A41.468296Z&ds.end=2026-04-22T05%3A30%3A48.733299Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T05%3A30%3A35.733318Z) | [[../report_cards/2026/04/Week-4/fme10010--2026-04-22--05-00-59--gen2-av-bdd143eb-5b0c-4060-9e69-a3ba4145b13f.md#unpudo 2026-04-22 05:30:35.733 UTC\|card]] |
+| `2026-04-22 06:18:23.383 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20018/2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7?id=&time-unixus=1776838703383289) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20018&ds.start=2026-04-22T06%3A16%3A48.618239Z&ds.end=2026-04-22T06%3A21%3A23.810802Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A18%3A23.383289Z) | [[../report_cards/2026/04/Week-4/fme20018--2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7.md#unpudo 2026-04-22 06:18:23.383 UTC\|card]] |
 | `2026-04-22 06:28:50.683 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776839330683297) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T06%3A28%3A31.668332Z&ds.end=2026-04-22T06%3A30%3A54.538887Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A28%3A50.683297Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 06:28:50.683 UTC\|card]] |
+| `2026-04-22 06:30:50.833 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20018/2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7?id=&time-unixus=1776839450833293) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20018&ds.start=2026-04-22T06%3A30%3A36.818253Z&ds.end=2026-04-22T06%3A31%3A10.089450Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A30%3A50.833293Z) | [[../report_cards/2026/04/Week-4/fme20018--2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7.md#unpudo 2026-04-22 06:30:50.833 UTC\|card]] |
 | `2026-04-22 06:33:27.633 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776839607633296) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T06%3A33%3A02.468253Z&ds.end=2026-04-22T06%3A34%3A22.778762Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A33%3A27.633296Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 06:33:27.633 UTC\|card]] |
+| `2026-04-22 06:33:57.033 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20018/2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7?id=&time-unixus=1776839637033315) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20018&ds.start=2026-04-22T06%3A33%3A31.068259Z&ds.end=2026-04-22T06%3A36%3A41.650487Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A33%3A57.033315Z) | [[../report_cards/2026/04/Week-4/fme20018--2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7.md#unpudo 2026-04-22 06:33:57.033 UTC\|card]] |
 | `2026-04-22 06:34:42.383 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776839682383312) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T06%3A33%3A02.468253Z&ds.end=2026-04-22T06%3A36%3A12.178786Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A34%3A42.383312Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 06:34:42.383 UTC\|card]] |
 | `2026-04-22 06:48:30.933 UTC` | `unpudo` | `pass` | `unclear` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776840510933306) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T06%3A46%3A20.938845Z&ds.end=2026-04-22T06%3A50%3A00.598783Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A48%3A30.933306Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 06:48:30.933 UTC\|card]] |
 | `2026-04-22 06:59:21.883 UTC` | `unpudo` | `fail` | `unclear` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20032/2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf?id=&time-unixus=1776841161883301) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20032&ds.start=2026-04-22T06%3A58%3A51.574740Z&ds.end=2026-04-22T07%3A00%3A10.583303Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T06%3A59%3A21.883301Z) | [[../report_cards/2026/04/Week-4/fme20032--2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf.md#unpudo 2026-04-22 06:59:21.883 UTC\|card]] |
 | `2026-04-22 07:06:28.933 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20032/2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf?id=&time-unixus=1776841588933326) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20032&ds.start=2026-04-22T07%3A05%3A38.918335Z&ds.end=2026-04-22T07%3A07%3A50.993446Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A06%3A28.933326Z) | [[../report_cards/2026/04/Week-4/fme20032--2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf.md#unpudo 2026-04-22 07:06:28.933 UTC\|card]] |
 | `2026-04-22 07:09:29.583 UTC` | `unpudo` | `fail` | `unclear` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20032/2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf?id=&time-unixus=1776841769583296) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20032&ds.start=2026-04-22T07%3A07%3A39.234730Z&ds.end=2026-04-22T07%3A09%3A39.583296Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A09%3A29.583296Z) | [[../report_cards/2026/04/Week-4/fme20032--2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf.md#unpudo 2026-04-22 07:09:29.583 UTC\|card]] |
+| `2026-04-22 07:10:21.783 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20018/2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7?id=&time-unixus=1776841821783307) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20018&ds.start=2026-04-22T07%3A10%3A07.868332Z&ds.end=2026-04-22T07%3A12%3A26.229517Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A10%3A21.783307Z) | [[../report_cards/2026/04/Week-4/fme20018--2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7.md#unpudo 2026-04-22 07:10:21.783 UTC\|card]] |
 | `2026-04-22 07:12:00.833 UTC` | `unpudo` | `fail` | `found` | `failed_to_unpudo` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776841920833302) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A11%3A36.518241Z&ds.end=2026-04-22T07%3A12%3A15.683312Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A12%3A00.833302Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:12:00.833 UTC\|card]] |
 | `2026-04-22 07:15:52.733 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20032/2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf?id=&time-unixus=1776842152733302) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20032&ds.start=2026-04-22T07%3A15%3A22.568251Z&ds.end=2026-04-22T07%3A23%3A28.033385Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A15%3A52.733302Z) | [[../report_cards/2026/04/Week-4/fme20032--2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf.md#unpudo 2026-04-22 07:15:52.733 UTC\|card]] |
 | `2026-04-22 07:17:41.433 UTC` | `unpudo` | `fail` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776842261433307) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A16%3A25.720691Z&ds.end=2026-04-22T07%3A18%3A04.933309Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A17%3A41.433307Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:17:41.433 UTC\|card]] |
+| `2026-04-22 07:18:55.483 UTC` | `unpudo` | `fail` | `unclear` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20018/2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7?id=&time-unixus=1776842335483291) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20018&ds.start=2026-04-22T07%3A16%3A56.570883Z&ds.end=2026-04-22T07%3A19%3A41.033296Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A18%3A55.483291Z) | [[../report_cards/2026/04/Week-4/fme20018--2026-04-22--06-05-20--gen2-av-fac905d8-4d29-4535-814b-562af90b07e7.md#unpudo 2026-04-22 07:18:55.483 UTC\|card]] |
 | `2026-04-22 07:26:52.633 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20032/2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf?id=&time-unixus=1776842812633313) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20032&ds.start=2026-04-22T07%3A25%3A20.818252Z&ds.end=2026-04-22T07%3A28%3A29.174284Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A26%3A52.633313Z) | [[../report_cards/2026/04/Week-4/fme20032--2026-04-22--06-46-49--gen2-av-dfb7ae12-4c7d-40e2-ad4b-edb775cd0fbf.md#unpudo 2026-04-22 07:26:52.633 UTC\|card]] |
 | `2026-04-22 07:29:21.483 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776842961483314) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A28%3A49.518274Z&ds.end=2026-04-22T07%3A30%3A04.218767Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A29%3A21.483314Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:29:21.483 UTC\|card]] |
 | `2026-04-22 07:37:54.433 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776843474433313) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A37%3A40.518257Z&ds.end=2026-04-22T07%3A38%3A32.578803Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A37%3A54.433313Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:37:54.433 UTC\|card]] |
