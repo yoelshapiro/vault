@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/apricot-crocodile-uproarious.md",
+                "file": "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "apricot-crocodile-uproarious"
+              "title": "fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6"
             }
           }
         ],
@@ -397,7 +397,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 536.012580871582
+    "width": 536.012580871582,
+    "collapsed": true
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -475,13 +476,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/apricot-crocodile-uproarious.md",
+                "file": "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of apricot-crocodile-uproarious"
+              "title": "Outline of fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6"
             }
           },
           {
@@ -516,6 +517,14 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-15--00-46-35--gen2-av-1202c391-bb32-4268-aa5d-deac5996f479.md",
+    "model_analysis/models/apricot-crocodile-uproarious.md",
+    "model_analysis/models/alpaca-chocolate-fearless.md",
+    "model_analysis/models/satisfied-amber-moose.md",
+    "model_analysis/models/plum-timeless-beaver.md",
+    "model_analysis/models/lively-orange-horse.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-21--08-28-49--gen2-av-39637566-e5c2-44a6-87cc-8c6b8aafa0bd.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-21--07-33-40--gen2-av-c6d477b7-97d3-44af-9484-ef8412cd497a.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-21--07-11-09--gen2-av-7682c037-e88d-4b10-bda6-6c941cd2b835.md",
@@ -534,14 +543,6 @@
     "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--06-21-59--gen2-av-dc89c904-bd1e-45df-a584-41784b2b2a5a.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-20--11-47-56--gen2-av-6cb52e0d-9b05-4671-adeb-05c5373729cd.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--20-04-45--gen2-av-f562c3f4-e8ad-4642-bc4b-35df81e2a175.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--08-38-33--gen2-av-06e51cdb-6c4f-452c-9972-f5a2806c88db.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-21--06-19-02--gen2-av-be2ad99b-5967-471c-a413-80a21809f1a2.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-20--08-45-16--gen2-av-544911bc-40b2-4276-9415-335ea55a142c.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-20--06-05-31--gen2-av-1a5a97bc-616d-489d-9c58-1fdeb3320708.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20030--2026-04-21--09-59-27--gen2-av-62c0d314-d910-493d-9c8d-e02454ae6679.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20030--2026-04-21--09-30-58--gen2-av-c9c6b863-5119-4456-a6ed-aecf82e5c33d.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20030--2026-04-21--08-46-46--gen2-av-42ce672b-9055-4616-ada6-7ef452149847.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20030--2026-04-21--07-53-27--gen2-av-fd3582e1-4118-4df4-b3a2-9f9db0773e25.md",
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
