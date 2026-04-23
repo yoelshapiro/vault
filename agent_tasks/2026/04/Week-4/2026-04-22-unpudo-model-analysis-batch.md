@@ -269,12 +269,19 @@ Processing policy:
     - `blue-panther-solid`: `188` events, `17` scored, `15` pass, `2` fail, `54` `non-AV`, `117` `accidental`
     - `harlequin-excited-greyhound`: `17` events, `16` scored, `12` pass, `4` fail, `0` `non-AV`, `1` `accidental`
     - `satisfied-amber-moose`: `270` events, `17` scored, `13` pass, `4` fail, `95` `non-AV`, `158` `accidental`
-  - still in progress:
-    - `armadillo-amethyst-squeaky`
-    - `apricot-crocodile-uproarious`
-    - `lively-orange-horse`
-    - `plum-timeless-beaver` full export retry
   - `parking.model_analysis` has still not been updated by this cache-first vault workflow; current writes remain vault-only
+
+- `2026-04-23 05:52 UTC`
+  - completed the remaining regenerated model cards under the new scoring logic:
+    - `armadillo-amethyst-squeaky`: `302` events, `73` scored, `66` pass, `7` fail, `88` `non-AV`, `141` `accidental`
+    - `apricot-crocodile-uproarious`: `228` events, `3` scored, `2` pass, `1` fail, `68` `non-AV`, `157` `accidental`
+    - `lively-orange-horse`: `545` events, `46` scored, `41` pass, `5` fail, `139` `non-AV`, `360` `accidental`
+    - `plum-timeless-beaver`: `403` events, `30` scored, `23` pass, `7` fail, `119` `non-AV`, `254` `accidental`
+  - all `9` model cards now share the same structure:
+    - top metadata table with scored / excluded counts
+    - `Analysis Summary` section with comparison metrics, failure profile, excluded-event explanation, success behavior, and written assessment
+    - event table with exact UTC timestamp plus `console`, `foxglove`, and `card` links
+  - `plum-timeless-beaver` required the long export retry before regeneration; the refreshed manifest now covers `64` runs and `403` events
     - `42` runs
     - refreshed model card `model_analysis/models/armadillo-amethyst-squeaky.md`
     - refreshed `42` run reports across `Week-2` and `Week-3`
