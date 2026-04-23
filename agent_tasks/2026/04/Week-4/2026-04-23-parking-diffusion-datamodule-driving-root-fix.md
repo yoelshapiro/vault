@@ -32,3 +32,12 @@ Those parquet files were not present for the training job, causing the dataloade
 
 ## Files
 - `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`
+
+## Correction
+The first attempted fix was too aggressive: it rewired the Wonjoon datamodule to the branch-local `DRIVING_ROOT`, which changed the intended driving materialisation. That was incorrect.
+
+The corrected fix does this instead:
+- restores `parking_bc_datamodule_cfg` to its original branch-local explicit driving buckets
+- keeps `parking_diffusion_datamodule_cfg` on `materialisation_version="bc/split_alpha2_alpha3/release/0.0.17"`
+- reproduces Wonjoon's intended alpha2/alpha3-split driving train partitions locally via `split_alpha2_alpha3_partitions(...)`
+- leaves Wonjoon's driving validation buckets rootless, matching the original PR pattern
