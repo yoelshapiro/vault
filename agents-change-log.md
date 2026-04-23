@@ -1361,6 +1361,9 @@
     - made run-by-run processing the documented default for this skill, added per-run `parking.model_analysis` writes via `--run-ids` support in the writer, and restarted the live `eel-teal-outspoken` workers on that updated contract
   - Update:
     - completed the full `eel-teal-outspoken` cleanup: refreshed the model card against the completed `232`-run packet store, confirmed `221` runs / `1086` recorded events in the vault, and rewrote `parking.model_analysis` to the matching final counts
+  - Update:
+    - tightened the incremental per-run workflow so successful runs now clean their worker-local `/tmp` caches automatically
+    - patched `process_model_runs_incrementally.py` to delete queue-discovery cache after sharding, remove per-worker Databricks cache after each successful run, and prune merged per-run packet JSON from `/tmp` when periodic full model-card refresh is disabled
 
 - 2026-04-23: [Parking Diffusion Datamodule Driving Root Fix](agent_tasks/2026/04/Week-4/2026-04-23-parking-diffusion-datamodule-driving-root-fix.md)
   - Labels: parking, datamodule, training, data-config, wonjoon

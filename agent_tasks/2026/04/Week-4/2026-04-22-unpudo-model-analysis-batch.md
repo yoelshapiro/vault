@@ -554,3 +554,15 @@ Processing policy:
     - total rows: `1086`
   - staged final payload for audit at:
     - `model_analysis/staged_rows/eel-teal-outspoken-final-2026-04-23.json`
+
+- `2026-04-23 18:52 UTC`
+  - tightened the incremental run-by-run workflow so cache cleanup now happens as part of the normal success path instead of relying on a manual sweep later
+  - patched `scripts/process_model_runs_incrementally.py` so each successful run now:
+    - removes the worker-local Databricks cache immediately after the run report and `parking.model_analysis` write succeed
+    - deletes the worker queue-discovery cache after sharding is computed
+    - prunes the merged per-run packet JSON back out of `/tmp` when periodic full model-card refresh is disabled
+  - updated the skill docs to state that single-run workers should leave durable outputs only:
+    - vault reports
+    - model cards when explicitly refreshed
+    - staged audit payloads
+    - `parking.model_analysis` rows
