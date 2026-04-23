@@ -80,3 +80,29 @@ Validation:
 
 Commits:
 - `db5dc3ff998` `fix(parking): align diffusion datamodule with branch parking keys`
+
+## Follow-up: Policy-Path Migration Preflight
+After four failed AKS attempts, added local preflight checks to stop using training runs as the migration debugger.
+
+Code fixes:
+- normalized cumulative distances in `_sample_policy_path_from_poses(...)` so epsilon-offset origins do not trip `interpolate_poses_and_curvature(...)`
+- ported Wonjoon's later `goal_distance` clamp in `add_parking_mode(...)` so `goal_distance` cannot exceed the available pose-path length
+- updated `test_make_driving_datapipe_parking_and_gear_direction_hooks` to use `ParkingDataConfig(..., use_zoo_dataloader=False)` instead of the stale zoo `ParkingConfig`
+
+Regression coverage added:
+- `test_sample_policy_path_from_poses_handles_epsilon_start`
+- `test_add_parking_mode_clamps_goal_distance_to_path_available`
+
+Local validation:
+- `python -m py_compile wayve/ai/si/datamodules/parking.py wayve/ai/si/datamodules/test/test_parking.py`
+- `bazel run //wayve/ai/si/datamodules:py_test -- --cov-fail-under=0 wayve/ai/si/datamodules/test/test_parking.py wayve/ai/si/datamodules/test/test_otf.py -k 'test_sample_policy_path_from_poses_handles_epsilon_start or test_add_parking_mode_clamps_goal_distance_to_path_available or test_gear_and_parking_lazy_future or test_make_driving_datapipe_parking_and_gear_direction_hooks'`
+  - result: `5 passed`
+- one-off Bazel-backed smoke on `parking_diffusion_datamodule`
+  - moved past config composition and datamodule setup wiring
+  - remaining failure is local storage auth only: `azure.core.exceptions.ClientAuthenticationError` from `DefaultAzureCredential`
+  - no further deterministic code/config migration failure was reached before auth blocked the smoke
+
+Current touched files:
+- `/workspace/WayveCode/wayve/ai/si/datamodules/parking.py`
+- `/workspace/WayveCode/wayve/ai/si/datamodules/test/test_parking.py`
+- `/workspace/WayveCode/wayve/ai/si/datamodules/test/test_otf.py`

@@ -1366,3 +1366,8 @@
   - Update:
     - removed unsupported top-level datamodule args from `parking_diffusion_datamodule_cfg` after constructor failure during training submission
     - aligned `wayve/ai/si/datamodules/parking.py` with this branch's parking key names (`PARKING_POSE`, `PARKING_POSE_GT`) to fix the deterministic prefetch-thread crash
+  - Update:
+    - added local preflight coverage for the migrated parking policy-path flow after repeated AKS failures
+    - fixed the uncaught epsilon-offset path interpolation in `wayve/ai/si/datamodules/parking.py` and ported Wonjoon's later goal-distance clamp
+    - aligned the OTF parking hook test to the SI `ParkingDataConfig` path and verified the targeted parking/OTF regression set locally (`5 passed`)
+    - attempted a Bazel-backed smoke on `parking_diffusion_datamodule`; the remaining blocker on this machine is Azure storage authentication, not another deterministic migration error
