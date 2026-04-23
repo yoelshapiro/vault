@@ -77,3 +77,32 @@ Requested scope:
   - the ported config does not fail fast on config/model startup
   - the local smoke run completed 3 train steps successfully
   - evidence is in `/workspace/.cache/ai_lib_sessions/session_2026_04_23_11_38_54_si_parking_bc_train_release_2026_5_11/lightning_logs/version_0/metrics.csv`, which contains train steps 1, 2, and 3
+
+## 2026-04-23 AKS failure follow-up
+
+Training job `153523` failed deterministically in dataloader setup, not from the short-path warnings. The fatal error was:
+- `NameError: name 'F' is not defined`
+- thrown from `wayve/ai/zoo/data/parking.py` inside `_add_parking_stop_route_position`
+- surfaced as `RuntimeError: Prefetch thread exited with an error`
+
+### Fix applied
+- added `import wayve.core.data.fields as F` to `wayve/ai/zoo/data/parking.py`
+- added missing Bazel dep `//wayve/core/data/fields` to `wayve/ai/zoo/data:parking`
+
+### Regression coverage added
+- `wayve/ai/zoo/data/test/test_parking.py`
+  - `test_insert_parking_stop_route_position_writes_route_anchor`
+- `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`
+  - `test_shorten_route_polyline_from_stop_interpolates_mid_segment`
+  - `test_route_map_fetcher_unparking_shortening_resets_waypoint_progress`
+- `wayve/ai/lib/test/data/pipes/test_load_paths.py`
+  - `test_process_path_clamps_when_out_of_range_enabled`
+
+### Validation run results
+- `python -m py_compile wayve/ai/zoo/data/parking.py wayve/ai/zoo/data/test/test_parking.py` passed
+- `bazel build //wayve/ai/zoo/data:parking` passed
+- `bazel test //wayve/ai/zoo/data:test_zoo_data_py_test --test_arg='-k=parking_stop_route_position'` passed
+- Scoped `//wayve/ai/lib:test_data_lib_py_test` selection ran the 3 new lib tests successfully:
+  - 3 passed, 49 deselected
+  - target still exits non-zero because `py_checks` enforces global coverage (`43%`) and a 3-test subset only reports ~15% total coverage
+- Full `//wayve/ai/lib:test_data_lib_py_test` selection remains noisy locally due unrelated collection/coverage issues, so the targeted subset is the relevant signal for this migration work.

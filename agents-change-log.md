@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — PR 102398 RL interleave driving-controls parity
+- Topic: add the missing RL behavior-control driving key needed for deploy-time interleaving parity with BC parking exports in PR `#102398`.
+- Labels: #si #offline-rl #interleaving #deployment #parking #tests #pr102398
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: #102398
+- Change type: code
+- Areas: `wayve/ai/si/models/`, `wayve/ai/si/test/models/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-23-pr-102398-rl-interleave-keys]]: updated offline-RL `get_deployment_config()` to include `DrivingControlKey.INITIATE_AUTO_PARKING` alongside `DILC_MODE` for behavior-control exports, added focused regression coverage for the RL deployment-config key layout, and documented the blocked Bazel/pytest verification attempts.
+
 > #### 2026-04-23 — UNPUDO model-analysis table write for pink + armadillo
 - Topic: persist the corrected UNPUDO / unparking model-analysis rows for `pink-manta-ray-smooth` and `armadillo-amethyst-squeaky` into `parking.model_analysis`, while finishing the sampled `eel-teal-outspoken` packet export.
 - Labels: #parking #unpudo #unpark #databricks #delta #model-analysis #vault
