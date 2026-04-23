@@ -41,3 +41,10 @@ The corrected fix does this instead:
 - keeps `parking_diffusion_datamodule_cfg` on `materialisation_version="bc/split_alpha2_alpha3/release/0.0.17"`
 - reproduces Wonjoon's intended alpha2/alpha3-split driving train partitions locally via `split_alpha2_alpha3_partitions(...)`
 - leaves Wonjoon's driving validation buckets rootless, matching the original PR pattern
+
+## Follow-up
+Added the two top-level data-loading flags that were still missing compared with PR `106346`:
+- `filter_bad_paths_thresh=0.6`
+- `allow_short_path=True`
+
+This brings the Wonjoon datamodule closer to the original PR's data config, beyond just matching the bucket sources.
