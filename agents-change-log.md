@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — Parking training submission for Wonjoon GC PUDO r017 fix3
+- Topic: submit the requested Parking training run for the migrated Wonjoon parking diffusion datamodule and monitor it to a concrete Surfboard state.
+- Labels: #parking #training #aks #surfboard #wandb #vault
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-23-parking-training-submit-wonjoon-gc-pudo-r017-fix3]]: recorded the exact training command and prompt answers, captured the submitted run (`153682`) with session id, nickname, W&B, and Datadog links, noted the final observed state as `Queued` at queue position `1`, and confirmed the submitted provenance commit `82b56c60d401aeef4c92417c016f37286b8c2240`.
+
 > #### 2026-04-23 — Parking training submission for Wonjoon GC PUDO root017
 - Topic: submit the requested Parking training run for the Wonjoon GC parking datamodule on `boris/training/kangaroo_with_50_and_route_shorten`, monitor it through startup, and record the resulting job identifiers.
 - Labels: #parking #training #aks #surfboard #wandb #vault
