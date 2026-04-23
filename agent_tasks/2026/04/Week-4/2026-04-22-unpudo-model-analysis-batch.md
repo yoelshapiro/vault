@@ -472,3 +472,12 @@ Processing policy:
       - `unpudo`: `60` pass, `165` fail, `3` accidental
       - `unparking`: `5` pass, `1` fail
       - total rows: `234`
+
+- `2026-04-23 12:19 UTC`
+  - user requested a fairer `eel-teal-outspoken` comparison based on run IDs rather than event-outcome sampling
+  - measured the full event population on the already-selected `76` runs:
+    - `519` events total
+    - `493` `unpudo`
+    - `26` `unparking`
+  - patched `export_model_event_packets.py` to accept a `--run-ids-file` allowlist so one model can be refreshed on an exact run cohort
+  - started a run-complete refresh for `eel-teal-outspoken` on those same `76` runs to analyze the `276` events that were missing from the earlier event-sampled pass
