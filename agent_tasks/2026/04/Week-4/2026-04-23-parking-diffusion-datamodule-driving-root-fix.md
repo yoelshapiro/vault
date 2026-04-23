@@ -48,3 +48,15 @@ Added the two top-level data-loading flags that were still missing compared with
 - `allow_short_path=True`
 
 This brings the Wonjoon datamodule closer to the original PR's data config, beyond just matching the bucket sources.
+
+## Follow-up: Add PUDO to Wonjoon Datamodule
+Updated `parking_diffusion_datamodule_cfg` train partitions so the parking child mix now includes PUDO buckets.
+
+Change made:
+- halved the four `parking_window_nopudo_*` raw weights from `0.9` total to `0.45`
+- added PUDO train buckets using the same internal PUDO proportions as the branch parking BC config
+- set `PARKING_DIFFUSION_PUDO_WEIGHT = 0.45` so the added PUDO raw weight exactly fills the freed `0.45`
+
+Validation:
+- `python -m py_compile wayve/ai/si/configs/parking/parking_config.py`
+- arithmetic check confirmed the PUDO formulas sum to `1.0`, so the inserted raw weight totals `0.45`
