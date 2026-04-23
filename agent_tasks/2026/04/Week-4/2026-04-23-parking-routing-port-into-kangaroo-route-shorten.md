@@ -51,8 +51,12 @@ Requested scope:
   - `wayve/ai/lib/data/pipes/routes.py`
   - `wayve/ai/si/datamodules/otf.py`
   - `wayve/ai/si/configs/parking/parking_config.py`
-- Started `bazel build //wayve/ai/si/datamodules:parking //wayve/ai/si/datamodules:otf` on the target branch. At note time the build was still progressing through the transitive graph and had not failed fast on the ported code.
+- `bazel build //wayve/ai/si/datamodules:parking //wayve/ai/si/datamodules:otf` passed.
+- Attempted a small Bazel smoke test via `bazel test //wayve/ai/lib:test_data_lib_py_test --test_arg='-k routes or paths'`, but the test was blocked during repository fetch by unrelated ACR auth failure for `azure-storage/azurite` (`401 Unauthorized`).
 
 ## Notes
 - The copied SI parking module needed one compatibility patch against this branch's older zoo fallback API: removed `store_entry_index` from the zoo delegation call because the local zoo `insert_parking_data` signature does not accept it.
 - Unrelated local workspace changes existed before the port and were left untouched.
+
+## Commit
+- Commit: `1ea5c61bce81` `feat(parking): port SI routing features into kangaroo`

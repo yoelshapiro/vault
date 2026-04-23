@@ -15,6 +15,7 @@
 - Labels: #parking #pudo #unpark #route-shortening #otf #datamodule #paths
 - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
 - PR: none
+- Commit: `1ea5c61bce81`
 - Change type: code
 - Areas: `wayve/ai/si/datamodules/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/si/configs/parking/`, `agent_tasks/2026/04/Week-4/`
 - Changes:
