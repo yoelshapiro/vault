@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — UNPUDO model-analysis table write for pink + armadillo
+- Topic: persist the corrected UNPUDO / unparking model-analysis rows for `pink-manta-ray-smooth` and `armadillo-amethyst-squeaky` into `parking.model_analysis`, while finishing the sampled `eel-teal-outspoken` packet export.
+- Labels: #parking #unpudo #unpark #databricks #delta #model-analysis #vault
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: tooling/analysis
+- Areas: `tools/parking_model_analysis_writer/`, `~/git/ParkingSkills/skills/unpudo-unpark-model-analysis/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-22-unpudo-model-analysis-batch]]: finished the sampled `eel-teal-outspoken` packet export (`243` events / `76` runs), added a Bazel-runnable Databricks Connect writer for `parking.model_analysis`, corrected the writer to filter by current model-card rows instead of stale run-report sections, and wrote validated table rows for `pink-manta-ray-smooth` (`309` rows) and `armadillo-amethyst-squeaky` (`234` rows).
+
 > #### 2026-04-23 — Port SI parking routing features into kangaroo route-shorten
 - Topic: port the SI parking datamodule, parking/unparking route shortening, and short-path wiring from `boris/parking-training-pudo-unpark-routing` into `boris/training/kangaroo_with_50_and_route_shorten`.
 - Labels: #parking #pudo #unpark #route-shortening #otf #datamodule #paths

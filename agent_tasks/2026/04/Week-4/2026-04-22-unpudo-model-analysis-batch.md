@@ -448,3 +448,27 @@ Processing policy:
     - `93` `unpudo` events with disengagement
     - `150` `unpudo` events without disengagement
     - `243` sampled events across `76` runs
+
+- `2026-04-23 11:46 UTC`
+  - completed the sampled packet export for `eel-teal-outspoken`
+  - final sampled export size:
+    - `243` `unpudo` events
+    - `76` runs
+    - packet manifest: `model_analysis/event_packets/eel-teal-outspoken/manifest.json`
+  - no run cards were generated for `eel-teal-outspoken` yet in this step; only the sampled packet cache was completed
+
+- `2026-04-23 11:46 UTC`
+  - added a Bazel-runnable writer utility at `tools/parking_model_analysis_writer/` to persist cached UNPUDO / unparking model-analysis rows into `parking.model_analysis` using Databricks Connect
+  - the first writer attempt proved that stale run-report sections can overcount `non-av` / outdated events, so the writer was tightened to use the model-card event table as the authoritative filter and only use run reports for row content
+  - wrote `pink-manta-ray-smooth` and `armadillo-amethyst-squeaky` into `parking.model_analysis`
+  - staged payload for audit at `model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json`
+  - validated pre-write and post-write grouped counts on the Databricks-backed table
+  - final table counts written:
+    - `pink-manta-ray-smooth`
+      - `unpudo`: `56` pass, `239` fail, `2` accidental
+      - `unparking`: `9` pass, `3` accidental
+      - total rows: `309`
+    - `armadillo-amethyst-squeaky`
+      - `unpudo`: `60` pass, `165` fail, `3` accidental
+      - `unparking`: `5` pass, `1` fail
+      - total rows: `234`
