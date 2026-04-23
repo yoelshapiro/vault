@@ -1337,6 +1337,8 @@
   - Update:
     - added a new incremental `eel-teal-outspoken` expansion workflow that processes one run at a time across `4` workers, merges each completed run into the main packet store, and rewrites the vault outputs after every merged run
     - fixed worker-level cache contention by isolating both the Databricks disk-cache root and the run-discovery output path per worker
+  - Update:
+    - made run-by-run processing the documented default for this skill, added per-run `parking.model_analysis` writes via `--run-ids` support in the writer, and restarted the live `eel-teal-outspoken` workers on that updated contract
 
 - 2026-04-23: [Parking Diffusion Datamodule Driving Root Fix](agent_tasks/2026/04/Week-4/2026-04-23-parking-diffusion-datamodule-driving-root-fix.md)
   - Labels: parking, datamodule, training, data-config, wonjoon

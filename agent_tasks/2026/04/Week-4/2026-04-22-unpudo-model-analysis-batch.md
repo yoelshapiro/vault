@@ -516,3 +516,16 @@ Processing policy:
     - `4` incremental workers are running on the remaining `eel-teal-outspoken` run IDs
     - packet-store coverage has increased from `76` runs / `519` raw events to `78` runs / `521` raw events so far
     - the incremental merge path is working, but the first post-merge full-model rewrite is still the dominant serialized step
+
+- `2026-04-23 13:58 UTC`
+  - updated the skill policy so run-by-run execution is now the default stable workflow, not just a fallback for oversized models
+  - patched `tools/parking_model_analysis_writer/main.py` to support `--run-ids`, so `parking.model_analysis` can be updated for exactly one completed run without deleting and rewriting the full model
+  - patched `scripts/process_model_runs_incrementally.py` so each completed run now:
+    - merges into the packet store
+    - regenerates the vault outputs
+    - writes that run's rows into `parking.model_analysis`
+    - records the staged JSON path for that run's table payload
+  - restarted the live `eel-teal-outspoken` workers on the updated script so future completions follow the new per-run vault + table-write contract
+  - current `eel-teal-outspoken` packet coverage at restart time:
+    - `84` runs
+    - `560` raw events
