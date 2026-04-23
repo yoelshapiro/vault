@@ -498,3 +498,21 @@ Processing policy:
     - `unpudo`: `248` pass, `183` fail, `3` accidental
     - `unparking`: `11` pass, `1` fail, `2` accidental
     - total rows: `448`
+
+- `2026-04-23 13:45 UTC`
+  - switched `eel-teal-outspoken` expansion from large run-batch exports to a new incremental one-run-at-a-time workflow
+  - added `scripts/process_model_runs_incrementally.py` under the `unpudo-unpark-model-analysis` skill
+  - new workflow:
+    - query remaining run IDs for the requested date window
+    - shard them across `4` workers
+    - export exactly one run per worker task with `--source-chunk-size-runs 1`
+    - merge the finished run into the main packet store
+    - regenerate the vault outputs after each merged run
+  - documented the new fallback mode in `skills/unpudo-unpark-model-analysis/SKILL.md`
+  - fixed two concurrency bugs discovered during the first live `eel` launch:
+    - isolated the Databricks disk cache per worker to avoid `sqlite3` disk-I/O errors from shared cache writes
+    - isolated the run-discovery `all_events.json` path per worker to avoid startup JSON decode races
+  - current live state:
+    - `4` incremental workers are running on the remaining `eel-teal-outspoken` run IDs
+    - packet-store coverage has increased from `76` runs / `519` raw events to `78` runs / `521` raw events so far
+    - the incremental merge path is working, but the first post-merge full-model rewrite is still the dominant serialized step
