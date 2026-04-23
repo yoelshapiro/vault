@@ -4,13 +4,13 @@
 |---|---|
 | Model | `eel-teal-outspoken` |
 | Authors | `zak` |
-| Runs covered | `78` |
-| Event count | `450` |
-| Scored event count | `445` |
-| Pass count | `261` |
+| Runs covered | `79` |
+| Event count | `451` |
+| Scored event count | `446` |
+| Pass count | `262` |
 | Fail count | `184` |
 | Accidental count | `5` |
-| Route-change found | `401` |
+| Route-change found | `402` |
 | Route-change not found | `2` |
 | Route-change unclear | `47` |
 | Top effective failure types | `not_av_owned` x61, `failed_to_unpudo` x51, `completed_outside_av` x22 |
@@ -21,41 +21,41 @@
 
 | Metric | Value |
 |---|---|
-| Runs covered | `78` |
-| Scored events | `445` |
+| Runs covered | `79` |
+| Scored events | `446` |
 | Excluded `accidental` events | `5` |
-| Overall success rate | `58.7% (261/445)` |
-| `unpudo` success rate | `57.5% (248/431)` |
+| Overall success rate | `58.7% (262/446)` |
+| `unpudo` success rate | `57.6% (249/432)` |
 | `unparking` success rate | `92.9% (13/14)` |
 | Ownership / handover failures | `51.1% (94/184)` |
 | Short AV-attempt failures | `36.4% (67/184)` |
-| Successful events with no driver accel help | `100.0% (261/261)` |
-| Successful events with route change found | `96.2% (251/261)` |
-| Successful gear alignment at anchor | `100.0% (261/261)` |
+| Successful events with no driver accel help | `100.0% (262/262)` |
+| Successful events with route change found | `96.2% (252/262)` |
+| Successful gear alignment at anchor | `100.0% (262/262)` |
 
 ### Failure Profile
 
-- The scored subset contains `184` failures out of `445` scored events. The dominant effective failure types are `not_av_owned` 33.2% (61/184), `failed_to_unpudo` 27.7% (51/184), `completed_outside_av` 12.0% (22/184).
+- The scored subset contains `184` failures out of `446` scored events. The dominant effective failure types are `not_av_owned` 33.2% (61/184), `failed_to_unpudo` 27.7% (51/184), `completed_outside_av` 12.0% (22/184).
 - Ownership loss and handover breakage are the main theme: `94` of `184` failures fall into `not_av_owned`, `completed_outside_av`, `driver_completed_maneuver`, or `interrupted_handover`.
 - Route-change evidence inside failed events is `found` in `145`, `not found` in `1`, and `unclear` in `38` cases.
 - Source disengagement labels inside failed events are `failed_to_unpudo` 27.7% (51/184), `failed_to_pudo` 5.4% (10/184), `uncategorised` 4.3% (8/184); anything else is failing from DBW / ownership / gear evidence rather than an explicit source disengagement label.
-- Event-type split: `unparking` is stronger than `unpudo` in this sample: 92.9% (13/14) versus 57.5% (248/431).
+- Event-type split: `unparking` is stronger than `unpudo` in this sample: 92.9% (13/14) versus 57.6% (249/432).
 
 ### Success Behavior
 
-- Successful events are distributed as `248` `unpudo` and `13` `unparking`.
-- On successful attempts, route change is recovered in `251` of `261` cases and driver accelerator help is absent in `261` of `261` cases.
-- Gear state stays aligned at the anchor in `261` of `261` comparable passes. Planned-indicator alignment is `24.5% (64/261)`, and controller-indicator alignment is `24.1% (63/261)`.
-- Typical successful timing is median `success baseline -> event start` `12.97s`, median `success baseline -> first motion` `6.68s`, and median AV-owned duration `95.82s`.
+- Successful events are distributed as `249` `unpudo` and `13` `unparking`.
+- On successful attempts, route change is recovered in `252` of `262` cases and driver accelerator help is absent in `262` of `262` cases.
+- Gear state stays aligned at the anchor in `262` of `262` comparable passes. Planned-indicator alignment is `24.4% (64/262)`, and controller-indicator alignment is `24.0% (63/262)`.
+- Typical successful timing is median `success baseline -> event start` `13.14s`, median `success baseline -> first motion` `6.69s`, and median AV-owned duration `95.82s`.
 - Typical successful maneuver shape: common actual gear at the anchor is `DRIVE_POSITION_V2_DRIVE`, common actual indicator is `INDICATORS_STATE_V2_OFF`, and median max AV speed is `4.75 m/s`.
 
 ### Written Assessment
 
-This card covers `450` recorded events across `78` runs, but only `445` of them are scored AV-owned attempts. The remaining `5` `accidental` events are explicitly excluded from the success-rate denominator. Within the scored subset, the overall success rate is `58.7% (261/445)`. `unparking` is stronger than `unpudo` in this sample: 92.9% (13/14) versus 57.5% (248/431).
+This card covers `451` recorded events across `79` runs, but only `446` of them are scored AV-owned attempts. The remaining `5` `accidental` events are explicitly excluded from the success-rate denominator. Within the scored subset, the overall success rate is `58.7% (262/446)`. `unparking` is stronger than `unpudo` in this sample: 92.9% (13/14) versus 57.6% (249/432).
 
 Across the scored failures, route-change evidence is `145` found / `1` not found / `38` unclear, so navigation context is usually present. The failure mix is led by `not_av_owned` 33.2% (61/184), `failed_to_unpudo` 27.7% (51/184), `completed_outside_av` 12.0% (22/184), while the excluded portion is limited to sub-`2s` accidental AV contact rather than true scored failures.
 
-When this model succeeds, the behavior is consistent: route change is recovered in `251` of `261` successful events, driver accelerator help is absent in `261` of `261`, and gear alignment holds in `261` of `261` comparable passes. The typical successful event starts moving about `6.68s` after the earlier of route change and AV start, reaches a median max AV speed of `4.75 m/s`, and most often begins in gear `DRIVE_POSITION_V2_DRIVE` with indicator state `INDICATORS_STATE_V2_OFF`.
+When this model succeeds, the behavior is consistent: route change is recovered in `252` of `262` successful events, driver accelerator help is absent in `262` of `262`, and gear alignment holds in `262` of `262` comparable passes. The typical successful event starts moving about `6.69s` after the earlier of route change and AV start, reaches a median max AV speed of `4.75 m/s`, and most often begins in gear `DRIVE_POSITION_V2_DRIVE` with indicator state `INDICATORS_STATE_V2_OFF`.
 
 ## Event Cards
 
@@ -360,6 +360,7 @@ When this model succeeds, the behavior is consistent: route change is recovered 
 | `2026-04-22 07:41:11.483 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776843671483299) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A40%3A50.168257Z&ds.end=2026-04-22T07%3A42%3A14.699055Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A41%3A11.483299Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:41:11.483 UTC\|card]] |
 | `2026-04-22 07:54:00.683 UTC` | `unpudo` | `fail` | `unclear` | `failed_to_unpudo` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776844440683299) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A53%3A41.058291Z&ds.end=2026-04-22T07%3A54%3A14.933302Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A54%3A00.683299Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:54:00.683 UTC\|card]] |
 | `2026-04-22 07:54:55.733 UTC` | `unpudo` | `pass` | `unclear` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20030/2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699?id=&time-unixus=1776844495733304) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20030&ds.start=2026-04-22T07%3A53%3A57.679679Z&ds.end=2026-04-22T07%3A56%3A13.358764Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T07%3A54%3A55.733304Z) | [[../report_cards/2026/04/Week-4/fme20030--2026-04-22--06-09-20--gen2-av-c27c49e5-a980-4763-9814-f0b74abf9699.md#unpudo 2026-04-22 07:54:55.733 UTC\|card]] |
+| `2026-04-22 08:32:14.633 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20007/2026-04-22--08-18-46--gen2-av-f4f206ce-cc95-4b7a-9b0c-98662178b626?id=&time-unixus=1776846734633319) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20007&ds.start=2026-04-22T08%3A31%3A49.068253Z&ds.end=2026-04-22T08%3A32%3A28.583325Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T08%3A32%3A14.633319Z) | [[../report_cards/2026/04/Week-4/fme20007--2026-04-22--08-18-46--gen2-av-f4f206ce-cc95-4b7a-9b0c-98662178b626.md#unpudo 2026-04-22 08:32:14.633 UTC\|card]] |
 | `2026-04-22 08:37:30.083 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20009/2026-04-22--08-29-02--gen2-av-65922491-c7ac-43cc-8af7-cf747e7336c2?id=&time-unixus=1776847050083295) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20009&ds.start=2026-04-22T08%3A37%3A16.218297Z&ds.end=2026-04-22T08%3A37%3A59.056280Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T08%3A37%3A30.083295Z) | [[../report_cards/2026/04/Week-4/fme20009--2026-04-22--08-29-02--gen2-av-65922491-c7ac-43cc-8af7-cf747e7336c2.md#unpudo 2026-04-22 08:37:30.083 UTC\|card]] |
 | `2026-04-22 08:37:59.483 UTC` | `unpudo` | `fail` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20009/2026-04-22--08-29-02--gen2-av-65922491-c7ac-43cc-8af7-cf747e7336c2?id=&time-unixus=1776847079483326) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20009&ds.start=2026-04-22T08%3A37%3A16.218297Z&ds.end=2026-04-22T08%3A38%3A47.483314Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T08%3A37%3A59.483326Z) | [[../report_cards/2026/04/Week-4/fme20009--2026-04-22--08-29-02--gen2-av-65922491-c7ac-43cc-8af7-cf747e7336c2.md#unpudo 2026-04-22 08:37:59.483 UTC\|card]] |
 | `2026-04-22 08:40:05.683 UTC` | `unpudo` | `pass` | `found` | `none observed` | [console](https://console.sso.wayve.ai/run/fme20018/2026-04-22--08-27-39--gen2-av-59ad9a97-e9da-47d0-aea4-c5a4ad0055d0?id=&time-unixus=1776847205683299) | [foxglove](https://app.foxglove.dev/wayve-on-prem/p/prj_0dX18KZdVHg1fmmI/view?ds=foxglove-stream&ds.deviceName=fme20018&ds.start=2026-04-22T08%3A38%3A39.668249Z&ds.end=2026-04-22T08%3A41%3A18.467629Z&layoutId=lay_0e7VD4WIKDQGU73Y&time=2026-04-22T08%3A40%3A05.683299Z) | [[../report_cards/2026/04/Week-4/fme20018--2026-04-22--08-27-39--gen2-av-59ad9a97-e9da-47d0-aea4-c5a4ad0055d0.md#unpudo 2026-04-22 08:40:05.683 UTC\|card]] |
