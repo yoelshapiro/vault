@@ -271,6 +271,29 @@ Processing policy:
     - `satisfied-amber-moose`: `270` events, `17` scored, `13` pass, `4` fail, `95` `non-AV`, `158` `accidental`
   - `parking.model_analysis` has still not been updated by this cache-first vault workflow; current writes remain vault-only
 
+- `2026-04-23 08:12 UTC`
+  - updated the `unpudo-unpark-model-analysis` skill instructions to match the current workflow instead of the original manual flow
+  - documented:
+    - cache-first execution via `scripts/export_model_event_packets.py` and `scripts/generate_model_reports.py`
+    - packet cache location: `model_analysis/event_packets/<model>/`
+    - Databricks query cache location: `/home/borisindelman/tmp/model_analysis_databricks_cache/<model>/`
+    - exporter chunking with `--source-chunk-size-runs`
+    - ordered multi-worker execution with up to `4` workers
+    - retrying only failed models instead of restarting a whole queue
+    - the success-timing baseline rule: use the earlier of route change and AV start
+  - generated one-off analysis for `insightful-magenta-porcupine`
+  - queried the event table first and found `7` relevant events, all on `2026-04-22`
+  - exported that exact day and regenerated the vault outputs with the new timing baseline and non-AV skip rule
+  - outputs:
+    - model card `model_analysis/models/insightful-magenta-porcupine.md`
+    - run report `model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--13-38-11--gen2-av-c6787608-2377-49a2-8db2-eb353c1251f9.md`
+  - counts after filtering:
+    - `7` raw events
+    - `5` skipped as `non-AV`
+    - `2` recorded events
+    - `1` scored fail
+    - `1` `accidental`
+
 - `2026-04-23 05:52 UTC`
   - completed the remaining regenerated model cards under the new scoring logic:
     - `armadillo-amethyst-squeaky`: `302` events, `73` scored, `66` pass, `7` fail, `88` `non-AV`, `141` `accidental`
