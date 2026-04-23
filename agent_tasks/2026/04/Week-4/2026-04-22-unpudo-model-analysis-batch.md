@@ -271,6 +271,28 @@ Processing policy:
     - `satisfied-amber-moose`: `270` events, `17` scored, `13` pass, `4` fail, `95` `non-AV`, `158` `accidental`
   - `parking.model_analysis` has still not been updated by this cache-first vault workflow; current writes remain vault-only
 
+- `2026-04-23 10:31 UTC`
+  - corrected `unpudo` scoring after finding late-anchor omissions in `armadillo-amethyst-squeaky`
+  - the previous logic only looked for AV ownership inside or after the official `unpudo` event timestamp, which caused late-anchor `unpudo` failures to be misclassified as `non-AV` and dropped
+  - updated the generator and skill instructions so `unpudo` now:
+    - starts its ownership lookback from the most recent route change
+    - scores successful cases across the official `unpudo` window
+    - cuts the scored window at disengagement when AV drops earlier
+    - marks those cases `fail` instead of `non-AV`
+  - reran `armadillo-amethyst-squeaky` from cache under the new `unpudo` rule
+  - concrete fix verified on run `fme20015/2026-04-15--14-16-31--gen2-av-28d171b6-80a7-4e64-8aa8-b306a6530d69`:
+    - `unpudo 2026-04-15 14:23:48.383 UTC` now present as `fail`
+    - `unpudo 2026-04-15 14:32:20.083 UTC` now present as `fail`
+    - `unpudo 2026-04-15 14:30:02.233 UTC` remains `pass`
+  - refreshed totals for `armadillo-amethyst-squeaky`:
+    - `302` raw events
+    - `68` skipped `non-AV`
+    - `234` recorded events
+    - `231` scored
+    - `65` pass
+    - `166` fail
+    - `3` `accidental`
+
 - `2026-04-23 08:42 UTC`
   - reran `armadillo-amethyst-squeaky` in cache-first mode and rewrote all generated event cards and run reports from the existing packet cache
   - this was a full local regeneration under the latest rules:
