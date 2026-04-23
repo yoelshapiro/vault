@@ -37,6 +37,7 @@ Requested scope:
   - `reconstruct_gear_from_speed=True`
   - `enable_route_shortening_for_parking=True`
   - `allow_short_path=True`
+  - `enable_early_path_gating=True`
   - `enable_strip_leading_standstill=True`
   - `enable_augment_standstill_gear=True`
   - `parked_unparking_prob=0.5`
