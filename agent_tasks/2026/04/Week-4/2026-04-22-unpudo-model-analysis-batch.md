@@ -246,3 +246,7 @@ Processing policy:
     - `Anscombe` -> `lively-orange-horse`
     - `Banach` -> `plum-timeless-beaver`
     - `Rawls` -> `alpaca-chocolate-fearless`
+- `2026-04-23 02:25 UTC`
+  - fixed model-card event links across all current model cards
+  - converted markdown file links with slug fragments into Obsidian section links with the exact H2 text from the run report
+  - patched `generate_model_reports.py` so future regenerated model cards also use exact section links by default
