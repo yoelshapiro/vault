@@ -321,7 +321,11 @@
             "state": {
               "type": "markdown",
               "state": {
+<<<<<<< Updated upstream
                 "file": "model_analysis/models/eel-teal-outspoken.md",
+=======
+                "file": "model_analysis/models/mallard-plum-mysterious.md",
+>>>>>>> Stashed changes
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +340,11 @@
                 }
               },
               "icon": "lucide-file",
+<<<<<<< Updated upstream
               "title": "eel-teal-outspoken"
+=======
+              "title": "mallard-plum-mysterious"
+>>>>>>> Stashed changes
             }
           }
         ],
@@ -475,13 +483,21 @@
             "state": {
               "type": "outline",
               "state": {
+<<<<<<< Updated upstream
                 "file": "model_analysis/models/eel-teal-outspoken.md",
+=======
+                "file": "model_analysis/models/mallard-plum-mysterious.md",
+>>>>>>> Stashed changes
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
+<<<<<<< Updated upstream
               "title": "Outline of eel-teal-outspoken"
+=======
+              "title": "Outline of mallard-plum-mysterious"
+>>>>>>> Stashed changes
             }
           },
           {
@@ -516,6 +532,7 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+<<<<<<< Updated upstream
     "model_analysis/models/mallard-plum-mysterious.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-22--10-07-11--gen2-av-caf34bee-7e98-4920-a00a-d4c61a575147.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-22--08-41-34--gen2-av-226468b9-4162-4768-9cdc-e643f6e5013a.md",
@@ -544,6 +561,36 @@
     "model_analysis/report_cards/2026/04/Week-3/fme20029--2026-04-19--09-04-12--gen2-av-c67fed38-c47b-4e4b-b311-36cdfde00923.md",
     "model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json",
     "model_analysis/staged_rows",
+=======
+    "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-20--19-33-10--gen2-av-7844ba47-afc0-425a-b5ef-a925c0d2c6bc.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-21--19-22-29--gen2-av-317481e0-4c9f-4033-96a4-619458685d04.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-21--17-39-16--gen2-av-1697050f-deec-4607-95bb-d6336f707fa5.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--17-21-28--gen2-av-7d5636db-09bc-474b-8f5b-c67d6e0c2e2c.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--16-45-34--gen2-av-1ab30619-caf1-4f23-b5f0-bb02c1a94628.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--15-19-29--gen2-av-f2bf5f43-ed9b-41c4-9afa-e1dfca8557bb.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--13-48-29--gen2-av-6cc0f9b6-4687-4074-be7f-51de100c4131.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--03-30-38--gen2-av-6002bf44-37af-457e-b5ed-51abfe8ed7c4.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--01-38-48--gen2-av-848a412f-c2ce-4d60-9fe4-1bfec42ba9a3.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--00-46-40--gen2-av-4e748e92-ae67-4a7d-a6f3-3ca72e7d91a4.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-18--00-38-03--gen2-av-1d46e088-452a-4fae-91d8-a6d9885e5160.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-17--22-08-31--gen2-av-9b6f4c60-c9a0-489f-a124-7f7fb87b5298.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-16--03-38-32--gen2-av-7db86d7e-265e-4355-8c1e-c0e5b36b18b5.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-16--01-57-02--gen2-av-6e4c2864-0a40-47ce-bd88-e148d3f375e5.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-15--13-36-23--gen2-av-f1432a3a-2962-4aaf-9fca-bf38ea9b222d.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-19--18-53-28--gen2-av-a33797a9-3dad-4832-9161-f24f5c8b595b.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-19--00-47-38--gen2-av-3f0d5fb3-b27c-4f38-9595-d20a00b51acc.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--02-22-03--gen2-av-ac26e7cc-757e-4a3d-891d-b16e70ae53f1.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--00-20-29--gen2-av-b59cf1a9-c1c4-4f13-8c4b-b24d2db51633.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-15--03-36-08--gen2-av-89e7a3a2-ccf3-4b10-95f1-fc161ac9a449.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-17--17-56-09--gen2-av-665d7037-2186-463c-9a63-7211f1adbc45.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-17--16-12-38--gen2-av-45669217-ec41-4dba-9e0c-e591852a503b.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-15--03-49-30--gen2-av-0a92ebc2-f66b-4a0b-9026-2990942d3433.md",
+    "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json",
+    "model_analysis/staged_rows",
+    "agent_tasks/2026/04/Week-4/2026-04-23-parking-routing-port-into-kangaroo-route-shorten.md",
+>>>>>>> Stashed changes
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
