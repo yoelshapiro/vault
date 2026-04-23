@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — Wonjoon long-horizon parking reconstruction
+- Topic: reconstruct Wonjoon Goo's long-horizon parking work across Notion notes, Slack threads, git history, and the April 20 parking handover transcript.
+- Labels: #parking #long-horizon #p2p #diffusion #policy-path #gear #evaluation #research-summary
+- Branch: `main`
+- PR: none
+- Change type: analysis/docs
+- Areas: `wayve/ai/si/datamodules/`, `wayve/ai/zoo/data/`, `wayve/ai/zoo/outputs/`, `wayve/ai/si/configs/parking/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-23-wonjoon-long-horizon-parking-summary]]: consolidated the project brief, architecture notes, input-processing design, handover doc, gear-augmentation Slack discussion, and local commit history into one summary explaining what Wonjoon actually built, which pieces look foundational, which augmentations were explicitly temporary or risky, and what remained unsolved at handover.
+
 > #### 2026-04-23 — PR 102398 RL interleave driving-controls parity
 - Topic: add the missing RL behavior-control driving key needed for deploy-time interleaving parity with BC parking exports in PR `#102398`.
 - Labels: #si #offline-rl #interleaving #deployment #parking #tests #pr102398
