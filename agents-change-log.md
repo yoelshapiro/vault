@@ -50,6 +50,7 @@
 - Areas: `wayve/ai/si/datamodules/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/si/configs/parking/`, `agent_tasks/2026/04/Week-4/`
 - Changes:
   - [[agent_tasks/2026/04/Week-4/2026-04-23-parking-routing-port-into-kangaroo-route-shorten]]: copied the SI parking datamodule into the target branch, rewired OTF to use `ParkingDataConfig`, added bucket-based short-path clamping support, ported parking and unparking route shortening, and updated the parking config to use `allow_short_path=True`, then validated a local `//wayve/ai/si:train` smoke run under `parking_bc_train_release_2026_5_11`, confirming successful startup and completion of 3 local train steps.
+  - Follow-up: root-caused AKS training job `153523` to a deterministic `NameError` in `wayve/ai/zoo/data/parking.py` (`_add_parking_stop_route_position` missing `F` import), added the missing `//wayve/core/data/fields` dependency, and added focused regression coverage for parking stop-route anchoring, unparking route shortening, and short-path clamping before resubmitting training.
 
 > #### 2026-04-22 — UNPUDO on-road analysis source discovery and plan
 - Topic: identify the Databricks tables needed to analyze failed and successful UNPUDO on-road events, validate source viability for gear/pedal/navigation timing, and define the first-pass analysis plan.
