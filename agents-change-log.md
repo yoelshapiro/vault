@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — Parking training submission for Wonjoon GC PUDO root017
+- Topic: submit the requested Parking training run for the Wonjoon GC parking datamodule on `boris/training/kangaroo_with_50_and_route_shorten`, monitor it through startup, and record the resulting job identifiers.
+- Labels: #parking #training #aks #surfboard #wandb #vault
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-23-parking-training-submit-wonjoon-gc-pudo-root017]]: recorded the requested training command and prompt answers, verified the branch/commit, captured the exact submitted run (`153615`) plus W&B/Datadog links, noted that it reached `Running` before later flipping to `Failed`, and logged the earlier incorrect worker submission (`153590`) for traceability.
+
 > #### 2026-04-23 — Port PR 106346 parking data as selectable datamodule
 - Topic: port the data portion of PR `#106346` into the current parking route-shortening branch as a second selectable parking datamodule without bringing over the diffusion model stack.
 - Labels: #parking #datamodule #config #path-prediction #data-port
