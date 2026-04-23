@@ -1337,3 +1337,14 @@
   - Update:
     - added a new incremental `eel-teal-outspoken` expansion workflow that processes one run at a time across `4` workers, merges each completed run into the main packet store, and rewrites the vault outputs after every merged run
     - fixed worker-level cache contention by isolating both the Databricks disk-cache root and the run-discovery output path per worker
+
+- 2026-04-23: [Parking Diffusion Datamodule Driving Root Fix](agent_tasks/2026/04/Week-4/2026-04-23-parking-diffusion-datamodule-driving-root-fix.md)
+  - Labels: parking, datamodule, training, data-config, wonjoon
+  - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+  - PR: none
+  - Change type: bug fix
+  - Areas: `wayve/ai/si/configs/parking/parking_config.py`
+  - Changes:
+    - replaced the borrowed baseline driving partitions in `parking_diffusion_datamodule_cfg` with explicit branch-local driving partitions rooted at the known-good `DRIVING_ROOT`
+    - removed the stale `materialisation_version` dependency that resolved driving buckets into a missing `sampling_materialised/bc/split_alpha2_alpha3/release/0.0.17` path
+    - extracted shared driving train and validation partition constants so both parking datamodules reuse the same explicit driving source
