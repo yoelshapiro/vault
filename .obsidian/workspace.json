@@ -499,8 +499,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -515,7 +514,7 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "7dea9896ceb1a3db",
+  "active": "a6cdcc3493cdeb21",
   "lastOpenFiles": [
     "model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json",
     "model_analysis/staged_rows",
