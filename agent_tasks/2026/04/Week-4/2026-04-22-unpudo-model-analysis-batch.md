@@ -481,3 +481,20 @@ Processing policy:
     - `26` `unparking`
   - patched `export_model_event_packets.py` to accept a `--run-ids-file` allowlist so one model can be refreshed on an exact run cohort
   - started a run-complete refresh for `eel-teal-outspoken` on those same `76` runs to analyze the `276` events that were missing from the earlier event-sampled pass
+
+- `2026-04-23 13:04 UTC`
+  - completed the run-complete `eel-teal-outspoken` refresh on the same `76` sampled runs
+  - regenerated the vault outputs from the refreshed packet cache:
+    - `model_analysis/models/eel-teal-outspoken.md`
+    - `76` run reports across `Week-3` and `Week-4`
+  - final refreshed counts on those `76` runs:
+    - `519` raw events
+    - `71` skipped `non-av`
+    - `448` recorded events
+  - wrote `eel-teal-outspoken` into `parking.model_analysis`
+  - staged payload for audit at `model_analysis/staged_rows/eel-teal-outspoken-2026-04-23.json`
+  - validated pre-write and post-write grouped counts on the Databricks-backed table
+  - final table counts written:
+    - `unpudo`: `248` pass, `183` fail, `3` accidental
+    - `unparking`: `11` pass, `1` fail, `2` accidental
+    - total rows: `448`

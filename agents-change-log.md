@@ -1331,3 +1331,6 @@
     - relaunched the batch with a cache-first exporter that writes per-model event packets locally, then assigns workers against cached JSON with exact event-section anchors in model-card links
   - Update:
     - moved the Databricks packet-cache location out of the vault into `~/tmp/model_analysis_databricks_cache` and patched the exporter so future runs do not leave `cache.db` files under `vault/model_analysis`
+  - Update:
+    - refreshed `eel-teal-outspoken` on a fixed cohort of `76` runs, regenerated the full run-complete vault outputs for those runs, and wrote `448` validated rows into `parking.model_analysis`
+    - final table counts for `eel-teal-outspoken`: `unpudo` `248` pass / `183` fail / `3` accidental, `unparking` `11` pass / `1` fail / `2` accidental
