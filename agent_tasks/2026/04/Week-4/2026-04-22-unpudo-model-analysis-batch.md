@@ -415,3 +415,24 @@ Processing policy:
   - fixed model-card event links across all current model cards
   - converted markdown file links with slug fragments into Obsidian section links with the exact H2 text from the run report
   - patched `generate_model_reports.py` so future regenerated model cards also use exact section links by default
+
+- `2026-04-23 10:56 UTC`
+  - applied the corrected `unpudo` lookback rule to `pink-manta-ray-smooth` using the cached packet export
+  - regenerated model card `model_analysis/models/pink-manta-ray-smooth.md` and its linked run reports with the same route-change-to-event / route-change-to-disengagement logic used for the `armadillo-amethyst-squeaky` fix
+  - refreshed totals for `pink-manta-ray-smooth`:
+    - `387` raw events
+    - `78` skipped `non-AV`
+    - `309` recorded events
+    - `304` scored
+    - `65` pass
+    - `239` fail
+    - `5` `accidental`
+
+- `2026-04-23 10:56 UTC`
+  - patched `scripts/export_model_event_packets.py` to reuse the already-built `//tools/databricks_queries:execute_query` binary when available, instead of invoking `bazel run` on every source chunk
+  - this avoids repeated Bazel startup overhead and bypasses the mid-export repo-mapping failure that interrupted `eel-teal-outspoken`
+  - updated `skills/unpudo-unpark-model-analysis/SKILL.md` so the cache-first instructions include this optimization
+
+- `2026-04-23 10:57 UTC`
+  - resumed `eel-teal-outspoken` from the partial packet cache after the exporter patch
+  - existing source chunks in `model_analysis/event_packets/eel-teal-outspoken/` are being reused; only the missing work should continue
