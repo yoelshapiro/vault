@@ -4,6 +4,7 @@
 |---|---|
 | Model | `harlequin-excited-greyhound` |
 | Authors | `boris.indelman` |
+| Runs covered | `1` |
 | Event count | `17` |
 | Pass count | `12` |
 | Fail count | `5` |
@@ -11,6 +12,42 @@
 | Route-change not found | `0` |
 | Route-change unclear | `9` |
 | Top effective failure types | `parking` x4, `failed_to_accelerate` x1 |
+
+## Analysis Summary
+
+### Comparison Snapshot
+
+| Metric | Value |
+|---|---|
+| Runs covered | `1` |
+| Overall success rate | `70.6% (12/17)` |
+| `unpudo` success rate | `60.0% (3/5)` |
+| `unparking` success rate | `75.0% (9/12)` |
+| Ownership / handover failures | `0.0% (0/5)` |
+| Short AV-attempt failures | `0.0% (0/5)` |
+| Successful events with no driver accel help | `100.0% (12/12)` |
+| Successful events with route change found | `50.0% (6/12)` |
+| Successful gear alignment at anchor | `100.0% (12/12)` |
+
+### Failure Profile
+
+- Failures make up `29.4% (5/17)` of the analyzed events. The dominant effective failure types are `parking` 80.0% (4/5), `failed_to_accelerate` 20.0% (1/5).
+- Ownership loss and handover breakage are the main theme: `0` of `5` failures fall into `not_av_owned`, `completed_outside_av`, `driver_completed_maneuver`, or `interrupted_handover`.
+- Route-change evidence inside failed events is `found` in `2`, `not found` in `0`, and `unclear` in `3` cases.
+- Source disengagement labels inside failed events are `parking` 80.0% (4/5), `failed_to_accelerate` 20.0% (1/5); anything else is failing from DBW / ownership / gear evidence rather than an explicit source disengagement label.
+- Event-type split: `unparking` is stronger than `unpudo` in this sample: 75.0% (9/12) versus 60.0% (3/5).
+
+### Success Behavior
+
+- Successful events are distributed as `3` `unpudo` and `9` `unparking`.
+- On successful attempts, route change is recovered in `6` of `12` cases and driver accelerator help is absent in `12` of `12` cases.
+- Gear state stays aligned at the anchor in `12` of `12` comparable passes. Planned-indicator alignment is `25.0% (3/12)`, and controller-indicator alignment is `25.0% (3/12)`.
+- Typical successful timing is median `AV -> event start` `196.54s`, median `AV -> first motion` `196.74s`, and median AV-owned duration `566.56s`.
+- Typical successful maneuver shape: common actual gear at the anchor is `DRIVE_POSITION_V2_DRIVE`, common actual indicator is `INDICATORS_STATE_V2_OFF`, and median max AV speed is `7.52 m/s`.
+
+### Coverage Note
+
+- This card currently reflects only `17` analyzed events across `1` runs, so the rates above are directional and may shift materially as more packets are refreshed.
 
 ## Event Cards
 
