@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
+                "file": "model_analysis/models/pink-manta-ray-smooth.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6"
+              "title": "pink-manta-ray-smooth"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
+                "file": "model_analysis/models/pink-manta-ray-smooth.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6"
+              "title": "Outline of pink-manta-ray-smooth"
             }
           },
           {
@@ -517,6 +517,8 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-4/2026-04-23-parking-routing-port-into-kangaroo-route-shorten.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
     "model_analysis/models/pink-manta-ray-smooth.md",
     "model_analysis/models/armadillo-amethyst-squeaky.md",
     "model_analysis/models/insightful-magenta-porcupine.md",
@@ -528,7 +530,6 @@
     "model_analysis/models/sea-cucumber-spectacular-orange.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--16-09-57--gen2-av-97310301-a8d4-4bb7-87aa-6bf157ad09e8.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--03-14-37--gen2-av-4cd403f2-b1b7-4e7c-afe5-42579f71b741.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-15--00-46-35--gen2-av-1202c391-bb32-4268-aa5d-deac5996f479.md",
     "model_analysis/models/apricot-crocodile-uproarious.md",
     "model_analysis/models/alpaca-chocolate-fearless.md",
@@ -542,7 +543,6 @@
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--20-14-14--gen2-av-64bfb241-2a77-49b3-9a73-b3fb4cc1406d.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--18-04-59--gen2-av-71f20556-6d74-4553-9f80-2c44392b02ea.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--16-20-45--gen2-av-fbe4e51a-0dd9-4a52-9bc6-eff63f0939cd.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--14-29-25--gen2-av-b8c3ecc9-d0ee-4a65-a4e6-e2fb1efde5f2.md",
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
