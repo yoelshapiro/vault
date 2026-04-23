@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/lively-orange-horse.md",
+                "file": "model_analysis/models/apricot-crocodile-uproarious.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "lively-orange-horse"
+              "title": "apricot-crocodile-uproarious"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/lively-orange-horse.md",
+                "file": "model_analysis/models/apricot-crocodile-uproarious.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of lively-orange-horse"
+              "title": "Outline of apricot-crocodile-uproarious"
             }
           },
           {
@@ -516,17 +516,17 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-19--17-11-32--gen2-av-ce73c67b-2bac-4bfa-bb30-7cd7f6654a1d.md",
-    "model_analysis/models/harlequin-excited-greyhound.md",
-    "model_analysis/models/lively-orange-horse.md",
-    "model_analysis/report_cards/2026/04/Week-2/fme10005--2026-04-06--22-59-19--gen2-av-ace71b58-df94-4493-bb23-8d4bb4ad4c3e.md",
-    "model_analysis/models/blue-panther-solid.md",
-    "model_analysis/models/armadillo-amethyst-squeaky.md",
-    "model_analysis/models/apricot-crocodile-uproarious.md",
     "model_analysis/models/alpaca-chocolate-fearless.md",
     "model_analysis/models/satisfied-amber-moose.md",
     "model_analysis/models/plum-timeless-beaver.md",
     "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/models/lively-orange-horse.md",
+    "model_analysis/models/harlequin-excited-greyhound.md",
+    "model_analysis/models/blue-panther-solid.md",
+    "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/apricot-crocodile-uproarious.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-19--17-11-32--gen2-av-ce73c67b-2bac-4bfa-bb30-7cd7f6654a1d.md",
+    "model_analysis/report_cards/2026/04/Week-2/fme10005--2026-04-06--22-59-19--gen2-av-ace71b58-df94-4493-bb23-8d4bb4ad4c3e.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-15--03-54-20--gen2-av-9f30e46a-a838-46da-973e-e2b38b53d74c.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20023--2026-04-14--15-39-41--gen2-av-32f289ea-c02f-49dc-8a18-f0fc2cdf2801.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20037--2026-04-13--21-35-17--gen2-av-a682e5bb-dc88-47cc-84b5-1556cf7eb1f2.md",
