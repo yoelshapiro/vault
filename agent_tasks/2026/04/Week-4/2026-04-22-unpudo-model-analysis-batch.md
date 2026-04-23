@@ -209,3 +209,40 @@ Processing policy:
     - `lively-orange-horse`
     - `plum-timeless-beaver`
     - `alpaca-chocolate-fearless`
+- `2026-04-23 01:29 UTC`
+  - `blue-panther-solid` completed:
+    - `188` events
+    - `30` runs
+    - refreshed model card `model_analysis/models/blue-panther-solid.md`
+    - refreshed or created `30` run reports under `model_analysis/report_cards/2026/04/Week-4/`
+- `2026-04-23 01:31 UTC`
+  - `satisfied-amber-moose` completed full-batch refresh:
+    - `270` events
+    - `44` runs
+    - refreshed model card `model_analysis/models/satisfied-amber-moose.md`
+    - refreshed `44` run reports across `Week-3` and `Week-4`
+- `2026-04-23 01:33 UTC`
+  - `pink-manta-ray-smooth` failed on the first full-batch attempt
+  - root cause:
+    - the model-level `trajectory_controller_state` query was too large as a single export over `90` runs
+  - partial packet artifacts exist:
+    - `387` events
+    - `90` runs
+    - `events`, `navigation`, `controller_state`, `vehicle_state`, and `driving_plan` landed
+    - `trajectory_controller_state.json` and `manifest.json` did not land
+- `2026-04-23 01:37 UTC`
+  - patched `export_model_event_packets.py` again so model-level source exports are chunked by run windows:
+    - new flag: `--source-chunk-size-runs`
+    - intended to keep large models like `pink-manta-ray-smooth`, `plum-timeless-beaver`, and `alpaca-chocolate-fearless` from hanging on one oversized source query
+  - started a local chunked retry for `pink-manta-ray-smooth`
+- `2026-04-23 01:40 UTC`
+  - `armadillo-amethyst-squeaky` completed:
+    - `302` events
+    - `42` runs
+    - refreshed model card `model_analysis/models/armadillo-amethyst-squeaky.md`
+    - refreshed `42` run reports across `Week-2` and `Week-3`
+  - rolled the worker queue forward:
+    - `Erdos` -> `apricot-crocodile-uproarious`
+    - `Anscombe` -> `lively-orange-horse`
+    - `Banach` -> `plum-timeless-beaver`
+    - `Rawls` -> `alpaca-chocolate-fearless`
