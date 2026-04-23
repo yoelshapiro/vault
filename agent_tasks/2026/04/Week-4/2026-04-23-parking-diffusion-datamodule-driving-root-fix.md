@@ -60,3 +60,23 @@ Change made:
 Validation:
 - `python -m py_compile wayve/ai/si/configs/parking/parking_config.py`
 - arithmetic check confirmed the PUDO formulas sum to `1.0`, so the inserted raw weight totals `0.45`
+
+## Follow-up: Branch Compatibility Fixes
+Two more deterministic training failures showed up after submission:
+
+1. `filter_bad_paths_thresh` and top-level `allow_short_path` are not accepted by this branch's `BcDataModuleCfg` / `OtfDrivingDataModule` constructor.
+2. `wayve/ai/si/datamodules/parking.py` had drifted to newer key names (`PARKING_GOAL_POSE`, `ORIGINAL_PARKING_GOAL_POSE`) that do not exist in this branch's `DataKeys`.
+
+Fixes applied:
+- removed unsupported top-level `filter_bad_paths_thresh` and `allow_short_path` from `parking_diffusion_datamodule_cfg`
+- kept parking-specific short-path behavior in `parking_config.allow_short_path`
+- changed the SI parking datamodule to use this branch's canonical keys:
+  - `PARKING_POSE`
+  - `PARKING_POSE_GT`
+- updated the related docstrings and inline comments in the SI datamodule to match
+
+Validation:
+- `python -m py_compile wayve/ai/si/datamodules/parking.py wayve/ai/si/configs/parking/parking_config.py`
+
+Commits:
+- `db5dc3ff998` `fix(parking): align diffusion datamodule with branch parking keys`

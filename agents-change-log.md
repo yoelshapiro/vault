@@ -1360,3 +1360,7 @@
     - replaced the borrowed baseline driving partitions in `parking_diffusion_datamodule_cfg` with explicit branch-local driving partitions rooted at the known-good `DRIVING_ROOT`
     - removed the stale `materialisation_version` dependency that resolved driving buckets into a missing `sampling_materialised/bc/split_alpha2_alpha3/release/0.0.17` path
     - extracted shared driving train and validation partition constants so both parking datamodules reuse the same explicit driving source
+
+  - Update:
+    - removed unsupported top-level datamodule args from `parking_diffusion_datamodule_cfg` after constructor failure during training submission
+    - aligned `wayve/ai/si/datamodules/parking.py` with this branch's parking key names (`PARKING_POSE`, `PARKING_POSE_GT`) to fix the deterministic prefetch-thread crash
