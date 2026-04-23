@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/pink-manta-ray-smooth.md",
+                "file": "model_analysis/models/sea-cucumber-spectacular-orange.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pink-manta-ray-smooth"
+              "title": "sea-cucumber-spectacular-orange"
             }
           }
         ],
@@ -397,7 +397,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 536.012580871582
+    "width": 294.0054512023926
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/pink-manta-ray-smooth.md",
+                "file": "model_analysis/models/sea-cucumber-spectacular-orange.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of pink-manta-ray-smooth"
+              "title": "Outline of sea-cucumber-spectacular-orange"
             }
           },
           {
@@ -499,7 +499,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -516,9 +517,12 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-15--00-46-35--gen2-av-1202c391-bb32-4268-aa5d-deac5996f479.md",
     "model_analysis/models/pink-manta-ray-smooth.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--16-09-57--gen2-av-97310301-a8d4-4bb7-87aa-6bf157ad09e8.md",
+    "model_analysis/models/sea-cucumber-spectacular-orange.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-17--03-14-37--gen2-av-4cd403f2-b1b7-4e7c-afe5-42579f71b741.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
+    "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-15--00-46-35--gen2-av-1202c391-bb32-4268-aa5d-deac5996f479.md",
     "model_analysis/models/apricot-crocodile-uproarious.md",
     "model_analysis/models/alpaca-chocolate-fearless.md",
     "model_analysis/models/satisfied-amber-moose.md",
@@ -539,9 +543,6 @@
     "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--10-09-14--gen2-av-fac6131e-754a-43f8-abc1-f99abb4ea8af.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--09-09-28--gen2-av-900aea02-08d0-4bad-8c73-5b302b4d1a52.md",
     "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--08-39-47--gen2-av-ff63823f-e9c6-4c52-b46c-24b0c69fbabe.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--07-32-06--gen2-av-6b2228e6-9d34-4978-b743-0d762038e024.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-21--06-21-59--gen2-av-dc89c904-bd1e-45df-a584-41784b2b2a5a.md",
-    "model_analysis/report_cards/2026/04/Week-4/fme20032--2026-04-20--11-47-56--gen2-av-6cb52e0d-9b05-4671-adeb-05c5373729cd.md",
     "model_analysis/report_cards/2026/04/Week-3",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-wal",
     "model_analysis/event_packets/satisfied-amber-moose/cache/cache.db-shm",
