@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — Port PR 106346 parking data as selectable datamodule
+- Topic: port the data portion of PR `#106346` into the current parking route-shortening branch as a second selectable parking datamodule without bringing over the diffusion model stack.
+- Labels: #parking #datamodule #config #path-prediction #data-port
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/configs/parking/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-23-parking-diffusion-datamodule-port]]: added `parking_diffusion_datamodule_cfg` and `parking_diffusion_datamodule` store entry, ported the GC parking bucket layout and parking-specific `ParkingDataConfig` from PR `#106346`, and adapted the baseline-driving half to this branch by reusing `baseline_bc_datamodule.train_partitions` instead of the missing helper used in the original PR.
+
 > #### 2026-04-23 — Wonjoon long-horizon parking reconstruction
 - Topic: reconstruct Wonjoon Goo's long-horizon parking work across Notion notes, Slack threads, git history, and the April 20 parking handover transcript.
 - Labels: #parking #long-horizon #p2p #diffusion #policy-path #gear #evaluation #research-summary
