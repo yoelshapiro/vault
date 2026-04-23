@@ -75,4 +75,5 @@ Requested scope:
   - still running after ~8 minutes with ~90% CPU
 - Conclusion:
   - the ported config does not fail fast on config/model startup
-  - full 3-step completion was not observed within the validation window because local startup was still in progress
+  - the local smoke run completed 3 train steps successfully
+  - evidence is in `/workspace/.cache/ai_lib_sessions/session_2026_04_23_11_38_54_si_parking_bc_train_release_2026_5_11/lightning_logs/version_0/metrics.csv`, which contains train steps 1, 2, and 3
