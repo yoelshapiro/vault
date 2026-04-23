@@ -1,2 +1,5 @@
 model_analysis/event_packets/*
 model_analysis/event_packets/
+
+model_analysis/staged_rows/*
+model_analysis/staged_rows/
