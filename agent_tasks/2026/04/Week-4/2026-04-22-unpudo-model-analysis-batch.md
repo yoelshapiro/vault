@@ -299,6 +299,26 @@ Processing policy:
     - `lively-orange-horse`: `545` events, `46` scored, `41` pass, `5` fail, `139` `non-AV`, `360` `accidental`
     - `plum-timeless-beaver`: `403` events, `59` scored, `31` pass, `28` fail, `333` `non-AV`, `11` `accidental`
     - `alpaca-chocolate-fearless`: `13` events, `1` scored, `1` pass, `0` fail, `12` `non-AV`, `0` `accidental`
+
+- `2026-04-23 07:13 UTC`
+  - added one-off analysis for `sea-cucumber-spectacular-orange`
+  - first checked the previous batch comparison window (`2026-04-15` to `2026-04-21`) and confirmed there were no UNPUDO / unparking events there
+  - queried the event table by date and found the model has `5` relevant events on `2026-04-22`
+  - exported that exact day and generated:
+    - model card `model_analysis/models/sea-cucumber-spectacular-orange.md`
+    - run report `model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--16-09-57--gen2-av-97310301-a8d4-4bb7-87aa-6bf157ad09e8.md`
+  - counts for this model:
+    - `5` total events
+    - `2` scored
+    - `2` pass
+    - `0` fail
+    - `3` `non-AV`
+    - `0` `accidental`
+  - patched the generator so event tables and Mermaid timelines are sorted strictly by timestamp
+  - the run card now explicitly shows:
+    - `DBW at event start (...)`
+    - `DBW at event end (...)`
+    - any `DBW -> true` / `DBW -> false` transitions in chronological order
     - `42` runs
     - refreshed model card `model_analysis/models/armadillo-amethyst-squeaky.md`
     - refreshed `42` run reports across `Week-2` and `Week-3`
