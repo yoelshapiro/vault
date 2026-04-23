@@ -238,6 +238,43 @@ Processing policy:
 - `2026-04-23 01:40 UTC`
   - `armadillo-amethyst-squeaky` completed:
     - `302` events
+
+- `2026-04-23 05:05 UTC`
+  - fixed model-card event links so the display text is `card` while still targeting the exact per-event section anchor inside each run report
+  - patched the generator and repair script to emit escaped Obsidian alias links inside markdown tables
+
+- `2026-04-23 05:12 UTC`
+  - extended `generate_model_reports.py` to add a durable per-model `Analysis Summary` section
+  - the model card now includes:
+    - comparison metrics
+    - failure profile
+    - success-behavior bullets
+    - a written assessment section for cross-event behavior
+  - event tables now show:
+    - exact event timestamp in UTC
+    - direct `console` and `foxglove` links
+    - `card` link to the exact vault section
+
+- `2026-04-23 05:22 UTC`
+  - changed the model-card scoring logic so detected events that do not start in AV are excluded from pass/fail scoring:
+    - outcome `non-AV` when the event starts outside AV ownership
+    - outcome `accidental` when AV participation is shorter than `2s`
+  - only `pass` and `fail` now contribute to model success-rate summaries
+  - model cards explicitly report excluded-event counts alongside scored-event counts
+
+- `2026-04-23 05:39 UTC`
+  - refreshed under the new scoring logic:
+    - `alpaca-chocolate-fearless`: `13` events, `0` scored, `4` `non-AV`, `9` `accidental`
+    - `pink-manta-ray-smooth`: `387` events, `70` scored, `64` pass, `6` fail, `113` `non-AV`, `204` `accidental`
+    - `blue-panther-solid`: `188` events, `17` scored, `15` pass, `2` fail, `54` `non-AV`, `117` `accidental`
+    - `harlequin-excited-greyhound`: `17` events, `16` scored, `12` pass, `4` fail, `0` `non-AV`, `1` `accidental`
+    - `satisfied-amber-moose`: `270` events, `17` scored, `13` pass, `4` fail, `95` `non-AV`, `158` `accidental`
+  - still in progress:
+    - `armadillo-amethyst-squeaky`
+    - `apricot-crocodile-uproarious`
+    - `lively-orange-horse`
+    - `plum-timeless-beaver` full export retry
+  - `parking.model_analysis` has still not been updated by this cache-first vault workflow; current writes remain vault-only
     - `42` runs
     - refreshed model card `model_analysis/models/armadillo-amethyst-squeaky.md`
     - refreshed `42` run reports across `Week-2` and `Week-3`
