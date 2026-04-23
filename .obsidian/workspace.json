@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/armadillo-amethyst-squeaky.md",
+                "file": "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "armadillo-amethyst-squeaky"
+              "title": "fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/armadillo-amethyst-squeaky.md",
+                "file": "model_analysis/report_cards/2026/04/Week-3/fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of armadillo-amethyst-squeaky"
+              "title": "Outline of fme20015--2026-04-15--13-08-33--gen2-av-19b98635-b96d-4d53-b7d9-faf6e67ec0c6"
             }
           },
           {
@@ -517,12 +517,12 @@
   },
   "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
-    "model_analysis/models/insightful-magenta-porcupine.md",
+    "model_analysis/models/pink-manta-ray-smooth.md",
     "model_analysis/models/armadillo-amethyst-squeaky.md",
+    "model_analysis/models/insightful-magenta-porcupine.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-22--13-38-11--gen2-av-c6787608-2377-49a2-8db2-eb353c1251f9.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10005--2026-04-14--22-37-44--gen2-av-8d87ab20-f543-464d-a9ba-376113d03561.md",
     "model_analysis/models/mallard-plum-mysterious.md",
-    "model_analysis/models/pink-manta-ray-smooth.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-22--13-54-22--gen2-av-776e6413-6cfd-4985-8a89-a423678c808d.md",
     "model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-22--20-12-43--gen2-av-3e0a8cb2-409e-4489-9145-f4a94365bc6c.md",
     "model_analysis/models/sea-cucumber-spectacular-orange.md",
