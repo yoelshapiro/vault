@@ -271,6 +271,25 @@ Processing policy:
     - `satisfied-amber-moose`: `270` events, `17` scored, `13` pass, `4` fail, `95` `non-AV`, `158` `accidental`
   - `parking.model_analysis` has still not been updated by this cache-first vault workflow; current writes remain vault-only
 
+- `2026-04-23 08:42 UTC`
+  - reran `armadillo-amethyst-squeaky` in cache-first mode and rewrote all generated event cards and run reports from the existing packet cache
+  - this was a full local regeneration under the latest rules:
+    - non-AV events skipped entirely from vault output
+    - accidental events kept as excluded events
+    - success timing measured from the earlier of route change and AV start
+    - timelines include chronological DBW and actual-indicator transitions
+  - refreshed outputs:
+    - model card `model_analysis/models/armadillo-amethyst-squeaky.md`
+    - `31` regenerated run reports under `model_analysis/report_cards/2026/04/Week-3/`
+  - refreshed totals:
+    - `302` raw events
+    - `208` skipped `non-AV`
+    - `94` recorded events
+    - `85` scored
+    - `68` pass
+    - `17` fail
+    - `9` `accidental`
+
 - `2026-04-23 08:12 UTC`
   - updated the `unpudo-unpark-model-analysis` skill instructions to match the current workflow instead of the original manual flow
   - documented:
