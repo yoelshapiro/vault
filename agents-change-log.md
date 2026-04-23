@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-23 — Port SI parking routing features into kangaroo route-shorten
+- Topic: port the SI parking datamodule, parking/unparking route shortening, and short-path wiring from `boris/parking-training-pudo-unpark-routing` into `boris/training/kangaroo_with_50_and_route_shorten`.
+- Labels: #parking #pudo #unpark #route-shortening #otf #datamodule #paths
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/si/datamodules/`, `wayve/ai/lib/data/pipes/`, `wayve/ai/si/configs/parking/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-23-parking-routing-port-into-kangaroo-route-shorten]]: copied the SI parking datamodule into the target branch, rewired OTF to use `ParkingDataConfig`, added bucket-based short-path clamping support, ported parking and unparking route shortening, and updated the parking config to use `allow_short_path=True`.
+
 > #### 2026-04-22 — UNPUDO on-road analysis source discovery and plan
 - Topic: identify the Databricks tables needed to analyze failed and successful UNPUDO on-road events, validate source viability for gear/pedal/navigation timing, and define the first-pass analysis plan.
 - Labels: #parking #unpudo #on-road #databricks #analysis #planning

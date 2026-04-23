@@ -436,3 +436,15 @@ Processing policy:
 - `2026-04-23 10:57 UTC`
   - resumed `eel-teal-outspoken` from the partial packet cache after the exporter patch
   - existing source chunks in `model_analysis/event_packets/eel-teal-outspoken/` are being reused; only the missing work should continue
+
+- `2026-04-23 11:15 UTC`
+  - stopped the full-corpus `eel-teal-outspoken` export because the raw packet scope was too large for a useful model comparison pass
+  - added exporter-side sampling for deterministic `unpudo` subsets:
+    - most-recent events with disengagement
+    - most-recent events without disengagement
+  - widened the disengagement bucket to include any of the source-table disengagement signals, not only `has_disengagement`
+  - restarted `eel-teal-outspoken` on the sampled subset only
+  - current effective sample size in the requested window:
+    - `93` `unpudo` events with disengagement
+    - `150` `unpudo` events without disengagement
+    - `243` sampled events across `76` runs
