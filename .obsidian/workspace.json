@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "model_analysis/models/eel-teal-outspoken.md",
+                "file": "model_analysis/models/mallard-plum-mysterious.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "eel-teal-outspoken"
+              "title": "mallard-plum-mysterious"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/eel-teal-outspoken.md",
+                "file": "model_analysis/models/mallard-plum-mysterious.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of eel-teal-outspoken"
+              "title": "Outline of mallard-plum-mysterious"
             }
           },
           {
@@ -514,8 +514,12 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "421689602b4afc34",
+  "active": "7dea9896ceb1a3db",
   "lastOpenFiles": [
+    "model_analysis/report_cards/2026/04/Week-4/fme20001--2026-04-22--10-37-44--gen2-av-1c40e6ee-0229-4961-a38f-38c3537c30c3.md",
+    "model_analysis/report_cards/2026/04/Week-4/fme20001--2026-04-22--07-02-01--gen2-av-ff256b18-c683-46ef-b0cb-735eec633ca6.md",
+    "model_analysis/models/sea-cucumber-spectacular-orange.md",
+    "model_analysis/models/eel-teal-outspoken.md",
     "agent_tasks/2026/04/Week-4/2026-04-24-refresh-selected-unpudo-model-cards.md",
     "agent_tasks/2026/04/Week-4/2026-04-24-parking-interleave-deploy-fiery-aardvark-copper.md",
     "agent_tasks/2026/04/Week-4/2026-04-23-parking-training-submit-wonjoon-gc-pudo-r017-fix3.md",
@@ -538,10 +542,6 @@
     "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-17--23-20-18--gen2-av-5fa629e8-b72b-472e-b016-2f3b0339df14.md",
     "model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-16--01-10-01--gen2-av-ff8aa648-c071-43af-94e3-0eb549f0e45f.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-17--06-19-04--gen2-av-a3dd5700-1ec3-482d-9ec0-b4662ec10d52.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20029--2026-04-18--11-56-15--gen2-av-5e141b0f-04a9-47ed-87f6-ec491c37cabc.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20018--2026-04-19--14-22-25--gen2-av-a616e8d2-cd1c-4b32-a2f3-d4dfdf333800.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-18--20-54-48--gen2-av-b61d2dfa-2e75-4f20-916e-a175d7abb031.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-17--19-13-10--gen2-av-7f6e10fd-6154-44c3-905a-836cb785069a.md",
     "model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json",
     "model_analysis/staged_rows",
     "model_analysis/report_cards/2026/04/Week-3",
