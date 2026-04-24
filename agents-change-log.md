@@ -1394,3 +1394,15 @@
     - fixed the uncaught epsilon-offset path interpolation in `wayve/ai/si/datamodules/parking.py` and ported Wonjoon's later goal-distance clamp
     - aligned the OTF parking hook test to the SI `ParkingDataConfig` path and verified the targeted parking/OTF regression set locally (`5 passed`)
     - attempted a Bazel-backed smoke on `parking_diffusion_datamodule`; the remaining blocker on this machine is Azure storage authentication, not another deterministic migration error
+
+- 2026-04-24: [Parking interleave deploy for fiery-aardvark-copper](agent_tasks/2026/04/Week-4/2026-04-24-parking-interleave-deploy-fiery-aardvark-copper.md)
+  - Labels: deploy, parking, interleave-control
+  - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+  - PR: none
+  - Change type: deployment
+  - Areas: `wayve/ai/si:deploy`, Model Catalogue, Notion release page
+  - Changes:
+    - Deployed interleave-control variant for `fiery-aardvark-copper`
+    - Resolved deployed nickname `exotic-jellyfish-silver`
+    - Verified radar config shape in output inference config
+    - Confirmed release-page row contains the deployed related-model mapping
