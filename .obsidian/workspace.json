@@ -314,33 +314,9 @@
               "icon": "lucide-file",
               "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
             }
-          },
-          {
-            "id": "7dea9896ceb1a3db",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "model_analysis/models/insightful-magenta-porcupine.md",
-                "mode": "preview",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "insightful-magenta-porcupine"
-            }
           }
         ],
-        "currentTab": 19
+        "currentTab": 18
       }
     ],
     "direction": "vertical"
@@ -516,6 +492,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-4/2026-04-24-move-model-analysis-to-parking-model-analysis.md",
     "parking_model_analysis",
     "agent_tasks/2026/04/Week-4/2026-04-24-remove-early-unpudo-model-cards.md",
     "model_analysis/models/apricot-crocodile-uproarious.md",
@@ -551,7 +528,6 @@
     "model_analysis/event_packets/satisfied-amber-moose/event_packet.sql",
     "model_analysis/event_packets/satisfied-amber-moose/cache",
     "model_analysis/event_packets/satisfied-amber-moose",
-    "model_analysis/event_packets",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
