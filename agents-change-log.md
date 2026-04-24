@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-24 — Remove staged_rows from parking_model_analysis and move write payloads to /tmp
+- Topic: delete the staged-row payload folder from the new `parking_model_analysis` repo and align the UNPUDO model-analysis skill/tooling so temporary Databricks write payloads live under `/tmp` instead of a vault repo.
+- Labels: #parking #unpudo #unpark #model-analysis #vault #tmp #cleanup #skills
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: cleanup/tooling/docs
+- Areas: `parking_model_analysis/`, `~/git/ParkingSkills/skills/unpudo-unpark-model-analysis/`, `tools/parking_model_analysis_writer/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-24-remove-staged-rows-and-temp-write-payloads]]: deleted `parking_model_analysis/staged_rows/`, switched the durable vault root defaults to `parking_model_analysis`, changed incremental table-write staging to `/tmp/parking_model_analysis_staged_rows/` with post-write cleanup, updated the writer to read model/run cards from the new repo root, and refreshed the skill docs and agent prompt accordingly.
+
 > #### 2026-04-24 — Move model-analysis corpus into parking_model_analysis repo
 - Topic: relocate the durable UNPUDO / unparking model-analysis artifacts from the vault's old `model_analysis` directory into the new dedicated git repo at `parking_model_analysis`.
 - Labels: #parking #unpudo #unpark #model-analysis #vault #repo-move
