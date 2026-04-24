@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-24 — Remove early UNPUDO model cards from vault
+- Topic: remove the earliest UNPUDO model-analysis cards that are no longer wanted, while preserving any run-report files still referenced by the remaining model cards.
+- Labels: #parking #unpudo #unpark #model-analysis #vault #cleanup
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: cleanup
+- Areas: `model_analysis/models/`, `model_analysis/report_cards/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-24-remove-early-unpudo-model-cards]]: removed `8` model cards (`harlequin-excited-greyhound`, `blue-panther-solid`, `alpaca-chocolate-fearless`, `apricot-crocodile-uproarious`, `armadillo-amethyst-squeaky`, `lively-orange-horse`, `plum-timeless-beaver`, `satisfied-amber-moose`), deleted `288` run report files that were exclusive to those models, preserved `28` shared run reports, and verified that all remaining model-card links still resolve.
+
 > #### 2026-04-24 — Refresh selected UNPUDO model cards with GitHub-safe links
 - Topic: refresh the current UNPUDO / unparking vault outputs for `sea-cucumber-spectacular-orange`, `mallard-plum-mysterious`, and `pink-manta-ray-smooth`, then normalize model-card event links so they work in GitHub markdown as well as Obsidian.
 - Labels: #parking #unpudo #unpark #model-analysis #vault #github-markdown #skills
