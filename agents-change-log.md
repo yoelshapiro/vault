@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-24 — Move model-analysis corpus into parking_model_analysis repo
+- Topic: relocate the durable UNPUDO / unparking model-analysis artifacts from the vault's old `model_analysis` directory into the new dedicated git repo at `parking_model_analysis`.
+- Labels: #parking #unpudo #unpark #model-analysis #vault #repo-move
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: cleanup/reorg
+- Areas: `parking_model_analysis/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-24-move-model-analysis-to-parking-model-analysis]]: moved `models/`, `report_cards/`, and `staged_rows/` into the new `parking_model_analysis` repo, replaced the placeholder README with the existing model-analysis README content plus `staged_rows/` documentation, and removed the old `model_analysis/` directory entirely.
+
 > #### 2026-04-24 — Remove early UNPUDO model cards from vault
 - Topic: remove the earliest UNPUDO model-analysis cards that are no longer wanted, while preserving any run-report files still referenced by the remaining model cards.
 - Labels: #parking #unpudo #unpark #model-analysis #vault #cleanup
