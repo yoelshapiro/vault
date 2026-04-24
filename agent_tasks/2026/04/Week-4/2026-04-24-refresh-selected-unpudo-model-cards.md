@@ -24,10 +24,18 @@ Status:
   - run reports regenerated
   - current regenerated counts: `12` recorded events, `3` pass, `9` fail, `3` skipped `non-av`
 - `pink-manta-ray-smooth`
-  - packet export in progress from `2026-04-15` through `2026-04-22`
-  - using chunked source export with `--source-chunk-size-runs 10`
-  - model/report regeneration pending export completion
+  - packet export complete for `2026-04-15` through `2026-04-22`
+  - chunked source export used `--source-chunk-size-runs 10`
+  - model card regenerated
+  - run reports regenerated
+  - current regenerated counts: `450` recorded events, `443` scored, `96` pass, `347` fail, `7` accidental, `113` skipped `non-av`
 
 Notes:
 - this refresh is using the current route-change lookback scoring rules, so counts differ materially from earlier cards
-- temporary packet/cache data should be cleaned from `/tmp` after the rewrite is complete
+- model-card `card` links were normalized to standard markdown relative links, so they resolve in both Obsidian and GitHub markdown rendering
+- the selected model cards now have:
+  - `sea-cucumber-spectacular-orange`: `5` GitHub-compatible `card` links
+  - `mallard-plum-mysterious`: `12` GitHub-compatible `card` links
+  - `pink-manta-ray-smooth`: `450` GitHub-compatible `card` links
+- temporary packet/query cache data was removed from `/tmp` after the rewrite completed
+- this refresh was vault-only; `parking.model_analysis` was not updated

@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-24 — Refresh selected UNPUDO model cards with GitHub-safe links
+- Topic: refresh the current UNPUDO / unparking vault outputs for `sea-cucumber-spectacular-orange`, `mallard-plum-mysterious`, and `pink-manta-ray-smooth`, then normalize model-card event links so they work in GitHub markdown as well as Obsidian.
+- Labels: #parking #unpudo #unpark #model-analysis #vault #github-markdown #skills
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: tooling/analysis/docs
+- Areas: `~/git/ParkingSkills/skills/unpudo-unpark-model-analysis/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-24-refresh-selected-unpudo-model-cards]]: re-exported and regenerated the selected model/run cards under the current scorer (`sea`: `5` events, `mallard`: `12`, `pink`: `450`), updated the report generator and repair utility so model-card `card` links use standard markdown relative links with GitHub heading anchors, verified the rewritten cards, and removed the temporary packet/query caches from `/tmp`.
+
 > #### 2026-04-24 — Parking interleave deploy for fiery-aardvark-copper
 - Topic: deploy `fiery-aardvark-copper` with interleave control enabled, verify the exported radar config, resolve the assigned deployed nickname, and update the Parking/PUDO release row.
 - Labels: #parking #deploy #interleave-control #radar #notion #vault
