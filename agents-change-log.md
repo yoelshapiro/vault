@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-24 — Parking interleave deploy for fiery-aardvark-copper
+- Topic: deploy `fiery-aardvark-copper` with interleave control enabled, verify the exported radar config, resolve the assigned deployed nickname, and update the Parking/PUDO release row.
+- Labels: #parking #deploy #interleave-control #radar #notion #vault
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-24-parking-interleave-deploy-fiery-aardvark-copper]]: resolved the source session path, confirmed no radar overlay was needed, deployed the interleave-control export to `session_2026_04_23_13_18_45_si_parking_bc_train_release_2026_5_11_kangaroo_route_shorten_early_gating_fix_stop_anchor__fiery-aardvark-copper_interleave_control_v1`, verified the exported radar shape (`5` features, `800` points per scan), resolved assigned nickname `exotic-jellyfish-silver`, and updated the Parking/PUDO release row's `Related models` field.
+
 > #### 2026-04-23 — Parking training submission for Wonjoon GC PUDO r017 fix3
 - Topic: submit the requested Parking training run for the migrated Wonjoon parking diffusion datamodule and monitor it to a concrete Surfboard state.
 - Labels: #parking #training #aks #surfboard #wandb #vault
