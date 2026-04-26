@@ -1487,3 +1487,4 @@
     - Reused newer diffusion driving train/validation partitions in the new datamodule
     - Normalized reused driving train partition weights to preserve 50% driving mass
     - Kept fiery-aardvark-copper PUDO/UNPUDO/UNPARK mix and parking behavior flags in the new datamodule
+    - Committed and pushed `7ec9c60b950e71331d395c7f221e9a25c6cfc702`, then started 100000-step training job `154721` / `precious-peach-panda` with `+datamodule=parking_bc_new_driving_datamodule`; observed state `Running`

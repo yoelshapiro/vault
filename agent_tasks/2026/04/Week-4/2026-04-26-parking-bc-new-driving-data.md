@@ -36,3 +36,19 @@ Added a new `parking_bc_new_driving_datamodule` option. The existing `parking_bc
   - normalized BC driving sum: `0.5`
   - `parking_bc_datamodule_cfg` still uses `DRIVING_ROOT`
   - `parking_bc_new_driving_datamodule_cfg` uses `PARKING_BC_DRIVING_TRAIN_PARTITIONS` and `PARKING_DIFFUSION_DRIVING_VAL_PARTITIONS`
+
+## Commit and Training
+
+- Committed and pushed `feat(parking): add BC new-driving datamodule`.
+- Commit: `7ec9c60b950e71331d395c7f221e9a25c6cfc702`
+- Training command:
+  - `bazel run //wayve/ai/si/cli:cli -- --project Parking -ex parking_bc -st bc_new_driving_100k --platform AKS -nn 4 --cluster dgx-h100 --no-verify +mode=parking_bc_train_release_2026_5_11 +datamodule=parking_bc_new_driving_datamodule num_steps=100000 --priority P1`
+- Surfboard job: `154721`
+- Job name: `precious-peach-panda-154721`
+- Nickname: `precious-peach-panda`
+- Session: `session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k`
+- State observed: `Running`
+- Start time: `2026-04-26 12:01 UTC`
+- W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aprecious-peach-panda-154721&from_ts=1775995349367&cols=job_name%2Cnode_rank&live=true`
+- Notion release row: `https://www.notion.so/34e03da5d69a8175bc92ea01f820b630`
