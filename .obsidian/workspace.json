@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-26-zmurez-pudo-data-research"
+              "title": "eel-teal-outspoken"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-26-zmurez-pudo-data-research"
+              "title": "Outline of eel-teal-outspoken"
             }
           },
           {
@@ -492,6 +492,8 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme20018--2026-04-24--17-54-18--gen2-av-e68785e7-c76b-49ac-b68e-24ef0b592e4e.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-24--20-30-10--gen2-av-1f8ff9c7-d48b-46e0-b005-4027a66ea7a9.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-24--20-50-52--gen2-av-7c37a5bd-58fd-4cdb-89e7-30d7a77e3306.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20014--2026-04-24--17-43-07--gen2-av-99938c8b-d3aa-4ab5-a4a4-6c378900526c.md",
@@ -504,7 +506,6 @@
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-25--00-17-39--gen2-av-db6ffdcd-8e10-446b-a315-b201d675233a.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-24--22-27-25--gen2-av-b89fe4ad-06d7-4ceb-a538-fa7fa7bbc021.md",
     "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
-    "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
     "parking_model_analysis/models/pink-manta-ray-smooth.md",
     "parking_model_analysis/models/insightful-magenta-porcupine.md",
     "parking_model_analysis/models/mallard-plum-mysterious.md",
@@ -517,7 +518,6 @@
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-25--03-21-01--gen2-av-ee0448aa-865f-4e82-aaa9-50d292b5025b.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-25--00-36-16--gen2-av-9bdd171f-5a7a-4678-9ed8-55f71767ae6e.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-25--01-15-54--gen2-av-1d092f9f-7f87-43c5-8438-bf9e7257d02c.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20012--2026-04-25--08-32-31--gen2-av-4ef6ebbf-c22a-410e-a796-df331febf89a.md",
     "parking_model_analysis/report_cards/2026/04/Week-4",
     "parking_model_analysis/report_cards/2026/04/Week-3",
     "parking_model_analysis/report_cards/2026/04/Week-2",
