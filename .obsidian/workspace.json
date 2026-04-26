@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
+                "file": "newsletters/newsletter_route-end-parking-trigger.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
+              "title": "newsletter_route-end-parking-trigger"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "model_analysis/models/insightful-magenta-porcupine.md",
+                "file": "newsletters/newsletter_route-end-parking-trigger.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of insightful-magenta-porcupine"
+              "title": "Outline of newsletter_route-end-parking-trigger"
             }
           },
           {
@@ -492,6 +492,9 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-4/2026-04-26-parking-model-analysis-table-sync-and-new-run-check.md",
+    "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
+    "model_analysis/models/insightful-magenta-porcupine.md",
     "agent_tasks/2026/04/Week-4/2026-04-24-remove-staged-rows-and-temp-write-payloads.md",
     "agent_tasks/2026/04/Week-4/2026-04-24-move-model-analysis-to-parking-model-analysis.md",
     "parking_model_analysis",
@@ -516,9 +519,6 @@
     "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-17--08-26-22--gen2-av-b041a701-af24-48d2-9966-1b6a5dcf4d2e.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-15--20-22-17--gen2-av-3a1fcd52-272e-4d90-b7f6-f003a622d594.md",
     "model_analysis/report_cards/2026/04/Week-3/fme20031--2026-04-17--20-37-18--gen2-av-c0532c1c-1dc9-47f9-bf61-1150824d2c0e.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20029--2026-04-17--09-56-40--gen2-av-93d048a7-0d14-49ce-a493-be732b1ee4dc.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20018--2026-04-18--07-23-29--gen2-av-b0e9cd6c-90be-4750-ad94-da70f33ea44c.md",
-    "model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-15--05-56-43--gen2-av-60deadf3-dc6c-41bc-8e4b-eca0f8903d7c.md",
     "model_analysis/staged_rows/pink-and-armadillo-2026-04-23.json",
     "model_analysis/staged_rows",
     "model_analysis/report_cards/2026/04/Week-3",
