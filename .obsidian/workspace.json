@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
+                "file": "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "eel-teal-outspoken"
+              "title": "sea-cucumber-spectacular-orange"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
+                "file": "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of eel-teal-outspoken"
+              "title": "Outline of sea-cucumber-spectacular-orange"
             }
           },
           {
@@ -490,8 +490,18 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "117f440063e12be8",
+  "active": "a6cdcc3493cdeb21",
   "lastOpenFiles": [
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-24--01-24-57--gen2-av-ffb1851f-d4a5-4891-825f-bad28c29c782.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-24--00-52-49--gen2-av-eaafe0c6-5287-44f4-b4a9-66af55eb17ba.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-23--14-23-52--gen2-av-46164aa5-d2dd-4a6e-9802-9061cb1aec21.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-23--13-42-30--gen2-av-c1125d70-e94f-4110-b6e0-97c2a186493a.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-23--19-19-28--gen2-av-d84aa072-3630-4b6d-a1e8-8b6535aaa4d5.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-23--22-40-34--gen2-av-174fb762-58a8-42cd-abe5-3dfe4ab63849.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-23--14-00-50--gen2-av-6a0862ed-122c-4cee-bc47-48bad46e0f58.md",
+    "parking_model_analysis/report_cards/2026/04/Week-4/fme10003--2026-04-23--00-39-44--gen2-av-5a9d0d96-b365-44b7-8d26-0be149b8db08.md",
+    "parking_model_analysis/models/insightful-magenta-porcupine.md",
+    "parking_model_analysis/models/eel-teal-outspoken.md",
     "agent_tasks/2026/04/Week-4/2026-04-26-targeted-unpudo-event-detector.md",
     "newsletters/newsletter_route-end-parking-trigger.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-22--10-07-11--gen2-av-caf34bee-7e98-4920-a00a-d4c61a575147.md",
@@ -508,16 +518,6 @@
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--16-20-45--gen2-av-fbe4e51a-0dd9-4a52-9bc6-eff63f0939cd.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--14-29-25--gen2-av-b8c3ecc9-d0ee-4a65-a4e6-e2fb1efde5f2.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--12-44-55--gen2-av-d7b5ebe9-0257-4947-a48a-ade5f11aa01b.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--09-42-12--gen2-av-d2486dc4-9a6a-4a40-b407-dca9017037fe.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--08-48-50--gen2-av-918cf11a-e92e-4618-8012-7c2024bb89bb.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--07-36-42--gen2-av-20a1d649-e7d2-44a8-9539-315c89d44658.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20038--2026-04-20--06-25-49--gen2-av-3409d356-9e42-46ab-956f-5e94e0ac1d68.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-22--08-41-34--gen2-av-226468b9-4162-4768-9cdc-e643f6e5013a.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-22--06-33-19--gen2-av-a5ab6b59-04e9-48b8-ab1d-b3db64f8f137.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-21--20-47-45--gen2-av-f7d37d9d-1bb1-4254-9bcc-feed94f26b1e.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-21--15-31-19--gen2-av-fe140b12-4b6b-41c0-bddb-bbe7d0e7594e.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-20--20-40-00--gen2-av-78b6b7fb-e37a-4d9e-9fca-a38d2eab5033.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20036--2026-04-20--15-55-13--gen2-av-daf39375-6389-456e-be35-cbc4186aea22.md",
     "parking_model_analysis/report_cards/2026/04/Week-4",
     "parking_model_analysis/report_cards/2026/04/Week-3",
     "parking_model_analysis/report_cards/2026/04/Week-2",
