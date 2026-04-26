@@ -1499,3 +1499,14 @@
     - Logged findings from `origin/zmurez/pudo` around parking/PUDO sampler weights, gear cleanup, PUDO labels, route-end jitter, and parking request conditioning
     - Captured the conclusion that Zak's parking/PUDO behavior comes from the experimental `Wayve`/Ipace loader with heuristic samplers rather than SI OTF parking defaults
     - Identified portable ideas for SI parking work: PUDO near/far split, start/gear-change sampling, gear cleanup before parking-mode derivation, route-end jitter, route blackout, and per-waypoint gear-change loss weighting
+
+- 2026-04-26: [Wonjoon Parking GC Materialisation Research](agent_tasks/2026/04/Week-4/2026-04-26-wonjoon-parking-gc-materialisation.md)
+  - Labels: parking, materialisation, pudo, unpudo, research
+  - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+  - PR: `#106341`
+  - Change type: research
+  - Areas: parking sampling datasets, PUDO materialization notebook design
+  - Changes:
+    - Investigated Wonjoon's merged `parking_gc` materialisation PR and bucket taxonomy
+    - Documented the gear reconstruction, long P/N segment detection, maneuver windowing, gear-count bucketing, and PUDO-exclusion heuristics
+    - Identified the concrete parts worth porting into the PUDO/UNPUDO materialization notebook
