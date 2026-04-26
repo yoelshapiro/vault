@@ -1489,12 +1489,13 @@
     - Kept fiery-aardvark-copper PUDO/UNPUDO/UNPARK mix and parking behavior flags in the new datamodule
     - Committed and pushed `7ec9c60b950e71331d395c7f221e9a25c6cfc702`, then started 100000-step training job `154721` / `precious-peach-panda` with `+datamodule=parking_bc_new_driving_datamodule`; observed state `Running`
 
-- Topic: zmurez/pudo data research
+- 2026-04-26: [zmurez/pudo Data Research](agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md)
   - Labels: parking, pudo, unpudo, research
   - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
   - PR: `#91997`
   - Change type: research
   - Areas: parking data, samplers, route augmentation
   - Changes:
-    - Logged findings from `origin/zmurez/pudo` around parking/PUDO sampler weights, gear cleanup, PUDO labels, route-end jitter, and parking request conditioning.
-    - Note: [[agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research]]
+    - Logged findings from `origin/zmurez/pudo` around parking/PUDO sampler weights, gear cleanup, PUDO labels, route-end jitter, and parking request conditioning
+    - Captured the conclusion that Zak's parking/PUDO behavior comes from the experimental `Wayve`/Ipace loader with heuristic samplers rather than SI OTF parking defaults
+    - Identified portable ideas for SI parking work: PUDO near/far split, start/gear-change sampling, gear cleanup before parking-mode derivation, route-end jitter, route blackout, and per-waypoint gear-change loss weighting
