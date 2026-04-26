@@ -1470,6 +1470,12 @@
     - sanity-checked `sea-cucumber-spectacular-orange`: existing table has `5` UNPUDO rows, the detector SQL mirror found those exact `5` plus `2` extra candidates from a run not present in the stale table
     - analyzed the `2026-04-23`/`2026-04-24` `sea-cucumber-spectacular-orange` model-catalogue run window with four run-by-run workers, writing `48` scored rows across `8` run files and refreshing the model card
     - extended the exporter/incremental runner to accept detector-derived `--events-json-file` input and handle no-scored-event runs without a worker failure
+  - Update:
+    - ran the detector-derived four-worker backfill for `blue-panther-solid`, `pink-manta-ray-smooth`, `mallard-plum-mysterious`, and `insightful-magenta-porcupine`, processing one run id per worker unit and writing run cards plus `parking.model_analysis` rows after each run
+    - verified recent `parking.model_analysis` rows for the batch: blue `85`, pink `122`, mallard `83`, insightful `29`
+    - added a table-backed model-card generator so final cards are regenerated from durable `parking.model_analysis` rows after temporary packet cache is cleaned
+    - refreshed model cards for blue, pink, mallard, and insightful with GitHub-compatible `[card](relative.md#anchor)` links
+    - added a sea dashboard-discrepancy section listing dashboard-success / model-card-fail events and reasons
 - 2026-04-26: [Parking BC new driving data](agent_tasks/2026/04/Week-4/2026-04-26-parking-bc-new-driving-data.md)
   - Labels: parking, training-config, data-mix
   - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
