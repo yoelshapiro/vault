@@ -1456,3 +1456,14 @@
     - Resolved deployed nickname `exotic-jellyfish-silver`
     - Verified radar config shape in output inference config
     - Confirmed release-page row contains the deployed related-model mapping
+
+- 2026-04-26: [Targeted UNPUDO Event Detector](agent_tasks/2026/04/Week-4/2026-04-26-targeted-unpudo-event-detector.md)
+  - Labels: parking, unpudo, databricks, event-detection, tooling
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: tooling
+  - Areas: `ParkingSkills/skills/unpudo-unpark-model-analysis`
+  - Changes:
+    - added `scripts/find_model_events.py` to detect model-scoped PUDO / UNPUDO / unparking events directly from source tables while `parking.pudo_unpudo_unpark_events` is stale
+    - ported the notebook event-detection flow with early model/run/date filtering before reading `prod_data_pipeline.wayve_corpus.all_data`
+    - updated the UNPUDO model-analysis skill to use the detector as the event-source fallback
