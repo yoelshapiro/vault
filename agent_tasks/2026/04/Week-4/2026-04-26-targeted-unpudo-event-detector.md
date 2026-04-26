@@ -26,3 +26,19 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
 
 - The script needs to run in an environment with Spark, Shapely, and Wayve geofence utilities available.
 - The local Databricks CLI is not configured, so the full PySpark script was not submitted as a Databricks job from this shell. SQL warehouse checks were run through `tools/databricks_queries`.
+
+## 2026-04-23/24 Sea-Cucumber Analysis
+
+- Queried the model-catalogue 12-run window for `sea-cucumber-spectacular-orange`.
+- Detector mirror found `56` raw candidates across `9` runs; `3` selected runs had no UNPUDO/unparking candidates.
+- Ran four incremental workers against an enriched detector `events.json`, one run per export unit.
+- Refreshed the model card after worker completion:
+  - raw events: `56`
+  - skipped non-AV events: `8`
+  - scored events: `48`
+  - scored run files: `8`
+- Verified `parking.model_analysis` for `2026-04-23` through `2026-04-24`:
+  - `unpudo pass`: `27`
+  - `unpudo fail`: `19`
+  - `unparking pass`: `2`
+- One detector run, `fme10003/2026-04-23--01-38-56--gen2-av-5c3b5ba9-4e2b-48a0-844f-749dc76d4a6a`, produced no scored rows after model-analysis filters.

@@ -1468,3 +1468,5 @@
     - ported the notebook event-detection flow with early model/run/date filtering before reading `prod_data_pipeline.wayve_corpus.all_data`
     - updated the UNPUDO model-analysis skill to use the detector as the event-source fallback
     - sanity-checked `sea-cucumber-spectacular-orange`: existing table has `5` UNPUDO rows, the detector SQL mirror found those exact `5` plus `2` extra candidates from a run not present in the stale table
+    - analyzed the `2026-04-23`/`2026-04-24` `sea-cucumber-spectacular-orange` model-catalogue run window with four run-by-run workers, writing `48` scored rows across `8` run files and refreshing the model card
+    - extended the exporter/incremental runner to accept detector-derived `--events-json-file` input and handle no-scored-event runs without a worker failure
