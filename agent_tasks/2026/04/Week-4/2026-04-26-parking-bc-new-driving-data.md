@@ -7,13 +7,15 @@
 
 ## Summary
 
-Updated `parking_bc_datamodule_cfg` to keep the `fiery-aardvark-copper` parking/PUDO datamodule behavior while swapping the driving data to the newer split-alpha2/alpha3 driving partitions used by `parking_diffusion_datamodule_cfg`.
+Added a new `parking_bc_new_driving_datamodule` option. The existing `parking_bc_datamodule` remains the `fiery-aardvark-copper` data mix, while the new datamodule keeps the same parking/PUDO behavior and swaps only the driving data to the newer split-alpha2/alpha3 partitions used by `parking_diffusion_datamodule_cfg`.
 
 ## Details
 
-- Replaced the old flat driving buckets rooted at `DRIVING_ROOT` with `PARKING_BC_DRIVING_TRAIN_PARTITIONS`.
+- Kept `parking_bc_datamodule_cfg` unchanged as the baseline fiery recipe.
+- Added `parking_bc_new_driving_datamodule_cfg` derived from `parking_bc_datamodule_cfg`.
+- Replaced the old flat driving buckets rooted at `DRIVING_ROOT` only in the new datamodule.
 - `PARKING_BC_DRIVING_TRAIN_PARTITIONS` reuses `PARKING_DIFFUSION_DRIVING_TRAIN_PARTITIONS` and normalizes its total weight to `0.50`.
-- Replaced the old driving validation buckets with `PARKING_DIFFUSION_DRIVING_VAL_PARTITIONS`.
+- The new datamodule uses `PARKING_DIFFUSION_DRIVING_VAL_PARTITIONS` for driving validation.
 - Left the PUDO, UNPUDO, and UNPARK bucket weights and roots unchanged from the fiery training recipe.
 - Left the parking behavior config unchanged:
   - `reconstruct_gear_from_speed=True`
@@ -32,4 +34,5 @@ Updated `parking_bc_datamodule_cfg` to keep the `fiery-aardvark-copper` parking/
 - Source-level weight check:
   - new driving base sum: `1.0442`
   - normalized BC driving sum: `0.5`
-  - old `DRIVING_ROOT` buckets removed from `parking_bc_datamodule_cfg` train/validation partitions
+  - `parking_bc_datamodule_cfg` still uses `DRIVING_ROOT`
+  - `parking_bc_new_driving_datamodule_cfg` uses `PARKING_BC_DRIVING_TRAIN_PARTITIONS` and `PARKING_DIFFUSION_DRIVING_VAL_PARTITIONS`
