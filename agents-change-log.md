@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-26 — Sync parking.model_analysis to kept vault models and check for new runs
+- Topic: make `parking.model_analysis` match the currently kept UNPUDO model-analysis cards in `parking_model_analysis`, and check whether selected parking models have any new run IDs since April 23, 2026.
+- Labels: #parking #unpudo #unpark #model-analysis #databricks #vault #table-sync
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: tooling/analysis/operations
+- Areas: `tools/parking_model_analysis_writer/`, `parking_model_analysis/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-26-parking-model-analysis-table-sync-and-new-run-check]]: updated the model-analysis writer to rebuild rows from durable vault cards when packet manifests are absent, added `--delete-other-models` so the kept vault model set can replace stale table contents in one write, refreshed `insightful-magenta-porcupine` from source because its previous card linked to a non-matching run report, rewrote `parking.model_analysis` for the kept models (`eel`, `insightful`, `mallard`, `pink`, `sea`), and confirmed there were no new run IDs for the requested model list from `2026-04-23 00:00 UTC` onward.
+
 > #### 2026-04-24 — Remove staged_rows from parking_model_analysis and move write payloads to /tmp
 - Topic: delete the staged-row payload folder from the new `parking_model_analysis` repo and align the UNPUDO model-analysis skill/tooling so temporary Databricks write payloads live under `/tmp` instead of a vault repo.
 - Labels: #parking #unpudo #unpark #model-analysis #vault #tmp #cleanup #skills

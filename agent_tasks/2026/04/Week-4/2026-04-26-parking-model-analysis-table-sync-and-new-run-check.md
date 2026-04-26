@@ -27,7 +27,16 @@ Current table verification:
 Date check:
 - checked for new run IDs on the requested model list since `2026-04-24 00:00 UTC`
 - reran with inclusive cutoff `2026-04-23 00:00 UTC` to match the wording `since 23 April 2026`
-- result to be filled from final query output
+- no new run IDs were found for any of:
+  - `sea-cucumber-spectacular-orange`
+  - `mallard-plum-mysterious`
+  - `pink-manta-ray-smooth`
+  - `blue-panther-solid`
+  - `insightful-magenta-porcupine`
+  - `porcupine-red-enthusiastic`
+  - `exotic-jellyfish-silver`
+  - `panther-white-intuitive`
+  - `prismatic-teal-bird`
 
 Cleanup:
 - removed temporary staged JSON payloads from `/tmp`
