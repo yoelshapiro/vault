@@ -1477,6 +1477,7 @@
   - Change type: config
   - Areas: `wayve/ai/si/configs/parking/parking_config.py`
   - Changes:
-    - Swapped `parking_bc_datamodule_cfg` driving train/validation buckets to the newer diffusion driving dataset partitions
+    - Added `parking_bc_new_driving_datamodule_cfg` while keeping `parking_bc_datamodule_cfg` as the fiery-aardvark-copper data mix
+    - Reused newer diffusion driving train/validation partitions in the new datamodule
     - Normalized reused driving train partition weights to preserve 50% driving mass
-    - Kept fiery-aardvark-copper PUDO/UNPUDO/UNPARK mix and parking behavior flags unchanged
+    - Kept fiery-aardvark-copper PUDO/UNPUDO/UNPARK mix and parking behavior flags in the new datamodule
