@@ -72,3 +72,15 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
 - Dashboard logic only treats disengagement flags as UNPUDO failures: `87` eligible events, `16` flagged failures.
 - Model-analysis logic also fails AV-owned attempts for behavior evidence without a source disengagement flag, including ownership ending, driver/outside-AV completion, gear/motion evidence, and route/AV timing failures.
 - Added a `Dashboard-Success / Card-Fail Disagreements` section to `/home/borisindelman/git/vault/parking_model_analysis/models/sea-cucumber-spectacular-orange.md` with links to the card-fail events that dashboard logic would count as success.
+
+## Sea Scoring Review Corrections
+
+- Reviewed `sea-cucumber-spectacular-orange` false failures with Boris.
+- `av_mode_at_event` in the notebook is only the closest `all_data.ground_truth__state__vehicle__automation_active` sample within `±2s` of the detector timestamp, not a full segment label.
+- Dashboard eligibility excludes `av_mode_at_event = 0` events unless they have relevant disengagement flags; some model-analysis failures were over-scored relative to that rule.
+- Learned corrections to apply before rerun:
+  - score UNPUDO success by distance travelled from the stopped/PUDO position under AV ownership
+  - once AV passes the successful-UNPUDO distance, later disengagements are downstream issues and should not fail UNPUDO
+  - process all UNPUDO/unparking rows in a run together to suppress later DC-only duplicate detections after a prior successful AV UNPUDO
+  - exclude detector artifacts where there is no real route change and the route immediately before driving / the detected event is very short (`<50m`)
+- Updated both `$unpudo-unpark-model-analysis` and `$unpudo-unpark-segment-investigation` skill docs with the new rules.
