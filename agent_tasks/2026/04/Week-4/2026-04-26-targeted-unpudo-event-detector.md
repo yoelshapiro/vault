@@ -84,3 +84,10 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
   - process all UNPUDO/unparking rows in a run together to suppress later DC-only duplicate detections after a prior successful AV UNPUDO
   - exclude detector artifacts where there is no real route change and the route immediately before driving / the detected event is very short (`<50m`)
 - Updated both `$unpudo-unpark-model-analysis` and `$unpudo-unpark-segment-investigation` skill docs with the new rules.
+- Updated `generate_model_reports.py` so full model-card rewrites use the corrected scoring:
+  - detector-anchor-under-DBW and integrated-speed fallback now count UNPUDO completion before downstream disengagements
+  - no-route-change plus `<50m` route-distance cases are excluded as invalid UNPUDO candidates
+  - later non-AV / DC-only UNPUDO duplicates within `120s` of a prior successful run-level UNPUDO are suppressed
+  - event cards now report route distance, short-route exclusion, estimated AV distance, and UNPUDO completion evidence
+- Updated `process_model_runs_incrementally.py` so one-run-at-a-time worker processing uses the same duplicate-suppression logic.
+- Verified the updated scripts with `python -m py_compile`.
