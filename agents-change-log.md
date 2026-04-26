@@ -1510,3 +1510,6 @@
     - Investigated Wonjoon's merged `parking_gc` materialisation PR and bucket taxonomy
     - Documented the gear reconstruction, long P/N segment detection, maneuver windowing, gear-count bucketing, and PUDO-exclusion heuristics
     - Identified the concrete parts worth porting into the PUDO/UNPUDO materialization notebook
+  - Update:
+    - expanded the Zak `zmurez/pudo` data-weight table with side-by-side `mcv_new.yml` and `mcv_new_phase2.yml` columns
+    - clarified that `~18%` gear-decision sampling applies to `mcv_new_phase2`, while `mcv_new` has `17.5%` generic parking and `9.5%` gear-decision sampling

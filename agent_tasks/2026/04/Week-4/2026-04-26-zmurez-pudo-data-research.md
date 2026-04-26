@@ -288,52 +288,68 @@ Caveat:
 
 ### 6. Data Weights
 
-From `mcv_new_phase2.yml`, the active heuristic sampler weights sum to `1.0`.
+These are train-time `Heuristic` sampler weights, not materialized dataset bucket weights. The sampler computes index pools per heuristic, then allocates samples by configured weight. If a pool is smaller than its requested count, indices are repeated, so this is real upsampling at sampler time.
 
-| Group | Bucket | Weight |
-|---|---:|---:|
-| driving / other | all non-parking, non-PUDO, non-unparking, non-gear buckets | `0.6185` |
-| parking | `PARKING_LDN_OFFICE` | `0.0025` |
-| parking | `PARKING_LDN_NOSE` | `0.0050` |
-| parking | `PARKING_LDN_TAIL` | `0.0050` |
-| parking | `PARKING_LDN_SIDE` | `0.0050` |
-| parking | `PARKING_LDN_PARALLEL` | `0.0050` |
-| parking | `PARKING_USA_OFFICE` | `0.0025` |
-| parking | `PARKING_USA_NOSE` | `0.0050` |
-| parking | `PARKING_USA_TAIL` | `0.0050` |
-| parking | `PARKING_USA_SIDE` | `0.0050` |
-| parking | `PARKING_USA_PARALLEL` | `0.0050` |
-| parking | `PARKING_ALPHA3_OFFICE` | `0.0025` |
-| parking | `PARKING_ALPHA3_OTHER` | `0.0050` |
-| parking | `PARKING_MSC_OFFICE` | `0.0025` |
-| parking | `PARKING_MSC_OTHER` | `0.0050` |
-| parking | `PARKING_MRM` | `0.0025` |
-| parking | `PARKING_MRM_TRACK` | `0.0005` |
-| PUDO | `PUDO_LDN_NEAR` | `0.0200` |
-| PUDO | `PUDO_LDN_FAR` | `0.0200` |
-| PUDO | `PUDO_USA_NEAR` | `0.0200` |
-| PUDO | `PUDO_USA_FAR` | `0.0200` |
-| unparking | `UNPARKING_LDN_OTHER` | `0.0100` |
-| unparking | `UNPARKING_USA_OTHER` | `0.0100` |
-| unparking | `UNPARKING_ALPHA3_OTHER` | `0.0100` |
-| unparking | `UNPARKING_MSC_OTHER` | `0.0100` |
-| unparking | `UNPARKING_LDN_OFFICE` | `0.0050` |
-| unparking | `UNPARKING_USA_OFFICE` | `0.0050` |
-| unparking | `UNPARKING_ALPHA3_OFFICE` | `0.0025` |
-| unparking | `UNPARKING_MSC_OFFICE` | `0.0025` |
-| gear decision | start/gear-change/intervention gear buckets | `0.1835` |
+| Group | Bucket | `mcv_new.yml` | `mcv_new_phase2.yml` |
+|---|---:|---:|---:|
+| driving / other | all non-parking, non-PUDO, non-unparking, non-gear buckets | `0.6750` | `0.6185` |
+| parking | `PARKING_LDN_OFFICE` | `0.0100` | `0.0025` |
+| parking | `PARKING_LDN_NOSE` | `0.0200` | `0.0050` |
+| parking | `PARKING_LDN_TAIL` | `0.0200` | `0.0050` |
+| parking | `PARKING_LDN_SIDE` | `0.0200` | `0.0050` |
+| parking | `PARKING_LDN_PARALLEL` | `0.0100` | `0.0050` |
+| parking | `PARKING_USA_OFFICE` | `0.0100` | `0.0025` |
+| parking | `PARKING_USA_NOSE` | `0.0200` | `0.0050` |
+| parking | `PARKING_USA_TAIL` | `0.0200` | `0.0050` |
+| parking | `PARKING_USA_SIDE` | `0.0200` | `0.0050` |
+| parking | `PARKING_USA_PARALLEL` | `0.0100` | `0.0050` |
+| parking | `PARKING_ALPHA3_OFFICE` | `0.0025` | `0.0025` |
+| parking | `PARKING_ALPHA3_OTHER` | `0.0025` | `0.0050` |
+| parking | `PARKING_MSC_OFFICE` | `0.0025` | `0.0025` |
+| parking | `PARKING_MSC_OTHER` | `0.0025` | `0.0050` |
+| parking | `PARKING_MRM` | `0.0025` | `0.0025` |
+| parking | `PARKING_MRM_TRACK` | `0.0025` | `0.0005` |
+| PUDO | `PUDO_LDN_NEAR` | `0.0000` | `0.0200` |
+| PUDO | `PUDO_LDN_FAR` | `0.0000` | `0.0200` |
+| PUDO | `PUDO_USA_NEAR` | `0.0000` | `0.0200` |
+| PUDO | `PUDO_USA_FAR` | `0.0000` | `0.0200` |
+| unparking | `UNPARKING_LDN_OTHER` | `0.0100` | `0.0100` |
+| unparking | `UNPARKING_USA_OTHER` | `0.0100` | `0.0100` |
+| unparking | `UNPARKING_ALPHA3_OTHER` | `0.0100` | `0.0100` |
+| unparking | `UNPARKING_MSC_OTHER` | `0.0100` | `0.0100` |
+| unparking | `UNPARKING_LDN_OFFICE` | `0.0050` | `0.0050` |
+| unparking | `UNPARKING_USA_OFFICE` | `0.0050` | `0.0050` |
+| unparking | `UNPARKING_ALPHA3_OFFICE` | `0.0025` | `0.0025` |
+| unparking | `UNPARKING_MSC_OFFICE` | `0.0025` | `0.0025` |
+| gear decision | `GEAR_CHANGE_*` | `0.0100` | `0.0370` |
+| gear decision | `START_GEAR_CHANGE_*` | `0.0250` | `0.0465` |
+| gear decision | `INTERVENTIONS_GEAR_CHANGE*` | `0.0600` | `0.1000` |
+| gear decision | combined gear decision rows | `0.0950` | `0.1835` |
 
 Group sums:
 
-| Group | Sum |
-|---|---:|
-| driving / other | `0.6185` |
-| parking | `0.0630` |
-| PUDO | `0.0800` |
-| unparking | `0.0550` |
-| gear decision | `0.1835` |
-| parking + PUDO + unparking | `0.1980` |
-| parking + PUDO + unparking + gear decision | `0.3815` |
+| Group | `mcv_new.yml` | `mcv_new_phase2.yml` |
+|---|---:|---:|
+| driving / other | `0.6750` | `0.6185` |
+| parking | `0.1750` | `0.0630` |
+| PUDO | `0.0000` | `0.0800` |
+| unparking | `0.0550` | `0.0550` |
+| gear decision | `0.0950` | `0.1835` |
+| parking + PUDO + unparking | `0.2300` | `0.1980` |
+| parking + PUDO + unparking + gear decision | `0.3250` | `0.3815` |
+
+Interpretation:
+
+- `mcv_new.yml` has much heavier generic parking sampling (`17.5%`) but no explicit PUDO near/far buckets.
+- `mcv_new_phase2.yml` reduces generic parking to `6.3%`, adds explicit PUDO near/far at `8.0%`, and nearly doubles gear-decision sampling to `18.35%`.
+- The earlier `~18% gear decision` statement applies to `mcv_new_phase2.yml`, not `mcv_new.yml`.
+- The `17.5%` number in `mcv_new.yml` is generic parking, not gear decision.
+
+Which config was used:
+
+- The branch contains both configs and `mcv_new_phase2` looks like the later experiment family.
+- `compare_si_mcv.py` defaults to `mcv_new_phase2_si_baseline.yml`, which suggests phase2 was active in the SI comparison tooling.
+- This does not prove which config produced the specific good on-road model. To prove that, use the model nickname/session id and inspect model-catalogue checkpoint metadata for the exact config path and training commit.
 
 ### 7. Stopping Mode
 
