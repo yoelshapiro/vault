@@ -15,8 +15,14 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
 ## Verification
 
 - Ran `python -m py_compile /home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/find_model_events.py`.
+- Checked the CLI help path after deferring Spark imports; `--help` now works locally without PySpark installed.
+- Sanity-checked `sea-cucumber-spectacular-orange` for `2026-04-22`:
+  - `parking.pudo_unpudo_unpark_events` has `5` UNPUDO rows from `1` run.
+  - A SQL mirror of the detector found `7` candidate UNPUDO rows.
+  - The `5` rows already in the materialized table match exactly on event timestamp and gear-change timestamp.
+  - The `2` extra candidates are from `fme20014/2026-04-22--07-59-33--gen2-av-4ac575f2-1bd2-44c9-b8fe-87ef1f2d9f95`; one is inside the `london_office` geofence, and the other is not present in the stale materialized table.
 
 ## Notes
 
 - The script needs to run in an environment with Spark, Shapely, and Wayve geofence utilities available.
-- Local verification covered Python syntax only; Databricks execution was not run in this turn.
+- The local Databricks CLI is not configured, so the full PySpark script was not submitted as a Databricks job from this shell. SQL warehouse checks were run through `tools/databricks_queries`.

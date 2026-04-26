@@ -1467,3 +1467,4 @@
     - added `scripts/find_model_events.py` to detect model-scoped PUDO / UNPUDO / unparking events directly from source tables while `parking.pudo_unpudo_unpark_events` is stale
     - ported the notebook event-detection flow with early model/run/date filtering before reading `prod_data_pipeline.wayve_corpus.all_data`
     - updated the UNPUDO model-analysis skill to use the detector as the event-source fallback
+    - sanity-checked `sea-cucumber-spectacular-orange`: existing table has `5` UNPUDO rows, the detector SQL mirror found those exact `5` plus `2` extra candidates from a run not present in the stale table
