@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+                "file": "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-26-zmurez-pudo-data-research"
+              "title": "sea-cucumber-spectacular-orange"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+                "file": "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-26-zmurez-pudo-data-research"
+              "title": "Outline of sea-cucumber-spectacular-orange"
             }
           },
           {
@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10010--2026-04-24--22-18-51--gen2-av-e48642dd-0beb-4f6e-aaf9-bfea6b29e186.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20018--2026-04-25--06-29-08--gen2-av-af0b163e-e906-4cf4-8499-5f90c79eb024.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-24--19-13-10--gen2-av-2ecf8894-866d-47f3-9698-b58782dd7295.md",
@@ -506,7 +507,6 @@
     "agent_tasks/2026/04/Week-4/2026-04-26-wonjoon-parking-gc-materialisation.md",
     "agents-change-log.md",
     "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
-    "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-23--19-19-28--gen2-av-d84aa072-3630-4b6d-a1e8-8b6535aaa4d5.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10011--2026-04-24--01-24-57--gen2-av-ffb1851f-d4a5-4891-825f-bad28c29c782.md",
     "parking_model_analysis/models/eel-teal-outspoken.md",
