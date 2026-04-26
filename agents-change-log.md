@@ -1499,6 +1499,9 @@
     - Logged findings from `origin/zmurez/pudo` around parking/PUDO sampler weights, gear cleanup, PUDO labels, route-end jitter, and parking request conditioning
     - Captured the conclusion that Zak's parking/PUDO behavior comes from the experimental `Wayve`/Ipace loader with heuristic samplers rather than SI OTF parking defaults
     - Identified portable ideas for SI parking work: PUDO near/far split, start/gear-change sampling, gear cleanup before parking-mode derivation, route-end jitter, route blackout, and per-waypoint gear-change loss weighting
+  - Update:
+    - expanded the data-weight table with side-by-side `mcv_new.yml` and `mcv_new_phase2.yml` columns
+    - clarified that `~18%` gear-decision sampling applies to `mcv_new_phase2`, while `mcv_new` has `17.5%` generic parking and `9.5%` gear-decision sampling
 
 - 2026-04-26: [Wonjoon Parking GC Materialisation Research](agent_tasks/2026/04/Week-4/2026-04-26-wonjoon-parking-gc-materialisation.md)
   - Labels: parking, materialisation, pudo, unpudo, research
@@ -1510,6 +1513,3 @@
     - Investigated Wonjoon's merged `parking_gc` materialisation PR and bucket taxonomy
     - Documented the gear reconstruction, long P/N segment detection, maneuver windowing, gear-count bucketing, and PUDO-exclusion heuristics
     - Identified the concrete parts worth porting into the PUDO/UNPUDO materialization notebook
-  - Update:
-    - expanded the Zak `zmurez/pudo` data-weight table with side-by-side `mcv_new.yml` and `mcv_new_phase2.yml` columns
-    - clarified that `~18%` gear-decision sampling applies to `mcv_new_phase2`, while `mcv_new` has `17.5%` generic parking and `9.5%` gear-decision sampling
