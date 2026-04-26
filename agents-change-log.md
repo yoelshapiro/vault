@@ -1470,3 +1470,13 @@
     - sanity-checked `sea-cucumber-spectacular-orange`: existing table has `5` UNPUDO rows, the detector SQL mirror found those exact `5` plus `2` extra candidates from a run not present in the stale table
     - analyzed the `2026-04-23`/`2026-04-24` `sea-cucumber-spectacular-orange` model-catalogue run window with four run-by-run workers, writing `48` scored rows across `8` run files and refreshing the model card
     - extended the exporter/incremental runner to accept detector-derived `--events-json-file` input and handle no-scored-event runs without a worker failure
+- 2026-04-26: [Parking BC new driving data](agent_tasks/2026/04/Week-4/2026-04-26-parking-bc-new-driving-data.md)
+  - Labels: parking, training-config, data-mix
+  - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+  - PR: none
+  - Change type: config
+  - Areas: `wayve/ai/si/configs/parking/parking_config.py`
+  - Changes:
+    - Swapped `parking_bc_datamodule_cfg` driving train/validation buckets to the newer diffusion driving dataset partitions
+    - Normalized reused driving train partition weights to preserve 50% driving mass
+    - Kept fiery-aardvark-copper PUDO/UNPUDO/UNPARK mix and parking behavior flags unchanged
