@@ -10,6 +10,11 @@
   - `/home/borisindelman/git/ParkingSkills/skills/parking-deploy/SKILL.md`
 - Updated agent metadata:
   - `/home/borisindelman/git/ParkingSkills/skills/parking-deploy/agents/openai.yaml`
+- Refined the skill after creation to match the requested post-training flow exactly:
+  - latest source checkpoint means max trained-model `checkpoint_num`
+  - deploy is delegated to `$parking-interleave-deploy`
+  - model lookup/checkpoint/CI routing goes through `$model-info-finder`
+  - deploy commands from `/workspace/WayveCode` must run through a spawned sub-agent
 
 ## Workflow Encoded In The Skill
 - Resolve the trained model nickname or session id.
@@ -17,9 +22,9 @@
 - Call `$parking-interleave-deploy` to create the interleave-control deployment with group `parking`.
 - Resolve the actual deployed nickname and `gen2` artefact id after upload.
 - Add the standard `model_change_note` in Console:
-  - `PUDO model`
-  - `- deployed with interleave control group Parking`
-  - `- based on <trained-model-nickname>`
+  - `Parking/PUDO model`
+  - `- deployed with interleave control group parking`
+  - `- based on trained model <trained-model-nickname>`
 - Trigger Gen2 AV Mache Alpha 3 Model CI for the deployed `gen2` artefact.
 - Document the preferred trigger path for:
   - `Failed to Unpudo Standstill(No Indicator)`
