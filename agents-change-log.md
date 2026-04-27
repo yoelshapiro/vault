@@ -20,6 +20,16 @@
 - Changes:
   - [[agent_tasks/2026/04/Week-4/2026-04-27-parking-deploy-skill]]: created/refined the new `parking-deploy` skill, wired it to `parking-interleave-deploy`, `model-info-finder`, and model-catalogue helpers, documented the authenticated Console write path for model notes and licensing experiments, encoded the standard Parking/PUDO note and Alpha 3 Model CI flow, captured conservative trigger rules for the two extra parking evals, and validated the skill with the local validator.
 
+> #### 2026-04-27 — Live parking deploy skill test for precious-peach-panda
+- Topic: run the new `parking-deploy` flow end to end on `precious-peach-panda`, including a fresh interleave-control deploy, Console note, Model CI trigger, parking follow-up Eval Studio suites, and UK licensing experiment.
+- Labels: #parking #deploy #skills #interleave-control #console #model-ci #eval-studio #licensing
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/04/Week-4/`, Model Catalogue, Eval Studio, Console on-road experiments
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-27-precious-peach-panda-interleave-deploy]]: deployed fresh interleave-control model `yellow-iguana-healthy` from source `precious-peach-panda` checkpoint `10`, added the standard Parking/PUDO Console note, triggered Model CI build `69079`, started Eval Studio executions `9a914afa-a1d0-4604-a2e1-629e74cedbc9` and `75854d93-8e77-4c17-b270-894b44183349`, and created UK licensing experiment `45f938eb-3a3e-4708-9bb4-6c4cc24a5686`.
+
 > #### 2026-04-26 — Sync parking.model_analysis to kept vault models and check for new runs
 - Topic: make `parking.model_analysis` match the currently kept UNPUDO model-analysis cards in `parking_model_analysis`, and check whether selected parking models have any new run IDs since April 23, 2026.
 - Labels: #parking #unpudo #unpark #model-analysis #databricks #vault #table-sync

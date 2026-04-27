@@ -59,6 +59,47 @@ Deployed source parking model `precious-peach-panda` with interleave control usi
   - `[MB] Failure to Accel from Stopped`: execution `123f06b8-d2aa-4bb8-a0dc-2d23345a4673`, `IN_PROGRESS`, `0/581` completed, `73` errored at `2026-04-27T08:47:51.141Z`
 - UK licensing experiment was not created because it was not requested.
 
+## Parking Deploy Skill Live End-To-End Test
+
+- Ran a fresh interleave-control deployment through a spawned sub-agent using suffix `__precious-peach-panda_interleave_control_v2`.
+- Source model and checkpoint:
+  - trained nickname: `precious-peach-panda`
+  - source session id: `session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k`
+  - latest source checkpoint: `10`
+  - deploy step: `100000`
+- Deployment result:
+  - output session id: `session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k__precious-peach-panda_interleave_control_v2`
+  - output session path: `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k__precious-peach-panda_interleave_control_v2`
+  - deployed nickname: `yellow-iguana-healthy`
+  - Console URL: `https://console.sso.wayve.ai/model/session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k__precious-peach-panda_interleave_control_v2`
+  - deployed checkpoint: `1`
+  - deployed checkpoint hash: `6ec65bc7023ed6e58d8fa5e5e7260c2d`
+  - deployed `gen2` artefact id: `720b60f1-9b70-40f0-9964-fdd71c19e54f`
+  - TorchScript: `traces/model-000100000.torchscript`
+  - deploy log: `/tmp/precious_peach_panda_interleave_deploy_v2.log`
+- Radar config verification passed in `gen2_model_inference_config.json`:
+  - tensor: `radar_data`
+  - features: `RADAR_FEATURE_X_M`, `RADAR_FEATURE_Y_M`, `RADAR_FEATURE_Z_M`, `RADAR_FEATURE_RANGE_RATE_MPS`, `RADAR_FEATURE_SNR_DB`
+  - `points_per_scan`: `800`
+- Added the standard Console note:
+  - note id: `a335a59d-a555-421a-ae93-57d1657f2b6a`
+  - note: `Parking/PUDO model`, deployed with interleave control group `parking`, based on trained model `precious-peach-panda`
+- Triggered Gen2 AV Mache Alpha 3 Model CI:
+  - build number: `69079`
+  - build id: `019dce2e-0976-43f0-b82f-74cbe5ae7e81`
+  - current observed status: `Model Deployment Archive Gen2` is `success`; `Eval Studio (Gen 2 Alpha 3)` is `in_progress`; downstream `Targeted Suites` and `Gen 2 Alpha3 License` were not yet materialized at the last poll.
+- Triggered the required parking follow-up Eval Studio suites:
+  - `Failed to Unpudo Standstill(No Indicator)`: execution `9a914afa-a1d0-4604-a2e1-629e74cedbc9`, `IN_PROGRESS`, `0/1274` completed, `0` errored at `2026-04-27T09:03:59.140Z`
+  - `[MB] Failure to Accel from Stopped`: execution `75854d93-8e77-4c17-b270-894b44183349`, `IN_PROGRESS`, `0/581` completed, `0` errored at `2026-04-27T09:03:59.733Z`
+- Created the UK licensing experiment:
+  - experiment id: `45f938eb-3a3e-4708-9bb4-6c4cc24a5686`
+  - experiment index: `25257`
+  - Console URL: `https://console.sso.wayve.ai/on-road-experiments/45f938eb-3a3e-4708-9bb4-6c4cc24a5686`
+  - template: `[UK] PUDO Licensing`
+  - template id: `1faea8e5-b080-43b8-ab41-0ef364d57236`
+  - vehicle model: `gen2-av-mache-alpha3`
+  - status: `pending_approval`
+
 ## Warnings
 
 - Codex model-backed sub-agent launch failed because the installed CLI/account rejected configured/tested models before running Bazel; the deploy was run in an isolated spawned bash process with logs in `/tmp/precious_peach_panda_interleave_deploy_v1.log`.
