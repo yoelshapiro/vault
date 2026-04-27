@@ -1513,3 +1513,15 @@
     - Investigated Wonjoon's merged `parking_gc` materialisation PR and bucket taxonomy
     - Documented the gear reconstruction, long P/N segment detection, maneuver windowing, gear-count bucketing, and PUDO-exclusion heuristics
     - Identified the concrete parts worth porting into the PUDO/UNPUDO materialization notebook
+
+- 2026-04-27: [Parking interleave deploy for precious-peach-panda](agent_tasks/2026/04/Week-4/2026-04-27-precious-peach-panda-interleave-deploy.md)
+  - Labels: deploy, parking, interleave-control
+  - Branch: current workspace branch
+  - PR: none
+  - Change type: deployment
+  - Areas: `wayve/ai/si:deploy`, Model Catalogue, Notion release page
+  - Changes:
+    - Deployed interleave-control variant for `precious-peach-panda`
+    - Resolved deployed nickname `tomato-toucan-gorgeous`
+    - Verified radar config shape in output inference config
+    - Updated the Parking/PUDO release-page row with the interleave-control related model
