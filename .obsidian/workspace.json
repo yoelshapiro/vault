@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
+                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "sea-cucumber-spectacular-orange"
+              "title": "eel-teal-outspoken"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
+                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of sea-cucumber-spectacular-orange"
+              "title": "Outline of eel-teal-outspoken"
             }
           },
           {
@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
     "agent_tasks/2026/04/Week-4/2026-04-27-parking-deploy-skill.md",
     "agent_tasks/2026/04/Week-4/2026-04-27-precious-peach-panda-interleave-deploy.md",
     "parking_model_analysis/models/mallard-plum-mysterious.md",
@@ -517,7 +518,6 @@
     "parking_model_analysis/report_cards/2026/04/Week-3/fme20002--2026-04-17--09-05-46--gen2-av-e216eb21-8291-4157-95b0-f2fcd4707472.md",
     "parking_model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-17--19-13-10--gen2-av-7f6e10fd-6154-44c3-905a-836cb785069a.md",
     "parking_model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-15--22-24-04--gen2-av-6ee369a1-c300-4a59-841e-63afd7898e63.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-16--03-38-32--gen2-av-7db86d7e-265e-4355-8c1e-c0e5b36b18b5.md",
     "parking_model_analysis/report_cards/2026/04/Week-4",
     "parking_model_analysis/report_cards/2026/04/Week-3",
     "parking_model_analysis/report_cards/2026/04/Week-2",
