@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
+                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "newsletter_interleaving-models-in-parking-deployment-wrapper"
+              "title": "eel-teal-outspoken"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
+                "file": "parking_model_analysis/models/eel-teal-outspoken.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of newsletter_interleaving-models-in-parking-deployment-wrapper"
+              "title": "Outline of eel-teal-outspoken"
             }
           },
           {
@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
     "parking_model_analysis/report_cards/diagnostics/eel-teal-outspoken-dashboard-only.md",
     "parking_model_analysis/report_cards/diagnostics",
     "projects.md",
@@ -518,7 +519,6 @@
     "parking_model_analysis/models/mallard-plum-mysterious.md",
     "parking_model_analysis/models/pink-manta-ray-smooth.md",
     "parking_model_analysis/models/blue-panther-solid.md",
-    "parking_model_analysis/models/insightful-magenta-porcupine.md",
     "parking_model_analysis/report_cards/2026/04/Week-4",
     "parking_model_analysis/report_cards/2026/04/Week-3",
     "parking_model_analysis/report_cards/2026/04/Week-2",
