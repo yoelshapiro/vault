@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-27 — Parking deploy skill for post-training interleave release workflow
+- Topic: create a reusable local Codex skill that turns a finished Parking/PUDO training run into a deployed interleave-control release candidate with the standard Console note, Model CI, follow-up evals, and optional UK licensing experiment.
+- Labels: #parking #deploy #skills #interleave-control #console #model-ci #licensing
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: docs/tooling
+- Areas: `~/.codex/skills/parking-deploy/`, `agent_tasks/2026/04/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-4/2026-04-27-parking-deploy-skill]]: created the new `parking-deploy` skill, wired it to the existing `parking-interleave-deploy` and model-catalogue helpers, documented the authenticated Console write path for model notes and licensing experiments, encoded the standard parking note and Alpha 3 Model CI flow, captured the conservative trigger rules for the two extra parking evals, and validated the skill with the local validator.
+
 > #### 2026-04-26 — Sync parking.model_analysis to kept vault models and check for new runs
 - Topic: make `parking.model_analysis` match the currently kept UNPUDO model-analysis cards in `parking_model_analysis`, and check whether selected parking models have any new run IDs since April 23, 2026.
 - Labels: #parking #unpudo #unpark #model-analysis #databricks #vault #table-sync
