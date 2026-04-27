@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+                "file": "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-04-26-zmurez-pudo-data-research"
+              "title": "newsletter_interleaving-models-in-parking-deployment-wrapper"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
+                "file": "newsletters/newsletter_interleaving-models-in-parking-deployment-wrapper.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-04-26-zmurez-pudo-data-research"
+              "title": "Outline of newsletter_interleaving-models-in-parking-deployment-wrapper"
             }
           },
           {
@@ -492,6 +492,23 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects.md",
+    "projects/interleaving-models-in-parking-deployment-wrapper.md",
+    "projects/parking-end-of-route-map-blackout-augmentation.md",
+    "agent_tasks/2026/04/Week-3/2026-04-16-gemini-cli-photo-classifier-skill.md",
+    "agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test.md",
+    "agent_tasks/2026/04/Week-3/2026-04-15-parking-d26-3-6-datamodule-mix-fix.md",
+    "agent_tasks/2026/04/Week-3/2026-04-15-parking-codeowners-precedence-and-team-update.md",
+    "agent_tasks/2026/04/Week-3/2026-04-15-interleave-gear-source-by-group.md",
+    "agent_tasks/2026/04/Week-3/2026-04-14-zak-latest-work-concepts-project.md",
+    "agent_tasks/2026/04/Week-3/2026-04-14-route-shortening-test-coverage.md",
+    "agent_tasks/2026/04/Week-3/2026-04-14-parking-config-release-arches.md",
+    "agent_tasks/2026/04/Week-4/2026-04-22-unpudo-unpark-model-analysis-skill.md",
+    "agent_tasks/2026/04/Week-4/2026-04-20-parking-otf-drop-audit.md",
+    "agent_tasks/2026/04/Week-4/2026-04-26-parking-model-analysis-table-sync-and-new-run-check.md",
+    "agents-change-log.md",
+    "projects/zak-latest-work-concepts.md",
+    "agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md",
     "parking_model_analysis/models/eel-teal-outspoken.md",
     "parking_model_analysis/models/sea-cucumber-spectacular-orange.md",
     "agent_tasks/2026/04/Week-4/2026-04-27-parking-deploy-skill.md",
@@ -501,23 +518,6 @@
     "parking_model_analysis/models/blue-panther-solid.md",
     "parking_model_analysis/models/insightful-magenta-porcupine.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-24--19-11-21--gen2-av-5339fa2a-b89a-461c-82e9-27654b1bc2bc.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20007--2026-04-25--11-02-51--gen2-av-d9624868-145e-4e35-85ef-10fb79dda5f9.md",
-    "parking_model_analysis/report_cards/2026/04/Week-4/fme20007--2026-04-25--06-49-10--gen2-av-da56f723-f636-4b07-9127-306d3f63b41d.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-15--13-36-23--gen2-av-f1432a3a-2962-4aaf-9fca-bf38ea9b222d.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-16--20-43-20--gen2-av-01591772-1c26-45ad-bdf3-63078008318a.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-17--09-01-01--gen2-av-587bec1e-f609-4d72-8424-c03bf4128335.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10010--2026-04-17--22-08-31--gen2-av-9b6f4c60-c9a0-489f-a124-7f7fb87b5298.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20029--2026-04-18--11-56-15--gen2-av-5e141b0f-04a9-47ed-87f6-ec491c37cabc.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10003--2026-04-15--03-49-30--gen2-av-0a92ebc2-f66b-4a0b-9026-2990942d3433.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-19--03-38-03--gen2-av-5b10a913-1435-4980-a591-26ea8cc540b2.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20029--2026-04-17--09-56-40--gen2-av-93d048a7-0d14-49ce-a493-be732b1ee4dc.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20018--2026-04-19--16-45-19--gen2-av-255d5dfa-c814-4ca6-aa46-ed93ed2e25f5.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-17--07-44-34--gen2-av-542c5b31-4036-4bf1-bf4a-01760dfa18af.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20007--2026-04-15--05-56-43--gen2-av-60deadf3-dc6c-41bc-8e4b-eca0f8903d7c.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20002--2026-04-19--14-16-38--gen2-av-4e676dbb-1011-4d36-a366-bd27e65d798f.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme20002--2026-04-17--09-05-46--gen2-av-e216eb21-8291-4157-95b0-f2fcd4707472.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-17--19-13-10--gen2-av-7f6e10fd-6154-44c3-905a-836cb785069a.md",
-    "parking_model_analysis/report_cards/2026/04/Week-3/fme10011--2026-04-15--22-24-04--gen2-av-6ee369a1-c300-4a59-841e-63afd7898e63.md",
     "parking_model_analysis/report_cards/2026/04/Week-4",
     "parking_model_analysis/report_cards/2026/04/Week-3",
     "parking_model_analysis/report_cards/2026/04/Week-2",
