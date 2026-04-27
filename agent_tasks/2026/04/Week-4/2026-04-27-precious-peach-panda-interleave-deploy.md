@@ -87,7 +87,8 @@ Deployed source parking model `precious-peach-panda` with interleave control usi
 - Triggered Gen2 AV Mache Alpha 3 Model CI:
   - build number: `69079`
   - build id: `019dce2e-0976-43f0-b82f-74cbe5ae7e81`
-  - current observed status: `Model Deployment Archive Gen2` is `success`; `Eval Studio (Gen 2 Alpha 3)` is `in_progress`; downstream `Targeted Suites` and `Gen 2 Alpha3 License` were not yet materialized at the last poll.
+  - current observed status: `Model Deployment Archive Gen2` is `success`; `Eval Studio (Gen 2 Alpha 3)` is `success`; `Gen2 Alpha3 HiL Model Validation` is `in_progress`; downstream `Targeted Suites` and `Gen 2 Alpha3 License` were not yet materialized at the last poll.
+  - generic Alpha 3 Eval Studio suite execution: `261d44af-43cd-424c-b733-fdf3593a2ece`
 - Triggered the required parking follow-up Eval Studio suites:
   - `Failed to Unpudo Standstill(No Indicator)`: execution `9a914afa-a1d0-4604-a2e1-629e74cedbc9`, `IN_PROGRESS`, `0/1274` completed, `0` errored at `2026-04-27T09:03:59.140Z`
   - `[MB] Failure to Accel from Stopped`: execution `75854d93-8e77-4c17-b270-894b44183349`, `IN_PROGRESS`, `0/581` completed, `0` errored at `2026-04-27T09:03:59.733Z`
