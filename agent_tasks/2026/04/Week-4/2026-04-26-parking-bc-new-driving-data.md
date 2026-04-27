@@ -52,3 +52,16 @@ Added a new `parking_bc_new_driving_datamodule` option. The existing `parking_bc
 - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k`
 - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aprecious-peach-panda-154721&from_ts=1775995349367&cols=job_name%2Cnode_rank&live=true`
 - Notion release row: `https://www.notion.so/34e03da5d69a8175bc92ea01f820b630`
+
+## Interleave Deploy
+
+- Source nickname: `precious-peach-panda`
+- Output session: `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k__precious-peach-panda_interleave_control_v1`
+- Assigned interleave-control nickname: `tomato-toucan-gorgeous`
+- Console URL: `https://console.sso.wayve.ai/model/session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k__precious-peach-panda_interleave_control_v1`
+- Radar verification: passed (`radar_data` present, X/Y/Z/range-rate/SNR features, `points_per_scan=800`)
+- Notion release row updated with the interleave-control nickname.
+- Non-blocking warnings:
+  - ONNX artefact upload hit known `OnnxExportAsset path=None` validation after the main console upload succeeded.
+  - `data_provenance` asset was missing.
+  - `stride_sec 0.04 is not a multiple of 0.05s (20Hz)`.

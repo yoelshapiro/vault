@@ -1488,6 +1488,7 @@
     - Normalized reused driving train partition weights to preserve 50% driving mass
     - Kept fiery-aardvark-copper PUDO/UNPUDO/UNPARK mix and parking behavior flags in the new datamodule
     - Committed and pushed `7ec9c60b950e71331d395c7f221e9a25c6cfc702`, then started 100000-step training job `154721` / `precious-peach-panda` with `+datamodule=parking_bc_new_driving_datamodule`; observed state `Running`
+    - Deployed `precious-peach-panda` with parking interleave control as `tomato-toucan-gorgeous`, verified Gen2 radar config (`points_per_scan=800`), and updated the release row's `Related models` field
 
 - 2026-04-26: [zmurez/pudo Data Research](agent_tasks/2026/04/Week-4/2026-04-26-zmurez-pudo-data-research.md)
   - Labels: parking, pudo, unpudo, research
