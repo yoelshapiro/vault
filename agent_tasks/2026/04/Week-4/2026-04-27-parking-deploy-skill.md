@@ -49,3 +49,8 @@ python /home/borisindelman/git/ParkingSkills/skills/.system/skill-creator/script
 - During the `precious-peach-panda` live test, the UK licensing experiment endpoint accepted the current nested `experiment_details` payload shape rather than the older flattened example.
 - Updated the skill's licensing experiment section to use the working Console `/v2/on_road_experiments` payload shape and note that created experiments remain `pending_approval` unless explicitly approved.
 - Re-ran the skill validator after the update: `Skill is valid!`
+
+## AV Test Stats Follow-Up
+- Replaced the remaining `$train-parking-model` dependency with `$av-test-multi-model-stats` for parking-specific follow-up evaluations.
+- Updated the skill to resolve `Failed to Unpudo Standstill(No Indicator)` and accelerate-from-stopped to scenario collection version ids, run the deployed interleave nickname through `$av-test-multi-model-stats`, and report the per-collection plus aggregate result tables.
+- Updated the skill metadata prompt to mention AV test stats and re-ran validation: `Skill is valid!`
