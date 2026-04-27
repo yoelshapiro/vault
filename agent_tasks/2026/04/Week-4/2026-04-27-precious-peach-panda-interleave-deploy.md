@@ -37,6 +37,28 @@ Deployed source parking model `precious-peach-panda` with interleave control usi
 - Model Catalogue lookup by output session id resolved nickname `tomato-toucan-gorgeous`.
 - Notion release row for `precious-peach-panda` updated with related model mapping.
 
+## Parking Deploy Skill Test
+
+- Confirmed the source model latest checkpoint is `10`; checkpoint 10 has hash `1dec7ef02e0abc9a5e270cf02cc71983`.
+- Reused the existing interleave-control deployment instead of creating a duplicate deployment:
+  - deployed session id: `session_2026_04_26_11_58_12_si_parking_bc_train_release_2026_5_11_bc_new_driving_100k__precious-peach-panda_interleave_control_v1`
+  - deployed nickname: `tomato-toucan-gorgeous`
+  - deployed checkpoint: `1`
+  - deployed `gen2` artefact id: `2f40b527-2562-41c4-bf8c-e7e7ec7025bf`
+- Added the standard Console note:
+  - note id: `66650b51-8dff-45d2-8c5b-3b95eb5c91dc`
+  - note: `Parking/PUDO model`, deployed with interleave control group `parking`, based on trained model `precious-peach-panda`
+- Confirmed existing Gen2 AV Mache Alpha 3 Model CI build `69068` for the deployed artefact was already successful:
+  - `Model Deployment Archive Gen2`: `success`
+  - `Eval Studio (Gen 2 Alpha 3)`: `success`
+  - `Gen2 Alpha3 HiL Model Validation`: `success`
+  - `Gen 2 Alpha3 License`: `success`
+  - No `Targeted Suites` job was present in the returned build metadata.
+- Triggered the required parking follow-up Eval Studio suites:
+  - `Failed to Unpudo Standstill(No Indicator)`: execution `2ec84534-e879-4550-8807-42b31959d029`, `IN_PROGRESS`, `0/1274` completed, `0` errored at `2026-04-27T08:44:26.935Z`
+  - `[MB] Failure to Accel from Stopped`: execution `123f06b8-d2aa-4bb8-a0dc-2d23345a4673`, `IN_PROGRESS`, `0/581` completed, `73` errored at `2026-04-27T08:47:51.141Z`
+- UK licensing experiment was not created because it was not requested.
+
 ## Warnings
 
 - Codex model-backed sub-agent launch failed because the installed CLI/account rejected configured/tested models before running Bazel; the deploy was run in an isolated spawned bash process with logs in `/tmp/precious_peach_panda_interleave_deploy_v1.log`.
