@@ -18,7 +18,7 @@
 - Change type: docs/tooling
 - Areas: `~/.codex/skills/parking-deploy/`, `agent_tasks/2026/04/Week-4/`
 - Changes:
-  - [[agent_tasks/2026/04/Week-4/2026-04-27-parking-deploy-skill]]: created/refined the new `parking-deploy` skill, wired it to `parking-interleave-deploy`, `model-info-finder`, and model-catalogue helpers, documented the authenticated Console write path for model notes and licensing experiments, encoded the standard Parking/PUDO note and Alpha 3 Model CI flow, captured conservative trigger rules for the two extra parking evals, and validated the skill with the local validator.
+  - [[agent_tasks/2026/04/Week-4/2026-04-27-parking-deploy-skill]]: created/refined the new `parking-deploy` skill, wired it to `parking-interleave-deploy`, `model-info-finder`, and model-catalogue helpers, documented the authenticated Console write path for model notes and licensing experiments, encoded the standard Parking/PUDO note and Alpha 3 Model CI flow, captured conservative trigger rules for the two extra parking evals, corrected the UK licensing experiment payload after the live test, and validated the skill with the local validator.
 
 > #### 2026-04-27 — Live parking deploy skill test for precious-peach-panda
 - Topic: run the new `parking-deploy` flow end to end on `precious-peach-panda`, including a fresh interleave-control deploy, Console note, Model CI trigger, parking follow-up Eval Studio suites, and UK licensing experiment.

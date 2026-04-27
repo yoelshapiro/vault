@@ -44,3 +44,8 @@ python /home/borisindelman/git/ParkingSkills/skills/.system/skill-creator/script
 ```
 
 - Result: `Skill is valid!`
+
+## Live Test Follow-Up
+- During the `precious-peach-panda` live test, the UK licensing experiment endpoint accepted the current nested `experiment_details` payload shape rather than the older flattened example.
+- Updated the skill's licensing experiment section to use the working Console `/v2/on_road_experiments` payload shape and note that created experiments remain `pending_approval` unless explicitly approved.
+- Re-ran the skill validator after the update: `Skill is valid!`
