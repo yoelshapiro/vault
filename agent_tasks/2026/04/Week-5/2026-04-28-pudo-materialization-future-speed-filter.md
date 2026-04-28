@@ -276,3 +276,16 @@ Validation:
 
 - notebook JSON validates
 - all `12` code cells parse
+
+## Avoid Startup Actions
+
+Commit: `b31d5b80d15`
+
+Removed expensive actions from the first materialization cells:
+
+- replaced unconditional `display(df)` of the full events table with `DISPLAY_EVENTS_TABLE_SAMPLE = False`
+- added `EVENTS_TABLE_SAMPLE_LIMIT = 100` for bounded debug display when needed
+- added `ENABLE_STARTUP_COUNTS = False` so startup `count()` calls do not run by default
+- replaced `dc_events.select("event_type").distinct().collect()` with the known event-type list, avoiding an extra event-table action
+
+This addresses the notebook getting stuck in the initial "Load and Display Parking Pudo Unpudo Events Table" cell.

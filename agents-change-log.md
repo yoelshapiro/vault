@@ -1582,3 +1582,4 @@
     - Added cached `all_data_for_events` restricted to filtered event run IDs and switched downstream corpus joins to use it; pushed commit `050ce54b527`
     - Added standalone `Spark native ABFSS parquet write test.ipynb` to validate native Spark partitioned parquet writes to the parking dev ABFSS path; pushed commit `c13ebb8ec06`
     - Disabled gear-specific and gear-boundary bucket experiments by default, removed the active `parking prev_gear_direction == -1` spec, and added `MATERIALIZATION_WRITE_MODE` to choose native Spark or fsspec writes; pushed commit `fa3101165e9`
+    - Removed expensive startup actions from the materialization notebook by guarding full-table display, startup counts, and event-type collection; pushed commit `b31d5b80d15`
