@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-28 — PUDO materialization future-speed filter
+- Topic: switch the PUDO / UNPUDO materialization notebook's UNPUDO / unparking sample filter from current acceleration to future speed at 0.6 seconds, aligned with the controller start/stop threshold discussion.
+- Labels: #parking #pudo #unpudo #materialization #controller #data
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: code/data-notebook
+- Areas: `wayve/ai/parking/notebooks/`, `agent_tasks/2026/04/Week-5/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-5/2026-04-28-pudo-materialization-future-speed-filter]]: created the materialization notebook file from `origin/parking/notebooks`, replaced the `0.734 m/s^2` acceleration filter for UNPUDO / unparking buckets with a future-speed filter requiring `0.15 m/s` at `timestamp + 0.6s`, and projected clean sample columns before the future-speed join to avoid Spark duplicate-column ambiguity.
+
 > #### 2026-04-27 — Parking deploy skill for post-training interleave release workflow
 - Topic: create a reusable local Codex skill that turns a finished Parking/PUDO training run into a deployed interleave-control release candidate with the standard Console note, Model CI, follow-up evals, and optional UK licensing experiment.
 - Labels: #parking #deploy #skills #interleave-control #console #model-ci #licensing
