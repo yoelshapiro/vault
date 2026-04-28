@@ -91,3 +91,32 @@ Verification:
 
 - Validated notebook JSON with `python -m json.tool`.
 - Parsed edited Python cells with `ast.parse`.
+
+## Event-Table Gear Schema Fix And Cutoff Evidence
+
+Commit: `db5c478824b4`
+
+The live `hive_metastore.parking.pudo_unpudo_unpark_events` table does not expose `gear_direction` or `prev_gear_direction`; it exposes `speed_kmh` and event timing fields. Added `ensure_event_gear_columns(...)` so the notebook derives `gear_direction` from signed `speed_kmh` when the gear columns are absent, and derives `prev_gear_direction` from that gear direction as a compatibility fallback.
+
+Databricks checks:
+
+- Initial query using `gear_direction` failed with `[UNRESOLVED_COLUMN.WITH_SUGGESTION]`.
+- A row-level schema check confirmed the table has `speed_kmh`, `gearchange_timestamp`, `event_duration`, and `event_startOrEnd_timestampunixus`, but not `gear_direction` / `prev_gear_direction`.
+- Re-ran duration analysis with speed-derived gear using `speed_kmh > 0.05 -> 1`, `speed_kmh < -0.05 -> -1`, otherwise `0`.
+
+Reverse-duration result:
+
+| event_type | duration bucket | events |
+|---|---:|---:|
+| unparking | 00-05s | 1836 |
+| unparking | 05-10s | 14927 |
+| unparking | 10-20s | 12905 |
+| unparking | 20-30s | 4649 |
+| unparking | 30s+ | 9048 |
+| unpudo | 00-05s | 136 |
+| unpudo | 05-10s | 2258 |
+| unpudo | 10-20s | 2859 |
+| unpudo | 20-30s | 1310 |
+| unpudo | 30s+ | 1716 |
+
+Conclusion: the old `10s` event-length cutoff would remove most reverse UNPUDO/unparking events. For speed-derived reverse gear, `61.34%` of unparking events and `71.08%` of UNPUDO events are longer than `10s`.

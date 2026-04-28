@@ -1571,3 +1571,5 @@
     - Added DC gear-boundary buckets around stabilized gear changes inside UNPUDO / unparking windows, including reverse-only variants
     - Pushed commit `02722ffcfcd9` to `origin/boris/pudo-materialization-future-speed-gear-buckets`
     - Disabled event-length cutoff through `EVENT_LENGTH_CUTOFF_MODE = None` while leaving the implementation and thresholds in place; pushed commit `fe5e8120623a`
+    - Fixed current event-table schema compatibility by deriving `gear_direction` from signed `speed_kmh` when gear columns are absent; pushed commit `db5c478824b4`
+    - Queried the events table and confirmed the old `10s` cutoff would remove most speed-derived reverse events: `61.34%` of reverse unparking and `71.08%` of reverse UNPUDO are longer than `10s`
