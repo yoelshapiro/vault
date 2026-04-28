@@ -1557,3 +1557,16 @@
     - Resolved deployed nickname `tomato-toucan-gorgeous`
     - Verified radar config shape in output inference config
     - Updated the Parking/PUDO release-page row with the interleave-control related model
+
+- 2026-04-28: [PUDO Materialization Future-Speed Filter](agent_tasks/2026/04/Week-5/2026-04-28-pudo-materialization-future-speed-filter.md)
+  - Labels: parking, pudo, unpudo, materialization
+  - Branch: `boris/pudo-materialization-future-speed-gear-buckets`
+  - PR: none
+  - Change type: notebook
+  - Areas: `wayve/ai/parking/notebooks/PUDO and UNPUDO materilization.ipynb`
+  - Changes:
+    - Replaced the UNPUDO / unparking acceleration filter with a future-speed filter at `+0.6s` using the `0.15 m/s` controller threshold
+    - Added gear-specific parking / PUDO / UNPUDO / unparking bucket variants, including reverse `unparking`
+    - Expanded DC UNPUDO / unparking windows from `gearchange_timestamp - 1s` through event end to retain full reverse/forward maneuvers
+    - Added DC gear-boundary buckets around stabilized gear changes inside UNPUDO / unparking windows, including reverse-only variants
+    - Pushed commit `02722ffcfcd9` to `origin/boris/pudo-materialization-future-speed-gear-buckets`

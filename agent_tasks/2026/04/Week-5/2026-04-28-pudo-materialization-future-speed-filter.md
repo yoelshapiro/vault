@@ -1,7 +1,7 @@
 # PUDO Materialization Future-Speed Filter
 
 Date: 2026-04-28
-Branch: `parking/notebooks`
+Branch: `boris/pudo-materialization-future-speed-gear-buckets`
 Worktree: `/tmp/wayvecode-parking-codeowners`
 PR: none
 
@@ -61,3 +61,22 @@ The existing generic buckets are unchanged. The gear-specific buckets are added 
 ## Caveat
 
 The future-speed materialization filter is a proxy for the OTF trajectory: it uses odometry speed at `sample + 0.6s`, not direct `POLICY_WAYPOINTS`, because this materialization notebook only emits `(run_id, timestamp_unixus)` buckets from `wayve_corpus.all_data`. OTF later interpolates the same odometry speed column into `DataKeys.POLICY_SPEED`.
+
+## Gear-Boundary Update
+
+Commit: `02722ffcfcd9`
+
+Follow-up change on the same branch added the agreed reverse and gear-change-window materialization changes:
+
+- Added reverse `unparking` gear-specific buckets with `gear_direction == -1`.
+- Expanded DC UNPUDO / unparking sample windows to cover from `gearchange_timestamp - 1s` through `event_startOrEnd_timestampunixus`, so reverse maneuvers can include park exit, reverse motion, optional reverse-to-drive transition, and the forward continuation.
+- Added DC gear-boundary buckets for UNPUDO and unparking. These detect stabilized gear changes inside the maneuver window using `lag` / `lead` over `ground_truth__state__vehicle__gear_direction`, then materialize a local `[-0.9s, +0.5s]` window around each boundary.
+- Added reverse-only gear-boundary bucket variants for `gear_direction == -1`.
+- Kept the future-speed filter downstream for UNPUDO / unparking buckets, including the new boundary buckets.
+- Renamed the materialized dataset suffix to `future_speed_gear_boundary`.
+
+Verification:
+
+- Validated notebook JSON with `python -m json.tool`.
+- Parsed edited Python cells with `ast.parse`.
+- Did not execute the Databricks notebook locally.
