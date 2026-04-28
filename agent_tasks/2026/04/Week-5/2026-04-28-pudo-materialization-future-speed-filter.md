@@ -95,8 +95,16 @@ Verification:
 ## Event-Table Gear Schema Fix And Cutoff Evidence
 
 Commit: `db5c478824b4`
+Superseded by commit: `ab34fae41a49`
 
-The live `hive_metastore.parking.pudo_unpudo_unpark_events` table does not expose `gear_direction` or `prev_gear_direction`; it exposes `speed_kmh` and event timing fields. Added `ensure_event_gear_columns(...)` so the notebook derives `gear_direction` from signed `speed_kmh` when the gear columns are absent, and derives `prev_gear_direction` from that gear direction as a compatibility fallback.
+The live `hive_metastore.parking.pudo_unpudo_unpark_events` table does not expose `gear_direction` or `prev_gear_direction`; it exposes `speed_kmh` and event timing fields.
+
+Initial fix in `db5c478824b4` derived gear from signed `speed_kmh`. That was only a schema compatibility fallback and was replaced in `ab34fae41a49` with corpus-derived gear:
+
+- `all_data = spark.table("wayve_corpus.all_data")` is now loaded before bucket construction.
+- `enrich_event_gear_columns(...)` joins event rows to corpus at `(runID, timestamp_unixus)` to populate `gear_direction` from `ground_truth__state__vehicle__gear_direction`.
+- `prev_gear_direction` is populated from corpus at `(runID, gearchange_timestamp - 50ms)`.
+- The later materialization join reuses the same `all_data` variable.
 
 Databricks checks:
 
