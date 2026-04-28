@@ -248,3 +248,31 @@ Purpose:
 - optionally clean up the test output
 
 This is for validating whether native Spark writes can replace the slower Python/fsspec parquet writer.
+
+## Disable Gear Bucket Experiments And Add Spark Write Mode
+
+Commit: `fa3101165e9`
+
+Disabled the newest gear-bucket experiments by default so the notebook can get back to the simpler working path:
+
+- `ENABLE_GEAR_SPECIFIC_BUCKETS = False`
+- `ENABLE_GEAR_BOUNDARY_BUCKETS = False`
+- removed the active `parking prev_gear_direction == -1` gear-specific bucket spec
+- skipped corpus gear enrichment unless gear-specific or gear-boundary buckets are enabled
+
+Added a materialization write-mode switch:
+
+- `MATERIALIZATION_WRITE_MODE = "spark"` uses native Spark partitioned parquet writes
+- `MATERIALIZATION_WRITE_MODE = "fsspec"` keeps the previous Python/fsspec writer
+- the switch only matters when `DRY_RUN_MATERIALIZATION = False`
+
+The Spark path writes with:
+
+- `.repartition("dataset_split", "dataset_bucket")`
+- `.partitionBy("dataset_split", "dataset_bucket")`
+- `.option("maxRecordsPerFile", 100_000)`
+
+Validation:
+
+- notebook JSON validates
+- all `12` code cells parse

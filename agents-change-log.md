@@ -1581,3 +1581,4 @@
     - Delayed corpus gear enrichment to gear-specific paths and removed per-bucket `limit(1).count()` probes to speed up one-day notebook tests; pushed commit `b5dc63a5cdd`
     - Added cached `all_data_for_events` restricted to filtered event run IDs and switched downstream corpus joins to use it; pushed commit `050ce54b527`
     - Added standalone `Spark native ABFSS parquet write test.ipynb` to validate native Spark partitioned parquet writes to the parking dev ABFSS path; pushed commit `c13ebb8ec06`
+    - Disabled gear-specific and gear-boundary bucket experiments by default, removed the active `parking prev_gear_direction == -1` spec, and added `MATERIALIZATION_WRITE_MODE` to choose native Spark or fsspec writes; pushed commit `fa3101165e9`
