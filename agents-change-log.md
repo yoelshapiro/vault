@@ -1576,3 +1576,4 @@
     - Queried the events table and confirmed the old `10s` cutoff would remove most speed-derived reverse events: `61.34%` of reverse unparking and `71.08%` of reverse UNPUDO are longer than `10s`
     - Removed unused worktrees to free `/workspace` disk space, fixed ambiguous Spark joins with explicit aliases, and added final `summary_df`-based UNPUDO/unparking bucket-count stats; pushed commit `d21d3a773daf`
     - Added optional `event_start_date` / `event_end_date` filters on `run_date_iso` for quick notebook tests; pushed commit `023674eac300`
+    - Fixed persistent Spark self-join ambiguity in AV/DC expansion by projecting unique key names before joins; pushed commit `a232267e0891`

@@ -157,3 +157,22 @@ Added optional event-table date filters to the first notebook cell:
 - `event_end_date = None`
 
 When set to `YYYY-MM-DD`, these filter `run_date_iso` before downstream bucket construction, allowing quick materialization tests on a small date range without changing the rest of the notebook.
+
+## Self-Join Ambiguity Fix
+
+Commit: `a232267e0891`
+
+The ambiguous `timestamp_unixus` error persisted in the AV expansion cell because Spark still saw multiple DataFrames with shared `all_data` lineage. Reworked all relevant joins to project unique key names before joining:
+
+- event gear enrichment uses `event_gear_*` and `prev_gear_*` columns
+- future-speed filtering uses `sample_*` and `future_speed_*` columns
+- gear-boundary detection uses `corpus_gear.*` projected into unique names
+- DC expansion joins `expanded_*` to `corpus_*`
+- AV expansion joins `window_*` to `corpus_*`
+
+Also added `from pyspark.sql import functions as F` to the first cell because date filters use `F` before the shared imports cell in a fresh top-to-bottom notebook run.
+
+Validation:
+
+- Notebook JSON validates with `/usr/bin/python3 -m json.tool`.
+- All code cells parse with `ast.parse`.
