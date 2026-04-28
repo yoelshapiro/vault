@@ -128,3 +128,21 @@ Reverse-duration result:
 | unpudo | 30s+ | 1716 |
 
 Conclusion: the old `10s` event-length cutoff would remove most reverse UNPUDO/unparking events. For speed-derived reverse gear, `61.34%` of unparking events and `71.08%` of UNPUDO events are longer than `10s`.
+
+## Ambiguous Join Fix And Final Bucket Counts
+
+Commit: `d21d3a773daf`
+
+Fixed a Spark ambiguous-column failure in the DC bucket materialization path by explicitly aliasing:
+
+- expanded event rows as `expanded`
+- corpus rows as `corpus`
+- future-speed join inputs as `samples` and `future_speed`
+
+Also added a final notebook section based on `summary_df` only:
+
+- prints final materialized UNPUDO / unparking rows per bucket
+- groups bucket counts into `generic`, `forward_gear_specific`, `reverse_gear_specific`, and `gear_boundary`
+- pivots forward vs reverse gear-specific bucket counts for quick upsampling decisions
+
+This stats section intentionally does not rejoin corpus; it summarizes the bucket distribution that training will see.

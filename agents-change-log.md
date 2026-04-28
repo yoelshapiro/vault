@@ -1574,3 +1574,4 @@
     - Fixed current event-table schema compatibility by deriving `gear_direction` from signed `speed_kmh` when gear columns are absent; pushed commit `db5c478824b4`
     - Replaced the speed-derived fallback with early corpus enrichment from `wayve_corpus.all_data` for `gear_direction` and `prev_gear_direction`; pushed commit `ab34fae41a49`
     - Queried the events table and confirmed the old `10s` cutoff would remove most speed-derived reverse events: `61.34%` of reverse unparking and `71.08%` of reverse UNPUDO are longer than `10s`
+    - Removed unused worktrees to free `/workspace` disk space, fixed ambiguous Spark joins with explicit aliases, and added final `summary_df`-based UNPUDO/unparking bucket-count stats; pushed commit `d21d3a773daf`
