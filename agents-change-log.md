@@ -1579,3 +1579,5 @@
     - Fixed persistent Spark self-join ambiguity in AV/DC expansion by projecting unique key names before joins; pushed commit `a232267e0891`
     - Added `DRY_RUN_MATERIALIZATION` to compute final materialized counts while skipping fsspec parquet/meta/README writes; pushed commit `4a6d2f00d8d`
     - Delayed corpus gear enrichment to gear-specific paths and removed per-bucket `limit(1).count()` probes to speed up one-day notebook tests; pushed commit `b5dc63a5cdd`
+    - Added cached `all_data_for_events` restricted to filtered event run IDs and switched downstream corpus joins to use it; pushed commit `050ce54b527`
+    - Added standalone `Spark native ABFSS parquet write test.ipynb` to validate native Spark partitioned parquet writes to the parking dev ABFSS path; pushed commit `c13ebb8ec06`

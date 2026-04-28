@@ -215,3 +215,36 @@ Changed the construction path to:
 - keep generic AV bucket creation event-table-only and enrich only for AV gear-specific buckets
 
 This may create empty logical bucket DataFrames, but they should naturally produce no rows in the final materialized summary. Avoiding repeated actions is more important for notebook iteration speed.
+
+## Corpus Run Filtering
+
+Commit: `050ce54b527`
+
+Added `all_data_for_events`, a cached corpus DataFrame restricted to run IDs present in the filtered event table:
+
+```python
+event_run_ids = df_filtered.select(F.col("runID").alias("run_id")).distinct()
+all_data_for_events = (
+    all_data.join(F.broadcast(event_run_ids), on="run_id", how="inner")
+    .cache()
+)
+```
+
+Downstream event-gear enrichment, gear-boundary detection, DC expansion, AV expansion, and future-speed filtering now use `all_data_for_events` instead of full `wayve_corpus.all_data`.
+
+## Spark ABFSS Write Test Notebook
+
+Commit: `c13ebb8ec06`
+
+Added a standalone notebook:
+
+- `wayve/ai/parking/notebooks/Spark native ABFSS parquet write test.ipynb`
+
+Purpose:
+
+- write a tiny partitioned DataFrame to a timestamped path under the parking dev materialization ABFSS root using native Spark parquet write
+- read it back and display counts by `dataset_split` / `dataset_bucket`
+- list written parquet files using Hadoop FS APIs
+- optionally clean up the test output
+
+This is for validating whether native Spark writes can replace the slower Python/fsspec parquet writer.
