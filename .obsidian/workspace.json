@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/04/Week-4/2026-04-28-controller-start-stop-threshold-research.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-27--09-25-33--gen2-av-90bb0e4a-6782-4f88-9618-b34b55cbf784.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20031--2026-04-27--06-18-31--gen2-av-176bae21-e503-4427-8fa3-65cd2f35adbd.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20018--2026-04-27--08-50-42--gen2-av-e87ca46e-e131-4d9f-bfda-d653cd39c654.md",
@@ -519,7 +520,6 @@
     "projects/interleaving-models-in-parking-deployment-wrapper.md",
     "projects/parking-end-of-route-map-blackout-augmentation.md",
     "agent_tasks/2026/04/Week-3/2026-04-16-gemini-cli-photo-classifier-skill.md",
-    "agent_tasks/2026/04/Week-3/2026-04-16-fallback-classifier-gemini-run-test.md",
     "parking_model_analysis/report_cards/2026/04/Week-4",
     "parking_model_analysis/report_cards/2026/04/Week-3",
     "parking_model_analysis/report_cards/2026/04/Week-2",
