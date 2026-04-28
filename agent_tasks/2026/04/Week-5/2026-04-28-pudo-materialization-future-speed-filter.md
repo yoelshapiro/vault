@@ -80,3 +80,14 @@ Verification:
 - Validated notebook JSON with `python -m json.tool`.
 - Parsed edited Python cells with `ast.parse`.
 - Did not execute the Databricks notebook locally.
+
+## Event-Length Cutoff Flag
+
+Commit: `fe5e8120623a`
+
+Disabled the event-length cutoff by setting `EVENT_LENGTH_CUTOFF_MODE = None`, while keeping the cutoff implementation and threshold config in the notebook. Rationale: for UNPUDO / unparking, the future-speed filter now removes standstill samples that do not lead to motion, while a hard event-level cutoff can drop valid longer reverse/forward maneuvers before good samples are extracted.
+
+Verification:
+
+- Validated notebook JSON with `python -m json.tool`.
+- Parsed edited Python cells with `ast.parse`.

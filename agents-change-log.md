@@ -1570,3 +1570,4 @@
     - Expanded DC UNPUDO / unparking windows from `gearchange_timestamp - 1s` through event end to retain full reverse/forward maneuvers
     - Added DC gear-boundary buckets around stabilized gear changes inside UNPUDO / unparking windows, including reverse-only variants
     - Pushed commit `02722ffcfcd9` to `origin/boris/pudo-materialization-future-speed-gear-buckets`
+    - Disabled event-length cutoff through `EVENT_LENGTH_CUTOFF_MODE = None` while leaving the implementation and thresholds in place; pushed commit `fe5e8120623a`
