@@ -176,3 +176,26 @@ Validation:
 
 - Notebook JSON validates with `/usr/bin/python3 -m json.tool`.
 - All code cells parse with `ast.parse`.
+
+## Dry-Run Materialization
+
+Commit: `4a6d2f00d8d`
+
+Added `DRY_RUN_MATERIALIZATION = True` and a `dry_run` argument to `materialize_joined_tables(...)`.
+
+When dry-run is enabled, the notebook still:
+
+- unions/caps bucket rows
+- joins train/validation split
+- builds `materialized_df`
+- computes and displays `summary_df`
+- returns `materialized_df`, `summary_df`, and `output_path`
+
+But it skips:
+
+- fsspec parquet writes
+- filesystem verification
+- metadata file generation
+- README generation
+
+This allows single-day notebook tests to validate bucket counts and final summaries without paying the slow Python/fsspec write cost.

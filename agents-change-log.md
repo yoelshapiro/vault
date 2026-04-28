@@ -1577,3 +1577,4 @@
     - Removed unused worktrees to free `/workspace` disk space, fixed ambiguous Spark joins with explicit aliases, and added final `summary_df`-based UNPUDO/unparking bucket-count stats; pushed commit `d21d3a773daf`
     - Added optional `event_start_date` / `event_end_date` filters on `run_date_iso` for quick notebook tests; pushed commit `023674eac300`
     - Fixed persistent Spark self-join ambiguity in AV/DC expansion by projecting unique key names before joins; pushed commit `a232267e0891`
+    - Added `DRY_RUN_MATERIALIZATION` to compute final materialized counts while skipping fsspec parquet/meta/README writes; pushed commit `4a6d2f00d8d`
