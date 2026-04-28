@@ -1578,3 +1578,4 @@
     - Added optional `event_start_date` / `event_end_date` filters on `run_date_iso` for quick notebook tests; pushed commit `023674eac300`
     - Fixed persistent Spark self-join ambiguity in AV/DC expansion by projecting unique key names before joins; pushed commit `a232267e0891`
     - Added `DRY_RUN_MATERIALIZATION` to compute final materialized counts while skipping fsspec parquet/meta/README writes; pushed commit `4a6d2f00d8d`
+    - Delayed corpus gear enrichment to gear-specific paths and removed per-bucket `limit(1).count()` probes to speed up one-day notebook tests; pushed commit `b5dc63a5cdd`

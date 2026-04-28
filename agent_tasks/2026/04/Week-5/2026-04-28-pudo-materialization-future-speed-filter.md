@@ -199,3 +199,19 @@ But it skips:
 - README generation
 
 This allows single-day notebook tests to validate bucket counts and final summaries without paying the slow Python/fsspec write cost.
+
+## Bucket Construction Performance Fix
+
+Commit: `b5dc63a5cdd`
+
+The DC bucket-construction cell was still slow on a single-day filter because it performed many `limit(1).count()` existence probes after event rows had been enriched from `wayve_corpus.all_data`. Each probe triggered Spark work through the corpus join.
+
+Changed the construction path to:
+
+- keep generic DC bucket construction event-table-only
+- delay corpus gear enrichment until gear-specific / gear-boundary bucket creation
+- remove per-bucket `limit(1).count()` probes from DC generic, DC short variants, DC gear-specific, DC gear-boundary, and AV bucket creation
+- pass `dc_events_with_gear` only into the gear-boundary creation path
+- keep generic AV bucket creation event-table-only and enrich only for AV gear-specific buckets
+
+This may create empty logical bucket DataFrames, but they should naturally produce no rows in the final materialized summary. Avoiding repeated actions is more important for notebook iteration speed.
