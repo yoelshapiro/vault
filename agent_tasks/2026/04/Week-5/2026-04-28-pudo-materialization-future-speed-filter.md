@@ -146,3 +146,14 @@ Also added a final notebook section based on `summary_df` only:
 - pivots forward vs reverse gear-specific bucket counts for quick upsampling decisions
 
 This stats section intentionally does not rejoin corpus; it summarizes the bucket distribution that training will see.
+
+## Quick Test Date Filters
+
+Commit: `023674eac300`
+
+Added optional event-table date filters to the first notebook cell:
+
+- `event_start_date = None`
+- `event_end_date = None`
+
+When set to `YYYY-MM-DD`, these filter `run_date_iso` before downstream bucket construction, allowing quick materialization tests on a small date range without changing the rest of the notebook.
