@@ -1606,6 +1606,8 @@
     - pushed commit `bb6b7b3fd31`
     - pushed commit `755ba3af5ab`
     - pushed commit `9c9a5117eca`
+    - added pending legacy output renaming so Spark-written files are moved to `part-00000.parquet.snappy` naming before metadata files are regenerated
+    - checked the SI OTF dataloader path and confirmed both Spark `*.snappy.parquet` and legacy `*.parquet.snappy` names are accepted
 
 - 2026-04-29: [Directional UNPUDO / Unpark Datamodule](agent_tasks/2026/04/Week-5/2026-04-29-directional-unpudo-unpark-datamodule.md)
   - Labels: parking, training, datamodule, unpudo, unparking

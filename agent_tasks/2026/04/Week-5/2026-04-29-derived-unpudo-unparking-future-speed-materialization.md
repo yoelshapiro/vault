@@ -9,7 +9,7 @@ Commits:
 - `bb6b7b3fd31` - restrict source reads and output metadata to explicit train bucket paths
 - `755ba3af5ab` - load train bucket parquet files using Databricks file listing
 - `9c9a5117eca` - read optional CA/pre-CA buckets from the April 13 all-disengagements materialization
-- pending - add additive DC gear-change buckets based on current-vs-future gear
+- pending - add additive DC gear-change buckets based on adjacent cleaned corpus gear transitions and legacy parquet file naming
 
 ## Goal
 
@@ -38,9 +38,9 @@ The notebook:
 - joins corpus to the first available row in `[timestamp_unixus + 0.60s, timestamp_unixus + 0.65s]`
 - keeps samples where `abs(inferred__state__odometry__speed_kmh) >= 0.54`, equivalent to `0.15 m/s`
 - keeps the full filtered DC buckets and adds additive `_forward` / `_reverse` variants using the gear direction on the matched future corpus row
-- optionally adds additive DC `_gear_change`, `_gear_change_forward`, and `_gear_change_reverse` variants using current gear at the sample timestamp versus the matched future gear; enabled by `ADD_DC_GEAR_CHANGE_BUCKETS = True`
+- optionally adds additive DC `_gear_change`, `_gear_change_forward`, and `_gear_change_reverse` variants using cleaned current gear at the sample timestamp versus the next cleaned corpus gear sample; enabled by `ADD_DC_GEAR_CHANGE_BUCKETS = True`
 - prints source vs filtered row counts per train bucket
-- writes a new Spark parquet materialization when `DRY_RUN = False`
+- writes a new Spark parquet materialization when `DRY_RUN = False`, then renames Spark output files into the legacy `part-00000.parquet.snappy` convention
 - writes `_parquet_files_list.txt`, `README.md`, and `source_materialization.txt`
 - includes a separate skipped-by-default final stage for train CA/pre-CA UNPUDO / unparking buckets from the April 13 all-disengagements materialization that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
 
@@ -56,10 +56,11 @@ When writing is enabled, output goes under:
 
 It uses the regular train bucket layout:
 
-- `dataset_split=train/dataset_bucket=<bucket>/part-*.parquet`
+- `dataset_split=train/dataset_bucket=<bucket>/part-00000.parquet.snappy`
 - bucket-level, split-level, and root `_parquet_files_list.txt` metadata files
 
 ## Validation
 
 - Notebook JSON validates.
 - All `5` code cells parse with `ast.parse`.
+- Checked the SI OTF `BucketStreamer` path: the loader accepts both Spark `*.snappy.parquet` names and legacy `*.parquet.snappy` names because it filters on `.parquet` or `.parquet.snappy`.
