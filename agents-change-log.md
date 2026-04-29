@@ -1594,6 +1594,7 @@
     - added a standalone notebook that derives DC UNPUDO / unparking buckets from the existing March 23 materialization
     - filters samples by the first available future odometry speed in `[timestamp_unixus + 0.60s, timestamp_unixus + 0.65s]` using the `0.15 m/s` controller threshold
     - keeps full filtered DC buckets and adds additive `_forward` / `_reverse` variants using the matched future gear direction
+    - added default-enabled additive DC `_gear_change`, `_gear_change_forward`, and `_gear_change_reverse` buckets from current-vs-future gear direction
     - added a skipped-by-default CA/pre-CA stage that appends full plus `_forward` / `_reverse` UNPUDO / unparking variants after the DC output is checkpointed
     - replaced the source-root parquet read with explicit `dataset_split=train/dataset_bucket=<bucket>` reads for DC and optional CA/pre-CA stages
     - aligned train bucket loading with `Materialisation Buckets - upload to databricks` by listing parquet files with `dbutils.fs.ls` before loading
