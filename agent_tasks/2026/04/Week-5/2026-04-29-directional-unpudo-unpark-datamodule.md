@@ -17,16 +17,16 @@ Updated `wayve/ai/si/configs/parking/parking_config.py`:
 
 - added `PUDO_UNPARKING_FUTURE_SPEED_ROOT`
 - copied the `parking_bc_new_driving_datamodule_cfg` structure into a new config
-- split the train mix into explicit nested groups: `driving=0.50`, `parking=0.25`, `unparking=0.25`
+- split the train mix into explicit nested groups matching the base config: `driving=0.50`, `parking/pudo=0.25`, `unpudo=0.20`, `unparking=0.05`
 - replaced only the DC `dc_unpudo_*` and `dc_unparking_*` training buckets inside the `unparking` group with derived `_forward` / `_reverse` buckets
 - kept PUDO, CA UNPUDO/unparking, pre-CA UNPUDO/unparking, validation, and driving source partitions unchanged
 - registered the new store entry as `parking_bc_new_driving_directional_unpudo_unpark_datamodule`
 
 ## Weighting
 
-The derived forward/reverse row counts are `638,245` forward and `364,954` reverse, so the raw source is `63.62%` forward and `36.38%` reverse. The config now assigns equal total sampler mass to the two directions: `forward=0.0663416430`, `reverse=0.0663416430`. Within each direction, bucket weights follow the row-count distribution, so reverse rows are sampled about `1.75x` more often per row than forward rows to produce a 50/50 directional stream.
+The derived UNPUDO row counts are `240,240` forward and `74,607` reverse. The config assigns equal derived DC UNPUDO sampler mass to forward and reverse, so reverse UNPUDO rows are sampled about `3.22x` more often per row. The derived unparking row counts are `398,005` forward and `290,347` reverse; reverse unparking rows are sampled about `1.37x` more often per row. Within each direction, bucket weights follow the row-count distribution.
 
 ## Validation
 
 - `python3 -m py_compile wayve/ai/si/configs/parking/parking_config.py`
-- Static weight check: directional DC rows are `638,245` forward / `364,954` reverse; sampler mass is `0.0663416430` forward / `0.0663416430` reverse; top-level nested budgets are `0.50 / 0.25 / 0.25`
+- Static weight check: top-level nested budgets are `0.50 / 0.25 / 0.20 / 0.05`; derived DC UNPUDO forward/reverse mass is equal, and derived DC unparking forward/reverse mass is equal
