@@ -9,7 +9,7 @@ Add a datamodule config that uses the derived future-speed-filtered DC UNPUDO / 
 
 Source root:
 
-`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_05_44_34_root_parking_unpudo_unparking_future_speed_0p15_from_2026_03_23`
+`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_06_36_32_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13`
 
 ## Change
 
@@ -21,6 +21,8 @@ Updated `wayve/ai/si/configs/parking/parking_config.py`:
 - replaced only the DC `dc_unpudo_*` and `dc_unparking_*` training buckets inside the `unparking` group with derived `_forward` / `_reverse` buckets
 - kept PUDO, CA UNPUDO/unparking, pre-CA UNPUDO/unparking, validation, and driving source partitions unchanged
 - registered the new store entry as `parking_bc_new_driving_directional_unpudo_unpark_datamodule`
+- updated the derived root to the fsspec-written materialization path and pushed commit `3566bbbe95d`
+- intentionally does not use the low-count `_gear_change` derived buckets from the new materialization
 
 ## Weighting
 

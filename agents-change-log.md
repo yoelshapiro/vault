@@ -1627,3 +1627,4 @@
     - assigned equal total sampler mass to forward and reverse inside each derived DC subset, implying about `3.22x` UNPUDO reverse and `1.37x` unparking reverse per-row upsampling
     - pushed commit `d88cf875ee4` to `boris/training/kangaroo_with_50_and_route_shorten`
     - submitted training job `155826` with session `session_2026_04_29_06_38_50_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_50_25_20_5`; initial state `Queued`
+    - updated `PUDO_UNPARKING_FUTURE_SPEED_ROOT` to the fsspec-written `2026_04_29_06_36_32...` materialization, kept gear-change buckets unused, and pushed commit `3566bbbe95d`
