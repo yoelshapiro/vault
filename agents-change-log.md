@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-29 — Unflappable Azure Sea Cucumber interleave-control deploy
+- Topic: deploy checkpoint 8 of `unflappable-azure-sea-cucumber` as a Parking/PUDO interleave-control model.
+- Labels: #parking #deploy #interleave-control #model-catalogue #console
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: operations
+- Areas: Model Catalogue, Console, `agent_tasks/2026/04/Week-5/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-5/2026-04-29-unflappable-azure-sea-cucumber-interleave-deploy]]: ran the checkpoint-8 deploy with `--step 80000` and suffix `__unflappable-azure-sea-cucumber_interleave_control_checkpoint8_v1`, uploaded output session `session_2026_04_29_08_18_36_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_replicated_50_25_20_5__unflappable-azure-sea-cucumber_interleave_control_checkpoint8_v1`, resolved assigned nickname `mollusk-teal-terrestrial`, and noted non-blocking ONNX/data-provenance warnings. No Model CI, notes, evals, experiments, Notion updates, commits, or PR actions were triggered.
+
 > #### 2026-04-29 — Stork Aquamarine PUDO UK licensing experiment
 - Topic: create a UK PUDO licensing on-road experiment for the deployed interleave-control model `stork-aquamarine-astonishing`.
 - Labels: #parking #pudo #licensing #uk #console #on-road-experiment
