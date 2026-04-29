@@ -67,3 +67,21 @@ The datamodule still uses only the derived `_forward` and `_reverse` buckets. It
 - Status at submission check: `Dispatched`
 - WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_29_07_31_55_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_fsspec_50_25_20_5`
 - Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Acourageous-harlequin-gecko-155829&from_ts=1776238380424&cols=job_name%2Cnode_rank&live=true`
+
+Job `155829` failed with the same materialization availability class:
+
+- concrete exception: `ValueError: No parquet files found in abfss://datasets@wayveproddatasetflatswe.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_06_36_32_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13/dataset_split=train/dataset_bucket=dc_unpudo_uk_forward`
+- confirmed with Azure CLI that the new materialization exists under `wayveproddatasetflat`
+- confirmed the same prefix is empty under `wayveproddatasetflatswe`
+- compared against the existing `2026_04_19_16_40_53...high_acc` materialization and confirmed that one exists in both primary and SWE accounts
+
+Comparison with the original PUDO materialization notebook:
+
+- both notebooks use direct fsspec parquet writes with `AsyncAzureCredentials`
+- both write `dataset_split=<split>/dataset_bucket=<bucket>/part-00000.parquet.snappy`
+- both write bucket-level, split-level, and root `_parquet_files_list.txt`
+- original additionally writes `git.hash` / `git.diff`
+- original `write_meta` opens metadata files without explicitly passing credentials; the new notebook uses credentialed fsspec for metadata too
+- original root has no directory marker blobs in Azure listing; the new root currently has marker blobs for the root/split/bucket directories
+
+Current conclusion: the failure is not a sampler/config issue and not that `_gear_change` buckets were used. The new output has not been copied/replicated to the SWE account used by AKS training.
