@@ -12,6 +12,7 @@ Commits:
 - `fdb8126b1d1` - add additive DC gear-change buckets based on adjacent cleaned corpus gear transitions and legacy parquet file naming
 - `d11068bfb1f` - fix gear-change union schema by dropping `future_gear_direction` from the gear-change branch
 - `5741b14da2c` - replace Spark writer with the direct `fsspec` Azure writer used by the original notebook
+- `1c713e52451` - replace the custom fsspec writer with the original PUDO materialization notebook writer implementation
 
 ## Goal
 
@@ -87,3 +88,17 @@ This is the known issue that caused the original materialization notebook to avo
 - uses the same fsspec writer for the optional CA/pre-CA stage and merges the existing root metadata list with newly written CA/pre-CA files
 
 Next required step before retraining: rerun the notebook with `DRY_RUN = False`, then update the datamodule root to the new output path.
+
+## 2026-04-29 Exact Writer Match
+
+After job `155829` failed, the new materialization was confirmed to exist in `wayveproddatasetflat` but not in `wayveproddatasetflatswe`. The existing `2026_04_19_16_40_53...high_acc` PUDO materialization exists in both accounts.
+
+The derived notebook was changed again to copy the original writer implementation more exactly:
+
+- original `_open(path, mode, credential=None, anon=False)`
+- original `write_meta`, including bare `_open(...)` for metadata files and best-effort `git.hash` / `git.diff`
+- original `write_materialization_readme`
+- original `write_partition_with_fsspec`, including logging and parquet byte creation inside the opened file handle
+- original `materialize_with_fsspec`, including local `ROWS_PER_FILE = 100_000` and row-number/file-id logic
+
+Only the wrapper around this writer remains notebook-specific because this notebook already has `filtered_df` / `filtered_summary_df` instead of the original `joined_tables` materialization flow.
