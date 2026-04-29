@@ -1,7 +1,7 @@
 # Directional UNPUDO / Unpark Datamodule
 
 Branch: `boris/training/kangaroo_with_50_and_route_shorten`
-Status: uncommitted local change
+Status: pushed and training submitted
 
 ## Goal
 
@@ -9,7 +9,7 @@ Add a datamodule config that uses the derived future-speed-filtered DC UNPUDO / 
 
 Source root:
 
-`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_06_36_32_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13`
+`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_07_52_36_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13`
 
 ## Change
 
@@ -32,6 +32,7 @@ The derived UNPUDO row counts are `240,240` forward and `74,607` reverse. The co
 
 - `python3 -m py_compile wayve/ai/si/configs/parking/parking_config.py`
 - Static weight check: top-level nested budgets are `0.50 / 0.25 / 0.20 / 0.05`; derived DC UNPUDO forward/reverse mass is equal, and derived DC unparking forward/reverse mass is equal
+- Azure CLI existence check confirmed the `2026_04_29_07_52_36...` materialization root and sampled bucket metadata/parquet files exist in both `wayveproddatasetflat` and `wayveproddatasetflatswe`
 
 ## Training Run
 
@@ -105,3 +106,34 @@ Verified bucket metadata/parquet files in SWE for:
 - `dc_unparking_usa_forward`
 
 Updated `PUDO_UNPARKING_FUTURE_SPEED_ROOT` to this replicated root and pushed commit `66a3f487862`.
+
+## Replicated Materialization Training
+
+Submitted after pushing commit `66a3f487862`, which points `PUDO_UNPARKING_FUTURE_SPEED_ROOT` at the replicated fsspec materialization:
+
+`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_07_52_36_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13`
+
+Command:
+
+```bash
+bazel run //wayve/ai/si/cli:cli -- \
+  --project Parking \
+  -ex parking_bc \
+  -st dir_unpudo_unpark_replicated_50_25_20_5 \
+  --platform AKS \
+  -nn 4 \
+  --cluster dgx-h100 \
+  --no-verify \
+  +mode=parking_bc_train_release_2026_5_11 \
+  +datamodule=parking_bc_new_driving_directional_unpudo_unpark_datamodule \
+  num_steps=100000 \
+  --priority P1
+```
+
+- Job id: `155836`
+- Nickname: `unflappable-azure-sea-cucumber`
+- Session: `session_2026_04_29_08_18_36_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_replicated_50_25_20_5`
+- Session path: `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_04_29_08_18_36_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_replicated_50_25_20_5`
+- Status at submission check: `Dispatched`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_29_08_18_36_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_replicated_50_25_20_5`
+- Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Aunflappable-azure-sea-cucumber-155836&from_ts=1776241300305&cols=job_name%2Cnode_rank&live=true`

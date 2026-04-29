@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-29 — Directional UNPUDO / unparking datamodule training
+- Topic: add and train a Parking BC datamodule that uses future-speed-filtered directional UNPUDO / unparking buckets with explicit forward/reverse balancing.
+- Labels: #parking #training #datamodule #unpudo #unparking #materialization #aks
+- Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+- PR: none
+- Change type: code/data-config/operations
+- Areas: `wayve/ai/si/configs/parking/`, `agent_tasks/2026/04/Week-5/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-5/2026-04-29-directional-unpudo-unpark-datamodule]]: added `parking_bc_new_driving_directional_unpudo_unpark_datamodule`, configured the train mix as `driving=50%`, `parking/pudo=25%`, `unpudo=20%`, `unparking=5%`, balanced derived DC forward/reverse buckets within UNPUDO and unparking, switched the root to the replicated `2026_04_29_07_52_36...` materialization after verifying it exists in both primary and SWE storage accounts, pushed commit `66a3f487862`, and submitted AKS training job `155836` (`unflappable-azure-sea-cucumber`).
+
 > #### 2026-04-28 — PUDO materialization future-speed filter
 - Topic: switch the PUDO / UNPUDO materialization notebook's UNPUDO / unparking sample filter from current acceleration to future speed at 0.6 seconds, and add gear-direction-specific bucket variants.
 - Labels: #parking #pudo #unpudo #materialization #controller #data #gear
