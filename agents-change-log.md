@@ -18,7 +18,7 @@
 - Change type: operations
 - Areas: Model Catalogue, Console, `agent_tasks/2026/04/Week-5/`
 - Changes:
-  - [[agent_tasks/2026/04/Week-5/2026-04-29-unflappable-azure-sea-cucumber-interleave-deploy]]: ran the checkpoint-8 deploy with `--step 80000` and suffix `__unflappable-azure-sea-cucumber_interleave_control_checkpoint8_v1`, uploaded output session `session_2026_04_29_08_18_36_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_replicated_50_25_20_5__unflappable-azure-sea-cucumber_interleave_control_checkpoint8_v1`, resolved assigned nickname `mollusk-teal-terrestrial`, and noted non-blocking ONNX/data-provenance warnings. No Model CI, notes, evals, experiments, Notion updates, commits, or PR actions were triggered.
+  - [[agent_tasks/2026/04/Week-5/2026-04-29-unflappable-azure-sea-cucumber-interleave-deploy]]: ran the checkpoint-8 deploy with `--step 80000` and suffix `__unflappable-azure-sea-cucumber_interleave_control_checkpoint8_v1`, uploaded output session `session_2026_04_29_08_18_36_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_replicated_50_25_20_5__unflappable-azure-sea-cucumber_interleave_control_checkpoint8_v1`, resolved assigned nickname `mollusk-teal-terrestrial`, added the standard Parking/PUDO note, triggered Model CI build `69400`, started Eval Studio executions `2f65b4c9-6cda-4fd5-97ad-927944a3413a` and `ba876483-f43b-4ad9-a609-d090d6446a6c`, and created pending UK licensing experiment `583c3265-aec3-465b-b1b6-1704db46daf9`.
 
 > #### 2026-04-29 — Stork Aquamarine PUDO UK licensing experiment
 - Topic: create a UK PUDO licensing on-road experiment for the deployed interleave-control model `stork-aquamarine-astonishing`.
