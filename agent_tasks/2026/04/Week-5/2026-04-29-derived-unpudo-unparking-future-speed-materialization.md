@@ -7,6 +7,7 @@ Commits:
 - `3b3ff14e783` - initial derived DC future-speed notebook
 - `8a065c9dabf` - additive forward/reverse gear bucket variants and optional CA/pre-CA stage
 - `bb6b7b3fd31` - restrict source reads and output metadata to explicit train bucket paths
+- `755ba3af5ab` - load train bucket parquet files using Databricks file listing
 
 ## Goal
 
@@ -26,6 +27,7 @@ The notebook:
 
 - reads only explicit `dataset_split=train/dataset_bucket=<bucket>` paths from the existing March 23 materialization
 - avoids `spark.read.parquet(SOURCE_MATERIALIZATION_PATH)` so Spark does not discover validation and unrelated buckets
+- lists files inside each bucket with `dbutils.fs.ls`, keeps `.parquet.snappy`, `.snappy.parquet`, and `.parquet` files, and loads those file paths directly
 - keeps only train DC UNPUDO / unparking buckets:
   - `dc_unpudo_usa`
   - `dc_unpudo_uk`

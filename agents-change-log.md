@@ -1596,6 +1596,7 @@
     - keeps full filtered DC buckets and adds additive `_forward` / `_reverse` variants using the matched future gear direction
     - added a skipped-by-default CA/pre-CA stage that appends full plus `_forward` / `_reverse` UNPUDO / unparking variants after the DC output is checkpointed
     - replaced the source-root parquet read with explicit `dataset_split=train/dataset_bucket=<bucket>` reads for DC and optional CA/pre-CA stages
+    - aligned train bucket loading with `Materialisation Buckets - upload to databricks` by listing parquet files with `dbutils.fs.ls` before loading
     - changed generated README/source metadata to reflect train-only output
     - keeps the first run dry by default and writes Spark parquet plus `_parquet_files_list.txt` metadata when enabled
     - pushed commit `3b3ff14e783`
