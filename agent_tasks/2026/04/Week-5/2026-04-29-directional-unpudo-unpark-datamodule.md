@@ -51,3 +51,19 @@ Job `155826` then failed before training because the derived Spark-written mater
 `.../dataset_split=train/dataset_bucket=dc_unpudo_usa_forward`
 
 This is a data availability / materialization write issue, not a datamodule weighting issue. Do not resubmit until the materialization is regenerated with the fsspec writer and this config root is updated to the new output path.
+
+## Fsspec Materialization Retry
+
+Submitted after pushing commit `3566bbbe95d`, which points `PUDO_UNPARKING_FUTURE_SPEED_ROOT` at the fsspec-written materialization:
+
+`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_06_36_32_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13`
+
+The datamodule still uses only the derived `_forward` and `_reverse` buckets. It does not use `_gear_change` buckets because the materialized gear-change counts are too small after future-speed filtering.
+
+- Job id: `155829`
+- Nickname: `courageous-harlequin-gecko`
+- Session: `session_2026_04_29_07_31_55_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_fsspec_50_25_20_5`
+- Session path: `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_04_29_07_31_55_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_fsspec_50_25_20_5`
+- Status at submission check: `Dispatched`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_29_07_31_55_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_fsspec_50_25_20_5`
+- Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Acourageous-harlequin-gecko-155829&from_ts=1776238380424&cols=job_name%2Cnode_rank&live=true`
