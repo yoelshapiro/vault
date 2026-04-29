@@ -30,3 +30,16 @@ The derived UNPUDO row counts are `240,240` forward and `74,607` reverse. The co
 
 - `python3 -m py_compile wayve/ai/si/configs/parking/parking_config.py`
 - Static weight check: top-level nested budgets are `0.50 / 0.25 / 0.20 / 0.05`; derived DC UNPUDO forward/reverse mass is equal, and derived DC unparking forward/reverse mass is equal
+
+## Training Run
+
+Submitted after pushing commit `d88cf875ee4` on `boris/training/kangaroo_with_50_and_route_shorten`.
+
+- Job id: `155826`
+- Session: `session_2026_04_29_06_38_50_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_50_25_20_5`
+- Status at submission: `Queued`
+- WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_29_06_38_50_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_50_25_20_5`
+- Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Aelated-gray-toucan-155826&from_ts=1776235156392&cols=job_name%2Cnode_rank&live=true`
+- Model nickname: not available at submission time
+
+First submission attempt used a longer session tag and failed before job creation because the generated full session name was `145` chars, above the `128` char limit. The successful retry used `dir_unpudo_unpark_50_25_20_5`.
