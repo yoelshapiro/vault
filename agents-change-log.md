@@ -1611,6 +1611,7 @@
     - pushed commit `fdb8126b1d1` with DC gear-change bucket variants and legacy parquet filename canonicalization
     - pushed commit `d11068bfb1f` to fix the gear-change union schema mismatch by dropping `future_gear_direction` from that branch
     - after training job `155826` failed to find the Spark-written derived buckets through the regional `wayveproddatasetflatswe` account, replaced the notebook output path with the original direct `fsspec` Azure writer pattern and pushed commit `5741b14da2c`
+    - after job `155829` confirmed the new output still existed only in `wayveproddatasetflat`, replaced the custom fsspec writer with the original PUDO materialization notebook writer implementation and pushed commit `1c713e52451`
 
 - 2026-04-29: [Directional UNPUDO / Unpark Datamodule](agent_tasks/2026/04/Week-5/2026-04-29-directional-unpudo-unpark-datamodule.md)
   - Labels: parking, training, datamodule, unpudo, unparking
