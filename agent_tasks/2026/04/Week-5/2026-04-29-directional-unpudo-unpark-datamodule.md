@@ -85,3 +85,23 @@ Comparison with the original PUDO materialization notebook:
 - original root has no directory marker blobs in Azure listing; the new root currently has marker blobs for the root/split/bucket directories
 
 Current conclusion: the failure is not a sampler/config issue and not that `_gear_change` buckets were used. The new output has not been copied/replicated to the SWE account used by AKS training.
+
+## Replicated Materialization Retry
+
+The materialization rerun with the exact original writer produced:
+
+`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_07_52_36_root_parking_unpudo_unparking_future_speed_0p15_gear_change_dc_2026_03_23_ca_2026_04_13`
+
+Azure CLI checks confirmed this root exists in both:
+
+- `wayveproddatasetflat`
+- `wayveproddatasetflatswe`
+
+Verified bucket metadata/parquet files in SWE for:
+
+- `dc_unpudo_uk_forward`
+- `dc_unpudo_usa_reverse`
+- `dc_unparking_uk_reverse`
+- `dc_unparking_usa_forward`
+
+Updated `PUDO_UNPARKING_FUTURE_SPEED_ROOT` to this replicated root and pushed commit `66a3f487862`.

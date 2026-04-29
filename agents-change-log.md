@@ -1629,3 +1629,4 @@
     - pushed commit `d88cf875ee4` to `boris/training/kangaroo_with_50_and_route_shorten`
     - submitted training job `155826` with session `session_2026_04_29_06_38_50_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_50_25_20_5`; initial state `Queued`
     - updated `PUDO_UNPARKING_FUTURE_SPEED_ROOT` to the fsspec-written `2026_04_29_06_36_32...` materialization, kept gear-change buckets unused, and pushed commit `3566bbbe95d`
+    - after rerunning materialization with the exact original writer, verified the `2026_04_29_07_52_36...` root exists in both primary and SWE storage accounts, updated the datamodule root, and pushed commit `66a3f487862`
