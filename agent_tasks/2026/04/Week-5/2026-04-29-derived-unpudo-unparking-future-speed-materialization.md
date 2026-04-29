@@ -6,7 +6,7 @@ Base: `origin/parking/notebooks` at `22f0e900a7a`
 Commits:
 - `3b3ff14e783` - initial derived DC future-speed notebook
 - `8a065c9dabf` - additive forward/reverse gear bucket variants and optional CA/pre-CA stage
-- pending - restrict source reads and output metadata to explicit train bucket paths
+- `bb6b7b3fd31` - restrict source reads and output metadata to explicit train bucket paths
 
 ## Goal
 

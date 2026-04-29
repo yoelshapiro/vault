@@ -1600,3 +1600,4 @@
     - keeps the first run dry by default and writes Spark parquet plus `_parquet_files_list.txt` metadata when enabled
     - pushed commit `3b3ff14e783`
     - pushed commit `8a065c9dabf`
+    - pushed commit `bb6b7b3fd31`
