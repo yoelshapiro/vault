@@ -1619,3 +1619,5 @@
     - added an uncommitted datamodule config using derived DC UNPUDO / unparking `_forward` and `_reverse` buckets from the 2026-04-29 future-speed materialization
     - split each replaced DC event/country weight 50/50 across forward and reverse to preserve total mass while upsampling reverse relative to row counts
     - registered `parking_bc_new_driving_directional_unpudo_unpark_datamodule`
+    - updated the config to use nested train groups with budgets `driving=0.50`, `parking=0.25`, and `unparking=0.25`
+    - verified the derived DC UNPUDO/unparking directional subset is split equally by sampler weight: `forward=50%`, `reverse=50%`
