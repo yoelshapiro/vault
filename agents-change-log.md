@@ -1583,3 +1583,14 @@
     - Added standalone `Spark native ABFSS parquet write test.ipynb` to validate native Spark partitioned parquet writes to the parking dev ABFSS path; pushed commit `c13ebb8ec06`
     - Disabled gear-specific and gear-boundary bucket experiments by default, removed the active `parking prev_gear_direction == -1` spec, and added `MATERIALIZATION_WRITE_MODE` to choose native Spark or fsspec writes; pushed commit `fa3101165e9`
     - Removed expensive startup actions from the materialization notebook by guarding full-table display, startup counts, and event-type collection; pushed commit `b31d5b80d15`
+
+- 2026-04-29: [Derived UNPUDO / Unparking Future-Speed Materialization](agent_tasks/2026/04/Week-5/2026-04-29-derived-unpudo-unparking-future-speed-materialization.md)
+  - Labels: parking, materialization, unpudo, unparking, notebook
+  - Branch: `boris/pudo-materialization-fresh`
+  - PR: none
+  - Change type: notebook
+  - Areas: `wayve/ai/parking/notebooks`
+  - Changes:
+    - added a standalone notebook that derives DC UNPUDO / unparking buckets from the existing March 23 materialization
+    - filters samples by future odometry speed at `timestamp_unixus + 0.6s` using the `0.15 m/s` controller threshold
+    - keeps the first run dry by default and writes Spark parquet plus `_parquet_files_list.txt` metadata when enabled
