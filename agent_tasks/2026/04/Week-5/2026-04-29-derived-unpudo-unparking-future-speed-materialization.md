@@ -41,7 +41,7 @@ The notebook:
 - keeps the full filtered DC buckets and adds additive `_forward` / `_reverse` variants using the gear direction on the matched future corpus row
 - optionally adds additive DC `_gear_change`, `_gear_change_forward`, and `_gear_change_reverse` variants using cleaned current gear at the sample timestamp versus the next cleaned corpus gear sample; enabled by `ADD_DC_GEAR_CHANGE_BUCKETS = True`
 - prints source vs filtered row counts per train bucket
-- writes a new Spark parquet materialization when `DRY_RUN = False`, then renames Spark output files into the legacy `part-00000.parquet.snappy` convention
+- writes a new materialization with direct `fsspec` Azure writes when `DRY_RUN = False`, matching the original PUDO materialization notebook writer
 - writes `_parquet_files_list.txt`, `README.md`, and `source_materialization.txt`
 - includes a separate skipped-by-default final stage for train CA/pre-CA UNPUDO / unparking buckets from the April 13 all-disengagements materialization that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
 
@@ -65,3 +65,23 @@ It uses the regular train bucket layout:
 - Notebook JSON validates.
 - All `5` code cells parse with `ast.parse`.
 - Checked the SI OTF `BucketStreamer` path: the loader accepts both Spark `*.snappy.parquet` names and legacy `*.parquet.snappy` names because it filters on `.parquet` or `.parquet.snappy`.
+
+## 2026-04-29 Writer Correction
+
+Training job `155826` (`elated-gray-toucan`) failed because the derived materialization written by native Spark parquet was not visible through the regional training storage account rewrite:
+
+`wayveproddatasetflat` -> `wayveproddatasetflatswe`
+
+Representative failure:
+
+`ValueError: No parquet files found in abfss://datasets@wayveproddatasetflatswe.dfs.core.windows.net/materialised/si/parking/dev/2026_04_29_05_44_34_root_parking_unpudo_unparking_future_speed_0p15_from_2026_03_23/dataset_split=train/dataset_bucket=dc_unpudo_usa_forward`
+
+This is the known issue that caused the original materialization notebook to avoid Spark-native parquet output. The new derived notebook now uses the same direct `fsspec` writer pattern:
+
+- assigns `_file_id` per `dataset_split` / `dataset_bucket`
+- repartitions by `dataset_split`, `dataset_bucket`, and `_file_id`
+- writes `part-00000.parquet.snappy` files directly through `fsspec.open(..., credential=AsyncAzureCredentials(), anon=False)`
+- writes bucket-level, split-level, and root `_parquet_files_list.txt` from the worker-reported paths
+- writes `README.md` and `source_materialization.txt` through the same credentialed fsspec path
+
+Next required step before retraining: rerun the notebook with `DRY_RUN = False`, then update the datamodule root to the new output path.
