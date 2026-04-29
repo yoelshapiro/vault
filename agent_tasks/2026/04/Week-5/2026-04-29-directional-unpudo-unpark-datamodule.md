@@ -40,6 +40,12 @@ Submitted after pushing commit `d88cf875ee4` on `boris/training/kangaroo_with_50
 - Status at submission: `Queued`
 - WandB: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_29_06_38_50_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_50_25_20_5`
 - Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Aelated-gray-toucan-155826&from_ts=1776235156392&cols=job_name%2Cnode_rank&live=true`
-- Model nickname: not available at submission time
+- Model nickname: `elated-gray-toucan`
 
 First submission attempt used a longer session tag and failed before job creation because the generated full session name was `145` chars, above the `128` char limit. The successful retry used `dir_unpudo_unpark_50_25_20_5`.
+
+Job `155826` then failed before training because the derived Spark-written materialization was not visible through the regional training storage account. The OTF loader rewrote `wayveproddatasetflat` to `wayveproddatasetflatswe` and then failed to find files such as:
+
+`.../dataset_split=train/dataset_bucket=dc_unpudo_usa_forward`
+
+This is a data availability / materialization write issue, not a datamodule weighting issue. Do not resubmit until the materialization is regenerated with the fsspec writer and this config root is updated to the new output path.

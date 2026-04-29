@@ -83,5 +83,6 @@ This is the known issue that caused the original materialization notebook to avo
 - writes `part-00000.parquet.snappy` files directly through `fsspec.open(..., credential=AsyncAzureCredentials(), anon=False)`
 - writes bucket-level, split-level, and root `_parquet_files_list.txt` from the worker-reported paths
 - writes `README.md` and `source_materialization.txt` through the same credentialed fsspec path
+- uses the same fsspec writer for the optional CA/pre-CA stage and merges the existing root metadata list with newly written CA/pre-CA files
 
 Next required step before retraining: rerun the notebook with `DRY_RUN = False`, then update the datamodule root to the new output path.
