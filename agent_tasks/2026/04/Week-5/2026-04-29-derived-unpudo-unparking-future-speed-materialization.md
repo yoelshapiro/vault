@@ -3,7 +3,9 @@
 Branch: `boris/pudo-materialization-fresh`
 Worktree: `/tmp/wayvecode-pudo-materialization-fresh`
 Base: `origin/parking/notebooks` at `22f0e900a7a`
-Commit: `3b3ff14e783`
+Commits:
+- `3b3ff14e783` - initial derived DC future-speed notebook
+- `8a065c9dabf` - additive forward/reverse gear bucket variants and optional CA/pre-CA stage
 
 ## Goal
 
@@ -29,11 +31,15 @@ The notebook:
   - `dc_unparking_uk`
 - joins corpus to the first available row in `[timestamp_unixus + 0.60s, timestamp_unixus + 0.65s]`
 - keeps samples where `abs(inferred__state__odometry__speed_kmh) >= 0.54`, equivalent to `0.15 m/s`
+- keeps the full filtered DC buckets and adds additive `_forward` / `_reverse` variants using the gear direction on the matched future corpus row
 - prints source vs filtered row counts per split/bucket
 - writes a new Spark parquet materialization when `DRY_RUN = False`
 - writes `_parquet_files_list.txt`, `README.md`, and `source_materialization.txt`
+- includes a separate skipped-by-default final stage for CA/pre-CA UNPUDO / unparking buckets that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
 
 Default is `DRY_RUN = True` so the first run only computes counts and prints the intended output path.
+
+`RUN_CA_PRE_CA_GEAR_SPLIT = False` by default. When enabled after DC output is written, it appends CA/pre-CA buckets to the same `output_path`; rerunning that append on the same output path will duplicate those rows unless the output is removed or rewritten first.
 
 ## Azure Layout
 
@@ -50,4 +56,4 @@ It uses the regular bucket layout:
 ## Validation
 
 - Notebook JSON validates.
-- All `4` code cells parse with `ast.parse`.
+- All `5` code cells parse with `ast.parse`.
