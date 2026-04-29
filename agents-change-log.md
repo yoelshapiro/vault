@@ -1606,3 +1606,14 @@
     - pushed commit `bb6b7b3fd31`
     - pushed commit `755ba3af5ab`
     - pushed commit `9c9a5117eca`
+
+- 2026-04-29: [Directional UNPUDO / Unpark Datamodule](agent_tasks/2026/04/Week-5/2026-04-29-directional-unpudo-unpark-datamodule.md)
+  - Labels: parking, training, datamodule, unpudo, unparking
+  - Branch: `boris/training/kangaroo_with_50_and_route_shorten`
+  - PR: none
+  - Change type: config
+  - Areas: `wayve/ai/si/configs/parking`
+  - Changes:
+    - added an uncommitted datamodule config using derived DC UNPUDO / unparking `_forward` and `_reverse` buckets from the 2026-04-29 future-speed materialization
+    - split each replaced DC event/country weight 50/50 across forward and reverse to preserve total mass while upsampling reverse relative to row counts
+    - registered `parking_bc_new_driving_directional_unpudo_unpark_datamodule`
