@@ -8,6 +8,7 @@ Commits:
 - `8a065c9dabf` - additive forward/reverse gear bucket variants and optional CA/pre-CA stage
 - `bb6b7b3fd31` - restrict source reads and output metadata to explicit train bucket paths
 - `755ba3af5ab` - load train bucket parquet files using Databricks file listing
+- pending - read optional CA/pre-CA buckets from the April 13 all-disengagements materialization
 
 ## Goal
 
@@ -39,7 +40,7 @@ The notebook:
 - prints source vs filtered row counts per train bucket
 - writes a new Spark parquet materialization when `DRY_RUN = False`
 - writes `_parquet_files_list.txt`, `README.md`, and `source_materialization.txt`
-- includes a separate skipped-by-default final stage for train CA/pre-CA UNPUDO / unparking buckets that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
+- includes a separate skipped-by-default final stage for train CA/pre-CA UNPUDO / unparking buckets from the April 13 all-disengagements materialization that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
 
 Default is `DRY_RUN = True` so the first run only computes counts and prints the intended output path.
 
@@ -49,7 +50,7 @@ Default is `DRY_RUN = True` so the first run only computes counts and prints the
 
 When writing is enabled, output goes under:
 
-`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/<timestamp>_<user>_parking_unpudo_unparking_future_speed_0p15_from_2026_03_23`
+`abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/<timestamp>_<user>_parking_unpudo_unparking_future_speed_0p15_dc_2026_03_23_ca_2026_04_13`
 
 It uses the regular train bucket layout:
 
