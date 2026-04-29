@@ -10,6 +10,7 @@ Commits:
 - `755ba3af5ab` - load train bucket parquet files using Databricks file listing
 - `9c9a5117eca` - read optional CA/pre-CA buckets from the April 13 all-disengagements materialization
 - `fdb8126b1d1` - add additive DC gear-change buckets based on adjacent cleaned corpus gear transitions and legacy parquet file naming
+- `d11068bfb1f` - fix gear-change union schema by dropping `future_gear_direction` from the gear-change branch
 
 ## Goal
 

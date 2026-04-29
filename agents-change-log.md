@@ -1609,6 +1609,7 @@
     - added pending legacy output renaming so Spark-written files are moved to `part-00000.parquet.snappy` naming before metadata files are regenerated
     - checked the SI OTF dataloader path and confirmed both Spark `*.snappy.parquet` and legacy `*.parquet.snappy` names are accepted
     - pushed commit `fdb8126b1d1` with DC gear-change bucket variants and legacy parquet filename canonicalization
+    - pushed commit `d11068bfb1f` to fix the gear-change union schema mismatch by dropping `future_gear_direction` from that branch
 
 - 2026-04-29: [Directional UNPUDO / Unpark Datamodule](agent_tasks/2026/04/Week-5/2026-04-29-directional-unpudo-unpark-datamodule.md)
   - Labels: parking, training, datamodule, unpudo, unparking
