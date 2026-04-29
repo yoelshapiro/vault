@@ -11,6 +11,7 @@ Commits:
 - `9c9a5117eca` - read optional CA/pre-CA buckets from the April 13 all-disengagements materialization
 - `fdb8126b1d1` - add additive DC gear-change buckets based on adjacent cleaned corpus gear transitions and legacy parquet file naming
 - `d11068bfb1f` - fix gear-change union schema by dropping `future_gear_direction` from the gear-change branch
+- `5741b14da2c` - replace Spark writer with the direct `fsspec` Azure writer used by the original notebook
 
 ## Goal
 
