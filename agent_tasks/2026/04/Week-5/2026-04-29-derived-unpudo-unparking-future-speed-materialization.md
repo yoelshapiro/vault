@@ -6,6 +6,7 @@ Base: `origin/parking/notebooks` at `22f0e900a7a`
 Commits:
 - `3b3ff14e783` - initial derived DC future-speed notebook
 - `8a065c9dabf` - additive forward/reverse gear bucket variants and optional CA/pre-CA stage
+- pending - restrict source reads and output metadata to explicit train bucket paths
 
 ## Goal
 
@@ -23,8 +24,9 @@ The source already has the existing UNPUDO / unparking materialized samples and 
 
 The notebook:
 
-- reads the existing March 23 materialization
-- keeps only DC UNPUDO / unparking buckets:
+- reads only explicit `dataset_split=train/dataset_bucket=<bucket>` paths from the existing March 23 materialization
+- avoids `spark.read.parquet(SOURCE_MATERIALIZATION_PATH)` so Spark does not discover validation and unrelated buckets
+- keeps only train DC UNPUDO / unparking buckets:
   - `dc_unpudo_usa`
   - `dc_unpudo_uk`
   - `dc_unparking_usa`
@@ -32,10 +34,10 @@ The notebook:
 - joins corpus to the first available row in `[timestamp_unixus + 0.60s, timestamp_unixus + 0.65s]`
 - keeps samples where `abs(inferred__state__odometry__speed_kmh) >= 0.54`, equivalent to `0.15 m/s`
 - keeps the full filtered DC buckets and adds additive `_forward` / `_reverse` variants using the gear direction on the matched future corpus row
-- prints source vs filtered row counts per split/bucket
+- prints source vs filtered row counts per train bucket
 - writes a new Spark parquet materialization when `DRY_RUN = False`
 - writes `_parquet_files_list.txt`, `README.md`, and `source_materialization.txt`
-- includes a separate skipped-by-default final stage for CA/pre-CA UNPUDO / unparking buckets that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
+- includes a separate skipped-by-default final stage for train CA/pre-CA UNPUDO / unparking buckets that keeps full buckets and appends `_forward` / `_reverse` variants using current gear at each sample timestamp
 
 Default is `DRY_RUN = True` so the first run only computes counts and prints the intended output path.
 
@@ -47,10 +49,9 @@ When writing is enabled, output goes under:
 
 `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/materialised/si/parking/dev/<timestamp>_<user>_parking_unpudo_unparking_future_speed_0p15_from_2026_03_23`
 
-It uses the regular bucket layout:
+It uses the regular train bucket layout:
 
 - `dataset_split=train/dataset_bucket=<bucket>/part-*.parquet`
-- `dataset_split=validation/dataset_bucket=<bucket>/part-*.parquet`
 - bucket-level, split-level, and root `_parquet_files_list.txt` metadata files
 
 ## Validation
