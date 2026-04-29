@@ -1620,4 +1620,5 @@
     - split each replaced DC event/country weight 50/50 across forward and reverse to preserve total mass while upsampling reverse relative to row counts
     - registered `parking_bc_new_driving_directional_unpudo_unpark_datamodule`
     - updated the config to use nested train groups with budgets `driving=0.50`, `parking=0.25`, and `unparking=0.25`
-    - verified the derived DC UNPUDO/unparking directional subset is split equally by sampler weight: `forward=50%`, `reverse=50%`
+    - recalculated directional bucket weights from materialized row counts: `638,245` forward vs `364,954` reverse
+    - assigned equal total sampler mass to forward and reverse, implying about `1.75x` reverse per-row upsampling

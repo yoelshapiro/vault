@@ -24,9 +24,9 @@ Updated `wayve/ai/si/configs/parking/parking_config.py`:
 
 ## Weighting
 
-Each original DC event/country effective weight is split 50/50 between forward and reverse variants. This preserves total DC UNPUDO / unpark mass while intentionally upsampling reverse relative to row-count share. The derived DC directional subset has equal raw sampler mass: `forward=0.0663416430`, `reverse=0.0663416430`, so forward and reverse are each 50% of that subset before nested group normalization.
+The derived forward/reverse row counts are `638,245` forward and `364,954` reverse, so the raw source is `63.62%` forward and `36.38%` reverse. The config now assigns equal total sampler mass to the two directions: `forward=0.0663416430`, `reverse=0.0663416430`. Within each direction, bucket weights follow the row-count distribution, so reverse rows are sampled about `1.75x` more often per row than forward rows to produce a 50/50 directional stream.
 
 ## Validation
 
 - `python3 -m py_compile wayve/ai/si/configs/parking/parking_config.py`
-- Static weight check: directional DC forward fraction `0.5`, reverse fraction `0.5`; top-level nested budgets are `0.50 / 0.25 / 0.25`
+- Static weight check: directional DC rows are `638,245` forward / `364,954` reverse; sampler mass is `0.0663416430` forward / `0.0663416430` reverse; top-level nested budgets are `0.50 / 0.25 / 0.25`
