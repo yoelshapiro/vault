@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-29 — Stork Aquamarine PUDO UK licensing experiment
+- Topic: create a UK PUDO licensing on-road experiment for the deployed interleave-control model `stork-aquamarine-astonishing`.
+- Labels: #parking #pudo #licensing #uk #console #on-road-experiment
+- Branch: `boris/foxmitten`
+- PR: none
+- Change type: operations
+- Areas: Model Catalogue, Console on-road experiments, `agent_tasks/2026/04/Week-5/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-5/2026-04-29-stork-aquamarine-pudo-uk-licensing]]: resolved `stork-aquamarine-astonishing` to checkpoint `1` and Gen2 artefact `1f1b0ccc-0050-409c-8f5d-beb222304ead`, confirmed the artefact supports `gen2-av-mache-alpha3`, found existing model change notes, and created pending UK PUDO licensing experiment `d2210a1b-eba9-4154-ab1d-afafe1222e39` from template `[UK] PUDO Licensing`.
+
 > #### 2026-04-29 — Directional UNPUDO / unparking datamodule training
 - Topic: add and train a Parking BC datamodule that uses future-speed-filtered directional UNPUDO / unparking buckets with explicit forward/reverse balancing.
 - Labels: #parking #training #datamodule #unpudo #unparking #materialization #aks
