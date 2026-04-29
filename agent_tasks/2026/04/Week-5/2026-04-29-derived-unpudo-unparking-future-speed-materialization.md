@@ -8,7 +8,7 @@ Commits:
 - `8a065c9dabf` - additive forward/reverse gear bucket variants and optional CA/pre-CA stage
 - `bb6b7b3fd31` - restrict source reads and output metadata to explicit train bucket paths
 - `755ba3af5ab` - load train bucket parquet files using Databricks file listing
-- pending - read optional CA/pre-CA buckets from the April 13 all-disengagements materialization
+- `9c9a5117eca` - read optional CA/pre-CA buckets from the April 13 all-disengagements materialization
 
 ## Goal
 
