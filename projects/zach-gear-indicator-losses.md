@@ -11,6 +11,7 @@
 - **Last updated:** 2026-04-30
 - **Current priorities:**
   - Understand the exact behavior in Zach's branch before changing SI / zoo code.
+  - Treat `mcv_new_phase2x_wta.yml` as the likely active config unless Zach confirms otherwise.
   - Decide whether to port only the loss weighting, or both the per-waypoint output heads and the loss weighting.
 - **Blockers:**
   - None for analysis.
@@ -40,7 +41,7 @@
   - Do not implement yet. This note is analysis only.
   - If implemented, keep it opt-in behind config flags.
 - **Open questions:**
-  - Which Zach config is the actual latest active model for the current PUDO work: `mcv_new_base0.yml` has per-waypoint enabled, while `mcv_new_phase2_si_baseline.yml` shows indicator per-waypoint disabled and gear disabled.
+  - Confirm with Zach whether `mcv_new_phase2x_wta.yml` is the launch config used for the current PUDO model.
   - Whether we want Zach's WTA path behavior as well, or only the single-head losses.
 
 ## Build Phases
@@ -90,6 +91,21 @@ weight(t) = 1 + (change_weight - 1) * exp(-change_decay * t)
 - In `wayve/ai/experimental/configs/mcv_new_phase2_si_baseline.yml`:
   - `INDICATOR.PER_WAYPOINT=False`
   - `GEAR.ENABLED=False`
+
+### Likely Active Config
+- The likely active config on `origin/zmurez/pudo` is `wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml`.
+- Evidence:
+  - Recent config commits repeatedly touched `mcv_new_phase2x_wta.yml` (`multi frame train`, `oracle per head and regression smoothness`, `jerk regularizer`, later cleanups).
+  - `mcv_new_phase2x_wta.yml` inherits through `mcv_new_phase2x.yml` -> `mcv_new_phase2.yml` -> `mcv_new_base.yml` -> `mcv_new_base0.yml`.
+  - Because `mcv_new_phase2x_wta.yml` does not override `INDICATOR` or `GEAR`, it inherits the `mcv_new_base0.yml` values:
+    - `INDICATOR.PER_WAYPOINT=True`
+    - `INDICATOR.LOSS_WEIGHT_CHANGE=10.0`
+    - `INDICATOR.LOSS_CHANGE_DECAY=0.5`
+    - `GEAR.ENABLED=True`
+    - `GEAR.PER_WAYPOINT=True`
+    - `GEAR.LOSS_WEIGHT_CHANGE=20.0`
+    - `GEAR.LOSS_CHANGE_DECAY=0.5`
+  - `mcv_new_phase2_si_baseline.yml` disables these paths, but it is referenced by `experimental/scripts/compare_si_mcv.py`, so it looks like a comparison/SI-baseline config, not the actively tuned PUDO training config.
 
 ### Zach Loss Behavior
 - `IndicatorLoss` reads future targets from `batch["indicator"][:, present + 1 : present + 1 + n_waypoints]`.
