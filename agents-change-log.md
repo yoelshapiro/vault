@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-30 — Parking training submission blocked by session-tag length
+- Topic: attempt the requested Parking BC training submission for the directional UNPUDO / unpark gear-indicator config and record the submission-time failure.
+- Labels: #parking #training #aks #surfboard #vault #submission-failure
+- Branch: `boris/pudo_w_route_path_fixes_and_new_data`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/04/Week-5/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator]]: ran the exact requested training command at commit `c2a575154cb`, confirmed the allowed unrelated dirty worktree remained untouched, and captured the CLI validation failure showing the derived full session name would be `146` characters, exceeding the `128`-character limit before any Surfboard job, session id, W&B run, Datadog link, or Notion release row could be created.
+
 > #### 2026-04-30 — Parking gear and indicator loss implementation draft
 - Topic: add an uncommitted opt-in draft of Zach Murez's per-waypoint gear and indicator heads/losses to Parking configs.
 - Labels: #parking #pudo #gear #indicator #losses #training #zoo #si
