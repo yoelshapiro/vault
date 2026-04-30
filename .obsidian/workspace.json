@@ -321,10 +321,10 @@
             "state": {
               "type": "excalidraw",
               "state": {
-                "file": "Excalidraw/Drawing 2026-04-30 10.42.32.excalidraw.md"
+                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
               },
               "icon": "excalidraw-icon",
-              "title": "Drawing 2026-04-30 10.42.32.excalidraw"
+              "title": "unparking_scenarios.excalidraw"
             }
           }
         ],
@@ -463,13 +463,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/Drawing 2026-04-30 10.42.32.excalidraw.md",
+                "file": "Excalidraw/unparking_scenarios.excalidraw.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Drawing 2026-04-30 10.42.32.excalidraw"
+              "title": "Outline of unparking_scenarios.excalidraw"
             }
           },
           {
@@ -504,6 +504,9 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "projects/pudo-event-materialization-speed-gear-buckets.md",
+    "projects.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md",
     "parking_model_analysis/models/tomato-toucan-gorgeous.md",
     "parking_model_analysis/models/panther-white-intuitive.md",
@@ -517,10 +520,7 @@
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-28--14-44-36--gen2-av-af4cfe85-0b1d-48e6-8877-979429c685cd.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-28--09-07-04--gen2-av-eca96edf-e45b-4831-9848-179f07dc4558.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-28--07-16-26--gen2-av-96be6a96-5bf2-46ac-83a2-bb1c18dcacb6.md",
-    "projects/pudo-event-materialization-speed-gear-buckets.md",
-    "Excalidraw/Drawing 2026-04-30 10.42.32.excalidraw.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-29--14-18-55--gen2-av-7320f924-6e0b-4de4-b66b-5006d590d7f4.md",
-    "projects.md",
     "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/04/Week-5/2026-04-29-unflappable-azure-sea-cucumber-interleave-deploy.md",
     "agents-change-log.md",
