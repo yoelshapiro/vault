@@ -1684,3 +1684,20 @@
     - regenerated four model cards and 12 per-run report cards from table rows
     - validated GitHub-compatible `card` links and Foxglove event windows at +/- 5 minutes
     - added helper support for Databricks JSON export, cache directory override, and a Bazel `parking_model_analysis_writer` target
+
+- 2026-04-30: [PUDO Event + Materialization Speed/Gear Buckets](projects/pudo-event-materialization-speed-gear-buckets.md)
+  - Labels: parking, materialization, notebooks, dry-run
+  - Branch: `boris/parking-materialization-config-dry-run`
+  - PR: none
+  - Change type: notebook
+  - Areas: `wayve/ai/parking/notebooks`
+  - Changes:
+    - added a `MaterializationConfig` cell to centralize materialization knobs
+    - added default `dry_run=True` behavior that limits source events to 10 rows and always skips Azure writes
+    - split output configuration from the guarded write block
+    - removed eager full-table display from the materialization load cell
+    - made cutoff count actions optional behind `CONFIG.log_action_counts`
+    - removed per-bucket `limit(1).count()` checks from DC/AV bucket construction
+    - moved event-length cutoff to the DC path so CA/pre-CA bucket construction is not cut by DC-only thresholds
+    - kept the event-notebook change that retains non-accidental `uncategorised` PUDO/park disengagements
+    - pushed commit `41c54f00bf31` to `origin/boris/parking-materialization-config-dry-run`
