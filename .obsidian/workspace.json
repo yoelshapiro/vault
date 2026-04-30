@@ -328,7 +328,7 @@
             }
           }
         ],
-        "currentTab": 18
+        "currentTab": 19
       }
     ],
     "direction": "vertical"
@@ -463,13 +463,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/zach-gear-indicator-losses.md",
+                "file": "Excalidraw/unparking_scenarios.excalidraw.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of zach-gear-indicator-losses"
+              "title": "Outline of unparking_scenarios.excalidraw"
             }
           },
           {
@@ -502,10 +502,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "117f440063e12be8",
+  "active": "d766a0330d27d64f",
   "lastOpenFiles": [
-    "projects.md",
     "projects/zach-gear-indicator-losses.md",
+    "projects.md",
     "projects/pudo-event-materialization-speed-gear-buckets.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
     "Excalidraw/model_release.excalidraw.md",
