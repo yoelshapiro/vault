@@ -15,8 +15,10 @@ Relevant notebooks:
 
 - Date: `2026-04-30`
 - Branch: `parking/notebooks`
-- State: design finalized; materialization notebook now has a config cell, default 10-event dry-run mode, and a guarded write block.
+- State: implemented in branch `boris/parking-materialization-config-dry-run`.
 - One small event-notebook edit is already made: PUDO/park disengagement blacklist no longer excludes `uncategorised`; only `accidental_avso_intervention` remains blacklisted.
+- Event notebook now adds UNPUDO/unparking `gear_change_timestamps` and `num_gear_changes`.
+- Materialization notebook now builds future-speed-filtered UNPUDO/unparking buckets, forward/reverse variants, and gear-change buckets.
 
 ## Runtime Risks Found
 
@@ -48,6 +50,39 @@ Relevant notebooks:
 - Split final materialization into:
   - output configuration/reporting cell
   - separate guarded write cell
+
+## Materialization Feature Implementation
+
+- Replaced the old per-bucket DC/AV dictionary join flow with a tagged dataframe flow:
+  - `dataset_bucket`
+  - `window_start_timestamp`
+  - `window_end_timestamp`
+  - `requires_future_speed_filter`
+  - `enable_directional_variants`
+- Bounded corpus reads to selected event runs and a timestamp envelope around the event/disengagement/gearchange timestamps.
+- Added cleaned gear computation on the bounded corpus frame.
+- DC PUDO/park movement windows:
+  - `event_startOrEnd_timestampunixus -> timestamp_unixus + 2s`
+  - no future-speed filter
+- DC UNPUDO/unparking movement windows:
+  - `coalesce(gearchange_timestamp, timestamp_unixus) - 5s -> coalesce(event_startOrEnd_timestampunixus, timestamp_unixus + 10s)`
+  - future-speed filter at closest frame in `[t + 0.60s, t + 0.65s]`
+  - keeps samples where `abs(future_speed_kmh) >= 0.54`
+- Added directional DC UNPUDO/unparking variants:
+  - `_forward` when matched future cleaned gear is `1`
+  - `_reverse` when matched future cleaned gear is `-1`
+- Added DC gear-change buckets:
+  - `dc_<event>_<country>_gear_change`
+  - samples `±1s` around cleaned gear transitions inside the event maneuver window
+  - explicitly includes PUDO/park final transition at `timestamp_unixus`
+  - explicitly includes UNPUDO/unparking initial transition at `gearchange_timestamp`
+  - not future-speed filtered
+- AV/CA buckets:
+  - still use selected disengagement anchors only
+  - use `pre_ca`, `ca_short`, `ca_long`
+  - apply future-speed filtering for UNPUDO/unparking
+  - do not create directional CA variants
+- Writer now accepts `materialized_keys_df` directly, avoiding the expensive per-bucket dictionary reconstruction before write.
 
 ## Guiding Decisions
 

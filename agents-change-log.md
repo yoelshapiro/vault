@@ -1701,3 +1701,11 @@
     - moved event-length cutoff to the DC path so CA/pre-CA bucket construction is not cut by DC-only thresholds
     - kept the event-notebook change that retains non-accidental `uncategorised` PUDO/park disengagements
     - pushed commit `41c54f00bf31` to `origin/boris/parking-materialization-config-dry-run`
+    - added UNPUDO/unparking event-table `gear_change_timestamps` and `num_gear_changes`
+    - replaced materialization middle flow with tagged window specs and bounded corpus reads
+    - added future-speed-filtered UNPUDO/unparking movement buckets using closest frame in `[t + 0.60s, t + 0.65s]` and `abs(speed) >= 0.54 km/h`
+    - added DC UNPUDO/unparking `_forward` and `_reverse` bucket variants from matched future cleaned gear
+    - added DC `*_gear_change` buckets around cleaned gear transitions and explicit initial/final gear anchors
+    - applied future-speed filtering to UNPUDO/unparking CA/pre-CA buckets without creating directional CA variants
+    - updated writer to consume `materialized_keys_df` directly instead of reconstructing per-bucket dataframes before writing
+    - pushed commit `10879af6c9f8` to `origin/boris/parking-materialization-config-dry-run`
