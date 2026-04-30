@@ -7,10 +7,10 @@
 - **Source of truth for this plan:** Notion app fetch of `📖 [Documentation] Generic Materialisation` on 2026-04-30 plus main-branch code inspection.
 
 ## Status
-- **Phase:** Research / planning.
+- **Phase:** Initial implementation / validation.
 - **Status:** active.
 - **Last updated:** 2026-04-30.
-- **Implementation:** not started.
+- **Implementation:** started on `boris/generic-parking-pudo-materialisation`.
 - **Important correction:** The official Generic Materialisation framework from Notion is `wayve/ai/services/sampling`, not the older/local `wayve/ai/foundation/data/curation/materialization` path.
 
 ## Notion Findings
@@ -160,7 +160,48 @@
 ## Decisions
 - **2026-04-30:** Use Notion via the Codex Apps connector as the documentation source.
 - **2026-04-30:** Treat `wayve/ai/services/sampling` as the target generic materialisation framework.
-- **2026-04-30:** Do not implement yet; first document the framework, current main-branch parking support, gaps, and migration plan.
+- **2026-04-30:** Started implementation by extending Wonjoon's existing generic parking filters rather than creating a notebook/pre-stage.
+- **2026-04-30:** Preserve legacy default behavior for existing generic parking filters. Stricter future-gear/progress behavior is enabled only through explicit event-dataset options.
+
+## Implementation Progress
+- **Branch:** `boris/generic-parking-pudo-materialisation`.
+- **Files changed:**
+  - `wayve/ai/services/sampling/datasets/parking/filters.py`
+  - `wayve/ai/services/sampling/datasets/parking/common.py`
+  - `wayve/ai/services/sampling/datasets/parking/events/dataset.py`
+  - `wayve/ai/services/sampling/datasets/store.py`
+  - `wayve/ai/services/sampling/BUILD`
+  - `wayve/ai/services/sampling/test/datasets/parking/test_parking_filters.py`
+- **Implemented so far:**
+  - Added explicit `pudo` / `park` split over cleaned long-P/N parking segments.
+  - Added explicit `unpudo` / `unparking` split over the stopped segment being exited, not a later stopped segment.
+  - Added forward/reverse direction filtering from cleaned gear direction.
+  - Added optional 10m progress validation for UNPUDO/unparking, with rejection if the vehicle returns to P/N before reaching progress.
+  - Added future-speed filter for samples whose first frame in `[t + 0.60s, t + 0.65s]` exceeds `0.15 m/s`.
+  - Added a new registered `parking/events` dataset with DC, directional DC, gear-change, CA short/long, and pre-CA buckets.
+  - Added tests for PUDO/park split, UNPUDO/unparking split, progress validation, direction split, and future-speed lookup.
+- **Important semantic fix during implementation:**
+  - Initial code incorrectly classified UNPUDO by looking for a later PUDO-like stopped segment. That was corrected to classify by the stopped segment being exited.
+  - Existing legacy `unparking` behavior still returns anchors even without future nonzero gear unless the new direction/progress options are requested. This avoids breaking existing `parking/gc` semantics.
+- **Validation run:**
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg='-k=parking' --test_arg='--cov-fail-under=0' --test_output=errors`
+  - Result: passed.
+  - The same scoped pytest without `--cov-fail-under=0` had all assertions passing but failed aggregate coverage because most tests were deselected.
+  - Ruff, Flake8, and type-check Bazel targets reported `PASSED`; the shell returned nonzero after each because `.bazelpostscript` hit `errors: unbound variable`.
+
+## Databricks Sanity Check
+- **Reference table:** `parking.pudo_unpudo_unpark_events`.
+- **Sample:** `fme20031/2026-04-29--08-47-39--gen2-av-c38acf7d-2d3c-40d0-ac67-d483eaf1e45e`.
+- **Future-speed result:** sampled UNPUDO rows all pass the planned filter:
+  - first frame in `[timestamp + 0.60s, timestamp + 0.65s]`
+  - `abs(speed_kmh) >= 0.54`
+- **PUDO hazard result:** notebook PUDO is not strictly hazard-only in this sample.
+  - Some PUDO rows had hazard frames in the notebook event window.
+  - Some PUDO rows had zero hazard frames in the event window and zero hazard frames in +/-30s, but non-off left/right indicators.
+  - One PUDO row had hazard within +/-30s but not inside the notebook event window.
+- **Implication:**
+  - The current generic hazard-only `pudo` split is aligned with the simplified design assumption but will not exactly reproduce `parking.pudo_unpudo_unpark_events`.
+  - If exact parity with the notebook table matters, PUDO evidence needs to include the notebook's additional logic, not just hazard inside the long stopped segment.
 
 ## Wonjoon Generic Parking vs Notebook Logic
 - **High-level conclusion:** Wonjoon already ported a large part of the parking/unparking materialisation problem into `services/sampling`: reliable gear reconstruction, parking/unparking event anchors, maneuver windows, gear-change count buckets, and gear-change boundary buckets. The missing part is mostly the PUDO-specific semantics: hazard/trip evidence, PUDO vs park split, UNPUDO vs unparking split, notebook event-table validation columns, directional forward/reverse UNPUDO/unparking buckets, and the newer future-speed movement filter.
