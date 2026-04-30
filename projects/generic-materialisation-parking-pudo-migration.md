@@ -96,13 +96,14 @@
 
 ## Implementation Plan
 - **Step 1: Decide source model.**
-  - Option A: implement PUDO/UNPUDO event detection directly as `PandasFilter`s over `wayve_corpus.all_data` batches.
-  - Option B: keep a separate tested event/frame-source generation step, then materialise that source through generic sampling.
-  - Decision criteria: whether hazard/trip evidence and UNPUDO-vs-unparking future event context can be computed cleanly inside per-run filters.
-- **Step 2: Define `parking/pudo` dataset.**
-  - Add a new package under `wayve/ai/services/sampling/datasets/parking/pudo/`.
-  - Add `dataset.py`, optional `stable.yaml`, optional `autopublish.yaml`, and optional `datamodule_config.yaml` if this becomes release-consumed.
-  - Register it in `DATASET_STORE`.
+  - Option A: implement parking/PUDO/UNPUDO/unparking event detection directly as shared `PandasFilter`s over `wayve_corpus.all_data` batches.
+  - Option B: move the notebook-derived event/frame expansion into tested Spark/Python batch code that emits a normalized source table, then let generic sampling materialise buckets from that source. This is not intended to keep a notebook as the production materialiser.
+  - Decision criteria: whether hazard/trip evidence and UNPUDO-vs-unparking future event context can be computed cleanly inside per-run filters without expensive cross-run joins.
+- **Step 2: Extend the parking dataset area with shared event logic.**
+  - Keep the calculation in `wayve/ai/services/sampling/datasets/parking/` and reuse existing gear reconstruction, maneuver-window, and gear-boundary helpers.
+  - Compute the common parking event once, then split into `park` vs `pudo` by hazard/PUDO evidence.
+  - Compute the common park-exit event once, then split into `unparking` vs `unpudo` by downstream PUDO/event semantics.
+  - Add a new dataset entry only if we need separate release/versioning from existing `parking/default` and `parking/gc`; do not fork the underlying calculations.
 - **Step 3: Build event filters / source columns.**
   - Implement PUDO/park transition detection with spike protection.
   - Implement UNPUDO/unparking park-exit detection.
