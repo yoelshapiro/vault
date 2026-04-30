@@ -36,11 +36,12 @@ Prompt handling:
   - `?? wayve/ai/services/sampling/datasets/parking/events/`
 - CLI submission note reported `Contains uncommitted changes: False`
 - final submission outcome: succeeded
-- latest observed state: `Dispatched`
+- latest observed state: `Running`
 - Surfboard job: `156658`
 - session id: `session_2026_04_30_19_28_13_si_parking_bc_train_gear_indicator_wonjoon_full_aug`
 - platform nickname: `violet-happy-dolphin`
 - compute target after dispatch: `aks-prod-training-2-swe.nd96h100c`
+- platform start time: `2026-04-30T19:31:08`
 - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_30_19_28_13_si_parking_bc_train_gear_indicator_wonjoon_full_aug`
 - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aviolet-happy-dolphin-156658&from_ts=1776367805584&cols=job_name%2Cnode_rank&live=true`
 - Datadog dashboard: `https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=violet-happy-dolphin-156658%2A&from_ts=1776972605584&to_ts=1777577405584&live=false`
@@ -49,6 +50,6 @@ Prompt handling:
 ## Notes
 
 - The training CLI spent extra time publishing and replicating the container image before Surfboard submission.
-- `wayvecli job get` showed the expected state progression so far: `Queued` (queue position `1`) -> `Dispatched`.
+- `wayvecli job get` showed the expected state progression: `Queued` (queue position `1`) -> `Dispatched` -> `Running`.
 - Model Catalogue lookup by session id returned no rows during close-out, so I did not block on indexing.
 - The workspace contained unrelated untracked files before submission; I preserved that state and did not clean or modify the worktree.
