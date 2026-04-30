@@ -40,6 +40,7 @@
   - `wayve/ai/services/sampling/datasets/parking/common.py`
   - `wayve/ai/services/sampling/datasets/parking/filters.py`
   - `wayve/ai/services/sampling/test/datasets/parking/test_parking_filters.py`
+- **Wonjoon context:** Wonjoon's parking materialisation work is already in this framework. `024de24343e` (`Parking materialise`, PR #101525) added the generic parking package, and `a49ea560644` (`simplify gear based parking materialisation`, PR #106341) refined the gear-count parking/unparking materialisation.
 
 ## How The Generic Pipeline Works
 - **Dataset registration:** a `BucketedDataset` is added to `DATASET_STORE` under a name like `bc/split_alpha2_alpha3`, `parking/default`, or `parking/gc`.
@@ -55,8 +56,9 @@
 - **Debug support:** `--debug`, `--start_date`, `--end_date`, `--comparison_path`, `--run_ids_filter`, and stage-specific reruns exist.
 
 ## Existing Parking Support On Main
-- **`parking/default`:** legacy parking-window dataset using `select_parking_legacy` and parking-specific DC/CA/pre-CA exclusions.
-- **`parking/gc`:** gear-change-count parking/unparking dataset already close to Wonjoon's long-horizon parking materialisation.
+- **`parking/default`:** an existing registered dataset entry for legacy parking-window buckets using `select_parking_legacy` and parking-specific DC/CA/pre-CA exclusions.
+- **`parking/gc`:** an existing registered dataset entry for gear-change-count parking/unparking buckets, close to Wonjoon's long-horizon parking materialisation.
+- **Important interpretation:** `default` and `gc` are current dataset entry points, not a design reason to maintain separate parking implementations. New PUDO/park/UNPUDO/unparking work should reuse shared helpers in `parking/common.py` and `parking/filters.py` and split bucket membership from common event calculations.
 - **Gear reconstruction:** `parking/filters.py` reconstructs gen2 Mache gear from signed speed, keeps validated P/N segments, extends P/N into adjacent standstill, and forward-fills unknown standstill so gear changes land at movement start.
 - **Gear smoothing:** short transient gear states are removed with a minimum dwell threshold.
 - **Parking windows:** parking uses a backwards maneuver window before first P frame.
@@ -89,16 +91,17 @@
 ## Recommended Migration Direction
 - **Use `services/sampling` as the target framework.** This matches Notion, release paths, comparison jobs, and existing main-branch parking support.
 - **Do not port notebook logic into YAML-only filters blindly.** The PUDO event logic is event-generation plus frame expansion, not just row filtering.
-- **Reuse `parking/gc` where possible.** Gear reconstruction, gear smoothing, gear-count labels, and gear-boundary tests are already implemented and should not be re-invented.
-- **Add a new dataset namespace.** Use a dataset name such as `parking/pudo` or `parking/pudo_unpudo` rather than overloading `parking/default` or `parking/gc`.
-- **Prefer tested filters over generated event tables when feasible.** If event classification can be implemented per run using `all_data` plus available columns, implement it as `PandasFilter`s. If it requires cross-run/event-table joins, create a normalized source table first and let generic sampling consume it.
+- **Reuse shared parking calculations.** Gear reconstruction, gear smoothing, maneuver-window construction, gear-count labels, and gear-boundary tests are already implemented under `datasets/parking`; extend those helpers rather than creating a PUDO-specific implementation.
+- **Do not add a notebook/local pre-stage as the default plan.** A pre-stage would either be slow or become a second optimized pipeline to maintain. The primary design should run inside the generic materialiser's distributed filter flow.
+- **Treat `default` and `gc` as existing dataset entries, not separate architecture layers.** We can add another registered dataset entry if release/versioning needs it, but the calculation should stay shared in `parking/common.py` and `parking/filters.py`.
+- **Use `parking.pudo_unpudo_unpark_events` for validation against notebook semantics.** It should be the comparison reference, not necessarily the production source unless we prove an event table is required.
 - **Keep output names SI-compatible.** Final `dataset_bucket=<bucket.name>` paths should match the names used in `parking_config.py` unless we deliberately migrate configs.
 
 ## Implementation Plan
-- **Step 1: Decide source model.**
-  - Option A: implement parking/PUDO/UNPUDO/unparking event detection directly as shared `PandasFilter`s over `wayve_corpus.all_data` batches.
-  - Option B: move the notebook-derived event/frame expansion into tested Spark/Python batch code that emits a normalized source table, then let generic sampling materialise buckets from that source. This is not intended to keep a notebook as the production materialiser.
-  - Decision criteria: whether hazard/trip evidence and UNPUDO-vs-unparking future event context can be computed cleanly inside per-run filters without expensive cross-run joins.
+- **Step 1: Implement in-framework shared event masks first.**
+  - Build parking/PUDO/UNPUDO/unparking event detection as shared `PandasFilter` logic over `wayve_corpus.all_data` batches.
+  - Reuse the generic materialiser's existing distributed execution instead of adding a notebook/pre-stage.
+  - Only revisit a normalized source table if we prove that required signals cannot be computed from the per-run batch or existing filter table joins.
 - **Step 2: Extend the parking dataset area with shared event logic.**
   - Keep the calculation in `wayve/ai/services/sampling/datasets/parking/` and reuse existing gear reconstruction, maneuver-window, and gear-boundary helpers.
   - Compute the common parking event once, then split into `park` vs `pudo` by hazard/PUDO evidence.
@@ -131,7 +134,8 @@
   - Verify bucket counts and sample examples before running a broad range.
   - Use stage-specific reruns if create-buckets or balance-buckets needs iteration.
 - **Step 8: Compare against notebook output.**
-  - Compare counts per bucket against recent notebook output.
+  - Use `parking.pudo_unpudo_unpark_events` as the notebook-derived event table reference.
+  - Compare counts per bucket against buckets derived from that table.
   - Compare sample overlap for unchanged bucket definitions.
   - Manually inspect examples for reverse UNPUDO/unparking and long multi-gear maneuvers.
 - **Step 9: Release integration.**
@@ -139,15 +143,15 @@
   - If baseline-candidate, follow Notion migration rules: changes merged to `main`, release dataset, comparison artifacts, and overlap explanation.
 
 ## Performance Plan
-- **Avoid notebook failure modes:** no global `display()` on event tables, no repeated wide joins per bucket, no repeated full `count()` during production runs.
+- **Avoid notebook/pre-stage failure modes:** no production notebook execution, no local pre-stage, no global `display()` on event tables, no repeated wide joins per bucket, no repeated full `count()` during production runs.
 - **Exploit per-run filters:** where possible, compute temporal masks once per run and reuse them across bucket definitions.
 - **Use debug runs:** constrain date/run IDs for iteration rather than running multi-hour full materialisations.
 - **Use stage reruns:** if masks are correct, rerun only bucketing or balancing stages.
 - **Keep bucket names explicit:** avoid dynamically generating hundreds of low-count buckets until counts justify them.
 
 ## Open Questions
-- Can all PUDO/UNPUDO classification be computed from `wayve_corpus.all_data` columns available to `services/sampling`, or do we still need trip/event side tables?
-- Should event detection be a separate normalized Delta table, or should it live fully inside the generic sampling filters?
+- Can all PUDO/UNPUDO classification be computed from `wayve_corpus.all_data` columns available to `services/sampling`, or do we need an existing side table only for validation/comparison?
+- If a side table is required, can it be joined inside the generic framework without creating a separate notebook/pre-stage?
 - Which exact future-speed offset do we standardize on: `0.60s`, `0.65s`, or nearest frame in a bounded window?
 - Do we want to keep low-count gear-change buckets, or use only boundary sampling inside larger movement buckets?
 - Should PUDO/park be included in the same dataset as UNPUDO/unparking, or split into separate datasets for easier release comparison?
