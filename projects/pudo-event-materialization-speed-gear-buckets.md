@@ -15,8 +15,39 @@ Relevant notebooks:
 
 - Date: `2026-04-30`
 - Branch: `parking/notebooks`
-- State: design finalized.
+- State: design finalized; materialization notebook now has a config cell, default 10-event dry-run mode, and a guarded write block.
 - One small event-notebook edit is already made: PUDO/park disengagement blacklist no longer excludes `uncategorised`; only `accidental_avso_intervention` remains blacklisted.
+
+## Runtime Risks Found
+
+- Full-table `display(df)` in the materialization load cell can trigger a large table scan just to inspect the events table.
+- Event-length cutoff was applied globally before DC/AV splitting, so CA/pre-CA rows could inherit DC-only filtering work.
+- `apply_event_length_cutoff` counted the input and filtered output by default, causing two full actions before materialization starts.
+- DC bucket creation used `distinct().collect()` for event types and `limit(1).count()` for each event/country bucket.
+- Optional short-bucket generation used `limit(1).count()` for each variant.
+- DC timestamp expansion uses `sequence(..., 50ms)` and `explode`; this becomes expensive when UNPUDO/unparking windows are extended and event-length removal is disabled.
+- DC expansion joins each bucket independently to `wayve_corpus.all_data`, so the same corpus ranges can be scanned many times.
+- AV/CA buckets do separate range joins per bucket and use `distinct()`, which is expensive on large disengagement windows.
+- Future-speed filtering would be very expensive if implemented as a separate per-bucket corpus join. It should be computed once on a tagged candidate dataframe.
+- Gear-change buckets would be very expensive if each bucket re-detects gear transitions. Gear transitions should be computed once over a bounded corpus subset and joined back.
+- The fsspec writer has unavoidable heavy actions: global per-bucket ordering for `_file_id`, repartitioning, `collect()` of written files, summary counts, and README generation. This should run only after dry-run validation.
+
+## Materialization Refactor Already Applied
+
+- Added `MaterializationConfig` at the top of the materialization notebook.
+- Added default dry-run behavior:
+  - `dry_run=True`
+  - `dry_run_event_limit=10`
+  - source event table is capped to 10 events
+  - Azure writing is skipped even if `write_output=True`
+- Added config knobs for country/date/run filters, output path/name, max count, verification, timestamp intervals, CA windows, cutoff thresholds, and legacy acceleration filter settings.
+- Removed the eager full-table `display(df)` from the load cell.
+- Made event-length cutoff counts optional behind `CONFIG.log_action_counts`.
+- Removed per-bucket `limit(1).count()` checks from DC/AV bucket construction.
+- Replaced dynamic event-type collection with fixed expected event types.
+- Split final materialization into:
+  - output configuration/reporting cell
+  - separate guarded write cell
 
 ## Guiding Decisions
 
