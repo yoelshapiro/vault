@@ -40,6 +40,19 @@
 - Changes:
   - [[projects/generic-materialisation-parking-pudo-migration]]: created a new active project summarizing generic materialisation architecture, existing parking/gear support, SI `materialisation_version` release usage, notebook semantics to preserve, compatibility gaps, and a bullet-point migration plan before implementation.
 
+> #### 2026-04-30 — Generic materialisation Parking events implementation draft
+- Topic: start implementing Parking PUDO / park / UNPUDO / unparking event buckets in the generic `services/sampling` framework and validate the first draft.
+- Labels: #parking #pudo #unpudo #unparking #generic-materialisation #services-sampling #databricks #tests
+- Branch: `boris/generic-parking-pudo-materialisation`
+- PR: none
+- Change type: code/tests/docs
+- Areas: `wayve/ai/services/sampling/datasets/parking/`, `wayve/ai/services/sampling/test/datasets/parking/`, `projects/`
+- Changes:
+  - [[projects/generic-materialisation-parking-pudo-migration]]: updated the active project with implementation progress, validation commands, and a Databricks sanity-check finding that notebook PUDO rows are not always hazard-only.
+  - Extended generic parking filters with PUDO/park and UNPUDO/unparking splits, forward/reverse direction filters, optional 10m progress validation, and the `timestamp + 0.60..0.65s` future-speed filter.
+  - Added a new `parking/events` dataset entry with DC, directional DC, gear-change, CA short/long, and pre-CA event buckets.
+  - Added parking-filter regression tests and ran scoped pytest plus Ruff/Flake8/type-check Bazel targets.
+
 > #### 2026-04-30 — Parking training retry reached Running after shortened session tag
 - Topic: retry the requested Parking BC directional UNPUDO / unpark gear-indicator training with a shortened session tag, monitor it through startup, and record the final submission identifiers.
 - Labels: #parking #training #aks #surfboard #wandb #notion #vault
