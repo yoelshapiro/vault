@@ -504,6 +504,7 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator.md",
     "projects/zach-gear-indicator-losses.md",
     "projects.md",
@@ -529,7 +530,6 @@
     "agents-change-log.md",
     "agent_tasks/2026/04/Week-4/2026-04-23-parking-training-submit-wonjoon-gc-pudo-r017-fix3.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
-    "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
     "agent_tasks/2026/04/Week-5",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
