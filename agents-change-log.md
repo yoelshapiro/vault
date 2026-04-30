@@ -10,6 +10,18 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-30 — Parking gear and indicator loss implementation draft
+- Topic: add an uncommitted opt-in draft of Zach Murez's per-waypoint gear and indicator heads/losses to Parking configs.
+- Labels: #parking #pudo #gear #indicator #losses #training #zoo #si
+- Branch: `boris/pudo_w_route_path_fixes_and_new_data`
+- PR: none
+- Change type: code/tests/docs
+- Areas: `wayve/ai/zoo/outputs/`, `wayve/ai/zoo/losses/`, `wayve/ai/si/losses/`, `wayve/ai/si/configs/parking/`, `projects/`
+- Changes:
+  - [[projects/zach-gear-indicator-losses]]: updated the active project with the implementation draft, validation results, and the checkpoint-loading risk from increasing parking output-adaptor query count.
+  - Added opt-in per-waypoint indicator and gear output heads, future class-change-weighted CE losses, BC loss config knobs, and Zach-like Parking config values (`indicator=10.0/0.5`, `gear=20.0/0.5`).
+  - Added/updated tests for per-waypoint head behavior, change-weighted future losses, and the current branch's 4-class indicator output shape.
+
 > #### 2026-04-30 — Zach gear and indicator loss investigation
 - Topic: document Zach Murez's per-waypoint gear and indicator classifier losses from `origin/zmurez/pudo` before making implementation changes.
 - Labels: #parking #pudo #gear #indicator #losses #training #planning
