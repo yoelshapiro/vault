@@ -2,12 +2,7 @@
 
 ## Overview
 
-Extend the base `parking/notebooks` event and materialization notebooks so PUDO/park and UNPUDO/unparking training buckets better cover:
-
-- starting from parked state
-- gear-decision points
-- reverse/forward unparking and UNPUDO
-- corrective-action windows around disengagements
+Extend the base `parking/notebooks` notebooks with additive training buckets for gear decisions, reverse/forward UNPUDO/unparking, and near-disengagement corrective actions.
 
 Base branch: `parking/notebooks`
 
@@ -20,33 +15,37 @@ Relevant notebooks:
 
 - Date: `2026-04-30`
 - Branch: `parking/notebooks`
-- State: design finalized; one small event-notebook edit already made to stop blacklisting `uncategorised` for PUDO/park disengagements.
-- Previous full-materialization attempt was too slow and produced worse output. Avoid repeating it by separating event-level logic from materialization filtering and by keeping CA windows independent from DC movement filters.
+- State: design finalized.
+- One small event-notebook edit is already made: PUDO/park disengagement blacklist no longer excludes `uncategorised`; only `accidental_avso_intervention` remains blacklisted.
+
+## Guiding Decisions
+
+- Do not change the UNPUDO/unparking event anchor for now.
+- Keep the existing acceleration-based `timestamp_unixus` anchor in the event table.
+- Use the future-speed threshold only in materialization for normal UNPUDO/unparking movement buckets.
+- Keep gear-change buckets separate from movement buckets and do not future-speed-filter them.
+- Keep CA/pre-CA buckets centered around disengagement anchors and do not apply DC movement filters to them.
 
 ## Current Timestamp Semantics
 
 ### PUDO / Park
 
 - `timestamp_unixus`
-  - The gear transition into park/neutral.
-  - This is the PUDO/park event endpoint.
+  - Gear transition into park/neutral.
+  - This is the PUDO/park endpoint.
 
 - `event_startOrEnd_timestampunixus`
-  - Bad name, but for PUDO/park it means estimated maneuver start.
-  - Current estimation looks backward from `timestamp_unixus` using:
-    - 30m backward distance rule
-    - 12s backward time cap
-    - optional left/right indicator extension
-    - clamp after previous event
+  - Estimated PUDO/park maneuver start.
+  - Current logic looks backward from `timestamp_unixus` using 30m distance, 12s time cap, optional left/right indicator extension, and previous-event clamping.
 
 - Indicator extension
-  - Currently used.
+  - Already used.
   - Uses left/right indicator ON edge, not hazard and not indicator-off as the start anchor.
   - Requires a later indicator OFF edge within 30m.
   - If active, start can become `latest_indicator_on_ts - 3s`.
 
 - Hazard
-  - Used to identify PUDO candidates: hazard within ±10s of the park transition.
+  - Used to identify/confirm PUDO candidates: hazard within ±10s of the park transition.
   - Not currently used to extend the materialization window.
 
 ### UNPUDO / Unparking
@@ -56,59 +55,33 @@ Relevant notebooks:
   - This is the gear-decision anchor.
 
 - `timestamp_unixus`
-  - Movement/progress anchor after leaving park.
-  - Planned update: choose it using future speed, not current acceleration.
-
-- `first_progress_timestamp`
-  - New/explicit analysis column.
-  - Same logical anchor as the future-speed movement/progress timestamp.
-  - Defined as first candidate timestamp after park-to-D/R where the closest frame in `[t + 0.60s, t + 0.65s]` has `abs(speed) >= 0.15 m/s`.
-  - Useful for analysis and disengagement windows, but not the materialization window end.
+  - Existing acceleration-based movement-start anchor after leaving park.
+  - Keep this unchanged for now.
 
 - `event_startOrEnd_timestampunixus`
-  - Bad name, but for UNPUDO/unparking it means event end.
-  - Should represent the post-start maneuver endpoint, based on moving enough after gear exit.
-  - Use 10m progress for this endpoint.
+  - Event end for UNPUDO/unparking.
+  - Current window enrichment uses the post-start maneuver endpoint, with 10m progress and speed conditions.
 
-## Event Notebook Changes
+## Event Notebook Changes To Make
 
 ### PUDO / Park
 
-- Keep PUDO/park detection as-is:
-  - drive/reverse to park/neutral transition
-  - PUDO evidence from hazard and/or trip table
-  - otherwise `park` when park events are enabled
-
-- Keep PUDO/park start estimation as-is:
-  - `event_startOrEnd_timestampunixus` remains estimated maneuver start
-  - keep indicator extension enabled
-
+- Keep detection unchanged.
+- Keep start estimation unchanged.
+- Keep indicator extension unchanged.
 - Disengagement blacklist:
-  - Do not blacklist `uncategorised` for PUDO/park.
+  - Keep `uncategorised` PUDO/park disengagements.
   - Continue blacklisting `accidental_avso_intervention`.
-  - Rationale: if it is not accidental, an uncategorised intervention near a PUDO/park event is probably related enough to keep for now.
 
 ### UNPUDO / Unparking
 
-- Replace acceleration-based movement-anchor selection with future-speed selection:
-  - candidate timestamp `t`
-  - find closest corpus frame in `[t + 0.60s, t + 0.65s]`
-  - require `abs(speed) >= 0.15 m/s` (`0.54 km/h`)
-  - use speed magnitude so reverse movement is retained if speed is signed
-
-- Keep/emit:
-  - `gearchange_timestamp`
-  - `timestamp_unixus` as the movement/progress anchor
-  - `first_progress_timestamp` for explicit analysis readability
-  - `event_startOrEnd_timestampunixus` as the 10m event-end endpoint
-  - `gear_to_accel_sec` / renamed equivalent if we rename the anchor from accel to progress
-  - `accel_to_end_sec` / renamed equivalent if needed
-
-- Add gear-change summary columns for UNPUDO/unparking after event end is known:
+- Keep existing acceleration-based `timestamp_unixus` anchor unchanged.
+- Keep `gearchange_timestamp` unchanged.
+- Keep `event_startOrEnd_timestampunixus` as current event-end logic.
+- Add gear-change summary columns after event end is known:
   - `num_gear_changes`
   - `gear_change_timestamps`
-
-- Gear changes should be based on cleaned gear, not raw noisy gear where possible.
+- Gear changes should be based on cleaned gear where possible.
 
 ## Disengagement Logic
 
@@ -116,12 +89,12 @@ Relevant notebooks:
 
 - Main detector:
   - window: `[event_startOrEnd_timestampunixus, timestamp_unixus]`
-  - selection: latest disengagement in the maneuver window
+  - selects latest disengagement
   - output: `disengagement_timestamp_unixus`
 
 - Before-start detector:
   - window: `[event_startOrEnd_timestampunixus - 10s, event_startOrEnd_timestampunixus]`
-  - selection: latest disengagement
+  - selects latest disengagement
   - output: `disengagement_timestamp_unixus_before_event_start_10s`
 
 - Fixed-window detector exists but should not be used by materialization unless explicitly needed:
@@ -132,26 +105,25 @@ Relevant notebooks:
 - Before-gearchange detector:
   - window: `[gearchange_timestamp - 10s, gearchange_timestamp]`
   - keep as 10s
-  - rationale: if the correction was much earlier than gear change, it is likely less related because the driver later drove away
   - output: `disengagement_timestamp_unixus_before_gearchange_10s`
 
 - Gear-to-start detector:
-  - window: `[gearchange_timestamp, first_progress_timestamp]`
-  - catches shifted-but-still-standstill failures
+  - window: `[gearchange_timestamp, timestamp_unixus]`
+  - catches shifted-but-still-standstill failures before the acceleration anchor
   - output: `disengagement_timestamp_unixus_gear_to_start`
 
 - Main maneuver detector:
-  - window: `[first_progress_timestamp, event_startOrEnd_timestampunixus]`
+  - window: `[timestamp_unixus, event_startOrEnd_timestampunixus]`
   - catches wrong/unsafe maneuver after movement begins
   - output: `disengagement_timestamp_unixus`
 
 - Fixed-window detector exists but should not be used by materialization unless explicitly needed.
 
-## Materialization Notebook Changes
+## Materialization Notebook Changes To Make
 
-### Shared Runtime/Implementation Rules
+### Shared Rules
 
-- Keep generic/full buckets and add new variants additively.
+- Keep generic/full buckets and add variants additively.
 - Use the original fsspec Azure writer style for final output.
 - Add date filters / dry-run controls for fast validation.
 - Avoid large raw `display(...)` calls and repeated per-bucket Spark actions.
@@ -169,7 +141,6 @@ event_startOrEnd_timestampunixus -> timestamp_unixus + 2s
 
 - No speed filter.
 - No future-speed filter.
-- This samples estimated approach/maneuver through the final park transition and a short tail after park.
 
 ### DC PUDO / Park Gear-Change Buckets
 
@@ -204,8 +175,8 @@ closest frame in [t + 0.60s, t + 0.65s]
 abs(speed) >= 0.15 m/s
 ```
 
-- This keeps samples that are close to actual movement/progress.
-- Times between gear change and first movement are naturally filtered out in normal movement buckets.
+- This filtering happens in materialization only.
+- It does not change the event table `timestamp_unixus` anchor.
 - Keep full generic buckets.
 
 ### DC UNPUDO / Unparking Forward/Reverse Buckets
@@ -260,10 +231,10 @@ ca_long:  [1.52s, 5.0s]
 - Inspect event counts by type and country.
 - Inspect PUDO/park `event_startOrEnd_method` distribution, especially `indicator_extension`.
 - Inspect UNPUDO/unparking:
-  - gear-to-progress duration
-  - progress-to-end duration
+  - gear-to-anchor duration
+  - anchor-to-end duration
   - gear-change count distribution
-  - reverse/forward distribution
+  - reverse/forward distribution from materialization
 - Run materialization dry-run on one day.
 - Check bucket counts:
   - full PUDO/park buckets
@@ -282,10 +253,10 @@ _parquet_files_list.txt
 
 ## Acceptance Criteria
 
+- Event notebook keeps the current UNPUDO/unparking acceleration anchor.
 - PUDO/park normal buckets remain equivalent to current behavior except for additive gear-change buckets.
 - PUDO/park gear-change buckets include the final transition into park.
 - PUDO/park disengagement materialization can use uncategorised non-accidental interventions.
-- UNPUDO/unparking movement anchor uses future-speed threshold instead of acceleration.
 - UNPUDO/unparking normal materialization uses `[gearchange - 5s, event end]` plus future-speed filtering.
 - UNPUDO/unparking forward and reverse buckets both have non-trivial counts.
 - UNPUDO/unparking gear-change buckets include standstill decision frames and are not future-speed filtered.
