@@ -36,11 +36,14 @@ Relevant notebooks:
 
 ## Intended Behavior
 
-- Event table should include event-window metadata, not sample-level gear:
+- Event table should include event-window metadata, not sample-level directional-bucket gear:
   - `gearchange_timestamp` for UNPUDO / unparking park-exit decision time.
-  - Existing `timestamp_unixus` remains the UNPUDO / unparking movement/acceleration anchor.
+  - Existing `timestamp_unixus` should become the UNPUDO / unparking movement-start anchor selected by future speed, not current acceleration.
   - Existing `event_startOrEnd_timestampunixus` remains the maneuver end estimate.
   - `gear_to_accel_sec` and `accel_to_end_sec` should remain useful debug columns.
+  - Add UNPUDO / unparking gear-change summary columns after the event end is known:
+    - `num_gear_changes`
+    - `gear_change_timestamps`
   - Optional: add explicit event window columns for materialization readability, for example `materialization_window_start_unixus` and `materialization_window_end_unixus`, but only if this simplifies the materialization notebook without duplicating logic.
 
 - Event table should not store event-level `gear_direction` for this project:
@@ -73,7 +76,11 @@ Relevant notebooks:
 
 - Event notebook changes:
   - Do not add `gear_direction` / `prev_gear_direction` just for materialization; those would be event-anchor values and not sufficient for per-sample directional buckets.
+  - Replace the current UNPUDO / unparking event-anchor rule from `acceleration >= 0.1 m/s^2` to future speed:
+    - candidate frame `t` is valid if the first/closest corpus frame in `[t + 0.60s, t + 0.65s]` has speed magnitude at least `0.15 m/s` (`0.54 km/h`)
+    - use speed magnitude so reverse movement is not dropped if the speed signal is signed
   - Keep `gearchange_timestamp`, `gear_to_accel_sec`, and `accel_to_end_sec` as first-class debug columns.
+  - Add UNPUDO / unparking `num_gear_changes` and `gear_change_timestamps` by scanning cleaned gear transitions between `gearchange_timestamp` and `event_startOrEnd_timestampunixus`.
   - Consider adding explicit materialization window columns for UNPUDO / unparking if they make the materialization notebook simpler.
   - Add a small summary section for UNPUDO / unparking gear-to-accel and event-duration distributions.
   - Avoid changing the core event detection thresholds in the first implementation unless the output stats prove we need to.
@@ -107,7 +114,9 @@ Relevant notebooks:
   - Confirm current materialization uses acceleration filtering, event-length removal, per-bucket actions, and repeated joins.
 
 - Update the event notebook first:
-  - Add only missing UNPUDO / unparking window/debug columns if needed.
+  - Replace the UNPUDO / unparking movement-start selection with future-speed-at-0.6s instead of acceleration.
+  - Add UNPUDO / unparking gear-change summary columns after `event_startOrEnd_timestampunixus` is available.
+  - Add only other missing UNPUDO / unparking window/debug columns if needed.
   - Do not add event-level gear fields unless a separate analysis need appears.
   - Add lightweight summary displays only; avoid full `display(df)` on large event tables by default.
 
@@ -134,6 +143,8 @@ Relevant notebooks:
 
 - Acceptance criteria:
   - Event table exposes or preserves the timing/window columns needed for UNPUDO / unparking materialization: `gearchange_timestamp`, `timestamp_unixus`, `event_startOrEnd_timestampunixus`, `gear_to_accel_sec`, and `accel_to_end_sec`.
+  - Event table exposes `num_gear_changes` and `gear_change_timestamps` for UNPUDO / unparking.
+  - UNPUDO / unparking `timestamp_unixus` is selected by future speed at `+0.6s`, not by current acceleration.
   - Materialization creates generic, forward, reverse, and gear-change UNPUDO / unparking buckets.
   - PUDO and park bucket outputs remain equivalent to the base materialization behavior unless explicitly changed later.
   - Future-speed-filtered generic rows are lower than the old unfiltered rows but not unexpectedly tiny.
@@ -144,7 +155,7 @@ Relevant notebooks:
 
 ## Decisions
 
-- Keep the `+0.6s` speed cutoff in materialization, not event detection.
+- Use the `+0.6s` future-speed threshold in event detection for selecting the UNPUDO / unparking movement-start anchor, and in materialization for filtering individual expanded movement samples.
 - Do not add event-level gear for this project; fetch gear per materialized timestamp in materialization.
 - Limit speed/gear extensions to UNPUDO and unparking.
 - Do not default to event-length removal for UNPUDO / unparking.
@@ -164,6 +175,7 @@ Relevant notebooks:
   - PUDO / park: the event anchor at the park transition. This is effectively the PUDO/park maneuver end.
   - UNPUDO / unparking: the movement/acceleration anchor after a park-to-nonzero gear transition. The event notebook detects park exit, finds the first frame that later moved enough, then picks the earliest acceleration frame between gear transition and that moved-enough frame.
   - In the current event notebook, "moved enough" means the haversine distance from the park-exit transition point reaches `UNPUDO_MIN_DISTANCE_M = 5.0m` within a `60s` lookahead. The chosen event timestamp is then the earliest frame between the gear transition and that first `5m` frame where odometry acceleration is at least `UNPUDO_MIN_ACCEL_MPS2 = 0.1 m/s^2`.
+  - Planned change: keep the `5m` validation, but replace the acceleration predicate with future speed. The chosen event timestamp should be the earliest frame `t` between the gear transition and first `5m` frame where speed magnitude at the first/closest frame in `[t + 0.60s, t + 0.65s]` is at least `0.15 m/s`.
 
 - `gearchange_timestamp`:
   - UNPUDO / unparking only.
