@@ -271,3 +271,10 @@ For `unparking`, the notebook temporarily relabels it as `unpudo` before disenga
 - The final transition into park at `timestamp_unixus` must be included; this can be captured by the cleaned gear-change detector, but should be explicitly guaranteed because it is the core PUDO/park gear decision.
 - These gear-change buckets should not use the unpudo/unparking future-speed filter.
 - Normal movement/parking buckets and gear-change buckets should remain separate signals.
+
+## 2026-04-30 PUDO/Park Disengagement Blacklist And Indicator Notes
+- Updated event notebook to stop blacklisting `uncategorised` for PUDO/park disengagements; only `accidental_avso_intervention` remains blacklisted.
+- Indicator extension uses left/right indicator ON edge, not hazard and not indicator-off as the start anchor.
+- The code requires a later indicator OFF edge within `CALIBRATION_INDICATOR_DISTANCE_M=30m`; when present, start is extended to `latest_indicator_on_ts - 3s`.
+- Hazard lights are used to identify PUDO candidates (`hazard` within ±10s of park transition), but hazard timing is not explicitly used to extend the PUDO/park materialization start.
+- Normal DC PUDO/park materialization samples the full estimated event window, so hazard frames are included only if they fall inside `[event_startOrEnd_timestampunixus, timestamp_unixus + 2s]`.
