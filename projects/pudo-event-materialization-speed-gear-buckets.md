@@ -306,6 +306,13 @@ ca_long:  [1.52s, 5.0s]
 ## Validation Plan
 
 - Parse notebook JSON and code cells locally after edits.
+- Databricks dry-run validation:
+  - Run ID: `729431122715074`
+  - Notebook: `/Workspace/Users/boris.indelman@wayve.ai/WayveCode/wayve/ai/parking/notebooks/PUDO and UNPUDO materilization - Codex dry run`
+  - Cluster: `0430-092826-g8yd3u76` (`shared_2.3.174`)
+  - Result: `SUCCESS`
+  - Execution duration: `92s`
+  - Mode: `CONFIG.dry_run=True`, capped to 10 events and skipped Azure output writes
 - Run event notebook on a bounded date range.
 - Inspect event counts by type and country.
 - Inspect PUDO/park `event_startOrEnd_method` distribution, especially `indicator_extension`.

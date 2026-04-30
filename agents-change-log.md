@@ -1709,3 +1709,5 @@
     - applied future-speed filtering to UNPUDO/unparking CA/pre-CA buckets without creating directional CA variants
     - updated writer to consume `materialized_keys_df` directly instead of reconstructing per-bucket dataframes before writing
     - pushed commit `10879af6c9f8` to `origin/boris/parking-materialization-config-dry-run`
+    - imported a dry-run copy of the materialization notebook to Databricks and ran it on cluster `shared_2.3.174`
+    - Databricks run `729431122715074` completed successfully in `92s` with `CONFIG.dry_run=True`, 10 source events, and no Azure writes
