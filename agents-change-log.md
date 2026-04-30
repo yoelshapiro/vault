@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-30 — Parking training dispatch for gi_parking_aug_retry
+- Topic: submit the requested Parking BC gear/indicator retraining run after the datamodule parking augmentation config updates, preserve the existing worktree state, and monitor it until startup.
+- Labels: #parking #training #aks #surfboard #wandb #vault
+- Branch: `boris/pudo_w_route_path_fixes_and_new_data`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/04/Week-5/`
+- Changes:
+  - [[agent_tasks/2026/04/Week-5/2026-04-30-parking-training-gi-parking-aug-retry]]: recorded the exact training command and prompt answers, captured Surfboard job `156652`, session `session_2026_04_30_19_00_22_si_parking_bc_train_gear_indicator_gi_parking_aug_retry`, nickname `pink-owl-vociferous`, W&B and Datadog links, and confirmed the job reached `Running` on `aks-prod-training-2-swe.nd96h100c` without creating or updating a Notion release row.
+
 > #### 2026-04-30 — Generic materialisation Parking PUDO migration plan
 - Topic: deep dive main-branch generic materialisation and create a project plan for migrating Parking PUDO / park / UNPUDO / unparking notebook materialization.
 - Labels: #parking #pudo #materialization #generic-materialisation #planning #vault
