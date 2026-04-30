@@ -319,12 +319,24 @@
             "id": "d766a0330d27d64f",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
+                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "unparking_scenarios.excalidraw"
+              "icon": "lucide-file",
+              "title": "pudo-event-materialization-speed-gear-buckets"
             }
           }
         ],
@@ -463,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md",
+                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of unparking_scenarios.excalidraw"
+              "title": "Outline of pudo-event-materialization-speed-gear-buckets"
             }
           },
           {
@@ -504,9 +516,9 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
-    "projects/pudo-event-materialization-speed-gear-buckets.md",
     "projects.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
+    "projects/pudo-event-materialization-speed-gear-buckets.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md",
     "parking_model_analysis/models/tomato-toucan-gorgeous.md",
     "parking_model_analysis/models/panther-white-intuitive.md",
