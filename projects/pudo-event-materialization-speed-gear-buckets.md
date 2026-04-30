@@ -28,6 +28,7 @@ Relevant notebooks:
 - Start from the clean base notebooks on `parking/notebooks`.
 - Keep the event notebook as the source of event-level truth.
 - Keep the materialization notebook responsible for sample-level filtering after timestamp expansion.
+- Only apply speed/gear extensions to UNPUDO and unparking materialization paths; PUDO and park buckets should stay on the existing path unless we identify a separate need.
 - Do not hard-remove long UNPUDO / unparking events by default; long reverse/forward maneuvers are exactly the cases we care about.
 - Keep generic buckets and add directional / gear-change buckets additively.
 - Use the original fsspec Azure writer style for final output, not native Spark parquet output.
@@ -35,16 +36,16 @@ Relevant notebooks:
 
 ## Intended Behavior
 
-- Event table should include enough event-level gear metadata:
-  - `gear_direction` for the detected event transition.
-  - `prev_gear_direction` for the gear before the detected transition.
+- Event table should include event-window metadata, not sample-level gear:
   - `gearchange_timestamp` for UNPUDO / unparking park-exit decision time.
   - Existing `timestamp_unixus` remains the UNPUDO / unparking movement/acceleration anchor.
   - Existing `event_startOrEnd_timestampunixus` remains the maneuver end estimate.
+  - `gear_to_accel_sec` and `accel_to_end_sec` should remain useful debug columns.
+  - Optional: add explicit event window columns for materialization readability, for example `materialization_window_start_unixus` and `materialization_window_end_unixus`, but only if this simplifies the materialization notebook without duplicating logic.
 
-- Event table should not try to store the `+0.6s` speed cutoff result:
-  - The cutoff is sample-level, not event-level.
-  - A single event expands into many candidate training samples, each with a different `sample_timestamp + 0.6s`.
+- Event table should not store event-level `gear_direction` for this project:
+  - Directional buckets need gear at each materialized sample/future timestamp, not just at the event anchor.
+  - The materialization notebook already has to join corpus for future speed, so it should fetch sample-level gear in the same restricted corpus path.
 
 - Generic DC UNPUDO / unparking buckets should represent samples that lead to motion:
   - Expand the normal movement window from movement anchor to event end.
@@ -66,14 +67,15 @@ Relevant notebooks:
 - Gear-change boundary sources:
   - Always include event-level UNPUDO / unparking `gearchange_timestamp` for the initial park-to-drive/reverse transition.
   - Optionally include additional cleaned in-maneuver gear transitions inside `[gearchange_timestamp, event_startOrEnd_timestampunixus]`, especially reverse-to-drive transitions in two/three-point maneuvers.
+  - These boundary detections are only for UNPUDO / unparking.
 
 ## Design
 
 - Event notebook changes:
-  - Preserve the gear metadata that already exists in candidate DataFrames instead of dropping it during standardization.
-  - Add `gear_direction` and `prev_gear_direction` to PUDO, park, UNPUDO, and unparking standardized output schemas.
+  - Do not add `gear_direction` / `prev_gear_direction` just for materialization; those would be event-anchor values and not sufficient for per-sample directional buckets.
   - Keep `gearchange_timestamp`, `gear_to_accel_sec`, and `accel_to_end_sec` as first-class debug columns.
-  - Add a small summary section for UNPUDO / unparking counts by `gear_direction`, plus gear-to-accel and event-duration distributions.
+  - Consider adding explicit materialization window columns for UNPUDO / unparking if they make the materialization notebook simpler.
+  - Add a small summary section for UNPUDO / unparking gear-to-accel and event-duration distributions.
   - Avoid changing the core event detection thresholds in the first implementation unless the output stats prove we need to.
 
 - Materialization notebook changes:
@@ -88,24 +90,25 @@ Relevant notebooks:
     - optional date filters for quick tests
   - Disable hard event-length removal for UNPUDO / unparking by default. Keep the code path as a flag, but do not use it as the default.
   - Stop doing per-bucket `limit(1).count()` checks. Empty buckets should naturally disappear from final summaries.
+  - Leave PUDO and park bucket generation unchanged except for shared refactor mechanics.
   - Build bucket samples as one tagged DataFrame with columns like `run_id`, `timestamp_unixus`, `dataset_bucket`, and helper metadata.
   - Join to `wayve_corpus.all_data` once per logical need, after restricting by:
     - event run IDs
     - global min/max timestamp bounds
     - required columns only
-  - Compute future-speed matches once for all generic UNPUDO / unparking samples, then derive full/forward/reverse variants from that result.
-  - Compute cleaned gear transitions once for bounded event windows, then derive gear-change buckets from those boundaries.
+  - Compute future-speed matches once for generic UNPUDO / unparking samples, then derive full/forward/reverse variants from that result.
+  - Compute cleaned gear transitions once for bounded UNPUDO / unparking event windows, then derive gear-change buckets from those boundaries.
   - Use the original fsspec materialization writer and metadata generation exactly, because Spark-native parquet output previously failed to appear in the SWE training storage account.
 
 ## Plan
 
 - Inspect the base notebooks and confirm the current schema:
-  - Confirm which gear columns are computed but dropped in the event notebook.
+  - Confirm the event notebook already emits the required window/timing columns for UNPUDO / unparking.
   - Confirm current materialization uses acceleration filtering, event-length removal, per-bucket actions, and repeated joins.
 
 - Update the event notebook first:
-  - Add gear metadata columns to the final event table schema.
-  - Preserve compatibility with existing materialization columns.
+  - Add only missing UNPUDO / unparking window/debug columns if needed.
+  - Do not add event-level gear fields unless a separate analysis need appears.
   - Add lightweight summary displays only; avoid full `display(df)` on large event tables by default.
 
 - Update the materialization notebook second:
@@ -114,6 +117,7 @@ Relevant notebooks:
   - Add forward/reverse variants from future matched gear direction.
   - Add gear-change buckets from event `gearchange_timestamp` and optional in-window cleaned corpus gear boundaries.
   - Keep gear-change buckets separate from the future-speed movement filter unless we explicitly decide otherwise.
+  - Do not add speed/gear variants for PUDO or park.
 
 - Add safe runtime controls:
   - `DRY_RUN_MATERIALIZATION = True` by default while validating.
@@ -129,8 +133,9 @@ Relevant notebooks:
   - Only then run `DRY_RUN_MATERIALIZATION = False`.
 
 - Acceptance criteria:
-  - Event table exposes `gear_direction`, `prev_gear_direction`, `gearchange_timestamp`, `gear_to_accel_sec`, and `accel_to_end_sec` for UNPUDO / unparking analysis.
+  - Event table exposes or preserves the timing/window columns needed for UNPUDO / unparking materialization: `gearchange_timestamp`, `timestamp_unixus`, `event_startOrEnd_timestampunixus`, `gear_to_accel_sec`, and `accel_to_end_sec`.
   - Materialization creates generic, forward, reverse, and gear-change UNPUDO / unparking buckets.
+  - PUDO and park bucket outputs remain equivalent to the base materialization behavior unless explicitly changed later.
   - Future-speed-filtered generic rows are lower than the old unfiltered rows but not unexpectedly tiny.
   - Reverse rows exist for both UNPUDO and unparking.
   - Gear-change rows are not almost all removed by the future-speed filter.
@@ -140,6 +145,8 @@ Relevant notebooks:
 ## Decisions
 
 - Keep the `+0.6s` speed cutoff in materialization, not event detection.
+- Do not add event-level gear for this project; fetch gear per materialized timestamp in materialization.
+- Limit speed/gear extensions to UNPUDO and unparking.
 - Do not default to event-length removal for UNPUDO / unparking.
 - Do not apply the movement future-speed cutoff to gear-change buckets by default.
 - Prefer one shared bounded corpus join per operation over per-bucket joins/actions.
@@ -147,6 +154,6 @@ Relevant notebooks:
 
 ## Notes
 
-- The base event notebook already has stable park-to-nonzero detection using `prev_gear_direction`, `prev2_gear_direction`, and `next_gear_direction`, but the standardized output drops `gear_direction` / `prev_gear_direction`.
+- The base event notebook already has stable park-to-nonzero detection using `prev_gear_direction`, `prev2_gear_direction`, and `next_gear_direction`, but this project does not need to persist those event-anchor values into the event table.
 - The base materialization notebook currently filters UNPUDO / unparking samples by current acceleration `>= 0.7341269935880388 m/s^2` and uses hard event-length removal: `unpudo=10s`, `unparking=10s`.
 - The previous gear-change materialization produced very small gear-change buckets because the speed/motion filter was downstream and removed many pre-decision samples.
