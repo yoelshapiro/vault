@@ -62,3 +62,23 @@ Requested prompt handling:
 - final retry
   - exact command above with `-st dir_unpudo_unpark_gi`
   - submitted job `156540`, reached `Dispatched`, then `Running`
+
+## Failure follow-up: job 156540
+
+- job: `156540`
+- nickname: `aqua-inimitable-grasshopper`
+- available logs: only worker/rank group log `rank3.log` and `rank3-errors.log`; Surfboard did not return logs for ranks 0-2.
+- failure signal:
+  - repeated data-loading warnings were present, but no fatal dataloader traceback was visible in the available logs.
+  - main failure was NCCL watchdog timeout after 30 minutes:
+    - `WorkNCCL(SeqNum=22, OpType=BROADCAST, NumelIn=16234296, NumelOut=16234296, Timeout(ms)=1800000)`
+    - training watchdog reported `Training hanging. Setting shared memory variable.`
+  - rank stack traces showed the training thread inside `torch._dynamo` compilation during the first optimizer/training step.
+- root-cause assessment:
+  - this is most consistent with a TorchDynamo/DDP compile hang for the new shared waypoint-token gear/indicator training mode, not a materialization or checkpoint-load failure.
+  - the base parking modes still use `compile_mode="reduce-overhead"`; the risky path is the new `parking_bc_train_gear_indicator` mode.
+- local fix applied:
+  - changed `ParkingBcTrainGearIndicatorCfg.compile_mode` from `"reduce-overhead"` to `None`.
+  - validation passed: `bazel test //wayve/ai/si:test_config_py_test --test_output=errors`.
+- status:
+  - fix is local and uncommitted at the time of this note.
