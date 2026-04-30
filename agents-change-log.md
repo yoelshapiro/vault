@@ -1670,3 +1670,17 @@
     - submitted training job `155826` with session `session_2026_04_29_06_38_50_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_50_25_20_5`; initial state `Queued`
     - updated `PUDO_UNPARKING_FUTURE_SPEED_ROOT` to the fsspec-written `2026_04_29_06_36_32...` materialization, kept gear-change buckets unused, and pushed commit `3566bbbe95d`
     - after rerunning materialization with the exact original writer, verified the `2026_04_29_07_52_36...` root exists in both primary and SWE storage accounts, updated the datamodule root, and pushed commit `66a3f487862`
+
+- 2026-04-30: [New UNPUDO Model Analysis Runs](agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md)
+  - Labels: parking, unpudo, model-analysis, databricks
+  - Branch: `parking/notebooks`
+  - PR: none
+  - Change type: analysis
+  - Areas: `parking.model_analysis`, `parking_model_analysis`, `tools/databricks_queries`, `tools/parking_model_analysis_writer`
+  - Changes:
+    - analyzed 12 new run IDs since 2026-04-27 for `exotic-jellyfish-silver`, `prismatic-teal-bird`, `panther-white-intuitive`, and `tomato-toucan-gorgeous`
+    - used 8-way single-run workers with detector-derived event JSON and per-worker `/tmp` packet/cache/staged roots
+    - wrote 115 scored rows into `parking.model_analysis`
+    - regenerated four model cards and 12 per-run report cards from table rows
+    - validated GitHub-compatible `card` links and Foxglove event windows at +/- 5 minutes
+    - added helper support for Databricks JSON export, cache directory override, and a Bazel `parking_model_analysis_writer` target
