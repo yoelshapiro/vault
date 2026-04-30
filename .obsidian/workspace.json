@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
+                "file": "projects/zach-gear-indicator-losses.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-event-materialization-speed-gear-buckets"
+              "title": "zach-gear-indicator-losses"
             }
           },
           {
@@ -328,7 +328,7 @@
             }
           }
         ],
-        "currentTab": 19
+        "currentTab": 18
       }
     ],
     "direction": "vertical"
@@ -463,13 +463,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md",
+                "file": "projects/zach-gear-indicator-losses.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of unparking_scenarios.excalidraw"
+              "title": "Outline of zach-gear-indicator-losses"
             }
           },
           {
@@ -502,12 +502,13 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "d766a0330d27d64f",
+  "active": "117f440063e12be8",
   "lastOpenFiles": [
-    "projects/pudo-event-materialization-speed-gear-buckets.md",
-    "Excalidraw/model_release.excalidraw.md",
     "projects.md",
+    "projects/zach-gear-indicator-losses.md",
+    "projects/pudo-event-materialization-speed-gear-buckets.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
+    "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md",
     "parking_model_analysis/models/tomato-toucan-gorgeous.md",
     "parking_model_analysis/models/panther-white-intuitive.md",
@@ -529,7 +530,6 @@
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
     "projects/parking-unparking-gear-augmentation.md",
-    "parking_model_analysis/models/eel-teal-outspoken.md",
     "agent_tasks/2026/04/Week-5",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
