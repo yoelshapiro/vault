@@ -246,3 +246,18 @@ For `unparking`, the notebook temporarily relabels it as `unpudo` before disenga
 - This produces two distinct signals:
   - speed-filtered UNPUDO/unparking buckets for actual start/progress behavior
   - unfiltered gear-change buckets for gear-decision learning around transitions
+
+## 2026-04-30 Current Disengagement Bucket Behavior
+- Event notebook computes several disengagement timestamp columns per event:
+  - `disengagement_timestamp_unixus`: selected within the main event window.
+  - `disengagement_timestamp_unixus_fixed_window`: selected within a fixed 30s window, but materialization intentionally does not use it.
+  - `disengagement_timestamp_unixus_gear_to_start`: UNPUDO/unparking only, selected between gear change and movement anchor.
+  - `disengagement_timestamp_unixus_before_gearchange_10s`: UNPUDO/unparking only, selected in the 10s before gear change.
+  - `disengagement_timestamp_unixus_before_event_start_10s`: PUDO/park only, selected in the 10s before event start.
+- Materialization currently explodes all non-null anchors except `_fixed_window`, then creates three CA windows around each anchor:
+  - `pre_ca`: [-1.2s, -0.04s]
+  - `ca_short`: [0.0s, 1.48s]
+  - `ca_long`: [1.52s, 5.0s]
+- Current materialization applies `df_filtered = apply_event_length_cutoff(df_filtered)` before both DC and AV buckets, so AV/disengagement buckets are also affected by event-length filtering.
+- Current materialization also applies the unpudo/unparking acceleration filter to AV buckets after the range join.
+- Proposed simplification: CA/pre-CA buckets should be driven directly by selected disengagement anchors and should not need the DC movement-window filters. Keep near-disengagement windows; avoid event-length and speed/future-speed filters for those buckets unless we explicitly want to train only accelerating CA samples.
