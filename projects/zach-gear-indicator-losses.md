@@ -11,7 +11,7 @@
 - **Last updated:** 2026-04-30
 - **Current priorities:**
   - Review the uncommitted implementation on `boris/pudo_w_route_path_fixes_and_new_data`.
-  - Review the updated Zach-faithful draft that reuses waypoint output tokens for gear/indicator.
+  - Review the updated implementation support while parking config defaults remain disabled.
   - If accepted, run a parking config construction / short train smoke test before committing.
 - **Blockers:**
   - Full `//wayve/ai/zoo:test_outputs` / `test_losses` py_checks are blocked by an existing unrelated pylint failure in `wayve/ai/zoo/deployment/deployment_wrapper.py`.
@@ -63,6 +63,9 @@
 - **2026-04-30:**
   - **Decision:** Revise the draft to reuse waypoint output tokens for per-waypoint gear/indicator instead of adding separate gear/indicator query tokens.
   - **Rationale:** This matches Zak's design more closely: gear/indicator losses backprop through the same future tokens used by the waypoint head, and parking configs do not inflate the output query count.
+- **2026-04-30:**
+  - **Decision:** Keep the new per-waypoint gear/indicator behavior disabled in `parking_config.py` for now.
+  - **Rationale:** The implementation is available for controlled experiments, but Parking models should fall back to the previous one-step / broadcasted behavior unless the new flags are explicitly enabled.
 
 ## Notes
 
@@ -171,9 +174,14 @@ weight(t) = 1 + (change_weight - 1) * exp(-change_decay * t)
   - `wayve/ai/zoo/outputs/behavior_control.py`: mirrors the same waypoint-token sharing path for behavior-label calculation and top-k sampled outputs, because Parking BC enables behavior control.
   - `wayve/ai/zoo/losses/imitation_losses.py`: added future-horizon CE with Zach-style class-change weighting, with dynamic indicator-class masking in the new per-waypoint path so hazard class `3` is not treated as invalid when the head has four classes. The legacy next-step path keeps its old hazard/Maxus ignore behavior.
   - `wayve/ai/si/losses/bc_loss_module.py`: added BC loss config knobs for per-waypoint indicator / gear losses and change weighting.
-  - `wayve/ai/si/configs/parking/parking_config.py`: enabled per-waypoint heads/losses for parking models with Zach-like values and waypoint-token sharing:
-    - indicator change weight `10.0`, decay `0.5`
-    - gear change weight `20.0`, decay `0.5`
+  - `wayve/ai/si/configs/parking/parking_config.py`: currently keeps the new behavior disabled:
+    - `indicator_per_waypoint=False`
+    - `gear_direction_per_waypoint=False`
+    - `indicator_from_waypoint_tokens=False`
+    - `gear_direction_from_waypoint_tokens=False`
+    - `indicator_per_waypoint_loss=False`
+    - `gear_direction_per_waypoint_loss=False`
+    - change weights are neutral (`1.0`, decay `0.0`)
   - Tests updated for head behavior, weighted losses, and the branch's 4-class indicator output shape.
 - Validation:
   - Passed: `bazel test //wayve/ai/zoo:test_outputs_py_test //wayve/ai/zoo:test_losses_py_test //wayve/ai/zoo:test_outputs_mypy //wayve/ai/zoo:test_losses_mypy //wayve/ai/zoo:test_outputs_py_lint_flake8 //wayve/ai/zoo:test_losses_py_lint_flake8`
