@@ -163,6 +163,7 @@ Relevant notebooks:
 - `timestamp_unixus`:
   - PUDO / park: the event anchor at the park transition. This is effectively the PUDO/park maneuver end.
   - UNPUDO / unparking: the movement/acceleration anchor after a park-to-nonzero gear transition. The event notebook detects park exit, finds the first frame that later moved enough, then picks the earliest acceleration frame between gear transition and that moved-enough frame.
+  - In the current event notebook, "moved enough" means the haversine distance from the park-exit transition point reaches `UNPUDO_MIN_DISTANCE_M = 5.0m` within a `60s` lookahead. The chosen event timestamp is then the earliest frame between the gear transition and that first `5m` frame where odometry acceleration is at least `UNPUDO_MIN_ACCEL_MPS2 = 0.1 m/s^2`.
 
 - `gearchange_timestamp`:
   - UNPUDO / unparking only.
