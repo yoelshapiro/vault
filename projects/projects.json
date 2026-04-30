@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Zach gear and indicator losses",
+      "slug": "zach-gear-indicator-losses",
+      "path": "/home/borisindelman/git/vault/projects/zach-gear-indicator-losses.md",
+      "status": "active",
+      "phase": "Investigation",
+      "last_updated": "2026-04-30"
+    },
+    {
       "name": "PUDO event materialization speed gear buckets",
       "slug": "pudo-event-materialization-speed-gear-buckets",
       "path": "/home/borisindelman/git/vault/projects/pudo-event-materialization-speed-gear-buckets.md",

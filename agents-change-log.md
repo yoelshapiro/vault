@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-30 — Zach gear and indicator loss investigation
+- Topic: document Zach Murez's per-waypoint gear and indicator classifier losses from `origin/zmurez/pudo` before making implementation changes.
+- Labels: #parking #pudo #gear #indicator #losses #training #planning
+- Branch: `boris/parking-materialization-config-dry-run`
+- PR: none
+- Change type: planning/docs
+- Areas: `projects/`, `wayve/ai/experimental/`, `wayve/ai/zoo/`, `wayve/ai/si/`
+- Changes:
+  - [[projects/zach-gear-indicator-losses]]: created a new active vault project summarizing Zach's `PER_WAYPOINT` gear/indicator heads, change-weighted future-horizon CE losses, config values from `mcv_new_base0.yml`, differences from our current SI / zoo next-step expanded-logit implementation, and a minimal opt-in port plan if we decide to implement it later.
+
 > #### 2026-04-30 — PUDO event/materialization speed and gear bucket plan
 - Topic: plan a clean retry for extending the PUDO event and materialization notebooks with future-speed filtering, forward/reverse buckets, and gear-change buckets without repeating the slow failed materialization path.
 - Labels: #parking #pudo #unpudo #unparking #materialization #notebooks #planning
