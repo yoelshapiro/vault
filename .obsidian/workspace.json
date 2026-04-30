@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
+                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-03-31-wonjoon-parking-augmentation-design-review"
+              "title": "pudo-event-materialization-speed-gear-buckets"
             }
           }
         ],
@@ -451,13 +451,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
+                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-03-31-wonjoon-parking-augmentation-design-review"
+              "title": "Outline of pudo-event-materialization-speed-gear-buckets"
             }
           },
           {
@@ -492,15 +492,15 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects.md",
+    "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "projects/pudo-event-materialization-speed-gear-buckets.md",
     "agent_tasks/2026/04/Week-5/2026-04-29-unflappable-azure-sea-cucumber-interleave-deploy.md",
     "agents-change-log.md",
-    "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
     "agent_tasks/2026/04/Week-4/2026-04-23-parking-training-submit-wonjoon-gc-pudo-r017-fix3.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-implementation.md",
     "agent_tasks/2026/03/Week-3/2026-03-20-parking-unparking-gear-augmentation-kickoff.md",
     "projects/parking-unparking-gear-augmentation.md",
-    "projects.md",
     "parking_model_analysis/models/eel-teal-outspoken.md",
     "agent_tasks/2026/04/Week-5/2026-04-29-stork-aquamarine-pudo-uk-licensing.md",
     "agent_tasks/2026/04/Week-5/2026-04-29-directional-unpudo-unpark-datamodule.md",
