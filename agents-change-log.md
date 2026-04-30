@@ -1765,3 +1765,16 @@
   - Areas: vault/projects
   - Changes:
     - Rewrote `projects/pudo-event-materialization-speed-gear-buckets.md` as a clean project note focused on desired notebook changes and how Zach's `zmurez/pudo` approach differs.
+
+- Topic: Parking gear/indicator per-waypoint loss config
+  - Labels: parking, pudo, gear, indicator, config-migration
+  - Branch: boris/pudo_w_route_path_fixes_and_new_data
+  - PR: N/A
+  - Change type: Feature
+  - Areas: wayve/ai/zoo/outputs, wayve/ai/zoo/losses, wayve/ai/si/losses, wayve/ai/si/configs/parking, wayve/ai/si/configs/versioning
+  - Changes:
+    - Added opt-in per-waypoint gear and indicator output heads that can reuse waypoint output tokens instead of allocating separate future query tokens.
+    - Added future-horizon, class-change-weighted gear and indicator CE losses behind BC loss flags.
+    - Added `parking_bc_train_gear_indicator` using the directional UNPUDO/unpark datamodule and Zach-style change weights (`indicator=10`, `gear=20`, decay `0.5`).
+    - Added BC config migration `v33`, regenerated `v33.yaml`, and updated BC reference configs.
+    - Validated SI config tests and targeted zoo output/loss tests.

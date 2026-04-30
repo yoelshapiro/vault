@@ -188,3 +188,17 @@ weight(t) = 1 + (change_weight - 1) * exp(-change_decay * t)
   - Not passing due unrelated existing issue: full `//wayve/ai/zoo:test_outputs //wayve/ai/zoo:test_losses` because `pylint` reports `wayve/ai/zoo/deployment/deployment_wrapper.py:2611` has too many locals.
 - Main risk:
   - The query-count increase from the first draft was removed. The remaining checkpoint risk is smaller: gear/indicator head parameters and behavior-control helper paths changed, but the shared query count for parking stays aligned with the waypoint head rather than adding separate future gear/indicator queries.
+
+### Final Commit Preparation
+- Added selectable config entries for the directional UNPUDO/unpark data plus shared waypoint-token gear/indicator losses:
+  - `parking_bc_new_driving_directional_unpudo_unpark_gear_indicator_datamodule`
+  - `parking_bc_gear_indicator`
+  - `parking_bc_train_gear_indicator`
+- Kept the default `parking_bc` path on legacy one-token/broadcast gear and indicator behavior.
+- Added BC config migration `v33` to:
+  - add default per-waypoint gear/indicator loss fields to migrated configs;
+  - remove stale BC fields no longer accepted by current signatures (`memray_profiler_callback`, old LN toggles, old radar/datamodule fields).
+- Regenerated BC sample config `v33` and updated BC baseline references.
+- Validation passed:
+  - `bazel test //wayve/ai/si:test_config_py_test --test_output=errors`
+  - `bazel test //wayve/ai/zoo:test_outputs_py_test //wayve/ai/zoo:test_losses_py_test //wayve/ai/zoo:test_outputs_mypy //wayve/ai/zoo:test_losses_mypy //wayve/ai/zoo:test_outputs_py_lint_flake8 //wayve/ai/zoo:test_losses_py_lint_flake8`
