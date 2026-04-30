@@ -157,3 +157,46 @@ Relevant notebooks:
 - The base event notebook already has stable park-to-nonzero detection using `prev_gear_direction`, `prev2_gear_direction`, and `next_gear_direction`, but this project does not need to persist those event-anchor values into the event table.
 - The base materialization notebook currently filters UNPUDO / unparking samples by current acceleration `>= 0.7341269935880388 m/s^2` and uses hard event-length removal: `unpudo=10s`, `unparking=10s`.
 - The previous gear-change materialization produced very small gear-change buckets because the speed/motion filter was downstream and removed many pre-decision samples.
+
+## Event Timestamp Semantics
+
+- `timestamp_unixus`:
+  - PUDO / park: the event anchor at the park transition. This is effectively the PUDO/park maneuver end.
+  - UNPUDO / unparking: the movement/acceleration anchor after a park-to-nonzero gear transition. The event notebook detects park exit, finds the first frame that later moved enough, then picks the earliest acceleration frame between gear transition and that moved-enough frame.
+
+- `gearchange_timestamp`:
+  - UNPUDO / unparking only.
+  - The last detected gear shift from park to nonzero before or at `timestamp_unixus`.
+  - Null for PUDO / park.
+
+- `event_startOrEnd_timestampunixus`:
+  - PUDO / park: estimated maneuver start, found by looking backward from `timestamp_unixus` using distance/time/indicator rules and clamped after the previous event.
+  - UNPUDO / unparking: estimated maneuver end, found by looking forward from `timestamp_unixus` until both distance and speed conditions are satisfied, bounded by max lookahead/distance and before the next event.
+
+- `disengagement_timestamp_unixus`:
+  - Selected disengagement in the main event window.
+  - PUDO / park main window is `[event_startOrEnd_timestampunixus, timestamp_unixus]`; selection prefers the latest disengagement in that window.
+  - UNPUDO / unparking main window is `[timestamp_unixus, event_startOrEnd_timestampunixus]`; selection prefers the earliest disengagement in that window.
+
+- `disengagement_timestamp_unixus_fixed_window`:
+  - Selected disengagement in a fixed `time_window_seconds` window.
+  - PUDO / park: `[timestamp_unixus - time_window_seconds, timestamp_unixus]`.
+  - UNPUDO / unparking: `[timestamp_unixus, timestamp_unixus + time_window_seconds]`.
+  - Uses the same selection direction as the main window: latest for PUDO/park, earliest for UNPUDO/unparking.
+
+- `disengagement_timestamp_unixus_gear_to_start`:
+  - UNPUDO / unparking only.
+  - Window is `[gearchange_timestamp, timestamp_unixus]`.
+  - Selection prefers the latest disengagement in the window.
+
+- `disengagement_timestamp_unixus_before_gearchange_10s`:
+  - UNPUDO / unparking only.
+  - Window is `[gearchange_timestamp - 10s, gearchange_timestamp]`.
+  - Selection prefers the latest disengagement in the window.
+
+- `disengagement_timestamp_unixus_before_event_start_10s`:
+  - PUDO / park only.
+  - Window is `[event_startOrEnd_timestampunixus - 10s, event_startOrEnd_timestampunixus]`.
+  - Selection prefers the latest disengagement in the window.
+
+For `unparking`, the notebook temporarily relabels it as `unpudo` before disengagement processing, then restores the original event type, so all UNPUDO disengagement-window semantics above apply to unparking too.
