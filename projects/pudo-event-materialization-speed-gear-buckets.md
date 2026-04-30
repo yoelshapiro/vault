@@ -377,3 +377,7 @@ Likely gaps if we want to mimic Zach more closely:
 - Validate gear cleanup parity. Our materialization cleans gear locally for bucket decisions, but model supervision still depends on what the dataloader provides.
 - Consider START_GEAR_CHANGE-style samples: standstill just before motion near any gear change. Our movement buckets with future-speed filtering may remove some of the pre-motion standstill; gear-change buckets keep transition context but are small.
 - Consider route/parking-request augmentation parity separately from data materialization: Zach's route blackout and route-end jitter are training-time input augmentations, not just bucket selection.
+
+## 2026-04-30 UNPUDO Distance Threshold Fix
+
+Fixed the event detection notebook config mismatch: `UNPUDO_MIN_DISTANCE_M` was still `5.0`, while the agreed progress/end threshold was `10.0`. Updated it to `10.0` so the transition-to-moved-enough anchor is consistent with `UNPUDO_END_MIN_DISTANCE_M`.

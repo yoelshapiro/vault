@@ -1722,3 +1722,13 @@
   - Changes:
     - Re-checked `origin/zmurez/pudo` at `e6246ab7c722` and compared Zach's dynamic sampler-based UNPUDO/unparking setup against the current notebook materialization plan.
     - Documented gear cleanup, UNPARKING, START_GEAR_CHANGE, GEAR_CHANGE, route blackout/request, and per-waypoint gear-loss differences in [[projects/pudo-event-materialization-speed-gear-buckets]].
+
+
+- Topic: UNPUDO distance threshold correction
+  - Labels: parking, unpudo, event-detection
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Fix
+  - Areas: wayve/ai/parking/notebooks
+  - Changes:
+    - Updated `UNPUDO_MIN_DISTANCE_M` from `5.0` to `10.0` in the PUDO/UNPUDO event detection notebook to match the agreed moved-enough threshold.
