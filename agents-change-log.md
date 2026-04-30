@@ -1732,3 +1732,13 @@
   - Areas: wayve/ai/parking/notebooks
   - Changes:
     - Updated `UNPUDO_MIN_DISTANCE_M` from `5.0` to `10.0` in the PUDO/UNPUDO event detection notebook to match the agreed moved-enough threshold.
+
+
+- Topic: Rewrite PUDO materialization project page
+  - Labels: parking, pudo, unpudo, materialization, vault
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/projects
+  - Changes:
+    - Rewrote `projects/pudo-event-materialization-speed-gear-buckets.md` as a clean project note focused on desired notebook changes and how Zach's `zmurez/pudo` approach differs.
