@@ -350,3 +350,30 @@ _parquet_files_list.txt
 - UNPUDO/unparking CA/pre-CA buckets are near disengagement and filtered by future speed.
 - PUDO/park CA/pre-CA buckets are near disengagement and are not future-speed filtered.
 - One-day dry-run finishes quickly enough to iterate.
+
+## 2026-04-30 Zach `zmurez/pudo` Comparison
+
+Checked `origin/zmurez/pudo` at `e6246ab7c722` (`2026-04-29 10:58:14 -0700`, Zak, `cleanup`). This branch is still active and the relevant PUDO/unparking implementation remains in `wayve/ai/experimental`, not in the SI OTF datamodule.
+
+Key Zach mechanisms:
+- `single_run.py` cleans gear before deriving parking labels: removes tiny reverse runs, removes short park/neutral runs, forces park around manual parked labels, and rewrites stopped-before-park frames to park after a short 0.5s buffer.
+- `make_park_masks` creates parking/PUDO masks around shift-to-park, extends start by distance and indicator context, and uses PUDO pin-valid distances.
+- PUDO is inferred as a park transition with hazards nearby, excluding office geofences. `stopping_type==2` is PUDO, `stopping_type==1` is park.
+- UNPARKING sampler finds park-to-nonzero gear transition, then picks the first later moving frame (`abs(speed)>0`) and dilates 0s before / 10s after.
+- START_GEAR_CHANGE sampler finds any gear change, expands ±30s, finds starts from standstill within that region, and samples 0.9s before / 0s after the start.
+- GEAR_CHANGE sampler samples cleaned gear transitions with `GEAR_CHANGE_BEFORE=1.0s`, `GEAR_CHANGE_AFTER=1.0s` in `mcv_new_base0`.
+- Route training uses route dropout and parking request: generic route dropout can black out routes; parking-request augmentation is low-probability (`0.025`) and blacks out route when active. In inference, route blackout is tied to explicit parking request / selected parking pose, not simply end-of-route.
+- Gear head is per-waypoint, with strong change weighting (`GEAR.PER_WAYPOINT=True`, `LOSS_WEIGHT_CHANGE=20.0`, decay `0.5`).
+
+Comparison to current notebook plan:
+- Current notebook materializes deterministic buckets from the event table. Zach samples dynamically at training time from cleaned in-memory run signals.
+- Our UNPUDO/unparking movement buckets use `gearchange_timestamp - 5s` to `event_startOrEnd_timestampunixus`, then filter by future speed at +0.60s to +0.65s. Zach does not apply this 0.6s future-speed criterion; he anchors to first actual movement after park exit and samples 10s after.
+- Our gear-change buckets sample ±1s around cleaned gear transitions and explicit event anchors. This is close to Zach's `GEAR_CHANGE_*` sampler, but our explicit event gear anchors are materialized and Zach's are sampler-level.
+- Our directional forward/reverse buckets are a new SI-side addition. Zach does not split UNPUDO/unparking into forward/reverse buckets; he relies on cleaned gear supervision and per-waypoint gear loss.
+- Our event notebook now records `gear_change_timestamps`/`num_gear_changes`; Zach does not need that because the sampler sees the whole run arrays directly.
+
+Likely gaps if we want to mimic Zach more closely:
+- Add or preserve strong per-waypoint gear-change loss in the SI parking model path; buckets alone do not recreate this.
+- Validate gear cleanup parity. Our materialization cleans gear locally for bucket decisions, but model supervision still depends on what the dataloader provides.
+- Consider START_GEAR_CHANGE-style samples: standstill just before motion near any gear change. Our movement buckets with future-speed filtering may remove some of the pre-motion standstill; gear-change buckets keep transition context but are small.
+- Consider route/parking-request augmentation parity separately from data materialization: Zach's route blackout and route-end jitter are training-time input augmentations, not just bucket selection.

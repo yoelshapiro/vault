@@ -1711,3 +1711,14 @@
     - pushed commit `10879af6c9f8` to `origin/boris/parking-materialization-config-dry-run`
     - imported a dry-run copy of the materialization notebook to Databricks and ran it on cluster `shared_2.3.174`
     - Databricks run `729431122715074` completed successfully in `92s` with `CONFIG.dry_run=True`, 10 source events, and no Azure writes
+
+
+- Topic: Zach PUDO/unparking data comparison
+  - Labels: parking, pudo, unpudo, materialization, research
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Research
+  - Areas: wayve/ai/experimental, parking materialization notebooks
+  - Changes:
+    - Re-checked `origin/zmurez/pudo` at `e6246ab7c722` and compared Zach's dynamic sampler-based UNPUDO/unparking setup against the current notebook materialization plan.
+    - Documented gear cleanup, UNPARKING, START_GEAR_CHANGE, GEAR_CHANGE, route blackout/request, and per-waypoint gear-loss differences in [[projects/pudo-event-materialization-speed-gear-buckets]].
