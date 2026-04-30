@@ -130,6 +130,19 @@ Relevant notebooks:
 - Prefer tagged DataFrames and bounded joins over many independent per-bucket joins.
 - Do not apply event-length cutoff globally to CA/pre-CA buckets.
 - Keep CA/pre-CA buckets centered on disengagement anchors only.
+- Keep hard event-length cutoff only for PUDO/park DC events, with a 30s threshold.
+- Apply the future-speed filter to UNPUDO/unparking CA/pre-CA materialized samples as well as UNPUDO/unparking DC movement samples.
+
+### DC PUDO / Park Event-Length Cutoff
+
+Use hard event-length removal only for PUDO/park DC events:
+
+```text
+pudo: 30s
+park: 30s
+```
+
+Do not apply hard event-length removal to UNPUDO/unparking.
 
 ### DC PUDO / Park Normal Buckets
 
@@ -220,9 +233,9 @@ ca_short: [0.0s, 1.48s]
 ca_long:  [1.52s, 5.0s]
 ```
 
-- Do not apply DC movement/future-speed filters by default.
-- Do not apply event-length cutoff by default.
-- If we later want accelerating-only CA buckets, create explicit separate bucket names.
+- Apply the future-speed filter to UNPUDO/unparking CA/pre-CA buckets.
+- Do not apply the future-speed filter to PUDO/park CA/pre-CA buckets.
+- Do not apply event-length cutoff to CA/pre-CA buckets.
 
 ## Validation Plan
 
@@ -260,5 +273,7 @@ _parquet_files_list.txt
 - UNPUDO/unparking normal materialization uses `[gearchange - 5s, event end]` plus future-speed filtering.
 - UNPUDO/unparking forward and reverse buckets both have non-trivial counts.
 - UNPUDO/unparking gear-change buckets include standstill decision frames and are not future-speed filtered.
-- CA/pre-CA buckets are near disengagement and are not reduced by DC movement filters.
+- PUDO/park DC event-length cutoff is 30s.
+- UNPUDO/unparking CA/pre-CA buckets are near disengagement and filtered by future speed.
+- PUDO/park CA/pre-CA buckets are near disengagement and are not future-speed filtered.
 - One-day dry-run finishes quickly enough to iterate.
