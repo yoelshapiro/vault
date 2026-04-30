@@ -10,15 +10,15 @@
 ## 2026-04
 > [!note] 2026-04
 
-> #### 2026-04-30 — Parking training submission blocked by session-tag length
-- Topic: attempt the requested Parking BC training submission for the directional UNPUDO / unpark gear-indicator config and record the submission-time failure.
-- Labels: #parking #training #aks #surfboard #vault #submission-failure
+> #### 2026-04-30 — Parking training retry reached Running after shortened session tag
+- Topic: retry the requested Parking BC directional UNPUDO / unpark gear-indicator training with a shortened session tag, monitor it through startup, and record the final submission identifiers.
+- Labels: #parking #training #aks #surfboard #wandb #notion #vault
 - Branch: `boris/pudo_w_route_path_fixes_and_new_data`
 - PR: none
 - Change type: operations
 - Areas: `agent_tasks/2026/04/Week-5/`
 - Changes:
-  - [[agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator]]: ran the exact requested training command at commit `c2a575154cb`, confirmed the allowed unrelated dirty worktree remained untouched, and captured the CLI validation failure showing the derived full session name would be `146` characters, exceeding the `128`-character limit before any Surfboard job, session id, W&B run, Datadog link, or Notion release row could be created.
+  - [[agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator]]: documented the earlier long-tag validation failure for traceability, reran the requested training from commit `c2a575154cb` with shortened tag `dir_unpudo_unpark_gi`, preserved the allowed unrelated dirty worktree, submitted Surfboard job `156540`, observed session `session_2026_04_30_14_41_35_si_parking_bc_train_gear_indicator_dir_unpudo_unpark_gi` reach `Running`, created the Notion release row for `aqua-inimitable-grasshopper`, and recorded that Model Catalogue had not indexed the session yet at close-out.
 
 > #### 2026-04-30 — Parking gear and indicator loss implementation draft
 - Topic: add an uncommitted opt-in draft of Zach Murez's per-waypoint gear and indicator heads/losses to Parking configs.
