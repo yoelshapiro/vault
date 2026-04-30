@@ -82,3 +82,42 @@ Requested prompt handling:
   - validation passed: `bazel test //wayve/ai/si:test_config_py_test --test_output=errors`.
 - status:
   - fix is local and uncommitted at the time of this note.
+
+## Compile-hang follow-up correction
+
+The initial local workaround that disabled `ParkingBcTrainGearIndicatorCfg.compile_mode` was reverted. That workaround would have avoided the symptom but would not have tested the same path as the failed training job.
+
+Final local fix:
+- Removed the hidden `_policy_waypoint_tokens` side channel from the mutable `outputs` dict.
+- Routed waypoint tokens explicitly inside `OutputAdaptor`, `process_behavior_unconditioned_outputs`, and `sample_top_k_outputs`.
+- `IndicatorOutputHead` and `GearDirectionOutputHead` now consume the tokens passed to them directly; when `*_from_waypoint_tokens=True`, the adaptor supplies the waypoint tokens.
+- `ParkingBcTrainGearIndicatorCfg.compile_mode` remains `"reduce-overhead"`.
+
+Validation:
+- `bazel test //wayve/ai/zoo:test_outputs_py_test //wayve/ai/zoo:test_losses_py_test //wayve/ai/zoo:test_outputs_mypy //wayve/ai/zoo:test_losses_mypy --test_output=errors` passed.
+- Local one-step train smoke passed:
+
+```bash
+bazel run //wayve/ai/si:train -- \
+  +mode=parking_bc_train_gear_indicator \
+  dev=True \
+  logger=None \
+  profiler=null \
+  use_callbacks=False \
+  num_gpus=1 \
+  num_steps=1 \
+  limit_val_batches=0 \
+  num_overfit_batches=1 \
+  datamodule.dataloader_workers=0 \
+  enable_flop_computation=False
+```
+
+Smoke result:
+- exit code: `0`
+- session: `session_2026_04_30_15_58_01_si_parking_bc_train_gear_indicator`
+- confirmed `compile_mode: reduce-overhead` in the resolved config
+- completed one compiled training step and saved `model-checkpoint-000000001.ckpt`
+- exported TorchScript traces at steps `0` and `1`
+
+Residual risk:
+- The local smoke is single-node / one GPU. It validates model construction, OTF datapipe, checkpoint load, TorchDynamo compile, backward, checkpoint save, and export. It does not fully reproduce the original 4-node/32-GPU DDP environment.

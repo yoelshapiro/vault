@@ -1788,3 +1788,15 @@
     - Added `parking_bc_train_gear_indicator` using the directional UNPUDO/unpark datamodule and Zach-style change weights (`indicator=10`, `gear=20`, decay `0.5`).
     - Added BC config migration `v33`, regenerated `v33.yaml`, and updated BC reference configs.
     - Validated SI config tests and targeted zoo output/loss tests.
+
+- Topic: Parking gear/indicator compile smoke fix
+  - Labels: parking, pudo, gear, indicator, torch-compile, training
+  - Branch: boris/pudo_w_route_path_fixes_and_new_data
+  - PR: N/A
+  - Change type: Fix
+  - Areas: wayve/ai/zoo/outputs, wayve/ai/zoo/outputs/test
+  - Changes:
+    - Replaced the hidden `_policy_waypoint_tokens` mutable-output side channel with explicit waypoint-token routing through `OutputAdaptor` and behavior-control output paths.
+    - Kept `ParkingBcTrainGearIndicatorCfg.compile_mode="reduce-overhead"` instead of disabling compile mode.
+    - Added `torch.compile(..., mode="reduce-overhead")` regression coverage for shared waypoint-token gear/indicator heads, including behavior-control output sampling.
+    - Validated output/loss tests and a one-step local `parking_bc_train_gear_indicator` train smoke; details in [[agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator]].
