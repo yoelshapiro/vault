@@ -314,9 +314,21 @@
               "icon": "lucide-file",
               "title": "pudo-event-materialization-speed-gear-buckets"
             }
+          },
+          {
+            "id": "d766a0330d27d64f",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2026-04-30 10.42.32.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2026-04-30 10.42.32.excalidraw"
+            }
           }
         ],
-        "currentTab": 18
+        "currentTab": 19
       }
     ],
     "direction": "vertical"
@@ -451,13 +463,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
+                "file": "Excalidraw/Drawing 2026-04-30 10.42.32.excalidraw.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of pudo-event-materialization-speed-gear-buckets"
+              "title": "Outline of Drawing 2026-04-30 10.42.32.excalidraw"
             }
           },
           {
@@ -490,11 +502,13 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "117f440063e12be8",
+  "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "projects/pudo-event-materialization-speed-gear-buckets.md",
+    "Excalidraw/Drawing 2026-04-30 10.42.32.excalidraw.md",
+    "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-29--14-18-55--gen2-av-7320f924-6e0b-4de4-b66b-5006d590d7f4.md",
     "projects.md",
     "agent_tasks/2026/03/Week-5/2026-03-31-wonjoon-parking-augmentation-design-review.md",
-    "projects/pudo-event-materialization-speed-gear-buckets.md",
     "agent_tasks/2026/04/Week-5/2026-04-29-unflappable-azure-sea-cucumber-interleave-deploy.md",
     "agents-change-log.md",
     "agent_tasks/2026/04/Week-4/2026-04-23-parking-training-submit-wonjoon-gc-pudo-r017-fix3.md",
@@ -517,8 +531,6 @@
     "parking_model_analysis/report_cards/2026/04/Week-4/fme20001--2026-04-27--07-15-12--gen2-av-0f502939-a768-48b3-9940-0a1d4a0a12ac.md",
     "parking_model_analysis/report_cards/2026/04/Week-4/fme10005--2026-04-27--00-30-01--gen2-av-a1c75c7d-7583-4500-8b53-f527597dc19d.md",
     "parking_model_analysis/models/prismatic-teal-bird.md",
-    "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-27--09-25-33--gen2-av-90bb0e4a-6782-4f88-9618-b34b55cbf784.md",
-    "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-27--06-18-31--gen2-av-176bae21-e503-4427-8fa3-65cd2f35adbd.md",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
     "parking_model_analysis/report_cards/2026/04/Week-4",
