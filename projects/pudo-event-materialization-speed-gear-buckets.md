@@ -236,3 +236,13 @@ For `unparking`, the notebook temporarily relabels it as `unpudo` before disenga
 - This replaces the current acceleration-based anchor and does not require a 5m/10m distance validation for the materialization anchor.
 - Main materialization window: `[gearchange_timestamp - 5s, first_progress_timestamp]` or, if keeping movement samples after start, `[gearchange_timestamp - 5s, event_end]` with the future-speed filter applied per sample.
 - Gear-change bucket window: `±1s` around each cleaned gear change, matching the Wonjoon-style symmetric boundary approach.
+
+## 2026-04-30 Finalized Materialization Split
+- `first_progress_timestamp` is useful in the event table for downstream analysis/debugging, but it should not bound the materialization window.
+- Materialization window for UNPUDO/unparking should be `[gearchange_timestamp - 5s, event_end_10m_timestamp]`.
+- The window intentionally includes post-gear-change standstill and the early maneuver; the movement buckets then apply the future-speed filter per candidate timestamp.
+- Movement buckets: all timestamps in the materialization window where closest frame in `[t + 0.60s, t + 0.65s]` has `abs(speed) >= 0.15m/s`.
+- Gear-change buckets: timestamps within `±1s` around each cleaned gear change inside the event window, without the future-speed filter.
+- This produces two distinct signals:
+  - speed-filtered UNPUDO/unparking buckets for actual start/progress behavior
+  - unfiltered gear-change buckets for gear-decision learning around transitions
