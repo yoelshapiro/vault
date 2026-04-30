@@ -1810,3 +1810,16 @@
     - Kept `ParkingBcTrainGearIndicatorCfg.compile_mode="reduce-overhead"` instead of disabling compile mode.
     - Added `torch.compile(..., mode="reduce-overhead")` regression coverage for shared waypoint-token gear/indicator heads, including behavior-control output sampling.
     - Validated output/loss tests and a one-step local `parking_bc_train_gear_indicator` train smoke; details in [[agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator]].
+
+- Topic: Generic materialisation PUDO migration research
+  - Labels: parking, pudo, materialisation, generic-sampling, notion, vault
+  - Branch: main
+  - PR: N/A
+  - Change type: Docs / Research
+  - Areas: vault/projects, wayve/ai/services/sampling
+  - Changes:
+    - Used the Notion Codex Apps connector to fetch `📖 [Documentation] Generic Materialisation`.
+    - Corrected the project plan to target `wayve/ai/services/sampling` rather than the older `foundation/data/curation/materialization` path.
+    - Documented the Generic Sampling Platform workflow, storage/release behavior, comparison rules, and migration requirements.
+    - Inspected main-branch `parking/default` and `parking/gc` datasets and documented reusable gear reconstruction, gear-count, and boundary-bucket logic.
+    - Added a detailed migration plan in [[projects/generic-materialisation-parking-pudo-migration]].
