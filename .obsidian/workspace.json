@@ -319,12 +319,24 @@
             "id": "d766a0330d27d64f",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
+                "file": "projects/generic-materialisation-parking-pudo-migration.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "unparking_scenarios.excalidraw"
+              "icon": "lucide-file",
+              "title": "generic-materialisation-parking-pudo-migration"
             }
           }
         ],
@@ -463,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md",
+                "file": "projects/generic-materialisation-parking-pudo-migration.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of unparking_scenarios.excalidraw"
+              "title": "Outline of generic-materialisation-parking-pudo-migration"
             }
           },
           {
@@ -504,12 +516,12 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "projects.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator.md",
     "projects/zach-gear-indicator-losses.md",
-    "projects.md",
     "projects/pudo-event-materialization-speed-gear-buckets.md",
-    "Excalidraw/unparking_scenarios.excalidraw.md",
     "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md",
     "parking_model_analysis/models/tomato-toucan-gorgeous.md",
