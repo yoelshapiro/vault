@@ -11,7 +11,7 @@
 - **Last updated:** 2026-04-30
 - **Current priorities:**
   - Review the uncommitted implementation on `boris/pudo_w_route_path_fixes_and_new_data`.
-  - Decide whether the query-count change for per-waypoint heads is acceptable for parking checkpoint loading.
+  - Review the updated Zach-faithful draft that reuses waypoint output tokens for gear/indicator.
   - If accepted, run a parking config construction / short train smoke test before committing.
 - **Blockers:**
   - Full `//wayve/ai/zoo:test_outputs` / `test_losses` py_checks are blocked by an existing unrelated pylint failure in `wayve/ai/zoo/deployment/deployment_wrapper.py`.
@@ -60,6 +60,9 @@
 - **2026-04-30:**
   - **Decision:** Implement an uncommitted opt-in draft on `boris/pudo_w_route_path_fixes_and_new_data`.
   - **Rationale:** A loss-only port would supervise future frames without giving the classifier independent future-frame capacity. The draft therefore includes both per-waypoint output heads and per-waypoint change-weighted losses, but enables them only through the parking output adaptor / parking BC losses.
+- **2026-04-30:**
+  - **Decision:** Revise the draft to reuse waypoint output tokens for per-waypoint gear/indicator instead of adding separate gear/indicator query tokens.
+  - **Rationale:** This matches Zak's design more closely: gear/indicator losses backprop through the same future tokens used by the waypoint head, and parking configs do not inflate the output query count.
 
 ## Notes
 
@@ -162,12 +165,13 @@ weight(t) = 1 + (change_weight - 1) * exp(-change_decay * t)
 - Branch: `boris/pudo_w_route_path_fixes_and_new_data`
 - Commit status: uncommitted, per user request.
 - Code changes:
-  - `wayve/ai/zoo/outputs/indicator_output_head.py`: added optional `per_waypoint`; default remains one-token broadcast.
-  - `wayve/ai/zoo/outputs/gear_direction_output_head.py`: added optional `per_waypoint`; default remains one-token broadcast.
-  - `wayve/ai/zoo/outputs/output_adaptor.py`: added `indicator_per_waypoint` and `gear_direction_per_waypoint` constructor flags and passes them into the heads.
+  - `wayve/ai/zoo/outputs/indicator_output_head.py`: added optional `per_waypoint`; default remains one-token broadcast. Parking can set `from_waypoint_tokens=True` so it consumes the waypoint output tokens and adds no queries.
+  - `wayve/ai/zoo/outputs/gear_direction_output_head.py`: added optional `per_waypoint`; default remains one-token broadcast. Parking can set `from_waypoint_tokens=True` so it consumes the waypoint output tokens and adds no queries.
+  - `wayve/ai/zoo/outputs/output_adaptor.py`: added `indicator_per_waypoint`, `gear_direction_per_waypoint`, `indicator_from_waypoint_tokens`, and `gear_direction_from_waypoint_tokens`. When enabled, the adaptor temporarily exposes the `WaypointOutputHead` token slice to gear/indicator heads.
+  - `wayve/ai/zoo/outputs/behavior_control.py`: mirrors the same waypoint-token sharing path for behavior-label calculation and top-k sampled outputs, because Parking BC enables behavior control.
   - `wayve/ai/zoo/losses/imitation_losses.py`: added future-horizon CE with Zach-style class-change weighting, with dynamic indicator-class masking in the new per-waypoint path so hazard class `3` is not treated as invalid when the head has four classes. The legacy next-step path keeps its old hazard/Maxus ignore behavior.
   - `wayve/ai/si/losses/bc_loss_module.py`: added BC loss config knobs for per-waypoint indicator / gear losses and change weighting.
-  - `wayve/ai/si/configs/parking/parking_config.py`: enabled per-waypoint heads/losses for parking models with Zach-like values:
+  - `wayve/ai/si/configs/parking/parking_config.py`: enabled per-waypoint heads/losses for parking models with Zach-like values and waypoint-token sharing:
     - indicator change weight `10.0`, decay `0.5`
     - gear change weight `20.0`, decay `0.5`
   - Tests updated for head behavior, weighted losses, and the branch's 4-class indicator output shape.
@@ -175,4 +179,4 @@ weight(t) = 1 + (change_weight - 1) * exp(-change_decay * t)
   - Passed: `bazel test //wayve/ai/zoo:test_outputs_py_test //wayve/ai/zoo:test_losses_py_test //wayve/ai/zoo:test_outputs_mypy //wayve/ai/zoo:test_losses_mypy //wayve/ai/zoo:test_outputs_py_lint_flake8 //wayve/ai/zoo:test_losses_py_lint_flake8`
   - Not passing due unrelated existing issue: full `//wayve/ai/zoo:test_outputs //wayve/ai/zoo:test_losses` because `pylint` reports `wayve/ai/zoo/deployment/deployment_wrapper.py:2611` has too many locals.
 - Main risk:
-  - True per-waypoint heads increase the `OutputAdaptor` driving query count for parking configs. This is semantically closer to Zach's implementation, but checkpoint loading should be smoke-tested because output-adaptor parameter shapes change.
+  - The query-count increase from the first draft was removed. The remaining checkpoint risk is smaller: gear/indicator head parameters and behavior-control helper paths changed, but the shared query count for parking stays aligned with the waypoint head rather than adding separate future gear/indicator queries.

@@ -20,6 +20,7 @@
 - Changes:
   - [[projects/zach-gear-indicator-losses]]: updated the active project with the implementation draft, validation results, and the checkpoint-loading risk from increasing parking output-adaptor query count.
   - Added opt-in per-waypoint indicator and gear output heads, future class-change-weighted CE losses, BC loss config knobs, and Zach-like Parking config values (`indicator=10.0/0.5`, `gear=20.0/0.5`).
+  - Revised the draft to reuse waypoint output tokens for per-waypoint gear/indicator instead of adding separate gear/indicator query tokens, including the behavior-control helper path.
   - Added/updated tests for per-waypoint head behavior, change-weighted future losses, and the current branch's 4-class indicator output shape.
 
 > #### 2026-04-30 — Zach gear and indicator loss investigation
