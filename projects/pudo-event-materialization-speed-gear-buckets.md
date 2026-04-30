@@ -213,3 +213,19 @@ Relevant notebooks:
   - Selection prefers the latest disengagement in the window.
 
 For `unparking`, the notebook temporarily relabels it as `unpudo` before disengagement processing, then restores the original event type, so all UNPUDO disengagement-window semantics above apply to unparking too.
+
+## 2026-04-30 Window Semantics Update
+- `first_progress_timestamp` / proposed `progress_timestamp_unixus` should mean the first frame after the park-to-D/R transition where the vehicle has made enough post-transition progress.
+- Current notebook equivalent is `first_distance_frame`: first frame within 60s after the transition whose haversine distance from the transition point exceeds `UNPUDO_MIN_DISTANCE_M`.
+- Rename the config to `UNPUDO_MIN_PROGRESS_DISTANCE_M`; use `10.0m` instead of the current `5.0m` for complex reverse/forward unparks.
+- This timestamp is a validation/progress bound, not the maneuver start. It should be used as the end of the materialization window for unpudo/unparking samples.
+
+## 2026-04-30 Sampling Window Decision
+- Base unpudo/unparking movement bucket should use `[gearchange_timestamp - 5s, progress_timestamp_unixus]`.
+- The base movement bucket should still apply the future-speed filter: closest frame in `[t + 0.60s, t + 0.65s]` must have `abs(speed) >= 0.15m/s`.
+- A larger pre-gear window is acceptable here because the future-speed filter prunes long parked/standstill dwell frames; it preserves slack for gear-to-pedal delay.
+- Do not include multi-second post-gear standstill unfiltered. That risks teaching the model that shifted-but-waiting is the target behavior, including unsafe-to-move waits.
+- Gear-change buckets should be separate from movement buckets.
+- Zak reference: `GEAR_CHANGE_BEFORE = 0.0`, `GEAR_CHANGE_AFTER = 0.5`, so his explicit gear-change oversampling is tight and post-change only.
+- Wonjoon reference: `select_gear_change_boundary_parking` uses `boundary_sec=1.0`, symmetric around each cleaned gear change, intersected with the parking/unparking maneuver window.
+- Proposed first implementation: use a separate gear-change bucket with a tight window, either Zak-like `[gc, gc + 0.5s]` or Wonjoon-like `[gc - 1.0s, gc + 1.0s]`; keep it independent from the future-speed-filtered movement bucket.
