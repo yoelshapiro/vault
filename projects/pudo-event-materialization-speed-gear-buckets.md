@@ -229,3 +229,10 @@ For `unparking`, the notebook temporarily relabels it as `unpudo` before disenga
 - Zak reference: `GEAR_CHANGE_BEFORE = 0.0`, `GEAR_CHANGE_AFTER = 0.5`, so his explicit gear-change oversampling is tight and post-change only.
 - Wonjoon reference: `select_gear_change_boundary_parking` uses `boundary_sec=1.0`, symmetric around each cleaned gear change, intersected with the parking/unparking maneuver window.
 - Proposed first implementation: use a separate gear-change bucket with a tight window, either Zak-like `[gc, gc + 0.5s]` or Wonjoon-like `[gc - 1.0s, gc + 1.0s]`; keep it independent from the future-speed-filtered movement bucket.
+
+## 2026-04-30 Correction: Progress Anchor
+- Corrected definition: `first_progress_timestamp` should be based only on the future-speed heuristic, not on distance travelled.
+- For UNPUDO/unparking, find the first candidate timestamp after the park-to-D/R transition where the closest frame in `[t + 0.60s, t + 0.65s]` has `abs(speed) >= 0.15m/s`.
+- This replaces the current acceleration-based anchor and does not require a 5m/10m distance validation for the materialization anchor.
+- Main materialization window: `[gearchange_timestamp - 5s, first_progress_timestamp]` or, if keeping movement samples after start, `[gearchange_timestamp - 5s, event_end]` with the future-speed filter applied per sample.
+- Gear-change bucket window: `±1s` around each cleaned gear change, matching the Wonjoon-style symmetric boundary approach.
