@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "PUDO event materialization speed gear buckets",
+      "slug": "pudo-event-materialization-speed-gear-buckets",
+      "path": "/home/borisindelman/git/vault/projects/pudo-event-materialization-speed-gear-buckets.md",
+      "status": "active",
+      "phase": "Planning",
+      "last_updated": "2026-04-30"
+    },
+    {
       "name": "Zak latest work concepts",
       "slug": "zak-latest-work-concepts",
       "path": "/home/borisindelman/git/vault/projects/zak-latest-work-concepts.md",
