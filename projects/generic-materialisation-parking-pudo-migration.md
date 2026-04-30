@@ -161,3 +161,86 @@
 - **2026-04-30:** Use Notion via the Codex Apps connector as the documentation source.
 - **2026-04-30:** Treat `wayve/ai/services/sampling` as the target generic materialisation framework.
 - **2026-04-30:** Do not implement yet; first document the framework, current main-branch parking support, gaps, and migration plan.
+
+## Wonjoon Generic Parking vs Notebook Logic
+- **High-level conclusion:** Wonjoon already ported a large part of the parking/unparking materialisation problem into `services/sampling`: reliable gear reconstruction, parking/unparking event anchors, maneuver windows, gear-change count buckets, and gear-change boundary buckets. The missing part is mostly the PUDO-specific semantics: hazard/trip evidence, PUDO vs park split, UNPUDO vs unparking split, notebook event-table validation columns, directional forward/reverse UNPUDO/unparking buckets, and the newer future-speed movement filter.
+- **Wonjoon commits:**
+  - `024de24343e` / PR #101525: added `parking/default`, `parking/gc`, shared parking filters, store registration, and tests.
+  - `a49ea560644` / PR #106341: simplified/refined gear-based parking materialisation, especially gear-count and boundary logic.
+- **Where his logic lives:**
+  - `wayve/ai/services/sampling/datasets/parking/filters.py`: core gear reconstruction, P/N segment extraction, maneuver-window selection, gear-count filtering, hazard exclusion, gear-change boundary selection.
+  - `wayve/ai/services/sampling/datasets/parking/common.py`: parking-specific exclusions, intervention windows, shared filter singletons.
+  - `wayve/ai/services/sampling/datasets/parking/gc/dataset.py`: bucket definitions for parking/unparking window/timestamp/CA/nopudo/boundary buckets.
+  - `wayve/ai/services/sampling/test/datasets/parking/test_parking_filters.py`: regression coverage.
+
+### What Wonjoon Already Covers
+- **Gear cleanup / reconstruction:**
+  - Reconstructs gen2 Mache gear from signed speed when gear is unreliable.
+  - Keeps only validated P/N segments with duration >= 2s.
+  - Extends P/N into adjacent standstill unknowns.
+  - Forward-fills remaining unknowns so gear changes land at movement start.
+  - Smooths short transient gear states with `min_gear_dwell_sec=0.5`.
+- **Parking anchors:**
+  - Uses the first frame of a long gear-zero segment as the parking anchor.
+  - Window goes backward by the longer of `25s` or `30m`.
+  - Can return either the full window or a single timestamp at the maneuver start.
+- **Unparking anchors:**
+  - Uses the last frame of a long gear-zero segment as the unparking anchor.
+  - Window goes forward by `15s` by default, with `0.5s` pre-event buffer into the parked segment.
+  - Can return either the full window or the single departure timestamp.
+- **Gear-change count:**
+  - Counts gear changes in the maneuver window before pre-event buffer extension.
+  - Supports `gc1`, `gc2`, `gc3`, `gc3plus`, and timestamp `gc0`.
+  - This directly supports multi-point parking/unparking sampling.
+- **Gear-change boundary sampling:**
+  - Adds `gc_boundary` buckets as intersection of maneuver windows with +/-1s around each cleaned gear change.
+  - This is close to the Zak/Wonjoon idea of sampling decision points around gear changes.
+- **PUDO hazard exclusion:**
+  - Has `parking_window_nopudo_*` and `parking_timestamp_nopudo_*` buckets that exclude parking segments with hazard active inside the long P/N segment.
+  - This is only an exclusion, not a full PUDO positive bucket.
+- **CA windows:**
+  - Has CA-intersected parking/unparking buckets using generic intervention filters.
+  - This is much cleaner than notebook-specific disengagement joins, but less semantically rich than the notebook event table.
+
+### What The Notebooks Do Differently
+- **PUDO detection:**
+  - Detects nonzero gear -> park transitions with spike protection using previous/current/next gear context.
+  - Keeps positive PUDO events if hazard is active within +/-10s of the transition.
+  - Also adds PUDO events from robotaxi trip summary completion events, then matches them back to raw gear transitions by closest position within 5m.
+  - Deduplicates nearby events by location and excludes office geofences.
+  - Optional `park` events are raw park transitions without PUDO evidence.
+- **UNPUDO/unparking detection:**
+  - Detects park -> nonzero gear transitions with spike protection.
+  - Looks forward until the vehicle moved at least `UNPUDO_MIN_DISTANCE_M` from the transition.
+  - In the inspected notebook this threshold is still `5m`; our later agreed target was `10m`.
+  - Looks backward from that moved-enough point to find the earliest acceleration frame above `0.1 m/s^2` and uses that as `timestamp_unixus`.
+  - Splits UNPUDO vs unparking by whether a later PUDO exists in the same run.
+- **Maneuver enrichment:**
+  - Adds `event_startOrEnd_timestampunixus`, `gearchange_timestamp`, and derived timing columns.
+  - PUDO/park windows include backward calibration by distance/time/indicator edges.
+  - UNPUDO/unparking windows include gear-to-start and maneuver-end timestamps.
+- **Disengagement handling:**
+  - Adds several disengagement timestamp variants: main window, fixed window, gear-to-start, before gear change, before event start.
+  - Temporarily relabels `unparking` as `unpudo` for shared disengagement processing, then restores it.
+- **Training bucket materialisation:**
+  - Expands DC windows at 50ms cadence, joins exact timestamps to `all_data`, and writes SI-style materialised buckets.
+  - Builds `pre_ca`, `ca_short`, and `ca_long` buckets around selected disengagement anchors.
+  - Applies optional event-length cutoffs and optional UNPUDO/unparking acceleration filtering.
+  - Newer branch work added desired future-speed filtering and directional forward/reverse buckets, but that is not in Wonjoon's generic code yet.
+
+### Direct Semantic Gaps To Port
+- **Positive PUDO bucket:** Wonjoon's `nopudo` only removes hazard parking from parking buckets. We need the complementary positive PUDO buckets, ideally using the same common parking event calculation and hazard/trip evidence.
+- **Park bucket:** We need raw park transitions not classified as PUDO if we still want separate `park` training buckets.
+- **UNPUDO vs unparking split:** Wonjoon has generic `unparking`; notebook splits it into `unpudo` if a future PUDO exists, otherwise `unparking`.
+- **Event-table validation semantics:** Generic sampling does not currently emit the notebook event table columns. For migration validation we should compare against `parking.pudo_unpudo_unpark_events`.
+- **Future-speed movement filter:** Need the newer `timestamp + ~0.6s` speed > `0.15 m/s` condition for UNPUDO/unparking movement buckets if we keep that design.
+- **Directional buckets:** Need `_forward` / `_reverse` variants for UNPUDO/unparking based on cleaned gear direction.
+- **CA/pre-CA parity:** Wonjoon's CA support is generic intervention intersection. The notebook uses event-specific disengagement anchors and multiple timestamp variants. We need decide whether to keep the notebook-specific CA semantics or accept generic CA windows.
+- **Bucket names:** Wonjoon's bucket names are `parking_window_gc*_...` and `unparking_window_gc*_...`; our training configs expect `dc_pudo_*`, `dc_unpudo_*`, `dc_unparking_*`, directional variants, etc.
+
+### Practical Migration Implication
+- Start from Wonjoon's `parking/filters.py` and `parking/common.py`.
+- Add PUDO/park classification as a split over the existing parking event calculation rather than duplicating gear transition logic.
+- Add UNPUDO/unparking classification as a split over the existing unparking event calculation.
+- Reuse gear-boundary and gear-count code for decision-point buckets.
+- Add focused tests for only the missing semantics: hazard-positive PUDO, trip-table PUDO if still required, future-PUDO split, future-speed filter, and directional forward/reverse buckets.
