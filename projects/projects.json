@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Generic Materialisation Parking PUDO Migration",
+      "slug": "generic-materialisation-parking-pudo-migration",
+      "path": "/home/borisindelman/git/vault/projects/generic-materialisation-parking-pudo-migration.md",
+      "status": "active",
+      "phase": "Planning",
+      "last_updated": "2026-04-30"
+    },
+    {
       "name": "Zach gear and indicator losses",
       "slug": "zach-gear-indicator-losses",
       "path": "/home/borisindelman/git/vault/projects/zach-gear-indicator-losses.md",

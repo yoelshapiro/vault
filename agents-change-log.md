@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-30 — Generic materialisation Parking PUDO migration plan
+- Topic: deep dive main-branch generic materialisation and create a project plan for migrating Parking PUDO / park / UNPUDO / unparking notebook materialization.
+- Labels: #parking #pudo #materialization #generic-materialisation #planning #vault
+- Branch: `main`
+- PR: none
+- Change type: planning/docs
+- Areas: `projects/`, `wayve/ai/foundation/data/curation/materialization/`, `wayve/ai/si/configs/baseline/`
+- Changes:
+  - [[projects/generic-materialisation-parking-pudo-migration]]: created a new active project summarizing generic materialisation architecture, existing parking/gear support, SI `materialisation_version` release usage, notebook semantics to preserve, compatibility gaps, and a bullet-point migration plan before implementation.
+
 > #### 2026-04-30 — Parking training retry reached Running after shortened session tag
 - Topic: retry the requested Parking BC directional UNPUDO / unpark gear-indicator training with a shortened session tag, monitor it through startup, and record the final submission identifiers.
 - Labels: #parking #training #aks #surfboard #wandb #notion #vault
