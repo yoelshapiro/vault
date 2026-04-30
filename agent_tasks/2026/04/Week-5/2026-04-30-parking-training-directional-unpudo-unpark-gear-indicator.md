@@ -121,3 +121,39 @@ Smoke result:
 
 Residual risk:
 - The local smoke is single-node / one GPU. It validates model construction, OTF datapipe, checkpoint load, TorchDynamo compile, backward, checkpoint save, and export. It does not fully reproduce the original 4-node/32-GPU DDP environment.
+
+## Retrain after explicit waypoint-token compile fix
+
+Committed and pushed:
+- commit: `7645a9e6943 fix: route shared waypoint tokens explicitly`
+- branch: `boris/pudo_w_route_path_fixes_and_new_data`
+
+Training command:
+
+```bash
+bazel run //wayve/ai/si/cli:cli -- \
+  --project Parking \
+  -ex parking_bc \
+  -st dir_unpudo_unpark_gi_compile_fix \
+  --platform AKS \
+  -nn 4 \
+  --cluster dgx-h100 \
+  --no-verify \
+  +mode=parking_bc_train_gear_indicator \
+  num_steps=100000 \
+  --priority P1
+```
+
+Prompt handling:
+- proceeded with unrelated dirty files after explicit CLI confirmation: `tools/databricks_queries/execute_query.py`, `tools/databricks_queries/lib/query.py`
+- accepted session tag: `si_parking_bc_train_gear_indicator_dir_unpudo_unpark_gi_compile_fix`
+
+Submission result:
+- Surfboard job: `156593`
+- nickname: `osprey-thoughtful-silver`
+- status: `Running`
+- start time: `2026-04-30 16:19 UTC`
+- session id: `session_2026_04_30_16_15_40_si_parking_bc_train_gear_indicator_dir_unpudo_unpark_gi_compile_fix`
+- session path: `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_04_30_16_15_40_si_parking_bc_train_gear_indicator_dir_unpudo_unpark_gi_compile_fix`
+- W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_04_30_16_15_40_si_parking_bc_train_gear_indicator_dir_unpudo_unpark_gi_compile_fix`
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aosprey-thoughtful-silver-156593&from_ts=1776356389709&cols=job_name%2Cnode_rank&live=true`
