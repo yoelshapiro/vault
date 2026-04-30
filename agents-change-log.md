@@ -10,6 +10,16 @@
 ## 2026-04
 > [!note] 2026-04
 
+> #### 2026-04-30 — PUDO event/materialization speed and gear bucket plan
+- Topic: plan a clean retry for extending the PUDO event and materialization notebooks with future-speed filtering, forward/reverse buckets, and gear-change buckets without repeating the slow failed materialization path.
+- Labels: #parking #pudo #unpudo #unparking #materialization #notebooks #planning
+- Branch: `parking/notebooks`
+- PR: none
+- Change type: planning/docs
+- Areas: `wayve/ai/parking/notebooks/`, `projects/`
+- Changes:
+  - [[projects/pudo-event-materialization-speed-gear-buckets]]: created the active vault project, summarized the desired event-table schema and materialization behavior, captured the decision to keep the `+0.6s` speed cutoff in materialization rather than event detection, separated gear-change buckets from movement speed filtering, and laid out a performance-focused implementation plan based on one tagged sample DataFrame and bounded shared corpus joins.
+
 > #### 2026-04-29 — Unflappable Azure Sea Cucumber interleave-control deploy
 - Topic: deploy checkpoint 8 of `unflappable-azure-sea-cucumber` as a Parking/PUDO interleave-control model.
 - Labels: #parking #deploy #interleave-control #model-catalogue #console
