@@ -353,3 +353,16 @@
 - **Comparison caveat:**
   - Generic output counts are materialised frame/bucket-membership rows and include additive directional / gear-change buckets, so they double-count samples across full and variant buckets.
   - The Databricks event table count is event-level. Exact parity requires comparing expanded windows, not just event counts.
+- **Comparison against `parking.2026_03_15_11_14_01_server_parking_pudo_buckets_bc`:**
+  - This table is an older BC bucket table with columns `timestamp_unixus`, `run_id`, `bucket_name`, `split`, `country`, `platform`, `bucket_type`, and `stopping_type`.
+  - It does not contain `pudo`, `unpudo`, `unparking`, `ca_short`, `ca_long`, or `pre_ca` bucket names, so it is only comparable to the parking-like DC subset.
+  - Same-date filter used: `run_id LIKE '%2026-03-14%'`.
+  - Reference UK/USA parking-like counts:
+    - Train UK: `dc_parking_uk=468`, `dc_parking_long_uk=789`.
+    - Train USA: `dc_parking_usa=214`, `dc_parking_long_usa=475`.
+    - Validation UK: `dc_parking_uk=310`, `dc_parking_long_uk=1111`.
+  - Generic base DC parking-like counts, excluding `_forward`, `_reverse`, and `_gear_change` variants:
+    - Train UK: `dc_park_uk=3152`, `dc_pudo_uk=29`.
+    - Train USA: `dc_park_usa=2565`, `dc_pudo_usa=600`.
+    - Validation UK: `dc_park_uk=605`.
+  - Main interpretation: this reference table is useful as a rough same-date sanity check, but it is not an exact parity target for `parking/events` because the taxonomy and window semantics are different.
