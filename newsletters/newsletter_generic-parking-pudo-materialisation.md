@@ -115,6 +115,22 @@ In generic materialisation, AV buckets do not use those precomputed event-table 
 
 So “before/after window” means a time interval relative to the intervention anchor. Generic implements it as frame offsets inside the per-run Pandas filter; the notebook implements it as timestamp arithmetic and Spark range joins.
 
+The category assignment is a mask intersection, not a separate CA detector per category. For example, `ca_short_pudo_usa` is built by AND-ing these filters on each frame:
+
+- USA country filter
+- Gen2 Mache platform filter
+- parking CA exclusions
+- `select_corrective_action_short_parking`, which selects frames in `[0.0s, +1.48s]` around valid intervention anchors
+- `select_pudo_window`, which selects frames inside PUDO event windows
+
+So a frame enters `ca_short_pudo_usa` only if it is both a short-CA frame and a PUDO-window frame. The same pattern creates the other categories:
+
+- `ca_*_park_*` = CA-window frame AND park-window frame
+- `ca_*_unpudo_*` = CA-window frame AND UNPUDO-window frame
+- `ca_*_unparking_*` = CA-window frame AND unparking-window frame
+
+There is no step that says “find a CA event, then classify it as PUDO.” The event classifier and the intervention-window selector run independently on the same run, and the bucket is their overlap.
+
 The three park/PUDO AV bucket families are:
 
 - `pre_ca_pudo_{country}` / `pre_ca_park_{country}`: frames from `-1.2s` to `-0.04s` before a valid intervention, intersected with the park/PUDO event window.

@@ -1999,3 +1999,13 @@
   - Changes:
     - Clarified the exact parking `select_interventions` filter settings in [[newsletters/newsletter_generic-parking-pudo-materialisation]].
     - Listed the concrete pre-CA, short-CA, and long-CA intervals inline with the intervention-anchor explanation.
+
+- Topic: Generic materialisation newsletter CA category assignment
+  - Labels: parking, pudo, materialisation, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters
+  - Changes:
+    - Added an explicit explanation that PUDO/park/UNPUDO/unparking CA buckets are frame-level intersections between event-window filters and intervention-window filters.
+    - Documented `ca_short_pudo_usa` as a concrete example of the composed filter logic.
