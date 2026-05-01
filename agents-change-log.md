@@ -1934,3 +1934,15 @@
     - Updated the PUDO/UNPUDO materialization notebook table-write path to match the events notebook pattern.
     - Added `materialized_table_root` defaulting to `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking`.
     - Changed the table write to copy `materialized_df` into a Delta table at `<materialized_table_root>/<materialization-folder>.table` and register it as `hive_metastore.parking.<materialization-folder>`.
+
+- Topic: Generic parking PUDO materialisation newsletter
+  - Labels: parking, pudo, materialisation, generic-sampling, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters, wayve/ai/services/sampling/datasets/parking
+  - Changes:
+    - Added [[newsletters/newsletter_generic-parking-pudo-materialisation]] explaining the scope of the generic parking event materialisation work.
+    - Documented park/PUDO and UNPUDO/unparking detection logic, including hazard splitting, gear cleanup, progress validation, direction splitting, and future-speed filtering.
+    - Distinguished DC buckets from AV/pre-CA/CA buckets and summarized every emitted bucket family.
+    - Updated `newsletter_index.md` with the new issue.

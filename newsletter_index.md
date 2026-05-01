@@ -11,6 +11,7 @@ Think of this as an internal newsletter series: short, practical issues that exp
 6. [Newsletter: Route map signal thresholds (near-end-of-route)](newsletters/newsletter_route-map-signal-thresholds.md)
 7. [Newsletter: PUDO update to January driving release 2026.5.4](newsletters/newsletter_pudo-update-january-driving-release-2026-5-4.md)
 8. [Newsletter: Naive parking stopping_mode heuristic (PUDO=0, PARK=1)](newsletters/newsletter_parking-stopping-mode-naive-heuristic.md)
+9. [Newsletter: Moving PUDO, park, UNPUDO, and unparking into generic materialisation](newsletters/newsletter_generic-parking-pudo-materialisation.md)
 
 ## How to Use This Newsletter Series
 - Each issue is a standalone `newsletter_[topic].md` file.
