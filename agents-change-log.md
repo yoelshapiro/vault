@@ -2021,3 +2021,15 @@
     - Left AV/pre-CA/CA park/PUDO buckets on the original event windows so corrective examples are not filtered by clean-approach assumptions.
     - Updated [[newsletters/newsletter_generic-parking-pudo-materialisation]] to describe the implemented DC progress checks for both approach and departure.
     - Added regression tests for short approach, long approach, and previous parked segment before approach progress.
+
+- Topic: Generic parking events Flyte runs with start-date gates
+  - Labels: parking, pudo, materialisation, flyte, sampling
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Experiment / Operations
+  - Areas: wayve/ai/services/sampling, vault/projects
+  - Changes:
+    - Published the current branch sampling image for Flyte: `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.81-boris-generic-parking-pudo-materialisation-1b6e0`.
+    - Dispatched a single-day `parking/events` dry-run materialisation for `2026-03-14`.
+    - Dispatched a full `parking/events` dry-run materialisation from `2025-08-01` to `2026-04-30`, relying on bucket-level gates for PUDO/park quality cutoff.
+    - Logged execution links and commands in [[projects/generic-materialisation-parking-pudo-migration]].

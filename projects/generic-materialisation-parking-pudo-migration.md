@@ -438,3 +438,19 @@
   - Generic uses `progress_max_lookahead_sec=90.0` for the 10m UNPUDO/unparking progress check.
   - Updated event notebook initial UNPUDO detector has a `60s` bounded join when looking for the first `10m` progress frame.
   - The notebook window-enrichment stage separately uses `UNPUDO_END_MAX_LOOKAHEAD_SEC=90s` and `UNPUDO_END_MAX_DISTANCE_SEARCH_M=120m`.
+
+### 2026-05-01 Flyte Runs With Event Start-Date Gates
+- Branch: `boris/generic-parking-pudo-materialisation`.
+- Image: `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.81-boris-generic-parking-pudo-materialisation-1b6e0`.
+- Digest: `sha256:881ac79afebf1322d78e2f7d570803533b03d8ba9969fb9a0787ef3ab3fcca44`.
+- Start-date handling:
+  - Workflow-level full run starts at `2025-08-01` so UNPUDO/unparking can use the older valid range.
+  - `parking/events` now applies bucket-level start-date filters: PUDO/park from `2025-12-01`, UNPUDO/unparking from `2025-08-01`.
+- Single-day comparison run:
+  - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a7sjcbh7vkvfp9plzxhh
+  - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_compare_2026_03_14_no_gear_recon_date_gates --start_date 2026-03-14 --end_date 2026-03-14 --dry_run`
+  - Initial status: `RUNNING` at dispatch.
+- Full-data run:
+  - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a848hwft9vh5l5dxn996
+  - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_full_no_gear_recon_date_gates --start_date 2025-08-01 --end_date 2026-04-30 --dry_run`
+  - Initial status: `RUNNING` at dispatch.
