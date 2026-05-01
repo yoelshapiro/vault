@@ -1901,3 +1901,14 @@
     - Replaced external folder table registration with a real Delta table write from flat `materialized_df`.
     - Added fallback loading from an existing materialization folder when `materialized_df` is unavailable.
     - Committed and pushed `fix: write parking materialization table data` (`a17b3ad0543d`).
+
+- Topic: Parking materialization table path derivation
+  - Labels: parking, pudo, materialization, databricks, notebooks
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Fix
+  - Areas: wayve/ai/parking/notebooks
+  - Changes:
+    - Removed the separate `materialized_table_path` config from the materialization notebook.
+    - Added a shared `make_materialization_output_path` helper so the Azure output path and Databricks table name derive from exactly the same folder basename.
+    - Committed and pushed `fix: derive parking materialization table path` (`066bebc2f2f4`).
