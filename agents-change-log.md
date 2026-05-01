@@ -1979,3 +1979,13 @@
   - Changes:
     - Reworded the intervention-anchor explanation in [[newsletters/newsletter_generic-parking-pudo-materialisation]] to describe `select_interventions` as anchor detection plus window expansion.
     - Clarified that pre-CA windows require `AUTOMATION_ACTIVE=True` before takeover.
+
+- Topic: Generic materialisation newsletter notebook-vs-generic AV comparison
+  - Labels: parking, pudo, materialisation, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters
+  - Changes:
+    - Added a direct notebook-vs-generic comparison for AV bucket construction in [[newsletters/newsletter_generic-parking-pudo-materialisation]].
+    - Replaced vague “before/after frame windows” wording with explicit timestamp-window semantics around intervention anchors.

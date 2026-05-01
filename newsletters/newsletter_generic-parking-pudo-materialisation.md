@@ -101,11 +101,19 @@ The current implementation also does not require a “previously moved 10m befor
 
 For AV-derived park/PUDO buckets, we do not create a separate event detector. We take the same park/PUDO event window described above and intersect it with intervention-relative windows from `select_interventions`.
 
-More concretely, `select_interventions` works in two phases.
+More concretely, the generic path differs from the notebook path.
 
-First it finds the intervention anchor frames. An anchor is a frame where the corpus intervention signal says an intervention happened, and that intervention passes the generic validity filters: taxonomy version is allowed, annotation fields match the requested filters, invalid intervention types such as accidental/system/end-of-run are removed, and parking-specific extra invalid labels are removed when configured.
+In the notebook, AV materialisation starts from disengagement timestamps that are already stored in the parking event table. The notebook builds an array from columns such as `disengagement_timestamp_unixus`, `disengagement_timestamp_unixus_gear_to_start`, `disengagement_timestamp_unixus_before_gearchange_10s`, and `disengagement_timestamp_unixus_before_event_start_10s`. It explodes those timestamps, adds the pre-CA / CA offsets in microseconds, and range-joins corpus frames whose `timestamp_unixus` falls inside that explicit timestamp interval.
 
-Then it expands each valid anchor into a frame window. For every frame in the run, the filter computes the nearest relevant intervention anchor and the frame offset from it. A frame is selected if that offset lies inside the requested `[before_intervention_sec, after_intervention_sec]` interval. For pre-CA windows, `select_interventions` also requires `AUTOMATION_ACTIVE=True`, so the selected frames are still AV-owned before takeover.
+In generic materialisation, AV buckets do not use those precomputed event-table disengagement timestamp columns. Instead, `select_interventions` runs directly on the corpus for each run:
+
+- It first finds intervention anchor frames. An anchor is a frame where the corpus intervention signal says an intervention happened.
+- It filters those anchors using the generic intervention validity logic: allowed taxonomy version, requested annotation fields, invalid intervention labels removed, and parking-specific extra invalid labels removed when configured.
+- It converts the requested seconds offsets into frame offsets using the run frequency.
+- It selects frames whose offset from a valid intervention anchor lies inside the requested interval. For example, `[-1.2s, -0.04s]` means frames shortly before the anchor, while `[0s, 1.48s]` means frames after the anchor.
+- For pre-CA windows, `select_interventions` also requires `AUTOMATION_ACTIVE=True`, so those frames are still AV-owned before takeover.
+
+So “before/after window” means a time interval relative to the intervention anchor. Generic implements it as frame offsets inside the per-run Pandas filter; the notebook implements it as timestamp arithmetic and Spark range joins.
 
 The three park/PUDO AV bucket families are:
 
