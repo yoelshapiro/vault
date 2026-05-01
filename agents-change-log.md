@@ -1890,3 +1890,14 @@
   - Changes:
     - Committed and pushed `feat: register parking materialization tables` (`9188f6ee5487`).
     - Confirmed notebook gear-change buckets are DC-only; AV buckets remain `pre_ca`, `ca_short`, and `ca_long` without gear-change variants.
+
+- Topic: Parking materialization flat table write
+  - Labels: parking, pudo, materialization, databricks, notebooks
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Fix
+  - Areas: wayve/ai/parking/notebooks
+  - Changes:
+    - Replaced external folder table registration with a real Delta table write from flat `materialized_df`.
+    - Added fallback loading from an existing materialization folder when `materialized_df` is unavailable.
+    - Committed and pushed `fix: write parking materialization table data` (`a17b3ad0543d`).
