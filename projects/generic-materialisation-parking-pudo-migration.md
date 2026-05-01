@@ -285,3 +285,13 @@
 - Add UNPUDO/unparking classification as a split over the existing unparking event calculation.
 - Reuse gear-boundary and gear-count code for decision-point buckets.
 - Add focused tests for only the missing semantics: hazard-positive PUDO, trip-table PUDO if still required, future-PUDO split, future-speed filter, and directional forward/reverse buckets.
+
+## 2026-05-01 Generic Run Count Check
+- **Run scope:** single-day generic materialisation sanity run, compared against `hive_metastore.parking.pudo_unpudo_unpark_events` for `run_date_iso = '2026-04-29'`.
+- **Generic output sample counts:** `44,514` train rows and `4,958` validation rows across all emitted buckets. These totals double-count samples that appear in both full buckets and additive directional / gear-change buckets.
+- **Base generic buckets only:** excluding `_forward`, `_reverse`, and `_gear_change` variants:
+  - Train: `38,207` rows (`park=11,689`, `pudo=16,426`, `unpudo=7,615`, `unparking=2,477`).
+  - Validation: `4,032` rows (`park=2,318`, `pudo=721`, `unpudo=724`, `unparking=269`).
+- **Reference event table count for 2026-04-29:** `pudo=212`, `unpudo=198`, `unparking=77`. The reference table has no `park` rows in this table version.
+- **Comparison caveat:** generic counts are materialised frame/sample rows, while the Databricks table count is event rows. The rough sample-per-event ratio is plausible for the configured windows, but this is not exact parity validation.
+- **Observed bucket sparsity:** some single-day DC directional buckets are absent or one-sided (for example only `dc_pudo_uk_reverse`, only `dc_unpudo_usa_reverse`, only `dc_unparking_uk_forward`). This may be a single-day/date effect, but it is a useful signal to inspect before trusting directional balancing.
