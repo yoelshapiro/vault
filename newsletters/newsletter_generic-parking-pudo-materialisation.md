@@ -95,7 +95,9 @@ DC park/PUDO buckets use the parking DC exclusions: they preserve reverse / neut
 
 There is no `+0.60s` future-speed threshold on park/PUDO. That threshold is only for departure events. Park/PUDO is an approach-to-stop problem, so the relevant signal is the approach window into `gear == 0`, not future speed after a timestamp.
 
-The current implementation also does not require a “previously moved 10m before stopping” progress check. That could be a useful follow-up: require that the vehicle had made enough approach progress before the stop anchor, analogous to the unpark progress validation. It would likely reduce accidental long-standstill / non-maneuver parked segments. It is not implemented in the generic branch today.
+DC park/PUDO now has the symmetric approach-progress validation to the UNPUDO/unparking departure-progress check. Before accepting a park/PUDO candidate, the filter scans backward from the stop anchor and requires at least `10m` of approach progress within `90s`. If it hits another `gear == 0` segment before reaching that progress threshold, or if the threshold is not reached within the lookback window, the candidate is dropped.
+
+This is DC-only. CA/pre-CA park/PUDO buckets still use the non-progress-filtered park/PUDO event window, because corrective examples can be exactly the awkward or short approach cases we do not want to filter out prematurely.
 
 ### Park/PUDO AV, CA, And Pre-CA Handling
 
@@ -157,6 +159,7 @@ Code references:
 
 - `wayve/ai/services/sampling/datasets/parking/common.py:194`
 - `wayve/ai/services/sampling/datasets/parking/common.py:237`
+- `wayve/ai/services/sampling/datasets/parking/filters.py:363`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:563`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:615`
 - `wayve/ai/services/sampling/datasets/parking/events/dataset.py:48`
@@ -342,13 +345,14 @@ The right parity check is therefore not just total row count. We should compare:
 - CA/pre-CA density around known disengagements
 - examples against `parking.pudo_unpudo_unpark_events`
 
-## Follow-Up: Approach Progress For Park/PUDO
+## DC Progress Checks
 
-UNPUDO/unparking already validates that the car actually drives away by requiring `10m` of progress after the park-exit anchor.
+The generic event dataset now uses progress validation on both sides of the parked segment for DC buckets:
 
-Park/PUDO does not currently have the symmetric validation that the car was meaningfully approaching the stop before the park anchor. Adding that would mean checking that, before the transition into `gear == 0`, the vehicle had covered enough distance relative to the stop anchor. A `10m` approach-progress requirement is a reasonable candidate because it mirrors the departure-progress check and would reduce non-maneuver parked segments.
+- Park/PUDO validates approach: before the transition into `gear == 0`, the car must have covered at least `10m` within `90s`, without crossing a previous parked segment.
+- UNPUDO/unparking validates departure: after the park-exit anchor, the car must cover at least `10m` within `90s`, without re-entering `gear == 0` before progress is reached.
 
-That change should be implemented deliberately because it can remove valid short parking maneuvers where the vehicle starts close to the final stop location. It should be measured against the notebook event table and spot-checked on short PUDO/park examples.
+These checks are intentionally DC-only in the event dataset. AV/pre-CA/CA buckets keep the original event windows and rely on intervention timing to capture failures, including short, awkward, stuck, or aborted maneuvers.
 
 ## Why This Matters
 

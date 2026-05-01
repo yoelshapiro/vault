@@ -2009,3 +2009,15 @@
   - Changes:
     - Added an explicit explanation that PUDO/park/UNPUDO/unparking CA buckets are frame-level intersections between event-window filters and intervention-window filters.
     - Documented `ca_short_pudo_usa` as a concrete example of the composed filter logic.
+
+- Topic: Generic materialisation DC park/PUDO approach progress
+  - Labels: parking, pudo, materialisation, generic-sampling, newsletter, tests
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Feature / Docs
+  - Areas: wayve/ai/services/sampling/datasets/parking, vault/newsletters
+  - Changes:
+    - Added DC-only park/PUDO approach-progress validation requiring `10m` approach progress within `90s` before the stop anchor.
+    - Left AV/pre-CA/CA park/PUDO buckets on the original event windows so corrective examples are not filtered by clean-approach assumptions.
+    - Updated [[newsletters/newsletter_generic-parking-pudo-materialisation]] to describe the implemented DC progress checks for both approach and departure.
+    - Added regression tests for short approach, long approach, and previous parked segment before approach progress.
