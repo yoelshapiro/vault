@@ -108,9 +108,9 @@ In the notebook, AV materialisation starts from disengagement timestamps that ar
 In generic materialisation, AV buckets do not use those precomputed event-table disengagement timestamp columns. Instead, `select_interventions` runs directly on the corpus for each run:
 
 - It first finds intervention anchor frames. An anchor is a frame where the corpus intervention signal says an intervention happened.
-- It filters those anchors using the generic intervention validity logic: allowed taxonomy version, requested annotation fields, invalid intervention labels removed, and parking-specific extra invalid labels removed when configured.
-- It converts the requested seconds offsets into frame offsets using the run frequency.
-- It selects frames whose offset from a valid intervention anchor lies inside the requested interval. For example, `[-1.2s, -0.04s]` means frames shortly before the anchor, while `[0s, 1.48s]` means frames after the anchor.
+- It filters those anchors using `select_interventions` defaults plus the parking overrides. In this dataset we do not pass specific `int_type`, `int_reason`, `int_detail`, `int_what`, or `int_why` filters, so it accepts all annotated intervention categories after the generic validity checks. The generic invalid-intervention filter removes invalid cases such as accidental AVSO intervention, system fault, uncommanded disengagement, and end-of-run. Parking also sets `remove_invalid_speed_limits_directional=False`. For pre-CA only, parking adds `additional_invalid_int_what=("early_turn",)`, so `early_turn` interventions are treated as invalid for that bucket family.
+- It converts each bucket family's seconds offsets into frame offsets using the run frequency.
+- It selects frames whose offset from a valid intervention anchor lies inside that bucket family's interval: `pre_ca=[-1.2s, -0.04s]`, `ca_short=[0.0s, +1.48s]`, and `ca_long=[+1.52s, +5.0s]`.
 - For pre-CA windows, `select_interventions` also requires `AUTOMATION_ACTIVE=True`, so those frames are still AV-owned before takeover.
 
 So “before/after window” means a time interval relative to the intervention anchor. Generic implements it as frame offsets inside the per-run Pandas filter; the notebook implements it as timestamp arithmetic and Spark range joins.

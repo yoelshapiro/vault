@@ -1989,3 +1989,13 @@
   - Changes:
     - Added a direct notebook-vs-generic comparison for AV bucket construction in [[newsletters/newsletter_generic-parking-pudo-materialisation]].
     - Replaced vague “before/after frame windows” wording with explicit timestamp-window semantics around intervention anchors.
+
+- Topic: Generic materialisation newsletter AV filter specifics
+  - Labels: parking, pudo, materialisation, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters
+  - Changes:
+    - Clarified the exact parking `select_interventions` filter settings in [[newsletters/newsletter_generic-parking-pudo-materialisation]].
+    - Listed the concrete pre-CA, short-CA, and long-CA intervals inline with the intervention-anchor explanation.
