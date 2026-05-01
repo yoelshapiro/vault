@@ -366,3 +366,34 @@
     - Train USA: `dc_park_usa=2565`, `dc_pudo_usa=600`.
     - Validation UK: `dc_park_uk=605`.
   - Main interpretation: this reference table is useful as a rough same-date sanity check, but it is not an exact parity target for `parking/events` because the taxonomy and window semantics are different.
+
+## 2026-05-01 Single-Day Flyte vs Stored Notebook Materialization
+- **Question:** compare the single-day generic Flyte output against the stored notebook materialization table `hive_metastore.parking.2026_05_01_20_54_01_root_parking_pudo_unpudo_unparking_with_short_buckets_all_disengagements_high_acc`.
+- **Flyte output path:** `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking/events/dev/parking_events_compare_2026_03_14_relaxed_ca__2026-05-01-15-43`.
+- **Comparison date:** `2026-03-14`.
+- **Method:**
+  - Counted Flyte materialized Parquet rows from file metadata using the generic materialization statistics helper.
+  - Counted notebook rows by joining the stored materialization table to `wayve_corpus.all_data` on `(run_id, timestamp_unixus)` and filtering `run_date_iso = '2026-03-14'`.
+  - Full diff CSV: `/tmp/flyte_vs_notebook_2026_03_14_counts.csv`.
+- **Totals:**
+  - Flyte: `46,106` bucket rows (`41,540` train, `4,566` validation).
+  - Notebook table: `72,336` bucket rows (`65,536` train, `6,800` validation).
+- **Totals excluding generic `park` buckets:**
+  - Flyte: `28,944` rows (`25,990` train, `2,954` validation).
+  - Notebook: `72,336` rows (`65,536` train, `6,800` validation). The notebook table does not include separate `park` buckets.
+- **Family totals excluding generic `park`:**
+  - Flyte train: `dc=3,406`, `ca_short=6,056`, `ca_long=12,441`, `pre_ca=4,087`.
+  - Notebook train: `dc=31,496`, `ca_short=8,241`, `ca_long=19,347`, `pre_ca=6,452`.
+  - Flyte validation: `dc=200`, `ca_short=713`, `ca_long=1,486`, `pre_ca=555`.
+  - Notebook validation: `dc=3,618`, `ca_short=772`, `ca_long=1,808`, `pre_ca=602`.
+- **Largest mismatches:**
+  - `train/dc_pudo_usa`: Flyte `600`, notebook `7,280`.
+  - `train/dc_pudo_uk`: Flyte `29`, notebook `1,967`.
+  - `train/dc_unpudo_usa`: Flyte `202`, notebook `4,071`.
+  - `train/dc_unparking_usa`: Flyte `72`, notebook `2,129`.
+  - `train/ca_long_unpudo_usa`: Flyte `1,900`, notebook `4,317`.
+  - `train/ca_long_unpudo_uk`: Flyte `1,395`, notebook `3,408`.
+- **Interpretation:**
+  - This is not an apples-to-apples parity yet. Generic emits `park` buckets that the stored notebook table does not, while still producing far fewer PUDO/UNPUDO/unparking rows after excluding `park`.
+  - The biggest issue is the DC event-window logic, not CA/pre-CA only. CA/pre-CA are closer but still lower in generic, especially for UNPUDO and USA unparking.
+  - The likely sources are event detection/window semantics, hazard/PUDO classification differences, and the generic DC progress checks/filtering being stricter than the notebook event table.
