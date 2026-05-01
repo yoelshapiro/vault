@@ -1868,3 +1868,15 @@
     - Disabled future-speed filtering for notebook AV UNPUDO/unparking buckets while keeping it for DC movement buckets.
     - Updated generic `parking/events` so CA/pre-CA buckets use plain event-window filters and only DC UNPUDO/unparking buckets keep `select_future_unpudo_unparking_speed`.
     - Validated generic parking sampling tests and confirmed the refreshed single-day Flyte run succeeded with non-empty CA/pre-CA buckets; details in [[projects/generic-materialisation-parking-pudo-migration]].
+
+- Topic: Parking materialization table registration
+  - Labels: parking, pudo, materialization, databricks, notebooks
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Feature
+  - Areas: wayve/ai/parking/notebooks
+  - Changes:
+    - Added optional external Hive table registration to the PUDO/UNPUDO materialization notebook.
+    - The table defaults to `hive_metastore.parking.<output-folder-basename>` and points at the existing Azure parquet folder instead of copying data.
+    - Added config switches for registration, replacement, schema, explicit output path, and explicit table name.
+    - Validated notebook code-cell parsing and whitespace checks.
