@@ -1912,3 +1912,14 @@
     - Removed the separate `materialized_table_path` config from the materialization notebook.
     - Added a shared `make_materialization_output_path` helper so the Azure output path and Databricks table name derive from exactly the same folder basename.
     - Committed and pushed `fix: derive parking materialization table path` (`066bebc2f2f4`).
+
+- Topic: Parking training job restores
+  - Labels: parking, training, surfboard, checkpoint, operations
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Ops
+  - Areas: Surfboard, training logs
+  - Changes:
+    - Inspected failed jobs `156963` and `156962` and found coordinated `SIGTERM` handling with successful checkpoint saves, not an apparent deterministic training error.
+    - Confirmed `job resume` is invalid for failed jobs and restored them via `job restore`.
+    - Restored `violet-happy-dolphin` as job `157458` and `pink-owl-vociferous` as job `157457`; details in [[agent_tasks/2026/05/Week-1/2026-05-01-parking-training-job-restores]].
