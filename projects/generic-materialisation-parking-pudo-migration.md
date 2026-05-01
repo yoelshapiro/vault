@@ -318,3 +318,26 @@
 - **Reference event table count for 2026-04-29:** `pudo=212`, `unpudo=198`, `unparking=77`. The reference table has no `park` rows in this table version.
 - **Comparison caveat:** generic counts are materialised frame/sample rows, while the Databricks table count is event rows. The rough sample-per-event ratio is plausible for the configured windows, but this is not exact parity validation.
 - **Observed bucket sparsity:** some single-day DC directional buckets are absent or one-sided (for example only `dc_pudo_uk_reverse`, only `dc_unpudo_usa_reverse`, only `dc_unparking_uk_forward`). This may be a single-day/date effect, but it is a useful signal to inspect before trusting directional balancing.
+
+## 2026-05-01 CA / Pre-CA Relaxation
+- **Notebook branch:** `boris/parking-materialization-config-dry-run`.
+- **Notebook commit:** `7b675c240264` (`fix: relax parking av materialization buckets`).
+- **Notebook changes:**
+  - Set `apply_future_speed_filter_to_av_unpudo_unparking=False`.
+  - Added `window_join_mode` to materialization window specs.
+  - Kept exact 50ms timestamp expansion for DC and gear-change windows.
+  - Restored range joins for AV buckets (`pre_ca`, `ca_short`, `ca_long`) so arbitrary disengagement timestamps do not need to align exactly with the corpus frame grid.
+- **Generic branch:** `boris/generic-parking-pudo-materialisation`.
+- **Generic commit:** `073d27e248e1` (`fix: relax parking event intervention buckets`).
+- **Generic changes:**
+  - Kept `select_future_unpudo_unparking_speed` on DC UNPUDO/unparking movement and directional buckets.
+  - Removed future-speed filtering from `ca_short_*`, `ca_long_*`, and `pre_ca_*` by using plain event-window filters for intervention buckets.
+- **Validation:**
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg='-k=parking' --test_arg='--cov-fail-under=0' --test_output=errors` passed.
+  - Refreshed branch image: `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.81-boris-generic-parking-pudo-materialisation-1b6e0`.
+  - Refreshed image digest: `sha256:83b540214179cc756a3415310369e5b09be8fa52583cb66ede3daaec073e3e99`.
+- **Single-date Flyte run:**
+  - Date: `2026-03-14`.
+  - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_compare_2026_03_14_relaxed_ca --start_date 2026-03-14 --end_date 2026-03-14 --dry_run`.
+  - Execution: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awlzjsqjgngm9gvvrw2n`.
+  - Initial status: `RUNNING` in `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.

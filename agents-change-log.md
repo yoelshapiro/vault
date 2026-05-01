@@ -1856,3 +1856,15 @@
     - Documented the Generic Sampling Platform workflow, storage/release behavior, comparison rules, and migration requirements.
     - Inspected main-branch `parking/default` and `parking/gc` datasets and documented reusable gear reconstruction, gear-count, and boundary-bucket logic.
     - Added a detailed migration plan in [[projects/generic-materialisation-parking-pudo-migration]].
+
+- Topic: Parking materialization CA/pre-CA relaxation
+  - Labels: parking, pudo, materialization, generic-sampling, notebooks
+  - Branch: boris/parking-materialization-config-dry-run; boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Fix
+  - Areas: wayve/ai/parking/notebooks, wayve/ai/services/sampling/datasets/parking/events
+  - Changes:
+    - Updated the notebook materialization to range-join AV buckets (`pre_ca`, `ca_short`, `ca_long`) instead of exact-grid joining from arbitrary disengagement timestamps.
+    - Disabled future-speed filtering for notebook AV UNPUDO/unparking buckets while keeping it for DC movement buckets.
+    - Updated generic `parking/events` so CA/pre-CA buckets use plain event-window filters and only DC UNPUDO/unparking buckets keep `select_future_unpudo_unparking_speed`.
+    - Validated generic parking sampling tests and launched a refreshed single-day Flyte run; details in [[projects/generic-materialisation-parking-pudo-migration]].
