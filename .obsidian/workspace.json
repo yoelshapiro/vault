@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/generic-materialisation-parking-pudo-migration.md",
+                "file": "newsletters/newsletter_generic-parking-pudo-materialisation.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "generic-materialisation-parking-pudo-migration"
+              "title": "newsletter_generic-parking-pudo-materialisation"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/generic-materialisation-parking-pudo-migration.md",
+                "file": "newsletters/newsletter_generic-parking-pudo-materialisation.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of generic-materialisation-parking-pudo-migration"
+              "title": "Outline of newsletter_generic-parking-pudo-materialisation"
             }
           },
           {
@@ -516,6 +516,7 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "projects/generic-materialisation-parking-pudo-migration.md",
     "newsletters/newsletter_generic-parking-pudo-materialisation.md",
     "agent_tasks/2026/05/Week-1/2026-05-01-parking-training-job-restores.md",
     "agent_tasks/2026/05/Week-1",
@@ -524,7 +525,6 @@
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-gi-parking-aug-retry.md",
     "projects.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
-    "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator.md",
     "projects/zach-gear-indicator-losses.md",
     "projects/pudo-event-materialization-speed-gear-buckets.md",
