@@ -1867,4 +1867,4 @@
     - Updated the notebook materialization to range-join AV buckets (`pre_ca`, `ca_short`, `ca_long`) instead of exact-grid joining from arbitrary disengagement timestamps.
     - Disabled future-speed filtering for notebook AV UNPUDO/unparking buckets while keeping it for DC movement buckets.
     - Updated generic `parking/events` so CA/pre-CA buckets use plain event-window filters and only DC UNPUDO/unparking buckets keep `select_future_unpudo_unparking_speed`.
-    - Validated generic parking sampling tests and launched a refreshed single-day Flyte run; details in [[projects/generic-materialisation-parking-pudo-migration]].
+    - Validated generic parking sampling tests and confirmed the refreshed single-day Flyte run succeeded with non-empty CA/pre-CA buckets; details in [[projects/generic-materialisation-parking-pudo-migration]].

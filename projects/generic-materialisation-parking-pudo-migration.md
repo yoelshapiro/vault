@@ -340,4 +340,16 @@
   - Date: `2026-03-14`.
   - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_compare_2026_03_14_relaxed_ca --start_date 2026-03-14 --end_date 2026-03-14 --dry_run`.
   - Execution: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awlzjsqjgngm9gvvrw2n`.
-  - Initial status: `RUNNING` in `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
+  - Final status: `SUCCEEDED`.
+  - Output path: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking/events/dev/parking_events_compare_2026_03_14_relaxed_ca__2026-05-01-15-43`.
+- **Output count signal:**
+  - Train bucket membership rows: `41,540` total (`dc=15,353`, `ca_short=6,986`, `ca_long=14,514`, `pre_ca=4,687`).
+  - Validation bucket membership rows: `4,566` total (`dc=1,554`, `ca_short=797`, `ca_long=1,633`, `pre_ca=582`).
+  - This confirms the CA/pre-CA relaxation fixed the near-empty intervention-bucket problem in generic materialisation.
+- **Reference event-table check for `2026-03-14`:**
+  - `hive_metastore.parking.pudo_unpudo_unpark_events` has UK/USA rows for `pudo`, `unpudo`, and `unparking`, but no separate `park` rows in this table.
+  - UK/USA DC event counts: `pudo=263`, `unpudo=235`, `unparking=185` before train/validation split and frame-window expansion.
+  - UK/USA AV-mode event counts: `pudo=106`, `unpudo=101`, `unparking=12`; any-disengagement counts among those are much lower (`pudo=10`, `unpudo=32`, `unparking=6`), so generic CA/pre-CA sample rows should not be compared 1:1 to event rows.
+- **Comparison caveat:**
+  - Generic output counts are materialised frame/bucket-membership rows and include additive directional / gear-change buckets, so they double-count samples across full and variant buckets.
+  - The Databricks event table count is event-level. Exact parity requires comparing expanded windows, not just event counts.
