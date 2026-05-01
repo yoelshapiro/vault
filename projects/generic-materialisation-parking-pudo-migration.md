@@ -216,7 +216,15 @@
   - `bazel run //wayve/ai/services/sampling:workflow -- remote --force-prod-version-of-registered-images run sample --dataset_name parking/events --job_name parking_events_compare_2026_03_14 --start_date 2026-03-14 --end_date 2026-03-14 --dry_run`
 - **Why the extra Flyte flag:** running without `--force-prod-version-of-registered-images` failed before Flyte execution creation because local `skopeo list-tags` could not authenticate to `wayveacrprodflyte.azurecr.io/sampling`.
 - **Flyte execution:** `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/amrldrsqz9kj7nq4r4qq`.
-- **Initial status:** `RUNNING` in `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
+- **Initial status:** failed in `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
+- **Failure:** `ValueError: Dataset 'parking/events' not found in DATASET_STORE.`
+- **Root cause:** the run used the prod sampling image `0.1.81`, which does not contain the branch changes that add `parking/events`.
+- **Fix applied:** ran `make acr-login && make publish-test -C wayve/ai/services/sampling`.
+- **Published branch image:** `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.81-boris-generic-parking-pudo-materialisation-1b6e0`.
+- **Replacement command:**
+  - `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_compare_2026_03_14_branch_image --start_date 2026-03-14 --end_date 2026-03-14 --dry_run`
+- **Replacement Flyte execution:** `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/al9n5vx8zx96j8wmx694`.
+- **Replacement status:** `RUNNING` in `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
 
 ## Wonjoon Generic Parking vs Notebook Logic
 - **High-level conclusion:** Wonjoon already ported a large part of the parking/unparking materialisation problem into `services/sampling`: reliable gear reconstruction, parking/unparking event anchors, maneuver windows, gear-change count buckets, and gear-change boundary buckets. The missing part is mostly the PUDO-specific semantics: hazard/trip evidence, PUDO vs park split, UNPUDO vs unparking split, notebook event-table validation columns, directional forward/reverse UNPUDO/unparking buckets, and the newer future-speed movement filter.
