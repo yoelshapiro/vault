@@ -405,3 +405,21 @@
 - **Generic requires long `gear==0` parking segments:** generic starts from long gear-zero segments (`min_parking_duration_sec=2.0`, with gear reconstruction/smoothing). The event notebook detects transition patterns with prev/next spike protection and does not use the same long-segment requirement. Short P states and noisy gear traces can therefore be present in notebook events but absent in generic.
 - **UNPUDO/unparking anchors differ:** notebook event detection uses a park-to-nonzero transition, finds first point that moved enough, then earliest acceleration anchor; materialization expands from gear-change / event timestamps. Generic anchors at the end of the long parked segment and then truncates by progress-to-10m, with a sample-level future-speed filter. That can create much shorter selected windows.
 - **Exclusions are different:** generic composes the standard sampling exclusions (`filtered_corpus`, geofence, allowed tags, known-bad windows, steering-bias, constant-speed, stopped-segment interiors, etc.). The event notebook had its own filtered frame logic and the stored materialization table then expands from already accepted event rows. This can drop events before bucket windowing.
+
+### 2026-05-01 Updated Notebook Comparison And Hazard-Window Fix
+- Rechecked against `boris/parking-materialization-config-dry-run`, not only base `parking/notebooks`.
+- Updated event notebook behavior:
+  - PUDO candidate: first `gear==0` frame with `prev_gear != 0`, `prev2_gear != 0`, and `next_gear == 0`.
+  - PUDO evidence: hazard active in `timestamp_unixus ± 10s`; plus trip-table pickup/dropoff completion evidence matched back to raw PUDO candidates within `5m`.
+  - UNPUDO candidate: first nonzero gear after two P frames, next gear same nonzero, then first frame reaching `10m` from transition, then earliest acceleration `>=0.1m/s^2` between transition and that progress point.
+- Generic before this fix classified PUDO by hazard anywhere inside the long parked segment. That misses notebook PUDOs where hazards are near the park transition but not inside the parked segment.
+- Code change made locally on `boris/generic-parking-pudo-materialisation`:
+  - `wayve/ai/services/sampling/datasets/parking/filters.py`: classify `segment_has_pudo` with `_has_hazard_near_index(..., long_gear_zero_start, hazard_window_sec)`.
+  - `wayve/ai/services/sampling/test/datasets/parking/test_parking_filters.py`: added regression coverage for hazard-before-parked-segment and adjusted the old segment-only exclusion test to use a narrow hazard window.
+- Validation:
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking --test_arg=--no-cov` passed.
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8` passed.
+- Remaining detector differences likely still large:
+  - Generic still requires a long P/N segment (`min_parking_duration_sec=2s`) and gear reconstruction/smoothing; notebook uses transition spike-protection directly.
+  - Generic does not use trip-table PUDO evidence.
+  - Generic UNPUDO/unparking does not use the notebook's acceleration-anchor event table; it builds windows from long parked-segment exit plus progress/future-speed filters.
