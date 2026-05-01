@@ -423,3 +423,18 @@
   - Generic still requires a long P/N segment (`min_parking_duration_sec=2s`) and gear reconstruction/smoothing; notebook uses transition spike-protection directly.
   - Generic does not use trip-table PUDO evidence.
   - Generic UNPUDO/unparking does not use the notebook's acceleration-anchor event table; it builds windows from long parked-segment exit plus progress/future-speed filters.
+
+### 2026-05-01 Disable Gear Reconstruction For Events Dataset
+- Commit: `5d42ac5080d9` (`fix: align parking event gear and hazard detection`).
+- Pushed to `origin/boris/generic-parking-pudo-materialisation`.
+- Changes:
+  - Disabled `reconstruct_gear_from_speed` for all `parking/events` PUDO/park/UNPUDO/unparking filters.
+  - Added a reconstruction-disabled gear-change boundary filter for `parking/events` only, leaving `parking/gc` defaults unchanged.
+  - Kept the notebook-style PUDO hazard classification around the P/N transition anchor.
+- Validation:
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking --test_arg=--no-cov` passed.
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty` passed.
+- Lookahead note:
+  - Generic uses `progress_max_lookahead_sec=90.0` for the 10m UNPUDO/unparking progress check.
+  - Updated event notebook initial UNPUDO detector has a `60s` bounded join when looking for the first `10m` progress frame.
+  - The notebook window-enrichment stage separately uses `UNPUDO_END_MAX_LOOKAHEAD_SEC=90s` and `UNPUDO_END_MAX_DISTANCE_SEARCH_M=120m`.
