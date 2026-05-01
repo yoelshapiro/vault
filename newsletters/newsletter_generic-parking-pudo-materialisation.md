@@ -99,11 +99,29 @@ The current implementation also does not require a “previously moved 10m befor
 
 ### Park/PUDO AV, CA, And Pre-CA Handling
 
-For AV-derived park/PUDO buckets, the event window is intersected with intervention-relative windows:
+For AV-derived park/PUDO buckets, we do not create a separate event detector. We take the same park/PUDO event window described above and intersect it with intervention-relative windows from `select_interventions`.
 
-- `pre_ca_pudo_{country}` / `pre_ca_park_{country}`: frames before intervention.
-- `ca_short_pudo_{country}` / `ca_short_park_{country}`: early corrective-action window after intervention.
-- `ca_long_pudo_{country}` / `ca_long_park_{country}`: later corrective-action window after the short CA region.
+The intervention anchor is any valid intervention frame selected by `get_intervention_mask` plus the intervention taxonomy / annotation validity filters inside `select_interventions`. The filter first identifies valid intervention anchors, then broadcasts each anchor into a frame window using the configured before/after offsets.
+
+The three park/PUDO AV bucket families are:
+
+- `pre_ca_pudo_{country}` / `pre_ca_park_{country}`: frames from `-1.2s` to `-0.04s` before a valid intervention, intersected with the park/PUDO event window.
+- `ca_short_pudo_{country}` / `ca_short_park_{country}`: frames from intervention time to `+1.48s`, intersected with the park/PUDO event window.
+- `ca_long_pudo_{country}` / `ca_long_park_{country}`: frames from `+1.52s` to `+5.0s`, intersected with the park/PUDO event window. The `+0.04s` gap after short CA mirrors the normal sampling split and avoids overlap at the boundary.
+
+The practical interpretation is:
+
+- `pre_ca_*` asks: what was the model seeing immediately before the VSO intervened during a park/PUDO maneuver?
+- `ca_short_*` asks: what corrective-action frames happen immediately after takeover?
+- `ca_long_*` asks: what later correction frames still belong to the same park/PUDO event window?
+
+The exclusion set is intentionally different from DC:
+
+- CA buckets use `PARKING_EXCLUSIONS_DC_CA`, which does not exclude entire autonomous runs. We need AV context because CA only exists around AV interventions.
+- CA buckets still apply `exclude_autonomous` at the frame level through that exclusion set, matching the existing generic sampling convention for CA frames after takeover.
+- Pre-CA buckets use `PARKING_EXCLUSIONS_PRE_CA`, which keeps the pre-intervention AV frames but applies `exclude_out_of_scope_intervention`.
+- Parking-specific `select_interventions` disables directional invalid speed-limit removal via `remove_invalid_speed_limits_directional=False`, because parking lots often do not have reliable road-speed-limit semantics.
+- Pre-CA additionally excludes `early_turn` interventions through `additional_invalid_int_what=("early_turn",)`.
 
 These AV buckets are not direction-split in the current dataset and do not have gear-change variants. They are meant to capture corrective behavior around the intervention, not rebalance forward/reverse approach directions.
 
@@ -115,6 +133,15 @@ Code references:
 - `wayve/ai/services/sampling/datasets/parking/filters.py:615`
 - `wayve/ai/services/sampling/datasets/parking/events/dataset.py:48`
 - `wayve/ai/services/sampling/datasets/parking/events/dataset.py:62`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:92`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:107`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:122`
+- `wayve/ai/services/sampling/datasets/parking/common.py:49`
+- `wayve/ai/services/sampling/datasets/parking/common.py:57`
+- `wayve/ai/services/sampling/datasets/parking/common.py:64`
+- `wayve/ai/services/sampling/datasets/parking/common.py:141`
+- `wayve/ai/services/sampling/datasets/parking/common.py:149`
+- `wayve/ai/services/sampling/datasets/common/filters.py:1164`
 
 ```mermaid
 sequenceDiagram
@@ -179,13 +206,36 @@ This replaces the previous acceleration-threshold idea for movement-intent filte
 
 ### UNPUDO/Unparking AV, CA, And Pre-CA Handling
 
-For AV-derived UNPUDO/unparking buckets, the event window is intersected with intervention-relative windows:
+For AV-derived UNPUDO/unparking buckets, the flow is the same intersection pattern, but the event window is the departure window rather than the approach-to-stop window.
 
-- `pre_ca_unpudo_{country}` / `pre_ca_unparking_{country}`: frames before intervention.
-- `ca_short_unpudo_{country}` / `ca_short_unparking_{country}`: early corrective-action window after intervention.
-- `ca_long_unpudo_{country}` / `ca_long_unparking_{country}`: later corrective-action window after the short CA region.
+First, the unpudo/unparking detector selects a departure event window:
+
+- start around the park-exit anchor, including the `5s` pre-exit standstill buffer
+- validate that the vehicle reaches `10m` progress before re-parking
+- clip the event window at the progress point
+
+Then `select_interventions` selects valid intervention anchors and broadcasts them into intervention-relative windows. The final bucket is the intersection of those two masks: the frame must be both inside the departure event window and inside the intervention window.
+
+The three departure AV bucket families are:
+
+- `pre_ca_unpudo_{country}` / `pre_ca_unparking_{country}`: frames from `-1.2s` to `-0.04s` before a valid intervention, intersected with the UNPUDO/unparking departure window.
+- `ca_short_unpudo_{country}` / `ca_short_unparking_{country}`: frames from intervention time to `+1.48s`, intersected with the departure window.
+- `ca_long_unpudo_{country}` / `ca_long_unparking_{country}`: frames from `+1.52s` to `+5.0s`, intersected with the departure window.
+
+This is how we catch different failure modes:
+
+- A disengagement while still parked or just before movement contributes through `pre_ca_*` if it lies inside the departure window.
+- A disengagement immediately after the model starts the wrong maneuver contributes through `ca_short_*`.
+- A correction during a longer multi-gear departure can still contribute through `ca_long_*`, as long as it is within the clipped departure event window.
 
 These AV buckets intentionally do not use the `+0.60s` future-speed threshold. For CA data, a disengagement can happen because the model is stuck, unsafe, delayed, or not moving yet. Filtering those frames by movement would remove exactly the failure cases we want corrective-action data to teach.
+
+The same CA/pre-CA exclusion split applies here:
+
+- `ca_short_*` and `ca_long_*` use `PARKING_EXCLUSIONS_DC_CA`.
+- `pre_ca_*` uses `PARKING_EXCLUSIONS_PRE_CA`.
+- None of these buckets create forward/reverse variants today.
+- None of these buckets create gear-change variants today.
 
 Code references:
 
@@ -196,6 +246,15 @@ Code references:
 - `wayve/ai/services/sampling/datasets/parking/filters.py:585`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:625`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:805`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:92`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:107`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:122`
+- `wayve/ai/services/sampling/datasets/parking/common.py:49`
+- `wayve/ai/services/sampling/datasets/parking/common.py:57`
+- `wayve/ai/services/sampling/datasets/parking/common.py:64`
+- `wayve/ai/services/sampling/datasets/parking/common.py:141`
+- `wayve/ai/services/sampling/datasets/parking/common.py:149`
+- `wayve/ai/services/sampling/datasets/common/filters.py:1164`
 
 ```mermaid
 flowchart LR
