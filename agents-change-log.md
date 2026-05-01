@@ -1923,3 +1923,14 @@
     - Inspected failed jobs `156963` and `156962` and found coordinated `SIGTERM` handling with successful checkpoint saves, not an apparent deterministic training error.
     - Confirmed `job resume` is invalid for failed jobs and restored them via `job restore`.
     - Restored `violet-happy-dolphin` as job `157458` and `pink-owl-vociferous` as job `157457`; details in [[agent_tasks/2026/05/Week-1/2026-05-01-parking-training-job-restores]].
+
+- Topic: Parking materialization Delta table storage fix
+  - Labels: parking, pudo, materialization, databricks, notebooks
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Fix
+  - Areas: wayve/ai/parking/notebooks
+  - Changes:
+    - Updated the PUDO/UNPUDO materialization notebook table-write path to match the events notebook pattern.
+    - Added `materialized_table_root` defaulting to `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking`.
+    - Changed the table write to copy `materialized_df` into a Delta table at `<materialized_table_root>/<materialization-folder>.table` and register it as `hive_metastore.parking.<materialization-folder>`.
