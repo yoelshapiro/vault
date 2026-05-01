@@ -1958,3 +1958,14 @@
     - Clarified that all-direction DC buckets exist alongside forward/reverse directional buckets for park/PUDO and UNPUDO/unparking.
     - Clarified that the `+0.60s`, `0.15 m/s` future-speed threshold applies only to DC UNPUDO/unparking buckets, not park/PUDO and not CA/pre-CA.
     - Added a follow-up note for a possible park/PUDO approach-progress check before stopping.
+
+- Topic: Generic materialisation newsletter AV detail
+  - Labels: parking, pudo, materialisation, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters
+  - Changes:
+    - Expanded the AV/CA/pre-CA sections in [[newsletters/newsletter_generic-parking-pudo-materialisation]] with the exact intervention-anchor and windowing behavior.
+    - Documented pre-CA, short-CA, and long-CA offsets and how they intersect with park/PUDO and UNPUDO/unparking event windows.
+    - Clarified the CA/pre-CA exclusion differences and why movement-speed filtering is intentionally not applied to AV buckets.
