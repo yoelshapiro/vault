@@ -1880,3 +1880,13 @@
     - The table defaults to `hive_metastore.parking.<output-folder-basename>` and points at the existing Azure parquet folder instead of copying data.
     - Added config switches for registration, replacement, schema, explicit output path, and explicit table name.
     - Validated notebook code-cell parsing and whitespace checks.
+
+- Topic: Parking materialization table registration commit
+  - Labels: parking, pudo, materialization, databricks, notebooks
+  - Branch: boris/parking-materialization-config-dry-run
+  - PR: N/A
+  - Change type: Commit
+  - Areas: wayve/ai/parking/notebooks
+  - Changes:
+    - Committed and pushed `feat: register parking materialization tables` (`9188f6ee5487`).
+    - Confirmed notebook gear-change buckets are DC-only; AV buckets remain `pre_ca`, `ca_short`, and `ca_long` without gear-change variants.
