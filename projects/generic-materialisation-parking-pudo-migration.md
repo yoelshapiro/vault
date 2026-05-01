@@ -9,7 +9,7 @@
 ## Status
 - **Phase:** Initial implementation / validation.
 - **Status:** active.
-- **Last updated:** 2026-04-30.
+- **Last updated:** 2026-05-01.
 - **Implementation:** started on `boris/generic-parking-pudo-materialisation`.
 - **Important correction:** The official Generic Materialisation framework from Notion is `wayve/ai/services/sampling`, not the older/local `wayve/ai/foundation/data/curation/materialization` path.
 
@@ -202,6 +202,21 @@
 - **Implication:**
   - The current generic hazard-only `pudo` split is aligned with the simplified design assumption but will not exactly reproduce `parking.pudo_unpudo_unpark_events`.
   - If exact parity with the notebook table matters, PUDO evidence needs to include the notebook's additional logic, not just hazard inside the long stopped segment.
+
+## 2026-05-01 Comparison Date Run
+- **Goal:** find a date present in the old Databricks parking BC materialisation and trigger a generic `parking/events` materialisation for comparison.
+- **Reference table checked:** `hive_metastore.parking.2026_03_15_11_14_01_server_parking_pudo_buckets_bc`.
+- **Chosen date:** `2026-03-14`.
+- **Why this date:** it exists in the old table and is much smaller than adjacent available dates, so it is a practical single-day comparison.
+- **Old-table signal for 2026-03-14:**
+  - Driving rows exist across `dc`, `dc_high_jerk`, `dc_high_curvature`, `dc_indicator_on`, `dc_long`, `dc_pre_start`, and `dc_reduce_speed_to_speed_limit`.
+  - Parking rows exist for `dc_parking_deu`, `dc_parking_uk`, `dc_parking_usa`, `dc_parking_long_deu`, `dc_parking_long_uk`, and `dc_parking_long_usa`.
+  - The old table does not expose explicit `pudo`, `unpudo`, or `unparking` bucket names for this date, so comparison is semantic/count-based rather than exact bucket-name parity.
+- **Submitted command:**
+  - `bazel run //wayve/ai/services/sampling:workflow -- remote --force-prod-version-of-registered-images run sample --dataset_name parking/events --job_name parking_events_compare_2026_03_14 --start_date 2026-03-14 --end_date 2026-03-14 --dry_run`
+- **Why the extra Flyte flag:** running without `--force-prod-version-of-registered-images` failed before Flyte execution creation because local `skopeo list-tags` could not authenticate to `wayveacrprodflyte.azurecr.io/sampling`.
+- **Flyte execution:** `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/amrldrsqz9kj7nq4r4qq`.
+- **Initial status:** `RUNNING` in `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
 
 ## Wonjoon Generic Parking vs Notebook Logic
 - **High-level conclusion:** Wonjoon already ported a large part of the parking/unparking materialisation problem into `services/sampling`: reliable gear reconstruction, parking/unparking event anchors, maneuver windows, gear-change count buckets, and gear-change boundary buckets. The missing part is mostly the PUDO-specific semantics: hazard/trip evidence, PUDO vs park split, UNPUDO vs unparking split, notebook event-table validation columns, directional forward/reverse UNPUDO/unparking buckets, and the newer future-speed movement filter.
