@@ -1969,3 +1969,13 @@
     - Expanded the AV/CA/pre-CA sections in [[newsletters/newsletter_generic-parking-pudo-materialisation]] with the exact intervention-anchor and windowing behavior.
     - Documented pre-CA, short-CA, and long-CA offsets and how they intersect with park/PUDO and UNPUDO/unparking event windows.
     - Clarified the CA/pre-CA exclusion differences and why movement-speed filtering is intentionally not applied to AV buckets.
+
+- Topic: Generic materialisation newsletter intervention-anchor clarification
+  - Labels: parking, pudo, materialisation, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters
+  - Changes:
+    - Reworded the intervention-anchor explanation in [[newsletters/newsletter_generic-parking-pudo-materialisation]] to describe `select_interventions` as anchor detection plus window expansion.
+    - Clarified that pre-CA windows require `AUTOMATION_ACTIVE=True` before takeover.

@@ -101,7 +101,11 @@ The current implementation also does not require a “previously moved 10m befor
 
 For AV-derived park/PUDO buckets, we do not create a separate event detector. We take the same park/PUDO event window described above and intersect it with intervention-relative windows from `select_interventions`.
 
-The intervention anchor is any valid intervention frame selected by `get_intervention_mask` plus the intervention taxonomy / annotation validity filters inside `select_interventions`. The filter first identifies valid intervention anchors, then broadcasts each anchor into a frame window using the configured before/after offsets.
+More concretely, `select_interventions` works in two phases.
+
+First it finds the intervention anchor frames. An anchor is a frame where the corpus intervention signal says an intervention happened, and that intervention passes the generic validity filters: taxonomy version is allowed, annotation fields match the requested filters, invalid intervention types such as accidental/system/end-of-run are removed, and parking-specific extra invalid labels are removed when configured.
+
+Then it expands each valid anchor into a frame window. For every frame in the run, the filter computes the nearest relevant intervention anchor and the frame offset from it. A frame is selected if that offset lies inside the requested `[before_intervention_sec, after_intervention_sec]` interval. For pre-CA windows, `select_interventions` also requires `AUTOMATION_ACTIVE=True`, so the selected frames are still AV-owned before takeover.
 
 The three park/PUDO AV bucket families are:
 
