@@ -4,7 +4,7 @@ The parking notebooks have been useful because they let us iterate quickly, but 
 
 The generic materialisation work moves the core PUDO / park / UNPUDO / unparking bucket logic into `wayve/ai/services/sampling`, so the recipe can be versioned, tested, launched through Flyte, and consumed like the rest of the sampling platform.
 
-This issue explains what we added, how park and unpark events are detected, how DC differs from AV / CA handling, and what bucket families are produced.
+This issue explains what we added, how park and unpark events are detected, how DC differs from AV / CA handling for each event family, and what bucket families are produced.
 
 Branch reference: `boris/generic-parking-pudo-materialisation`
 
@@ -36,8 +36,8 @@ flowchart TD
     E -->|no| G[park / unparking]
     F --> H[Event window filters]
     G --> H
-    H --> I[DC movement buckets]
-    H --> J[DC directional buckets]
+    H --> I[DC all-direction buckets]
+    H --> J[DC forward/reverse buckets]
     H --> K[DC gear-change buckets]
     H --> L[AV / CA intersection buckets]
 ```
@@ -61,7 +61,7 @@ Code references:
 - `wayve/ai/services/sampling/datasets/parking/filters.py:143`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:503`
 
-## Park And PUDO Detection
+## Park And PUDO
 
 For park-like events, the anchor is the transition into a long `gear == 0` segment.
 
@@ -75,7 +75,7 @@ For each accepted park/PUDO event, the selected training window is the approach 
 - `30s` of history
 - `30m` of distance
 
-This matches the intent of the notebook materialisation: capture the maneuver leading into the stop, not only the frame where the gear becomes Park / Neutral.
+This captures the maneuver leading into the stop, not only the frame where the gear becomes Park / Neutral.
 
 We also added indicator extension for park/PUDO. If a left/right indicator starts before the parking anchor and is active into the maneuver, the window can extend back to that indicator start. This keeps the intent signal that often begins before the actual stopping maneuver.
 
@@ -84,12 +84,37 @@ Direction for park/PUDO is based on the entry gear immediately before the parked
 - Entry gear `+1` means forward.
 - Entry gear `-1` means reverse.
 
+Important bucket detail: we create both all-direction and directional park/PUDO buckets.
+
+- `dc_pudo_{country}` and `dc_park_{country}` include both entry directions.
+- `dc_pudo_{country}_forward`, `dc_pudo_{country}_reverse`, `dc_park_{country}_forward`, and `dc_park_{country}_reverse` split the same event family by entry direction.
+
+### Park/PUDO DC Handling
+
+DC park/PUDO buckets use the parking DC exclusions: they preserve reverse / neutral / parking frames, remove autonomous data, and remove deep stopped interiors while keeping transition edges.
+
+There is no `+0.60s` future-speed threshold on park/PUDO. That threshold is only for departure events. Park/PUDO is an approach-to-stop problem, so the relevant signal is the approach window into `gear == 0`, not future speed after a timestamp.
+
+The current implementation also does not require a “previously moved 10m before stopping” progress check. That could be a useful follow-up: require that the vehicle had made enough approach progress before the stop anchor, analogous to the unpark progress validation. It would likely reduce accidental long-standstill / non-maneuver parked segments. It is not implemented in the generic branch today.
+
+### Park/PUDO AV, CA, And Pre-CA Handling
+
+For AV-derived park/PUDO buckets, the event window is intersected with intervention-relative windows:
+
+- `pre_ca_pudo_{country}` / `pre_ca_park_{country}`: frames before intervention.
+- `ca_short_pudo_{country}` / `ca_short_park_{country}`: early corrective-action window after intervention.
+- `ca_long_pudo_{country}` / `ca_long_park_{country}`: later corrective-action window after the short CA region.
+
+These AV buckets are not direction-split in the current dataset and do not have gear-change variants. They are meant to capture corrective behavior around the intervention, not rebalance forward/reverse approach directions.
+
 Code references:
 
 - `wayve/ai/services/sampling/datasets/parking/common.py:194`
 - `wayve/ai/services/sampling/datasets/parking/common.py:237`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:563`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:615`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:48`
+- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:62`
 
 ```mermaid
 sequenceDiagram
@@ -106,9 +131,10 @@ sequenceDiagram
     H-->>W: no hazard => park
     W->>W: select approach window: max(30s, 30m)
     W->>W: optionally extend to indicator start
+    W->>W: optionally split by entry gear
 ```
 
-## UNPUDO And Unparking Detection
+## UNPUDO And Unparking
 
 For departure events, the anchor is the end of a long `gear == 0` segment: the moment just before the vehicle leaves the parked state.
 
@@ -132,13 +158,44 @@ Direction for UNPUDO/unparking is based on the first nonzero gear after the park
 - First nonzero gear `+1` means forward departure.
 - First nonzero gear `-1` means reverse departure.
 
+Like park/PUDO, we create both all-direction and directional departure buckets:
+
+- `dc_unpudo_{country}` and `dc_unparking_{country}` include both exit directions.
+- `dc_unpudo_{country}_forward`, `dc_unpudo_{country}_reverse`, `dc_unparking_{country}_forward`, and `dc_unparking_{country}_reverse` split by first nonzero exit gear.
+
+### UNPUDO/Unparking DC Handling
+
+DC UNPUDO/unparking buckets use the same parking DC exclusions as park/PUDO, but add a movement-intent filter.
+
+For departure buckets only, a timestamp is kept only if the future speed around `+0.60s` shows movement:
+
+- offset: `0.60s`
+- tolerance: `0.05s`
+- threshold: `abs(speed) >= 0.15 m/s`
+
+This is only applied to DC UNPUDO/unparking buckets, including their forward/reverse variants. It is not applied to park/PUDO, and it is not applied to AV/pre-CA/CA buckets.
+
+This replaces the previous acceleration-threshold idea for movement-intent filtering. It aligns better with the controller question we were asking: does the near-future trajectory have enough speed to break standstill?
+
+### UNPUDO/Unparking AV, CA, And Pre-CA Handling
+
+For AV-derived UNPUDO/unparking buckets, the event window is intersected with intervention-relative windows:
+
+- `pre_ca_unpudo_{country}` / `pre_ca_unparking_{country}`: frames before intervention.
+- `ca_short_unpudo_{country}` / `ca_short_unparking_{country}`: early corrective-action window after intervention.
+- `ca_long_unpudo_{country}` / `ca_long_unparking_{country}`: later corrective-action window after the short CA region.
+
+These AV buckets intentionally do not use the `+0.60s` future-speed threshold. For CA data, a disengagement can happen because the model is stuck, unsafe, delayed, or not moving yet. Filtering those frames by movement would remove exactly the failure cases we want corrective-action data to teach.
+
 Code references:
 
 - `wayve/ai/services/sampling/datasets/parking/common.py:213`
 - `wayve/ai/services/sampling/datasets/parking/common.py:251`
+- `wayve/ai/services/sampling/datasets/parking/common.py:266`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:332`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:585`
 - `wayve/ai/services/sampling/datasets/parking/filters.py:625`
+- `wayve/ai/services/sampling/datasets/parking/filters.py:805`
 
 ```mermaid
 flowchart LR
@@ -149,68 +206,22 @@ flowchart LR
     E -->|no| F[Drop candidate]
     E -->|yes| G[Clip window at progress point]
     G --> H[Classify direction by first nonzero gear]
+    H --> I[For DC only: keep timestamp if speed at +0.60s >= 0.15 m/s]
 ```
-
-## DC Handling
-
-DC buckets are the clean data-collection buckets. They use parking-specific exclusions that keep reverse / neutral / parking frames but remove autonomous data and long stopped interiors.
-
-The DC path is where we apply movement-intent filtering for UNPUDO/unparking. For those departure buckets, a timestamp is kept only if the future speed around `+0.60s` shows movement:
-
-- offset: `0.60s`
-- tolerance: `0.05s`
-- threshold: `abs(speed) >= 0.15 m/s`
-
-This replaces the previous acceleration-threshold idea for movement-intent filtering. It aligns better with the controller question we were asking: does the near-future trajectory have enough speed to break standstill?
-
-This speed filter is intentionally not applied to park/PUDO DC buckets, because those are approach-to-stop windows.
-
-Code references:
-
-- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:31`
-- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:48`
-- `wayve/ai/services/sampling/datasets/parking/common.py:132`
-- `wayve/ai/services/sampling/datasets/parking/common.py:266`
-- `wayve/ai/services/sampling/datasets/parking/filters.py:805`
-
-## AV, CA, And Pre-CA Handling
-
-AV-derived buckets are handled differently from DC buckets. These buckets are about corrective behavior around interventions, so they intersect the parking event window with intervention-relative windows rather than applying the movement-intent filter.
-
-The generic dataset creates three AV-style families:
-
-- `pre_ca`: frames before the intervention.
-- `ca_short`: the early corrective-action window after intervention.
-- `ca_long`: the later corrective-action window after the short CA region.
-
-The parking-specific intervention filters intentionally disable directional invalid speed-limit removal, because parking lots and parking maneuvers do not behave like ordinary road-driving speed-limit cases.
-
-Recent relaxation: CA/pre-CA UNPUDO and unparking buckets do not use the `+0.60s` future-speed filter. That filter was too aggressive for intervention windows because a disengagement can happen exactly when the model is wrong, stuck, unsafe, or not yet moving. For CA data, the intervention timing is the training signal; filtering it again by movement intent removes the failures we want to learn from.
-
-Code references:
-
-- `wayve/ai/services/sampling/datasets/parking/common.py:49`
-- `wayve/ai/services/sampling/datasets/parking/common.py:57`
-- `wayve/ai/services/sampling/datasets/parking/common.py:64`
-- `wayve/ai/services/sampling/datasets/parking/common.py:141`
-- `wayve/ai/services/sampling/datasets/parking/common.py:149`
-- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:92`
-- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:107`
-- `wayve/ai/services/sampling/datasets/parking/events/dataset.py:122`
 
 ## Bucket Families
 
 The dataset emits several overlapping bucket families. Counts should be interpreted as timestamp rows per bucket, not unique events. A single event can contribute to multiple bucket variants.
 
-| Bucket pattern | Source | Meaning |
-|---|---|---|
-| `dc_{event_type}_{country}` | DC | Main movement/event bucket. UNPUDO/unparking additionally require future speed at `+0.60s` above `0.15 m/s`. |
-| `dc_{event_type}_{country}_{forward}` | DC | Directional forward variant of the same event window. |
-| `dc_{event_type}_{country}_{reverse}` | DC | Directional reverse variant of the same event window. |
-| `dc_{event_type}_{country}_gear_change` | DC | Frames within `+-1s` of a smoothed gear change inside the event window. |
-| `ca_short_{event_type}_{country}` | AV / CA | Event window intersected with the short corrective-action window. No future-speed filter. |
-| `ca_long_{event_type}_{country}` | AV / CA | Event window intersected with the later corrective-action window. No future-speed filter. |
-| `pre_ca_{event_type}_{country}` | AV / pre-CA | Event window intersected with the pre-intervention window. No future-speed filter. |
+| Bucket pattern | Source | Event types | Meaning |
+|---|---|---|---|
+| `dc_{event_type}_{country}` | DC | `pudo`, `park`, `unpudo`, `unparking` | Main all-direction event bucket. For `unpudo`/`unparking` only, timestamps additionally require future speed at `+0.60s` above `0.15 m/s`. |
+| `dc_{event_type}_{country}_{forward}` | DC | `pudo`, `park`, `unpudo`, `unparking` | Directional forward variant. Park/PUDO uses entry gear; UNPUDO/unparking uses first nonzero exit gear. |
+| `dc_{event_type}_{country}_{reverse}` | DC | `pudo`, `park`, `unpudo`, `unparking` | Directional reverse variant. Park/PUDO uses entry gear; UNPUDO/unparking uses first nonzero exit gear. |
+| `dc_{event_type}_{country}_gear_change` | DC | `pudo`, `park`, `unpudo`, `unparking` | Frames within `+-1s` of a smoothed gear change inside the event window. |
+| `ca_short_{event_type}_{country}` | AV / CA | `pudo`, `park`, `unpudo`, `unparking` | Event window intersected with the short corrective-action window. No future-speed filter. |
+| `ca_long_{event_type}_{country}` | AV / CA | `pudo`, `park`, `unpudo`, `unparking` | Event window intersected with the later corrective-action window. No future-speed filter. |
+| `pre_ca_{event_type}_{country}` | AV / pre-CA | `pudo`, `park`, `unpudo`, `unparking` | Event window intersected with the pre-intervention window. No future-speed filter. |
 
 Where:
 
@@ -243,6 +254,14 @@ The right parity check is therefore not just total row count. We should compare:
 - directional split ratios
 - CA/pre-CA density around known disengagements
 - examples against `parking.pudo_unpudo_unpark_events`
+
+## Follow-Up: Approach Progress For Park/PUDO
+
+UNPUDO/unparking already validates that the car actually drives away by requiring `10m` of progress after the park-exit anchor.
+
+Park/PUDO does not currently have the symmetric validation that the car was meaningfully approaching the stop before the park anchor. Adding that would mean checking that, before the transition into `gear == 0`, the vehicle had covered enough distance relative to the stop anchor. A `10m` approach-progress requirement is a reasonable candidate because it mirrors the departure-progress check and would reduce non-maneuver parked segments.
+
+That change should be implemented deliberately because it can remove valid short parking maneuvers where the vehicle starts close to the final stop location. It should be measured against the notebook event table and spot-checked on short PUDO/park examples.
 
 ## Why This Matters
 

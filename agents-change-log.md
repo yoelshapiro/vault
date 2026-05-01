@@ -1946,3 +1946,15 @@
     - Documented park/PUDO and UNPUDO/unparking detection logic, including hazard splitting, gear cleanup, progress validation, direction splitting, and future-speed filtering.
     - Distinguished DC buckets from AV/pre-CA/CA buckets and summarized every emitted bucket family.
     - Updated `newsletter_index.md` with the new issue.
+
+- Topic: Generic parking materialisation newsletter revision
+  - Labels: parking, pudo, materialisation, newsletter, vault
+  - Branch: boris/generic-parking-pudo-materialisation
+  - PR: N/A
+  - Change type: Docs
+  - Areas: vault/newsletters
+  - Changes:
+    - Revised [[newsletters/newsletter_generic-parking-pudo-materialisation]] to separate DC and AV handling inside park/PUDO and UNPUDO/unparking sections.
+    - Clarified that all-direction DC buckets exist alongside forward/reverse directional buckets for park/PUDO and UNPUDO/unparking.
+    - Clarified that the `+0.60s`, `0.15 m/s` future-speed threshold applies only to DC UNPUDO/unparking buckets, not park/PUDO and not CA/pre-CA.
+    - Added a follow-up note for a possible park/PUDO approach-progress check before stopping.
