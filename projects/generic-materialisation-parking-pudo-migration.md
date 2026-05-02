@@ -562,3 +562,16 @@
 - Current conclusion:
   - No missing documented flag explains why one-day succeeds and full-range fails.
   - The failure pattern still points to full-range scale/resource/Ray node stability during stage-0 mask writing.
+
+### 2026-05-02 Full + Month Flyte Reruns
+- Verified branch before dispatch: `boris/generic-parking-pudo-materialisation`.
+- A first dispatch attempt failed locally because the workspace had unexpectedly switched to `boris/training/kangaroo_new_pudo_unpudo_unpark_root`, causing an import error for sampling dataset modules. Switched back and verified `parking/events` was present in `DATASET_STORE` before rerunning.
+- Refreshed ACR auth with `az acr login --name wayveacrprodflyte` and `az acr login --name wayve` after local image lookup failed with `authentication required`.
+- Full retry run:
+  - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/as82v7jjc564pn7lpjvs
+  - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_full_no_gear_recon_date_gates_retry2 --start_date 2025-08-01 --end_date 2026-04-30 --dry_run`
+  - Initial status: `RUNNING`.
+- One-month shard run:
+  - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awnxp7c8hk9x7lq2db8v
+  - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_month_2026_03_no_gear_recon_date_gates --start_date 2026-03-01 --end_date 2026-03-31 --dry_run`
+  - Initial status: `RUNNING`.
