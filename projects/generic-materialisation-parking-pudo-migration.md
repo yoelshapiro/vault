@@ -591,3 +591,28 @@
   - The month shard failing the same way means this is not just full-range materialization volume.
   - The Ray worker group defaults to `spot_node_usage="tolerate"`; the head is deliberately not spot, but workers may use spot nodes.
   - Next recommended experiment is a no-spot/non-interruptible Ray materialization run, not another unchanged retry.
+
+## 2026-05-02 Grafana / Loki Failure Check
+
+Checked the one-month Flyte execution `awnxp7c8hk9x7lq2db8v` in Grafana Loki via `shared-loki` (`df0kqxr5tyhvkd`) with query:
+
+```logql
+{app="awnxp7c8hk9x7lq2db8v-n0-0"} !~ `^\\s*$`
+```
+
+Result: the failure is not a clean preemption-only case. The logs show repeated Ray OOM pressure while executing `MapBatches(create_masks)`:
+
+- Ray reports `Task _map_task failed due to oom` with infinite retries.
+- Nodes hit about `341-349GB / 359GB`, exceeding Ray's `0.95` memory threshold.
+- `MapBatches(create_masks)` workers are the top memory users, often around `50-80GB` each.
+- Multiple Ray worker nodes are marked dead after missed heartbeats, consistent with raylet/node instability under memory pressure.
+- The final Flyte-visible failure remains `ray.exceptions.NodeDiedError`, but Grafana shows the underlying pressure is OOM during mask creation.
+
+Concrete example from the logs:
+
+- `Memory on the node ... was 342.24GB / 359.00GB (0.953324)`.
+- `Ray killed 1 worker(s)`.
+- `task name=MapBatches(create_masks)`.
+- Top memory users include several `ray::MapBatches(create_masks)` processes at `53GB`, `55GB`, `63GB`, and `69GB` on the same node.
+
+Implication: retrying the same full/month materialisation without changing Ray memory/parallelism or the mask creation batching is unlikely to be stable.
