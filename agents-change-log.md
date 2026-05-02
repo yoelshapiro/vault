@@ -1,11 +1,25 @@
 # Codex Change Log — WayveCode
 
 ## Table of Contents
+- [2026-05](#2026-05)
 - [2026-04](#2026-04)
 - [2026-03](#2026-03)
 - [2026-02](#2026-02)
 - [2026-01](#2026-01)
 - [2025-12](#2025-12)
+
+## 2026-05
+> [!note] 2026-05
+
+> #### 2026-05-02 — Pink Owl Vociferous interleave-control deploy
+- Topic: deploy `pink-owl-vociferous` checkpoint 10 as a Parking/PUDO interleave-control model without triggering post-deploy CI or notes.
+- Labels: #parking #deploy #interleave-control #model-catalogue #radar #vault
+- Branch: `boris/pudo_w_route_path_fixes_and_new_data`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-1/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-02-pink-owl-vociferous-interleave-deploy]]: ran the checkpoint-10 deploy with `--step 100000` and suffix `__pink-owl-vociferous_interleave_control_v1`, uploaded output session `session_2026_04_30_19_00_22_si_parking_bc_train_gear_indicator_gi_parking_aug_retry__pink-owl-vociferous_interleave_control_v1`, resolved assigned nickname `observant-yak-silver`, verified the exported radar shape (`5` features, `800` points per scan), and left Model CI, notes, and release-page follow-up untouched.
 
 ## 2026-04
 > [!note] 2026-04
