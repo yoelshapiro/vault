@@ -575,3 +575,19 @@
   - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awnxp7c8hk9x7lq2db8v
   - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_month_2026_03_no_gear_recon_date_gates --start_date 2026-03-01 --end_date 2026-03-31 --dry_run`
   - Initial status: `RUNNING`.
+
+### 2026-05-02 Full + Month Rerun Failures
+- Full retry execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/as82v7jjc564pn7lpjvs
+  - Status: `FAILED` after `4712.7s`.
+  - Failed task: `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
+  - Error: `ray.exceptions.NodeDiedError` while executing Ray Data `write_parquet(...).materialize()` inside `generate_bucketed_dataset`.
+  - Dead node: IP `10.128.88.106`, node ID `d7d304931246b7e67331d66534e26b174b7b1e70aea4afbe02d6119b`.
+- One-month shard execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awnxp7c8hk9x7lq2db8v
+  - Status: `FAILED` after `3802.4s`.
+  - Failed task: `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
+  - Error: same `ray.exceptions.NodeDiedError` at the same Ray Data `write_parquet(...).materialize()` call.
+  - Dead node: IP `10.128.176.243`, node ID `f6b58b99863cdf5244eca45369a77bc93985ef812204f2d7d60f5fd0`.
+- Interpretation:
+  - The month shard failing the same way means this is not just full-range materialization volume.
+  - The Ray worker group defaults to `spot_node_usage="tolerate"`; the head is deliberately not spot, but workers may use spot nodes.
+  - Next recommended experiment is a no-spot/non-interruptible Ray materialization run, not another unchanged retry.
