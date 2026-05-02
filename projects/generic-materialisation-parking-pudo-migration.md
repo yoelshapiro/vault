@@ -639,3 +639,22 @@ Recommended order:
 2. Reduce binary-index chunk size (`_DELTA_CHUNK_SIZE`) from `1000` to `250-500` for this dataset or globally if acceptable.
 3. Throttle child `_process_batch_remote` fanout inside `create_masks` so one parent does not launch all batch futures at once.
 4. Then optimize event filters by sharing the parking-event scan or reducing duplicated direction/progress filters if stage 0 is still too slow.
+
+## 2026-05-02 One-Month Rerun: Memory 100GiB + Chunk 250
+
+- Branch: `boris/generic-parking-pudo-materialisation`
+- Code change under test:
+  - `_DELTA_CHUNK_SIZE`: `1000 -> 250`
+  - `create_masks` Ray memory reservation: `58GiB -> 100GiB`
+- Local validation:
+  - `bazel test //wayve/ai/services/sampling:test_tasks` passed in the combined run.
+  - `bazel test //wayve/ai/services/sampling:test_ray_tasks` passed after updating the chunking test expectation to remain relative to `_DELTA_CHUNK_SIZE`.
+- One-month Flyte dry-run:
+  - Dataset: `parking/events`
+  - Date range: `2026-03-01` to `2026-03-31`
+  - Job name: `parking_events_month_2026_03_memory100_chunk250`
+  - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/abvwwtf5gg85qrcggpdg
+  - Initial status: `RUNNING`, node `generate_bucketed_dataset_task`.
+- Submission note:
+  - First submission attempt failed before execution creation due stale ACR auth for `wayveacrprodflyte.azurecr.io/sampling`.
+  - Refreshed `az acr login` for `wayve`, `wayvetraining`, and `wayveacrprodflyte`; retry submitted successfully.

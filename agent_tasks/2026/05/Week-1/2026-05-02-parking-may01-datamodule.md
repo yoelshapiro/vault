@@ -54,3 +54,15 @@ Retry used `+datamodule=...` and submitted successfully:
 - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_05_02_13_49_28_si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`
 - Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Abutterfly-fuchsia-outgoing-157814&from_ts=1776520499765&cols=job_name%2Cnode_rank&live=true`
 - Notion release row: `https://www.notion.so/35403da5d69a81aa9301f2640fd961be`
+
+### Failure follow-up
+
+Checked Surfboard job `157814` after it moved to `Failed`. Metadata showed no `reason_for_termination`; job ran on 4 H100 nodes and failed shortly after startup. Downloaded logs to `/tmp/claude/157814_logs/`.
+
+Evidence:
+- `rank0.log` could not be retrieved: `unable to retrieve container logs for containerd://...`
+- `rank1.log`, `rank2.log`, and `rank3.log` showed the config being saved and train partitions being printed, then repeated c10d rendezvous retries against `butterfly-fuchsia-outgoing-157814-master-0...:23456`.
+- No Python traceback, Hydra composition error, CUDA OOM, dataloader exception, or NCCL origin error was present in the retrieved logs.
+- W&B run lookup did not find a created run for the session id, consistent with failing before useful training metrics were emitted.
+
+Interpretation: likely infra/startup failure where the master/rank-0 pod or container died or became unavailable before distributed rendezvous completed. This does not look like a datamodule/config bug from the available evidence. Recommended next action is retry/restore as-is or inspect Datadog/Kubernetes events for the missing master container if the failure repeats.
