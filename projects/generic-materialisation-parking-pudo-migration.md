@@ -454,3 +454,21 @@
   - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a848hwft9vh5l5dxn996
   - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_full_no_gear_recon_date_gates --start_date 2025-08-01 --end_date 2026-04-30 --dry_run`
   - Initial status: `RUNNING` at dispatch.
+
+### 2026-05-02 Full Flyte Run Failure
+- Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a848hwft9vh5l5dxn996
+- Status: `FAILED` after `3813.9s`.
+- Failing Flyte task: `wayve.ai.services.sampling.common.tasks.generate_bucketed_dataset_task`.
+- Failure location: `generate_bucketed_dataset -> ds.write_parquet(...).materialize()` in Ray Data.
+- Error summary:
+  - `ray.data.exceptions.SystemException`
+  - caused by `ray.exceptions.NodeDiedError`
+  - dead node IP: `10.128.235.33`
+  - dead Ray node ID: `3d10a01d28e88ebd154383a930888d2a40d1f974afa3889a36f597a0`
+- Interpretation:
+  - The stack does not show a deterministic application/data exception from the parking filters.
+  - The failure happened while writing Parquet, after the Ray dataset plan was executing.
+  - Most likely classes: node preemption, node hardware failure, raylet crash, or resource pressure/OOM killing the raylet/worker.
+- Follow-up needed:
+  - Check Ray/Grafana/Datadog links for node death details if we need to distinguish preemption from memory pressure.
+  - A retry is reasonable if this was preemption/node loss; if it repeats at write time, reduce partitions/output pressure or request more robust resources.
