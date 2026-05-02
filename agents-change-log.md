@@ -11,6 +11,19 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-02 — Parking May 1 PUDO datamodule config
+- Topic: add a Parking BC datamodule on the kangaroo training branch using the May 1 PUDO/UNPUDO/unparking materialization root and the requested 50/20/13/7/10 mix.
+- Labels: #parking #pudo #datamodule #unpudo #unparking #gear-change #tests
+- Branch: `boris/training/kangaroo_new_pudo_unpudo_unpark_root`
+- PR: none
+- Change type: code/tests
+- Areas: `wayve/ai/si/configs/parking/`, `wayve/ai/si/test/configs/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-02-parking-may01-datamodule]]: added `parking_bc_new_driving_2026_05_01_directional_unpudo_unpark_gear_change_datamodule` using the May 1 materialization root.
+  - Configured nested train weights as driving `50%`, PUDO `20%`, UNPUDO `13%`, unparking `7%`, and gear-change `10%`.
+  - Balanced DC UNPUDO/unparking forward and reverse buckets 50/50 within each DC country aggregate to upsample reverse, while using row-count proportions for PUDO, CA/pre-CA, and gear-change child weights.
+  - Added a config regression test for the registered datamodule mix, root usage, child-weight normalization, and forward/reverse balancing.
+
 > #### 2026-05-02 — Parking deploy for violet-happy-dolphin and pink-owl-vociferous
 - Topic: deploy two trained Parking/PUDO models with interleave control, trigger Model CI, add Console notes, and start the standard parking follow-up suites.
 - Labels: #parking #deploy #interleave-control #model-ci #eval-studio #vault
