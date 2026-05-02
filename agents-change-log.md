@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-02 — Parking training submission for May 1 PUDO mix
+- Topic: submit the committed May 1 Parking BC PUDO/UNPUDO/unparking training run and monitor it to startup.
+- Labels: #parking #training #aks #surfboard #wandb #notion #vault
+- Branch: `boris/training/kangaroo_new_pudo_unpudo_unpark_root`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-1/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-02-parking-training-may01-pudo-mix]]: submitted Surfboard job `157805` from commit `e74bc4067860367bb3e106a97180b88d3ecbb406`, accepted session tag `si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`, captured session `session_2026_05_02_13_33_47_si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`, observed nickname `precocious-scarlet-raccoon`, monitored the job to `Running`, and created the Notion release row.
+
 > #### 2026-05-02 — Parking May 1 PUDO datamodule config
 - Topic: add a Parking BC datamodule on the kangaroo training branch using the May 1 PUDO/UNPUDO/unparking materialization root and the requested 50/20/13/7/10 mix.
 - Labels: #parking #pudo #datamodule #unpudo #unparking #gear-change #tests
