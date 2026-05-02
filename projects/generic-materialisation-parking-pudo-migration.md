@@ -547,3 +547,18 @@
   - Run a smaller date-sharded materialization to isolate scale and verify the parking logic over more than a single day.
   - Make the full production run more robust by changing resource/interruptibility/concurrency for the Ray materialization task, rather than retrying unchanged.
   - Longer-term: expose staged/chunked materialization so stage 0 can be generated in bounded shards and then merged into buckets/final dataset.
+
+### 2026-05-02 Docs/Slack Check for Full-Run Failure
+- Checked Notion page `Documentation - Generic Materialisation`.
+- Relevant doc findings:
+  - Normal remote command is still `bazel run //wayve/ai/services/sampling:workflow -- remote run sample ...`.
+  - `--debug`, `--start_date`, `--end_date`, `--comparison_path`, `--env`, `--project`, and `--domain` are documented user-facing knobs.
+  - `is_prod`/release handling changes the output path and release/autopr side effects, not the Ray materialisation execution path.
+  - The linked branch-based release design is documented as a planned/prototype path; current local code does not expose `branch_name` / `branch_version` in `sample()`.
+- Checked Slack for `NodeDiedError` + sampling/generic materialisation.
+- Relevant Slack finding:
+  - Historical `NodeDiedError` failures exist for full `bc` dev materialisations, including failures in `ds.write_parquet(...)` during `generate_bucketed_dataset`.
+  - In the same notification window, scheduled `release` runs for `bc`, `rl`, and `rmrl` completed successfully, which suggests the difference is not a simple required flag for “own materialisation”.
+- Current conclusion:
+  - No missing documented flag explains why one-day succeeds and full-range fails.
+  - The failure pattern still points to full-range scale/resource/Ray node stability during stage-0 mask writing.
