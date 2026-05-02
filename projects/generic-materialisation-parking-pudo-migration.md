@@ -616,3 +616,26 @@ Concrete example from the logs:
 - Top memory users include several `ray::MapBatches(create_masks)` processes at `53GB`, `55GB`, `63GB`, and `69GB` on the same node.
 
 Implication: retrying the same full/month materialisation without changing Ray memory/parallelism or the mask creation batching is unlikely to be stable.
+
+## 2026-05-02 Implementation Cost Review
+
+Reviewed whether the new `parking/events` implementation itself is unusually expensive compared with `parking/default`, `parking/gc`, and normal driving materialisation.
+
+Findings:
+
+- The OOM is happening in the outer Ray `MapBatches(create_masks)` task, not primarily in the child `_process_batch_remote` filter workers.
+- Grafana examples show `_process_batch_remote` on `~400k-500k` rows peaking around `2.7-3.0GB` RSS, while the parent `MapBatches(create_masks)` workers are the ones using `50-80GB`.
+- This suggests the main pressure is from loading/joining a large partition and launching child batch futures, not a single filter returning a huge mask.
+- The `parking/events` dataset still adds extra cost versus `parking/default`:
+  - multiple distinct event filters recompute the same parking/unparking event scan with different mode/direction/progress parameters;
+  - `select_future_speed_at_offset` currently loops row-by-row and can be vectorized;
+  - direction buckets add duplicated scans;
+  - `pudo`/`park` progress checks add backward scans.
+- However, `parking/gc` also has many unique gear-count filters and more buckets, so the fact that `gc` works means the biggest issue is likely partition size / Ray packing, not only number of filters.
+
+Recommended order:
+
+1. Lower create-mask task concurrency via larger Ray memory request (`~100GiB` instead of `58GiB`).
+2. Reduce binary-index chunk size (`_DELTA_CHUNK_SIZE`) from `1000` to `250-500` for this dataset or globally if acceptable.
+3. Throttle child `_process_batch_remote` fanout inside `create_masks` so one parent does not launch all batch futures at once.
+4. Then optimize event filters by sharing the parking-event scan or reducing duplicated direction/progress filters if stage 0 is still too slow.
