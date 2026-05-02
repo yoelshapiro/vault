@@ -472,3 +472,11 @@
 - Follow-up needed:
   - Check Ray/Grafana/Datadog links for node death details if we need to distinguish preemption from memory pressure.
   - A retry is reasonable if this was preemption/node loss; if it repeats at write time, reduce partitions/output pressure or request more robust resources.
+
+### 2026-05-02 Full Flyte Retry
+- Retried the full `parking/events` dry-run after the previous run failed with Ray `NodeDiedError` during Parquet writing.
+- First retry dispatch attempt failed locally before Flyte submission due to expired ACR auth while listing tags for `wayveacrprodflyte.azurecr.io/sampling`.
+- Refreshed ACR auth with `az acr login --name wayveacrprodflyte` and `az acr login --name wayve`.
+- Retry execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/asg47hxk2xdf6bp7dxgx
+- Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_full_no_gear_recon_date_gates_retry1 --start_date 2025-08-01 --end_date 2026-04-30 --dry_run`
+- Initial poll: execution accepted by Flyte; phase not populated yet immediately after dispatch.
