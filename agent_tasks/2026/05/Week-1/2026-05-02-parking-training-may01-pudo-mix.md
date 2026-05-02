@@ -7,8 +7,10 @@
 - Surfboard job: `157805`
 - Session: `session_2026_05_02_13_33_47_si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`
 - Surfboard nickname: `precocious-scarlet-raccoon`
-- Final observed state: `Running`
+- Final observed state: `Failed`
 - Start time: `2026-05-02 13:36 UTC`
+- End time: `2026-05-02 13:37 UTC`
+- Failure reason: `ConfigCompositionException: Could not override 'datamodule'. No match in the defaults list.`
 - Notion release row: https://www.notion.so/35403da5d69a81aa9301f2640fd961be
 
 ## Command
@@ -40,5 +42,5 @@ bazel run //wayve/ai/si/cli:cli -- \
 
 ## Notes
 - Model Catalogue lookup by session id and Surfboard nickname returned no rows immediately after submission.
-- Created a Notion release row with status `In training`, owner Boris, and Model Version `M26.1.0`.
+- Created a Notion release row with owner Boris and Model Version `M26.1.0`; after the final Surfboard poll showed failure, updated its status to `Canceled` because the database has no `Failed` status option.
 - Did not create commits or edit files in `/workspace/WayveCode`.
