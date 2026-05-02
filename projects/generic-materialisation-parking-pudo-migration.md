@@ -673,3 +673,34 @@ Recommended order:
 - Cleanup:
   - Aborted pre-republish execution `abvwwtf5gg85qrcggpdg` after confirming it used the old digest.
   - Current execution `a59x9ggt88z6bw2qrkbj` is running with task logs attached for `generate_bucketed_dataset_task`.
+
+## 2026-05-02 March Stats Comparison: Generic Flyte vs Notebook Table
+
+Compared generic Flyte month run `a59x9ggt88z6bw2qrkbj` against Databricks table `hive_metastore.parking.2026_05_01_20_54_01_root_parking_pudo_unpudo_unparking_with_short_buckets_all_disengagements_high_acc` for March 2026.
+
+- Flyte path: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking/events/dev/parking_events_month_2026_03_memory100_chunk250_republished__2026-05-02-18-03`
+- Databricks filter tried both `timestamp_unixus >= 2026-03-01 and < 2026-04-01` and `run_id LIKE '%/2026-03-%'`; results were effectively the same.
+- Flyte total bucket stats: 109 split/bucket rows, 2,050,001 samples.
+- Notebook table March stats: 76 split/bucket rows, 3,827,504 samples.
+- Common bucket names: 75 rows; Flyte common total 1,225,047 vs notebook common total 3,822,595.
+- Flyte-only buckets are mostly `park` and PUDO direction variants, which the notebook table does not have.
+- Main mismatch still remains in common buckets: generic UNPUDO/unparking and CA/PRE-CA are much lower than notebook output.
+- Query outputs saved locally at `/tmp/parking_march_counts_runid.csv` and comparison markdown at `/tmp/parking_march_flyte_vs_notebook.md`.
+
+Key group-level diffs on common buckets:
+
+| split | group | Flyte | Notebook | Diff |
+|---|---:|---:|---:|---:|
+| train | dc unpudo | 16,711 | 593,624 | -576,913 |
+| train | dc unparking | 47,816 | 234,478 | -186,662 |
+| train | dc pudo common only | 140,474 | 596,456 | -455,982 |
+| train | ca_long unpudo | 67,291 | 336,410 | -269,119 |
+| train | ca_long pudo | 387,626 | 706,023 | -318,397 |
+| validation | dc unpudo common | 6,330 | 79,209 | -72,879 |
+| validation | dc unparking | 8,545 | 36,181 | -27,636 |
+
+Interpretation so far:
+
+- Park/PUDO splitting explains some PUDO differences, because generic has explicit park buckets and the notebook comparison table does not.
+- It does not explain the UNPUDO/unparking gap.
+- Need next investigation against filter-level logic: generic future-speed/progress filters, event detection windows, CA/pre-CA windowing, and source partition filtering versus notebook table generation.
