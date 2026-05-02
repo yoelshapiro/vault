@@ -11,6 +11,19 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-02 — Parking deploy for violet-happy-dolphin and pink-owl-vociferous
+- Topic: deploy two trained Parking/PUDO models with interleave control, trigger Model CI, add Console notes, and start the standard parking follow-up suites.
+- Labels: #parking #deploy #interleave-control #model-ci #eval-studio #vault
+- Branch: `boris/pudo_w_route_path_fixes_and_new_data`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-1/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-02-parking-deploy-violet-pink]]: deployed `violet-happy-dolphin` checkpoint `10` as `goose-fierce-crimson` with Gen2 artefact `d3ec2ab9-f058-4617-85a3-95379471ae98`.
+  - Deployed `pink-owl-vociferous` checkpoint `10` as `observant-yak-silver` with Gen2 artefact `362f8b18-2477-4074-b4b1-4061987eb14a`.
+  - Added standard Parking/PUDO Console notes, triggered Model CI builds `69720` and `69721`, and recorded that build `69721` hit a transient AI Lab / Model Catalogue `502` in Eval Studio.
+  - Triggered parking follow-up suite executions for `Failed to Unpudo Standstill(No Indicator)` and `[MB] Failure to Accel from Stopped` for both deployed artefacts.
+
 > #### 2026-05-02 — Pink Owl Vociferous interleave-control deploy
 - Topic: deploy `pink-owl-vociferous` checkpoint 10 as a Parking/PUDO interleave-control model without triggering post-deploy CI or notes.
 - Labels: #parking #deploy #interleave-control #model-catalogue #radar #vault
