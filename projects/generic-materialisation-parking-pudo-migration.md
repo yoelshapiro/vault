@@ -658,3 +658,14 @@ Recommended order:
 - Submission note:
   - First submission attempt failed before execution creation due stale ACR auth for `wayveacrprodflyte.azurecr.io/sampling`.
   - Refreshed `az acr login` for `wayve`, `wayvetraining`, and `wayveacrprodflyte`; retry submitted successfully.
+
+### Corrected Submission After Image Refresh
+
+- Important correction: the first submitted execution (`abvwwtf5gg85qrcggpdg`) resolved the pre-existing branch image digest `sha256:881ac79...`, so it was not a reliable test of the uncommitted patch.
+- Republished the `sampling` test image with the current workspace changes:
+  - Tag: `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.81-boris-generic-parking-pudo-materialisation-1b6e0`
+  - New digest: `sha256:fff40a18b9cd0b4394060168505f98dce36d3750e46baf6d76f7d62c130a2287`
+- Corrected one-month Flyte dry-run:
+  - Job name: `parking_events_month_2026_03_memory100_chunk250_republished`
+  - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a59x9ggt88z6bw2qrkbj
+  - Initial status: `RUNNING`; no task log URIs were attached yet at first status check.
