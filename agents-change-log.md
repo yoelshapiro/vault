@@ -1959,6 +1959,19 @@
     - Clarified that the `+0.60s`, `0.15 m/s` future-speed threshold applies only to DC UNPUDO/unparking buckets, not park/PUDO and not CA/pre-CA.
     - Added a follow-up note for a possible park/PUDO approach-progress check before stopping.
 
+- Topic: Parking deploy attempt for violet/pink interleave models
+  - Labels: parking, pudo, deploy, model-ci, eval-studio
+  - Branch: main
+  - PR: 102398 required, not checked out
+  - Change type: Operations
+  - Areas: model deployment, parking skills
+  - Changes:
+    - Attempted `$parking-deploy` for `violet-happy-dolphin` and `pink-owl-vociferous` through spawned deploy workers.
+    - Resolved both models to latest checkpoint `10` / deploy step `100000`.
+    - Both deploys failed before upload because current `wayve/ai/si/deploy.py` rejects `--enable_interleave_control --interleave_control_group parking`.
+    - Confirmed PR `102398` adds the missing CLI and wrapper support required by the skill.
+    - Logged details in [[agent_tasks/2026/05/Week-1/2026-05-02-parking-deploy-violet-pink]].
+
 - Topic: Generic materialisation newsletter AV detail
   - Labels: parking, pudo, materialisation, newsletter, vault
   - Branch: boris/generic-parking-pudo-materialisation
