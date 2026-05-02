@@ -669,3 +669,7 @@ Recommended order:
   - Job name: `parking_events_month_2026_03_memory100_chunk250_republished`
   - Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a59x9ggt88z6bw2qrkbj
   - Initial status: `RUNNING`; no task log URIs were attached yet at first status check.
+
+- Cleanup:
+  - Aborted pre-republish execution `abvwwtf5gg85qrcggpdg` after confirming it used the old digest.
+  - Current execution `a59x9ggt88z6bw2qrkbj` is running with task logs attached for `generate_bucketed_dataset_task`.
