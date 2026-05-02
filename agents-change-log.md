@@ -1972,6 +1972,18 @@
     - Confirmed PR `102398` adds the missing CLI and wrapper support required by the skill.
     - Logged details in [[agent_tasks/2026/05/Week-1/2026-05-02-parking-deploy-violet-pink]].
 
+- Topic: Violet happy dolphin interleave deploy
+  - Labels: parking, deploy, interleave-control
+  - Branch: N/A
+  - PR: N/A
+  - Change type: Operations
+  - Areas: parking_bc, deployment
+  - Changes:
+    - Ran the requested narrow deploy for `violet-happy-dolphin` at step `100000` with suffix `__violet-happy-dolphin_interleave_control_v1`.
+    - Upload succeeded without a suffix-collision retry.
+    - Verified the exported radar config contains `radar_data`, expected radar features, and `points_per_scan: 800`.
+    - Logged details in [[agent_tasks/2026/05/Week-1/2026-05-02-violet-happy-dolphin-interleave-deploy]].
+
 - Topic: Generic materialisation newsletter AV detail
   - Labels: parking, pudo, materialisation, newsletter, vault
   - Branch: boris/generic-parking-pudo-materialisation
