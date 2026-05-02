@@ -526,3 +526,24 @@
   - AV UNPUDO Flyte rows are mostly a subset of notebook rows in the same bucket, e.g. `train/ca_long_unpudo_usa` has `371/417` Flyte rows in notebook but notebook has `4,317` rows total.
   - DC UNPUDO/unparking exact overlap is essentially zero for the biggest buckets, which points to anchor/window semantics being very different from the notebook, not only stricter filtering.
   - PUDO/park exact overlap is mixed because generic has separate `park` buckets and bucket assignment differs; folded counts are closer than exact bucket overlap.
+
+### 2026-05-02 Full Flyte Retry Failure
+- Retry execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/asg47hxk2xdf6bp7dxgx
+- Status: `FAILED` after `3814.0s`.
+- Failure location: `generate_bucketed_dataset -> ds.write_parquet(...).materialize()` in `wayve/ai/services/sampling/common/ray_tasks.py`, during the first `create_masks` Parquet write to `{output}/masks`.
+- Error summary:
+  - `ray.data.exceptions.SystemException`
+  - caused by `ray.exceptions.NodeDiedError`
+  - dead node IP: `10.128.109.67`
+  - dead Ray node ID: `a5adaa5feb80da18351cfb3641b4c37457ea0e91c962e33a93e482bd`
+- Interpretation:
+  - This is the same failure mode as the first full run, at effectively the same runtime, but on a different Ray node.
+  - It is unlikely to be fixed by another unchanged retry.
+  - The failure happens before bucket creation and final dataset writing, so the full run never reaches a comparable output dataset.
+- Current hypothesis:
+  - The full date range creates enough stage-0 mask output pressure that a Ray worker/raylet dies during `write_parquet`.
+  - The task is configured as `interruptible=True`; worker groups do not explicitly use the head-node no-spot safeguard. Preemption is still possible, but the repeated ~3814s timing also points to deterministic resource/write pressure or a cluster/runtime limit.
+- Next options:
+  - Run a smaller date-sharded materialization to isolate scale and verify the parking logic over more than a single day.
+  - Make the full production run more robust by changing resource/interruptibility/concurrency for the Ray materialization task, rather than retrying unchanged.
+  - Longer-term: expose staged/chunked materialization so stage 0 can be generated in bounded shards and then merged into buckets/final dataset.
