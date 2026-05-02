@@ -2110,3 +2110,15 @@
     - Dispatched a single-day `parking/events` dry-run materialisation for `2026-03-14`.
     - Dispatched a full `parking/events` dry-run materialisation from `2025-08-01` to `2026-04-30`, relying on bucket-level gates for PUDO/park quality cutoff.
     - Logged execution links and commands in [[projects/generic-materialisation-parking-pudo-migration]].
+
+- Topic: Parking training retry with shortened datamodule tag
+  - Labels: parking, training, wandb, datamodule
+  - Branch: boris/training/kangaroo_new_pudo_unpudo_unpark_root
+  - PR: n/a
+  - Change type: config/debug
+  - Areas: wayve/ai/si/configs/parking/parking_config.py, training submission
+  - Changes:
+    - Diagnosed W&B tag-length failure in `butterfly-fuchsia-outgoing` retries.
+    - Shortened the May 1 directional UNPUDO/unparking datamodule datastore name to fit W&B tag limits.
+    - Submitted replacement train job `157988` / `dexterous-sapphire-crane`, which reached `Running`.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-02-parking-training-short-datamodule-name-retry]]
