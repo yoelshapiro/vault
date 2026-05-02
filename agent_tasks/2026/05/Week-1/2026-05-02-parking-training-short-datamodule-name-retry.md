@@ -36,3 +36,14 @@ Submitted train with the shortened datamodule name:
 ## Notes
 
 The change was made in a temporary worktree at `/tmp/wayvecode-train-kangaroo-short-name.FfzHJv` to avoid disturbing uncommitted generic-materialization changes in `/workspace/WayveCode`.
+
+## Failure Investigation: 157988 `dexterous-sapphire-crane`
+
+- Status: `Failed`.
+- Surfboard reason: `RuntimeError: Prefetch thread exited with an error; ConnectionResetError: Connection lost`.
+- Rank logs show the underlying first actionable error is missing `_parquet_files_list.txt`:
+  - `abfss://datasets@wayveproddatasetflatswe.dfs.core.windows.net/materialised/si/parking/dev/2026_05_01_20_54_01_root_parking_pudo_unpudo_unparking_with_short_buckets_all_disengagements_high_acc//dataset_split=train/dataset_bucket=dc_unpudo_usa_forward/_parquet_files_list.txt`
+- The file exists when queried without the double slash between root and `dataset_split`.
+- Root cause: `PUDO_UNPUDO_UNPARKING_BUCKETS_ROOT_2026_05_01` has a trailing slash, and the dataloader/BucketCfg path assembly appends `/dataset_split=...`, producing `...high_acc//dataset_split=...`.
+- This is an application/config path bug, not a W&B tag issue and not an infra failure.
+- Fix: remove the trailing slash from `PUDO_UNPUDO_UNPARKING_BUCKETS_ROOT_2026_05_01` before resubmitting.
