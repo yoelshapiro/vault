@@ -35,3 +35,22 @@ The new datamodule keeps the split-alpha2/alpha3 driving data and uses the May 1
 - Passed: `bazel test //wayve/ai/si:test_config_py_test --test_arg=-k --test_arg=test_parking_bc_2026_05_01_datamodule_mix`
 - Passed: `bazel test //wayve/ai/si:test_config_py_lint_pylint`
 - Failed unrelated/pre-existing: `bazel test //wayve/ai/si:test_config_py_lint_flake8` on `wayve/ai/si/configs/versioning/bc_migrations.py:499 E303`.
+
+## Training
+
+Pushed commit `e74bc4067860367bb3e106a97180b88d3ecbb406`, then submitted an 80k-step AKS training run.
+
+First submission used `datamodule=...` and failed quickly with:
+
+`ConfigCompositionException: Could not override 'datamodule'. No match in the defaults list.`
+
+Retry used `+datamodule=...` and submitted successfully:
+
+- Surfboard job: `157814`
+- Session: `session_2026_05_02_13_49_28_si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`
+- Nickname: `butterfly-fuchsia-outgoing`
+- Final observed state: `Dispatched`
+- Compute: `aks-prod-training-2-swe.nd96h100`
+- W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_05_02_13_49_28_si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`
+- Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Abutterfly-fuchsia-outgoing-157814&from_ts=1776520499765&cols=job_name%2Cnode_rank&live=true`
+- Notion release row: `https://www.notion.so/35403da5d69a81aa9301f2640fd961be`
