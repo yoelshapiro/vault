@@ -480,3 +480,49 @@
 - Retry execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/asg47hxk2xdf6bp7dxgx
 - Command: `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking/events --job_name parking_events_full_no_gear_recon_date_gates_retry1 --start_date 2025-08-01 --end_date 2026-04-30 --dry_run`
 - Initial poll: execution accepted by Flyte; phase not populated yet immediately after dispatch.
+
+### 2026-05-02 Single-Day Flyte vs Notebook Table Comparison
+- Flyte execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a7sjcbh7vkvfp9plzxhh
+- Flyte path: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking/events/dev/parking_events_compare_2026_03_14_no_gear_recon_date_gates__2026-05-01-21-55`
+- Notebook table: `hive_metastore.parking.2026_05_01_20_54_01_root_parking_pudo_unpudo_unparking_with_short_buckets_all_disengagements_high_acc`
+- Date compared: `2026-03-14`.
+- Count artifacts:
+  - Bucket count diff CSV: `/tmp/flyte_vs_notebook_2026_03_14_no_gear_recon_date_gates.csv`.
+  - Exact key overlap CSV: `/tmp/flyte_vs_notebook_2026_03_14_key_overlap.csv`.
+- Total bucket rows:
+  - Flyte: `41,441`.
+  - Notebook: `72,336`.
+  - Diff: `-30,895`.
+- Exact key overlap on `(dataset_split, dataset_bucket, run_id, timestamp_unixus)`:
+  - Flyte unique keys: `41,441`.
+  - Notebook unique keys: `72,336`.
+  - Intersection: `12,749`.
+  - Only Flyte: `28,692`.
+  - Only notebook: `59,587`.
+  - Jaccard: `12.62%`.
+- Family totals:
+  - Train Flyte: `dc=14,721`, `ca_long=12,245`, `ca_short=5,660`, `pre_ca=3,735`.
+  - Train Notebook: `dc=31,496`, `ca_long=19,347`, `ca_short=8,241`, `pre_ca=6,452`.
+  - Validation Flyte: `dc=1,358`, `ca_long=1,963`, `ca_short=1,039`, `pre_ca=720`.
+  - Validation Notebook: `dc=3,618`, `ca_long=1,808`, `ca_short=772`, `pre_ca=602`.
+- Event totals:
+  - Flyte train: `park=16,292`, `pudo=16,199`, `unparking=1,971`, `unpudo=1,899`.
+  - Notebook train: `pudo=29,217`, `unparking=10,061`, `unpudo=26,258`.
+  - Flyte validation: `park=1,733`, `pudo=3,046`, `unparking=216`, `unpudo=85`.
+  - Notebook validation: `pudo=3,679`, `unparking=1,862`, `unpudo=1,259`.
+- If generic `park` and `pudo` are folded together for comparison with notebook PUDO:
+  - Train `dc` PUDO/park: Flyte `13,564`, Notebook `11,344`, ratio `1.196`.
+  - Train `ca_long` PUDO/park: Flyte `10,835`, Notebook `10,161`, ratio `1.066`.
+  - Train `ca_short` PUDO/park: Flyte `4,916`, Notebook `4,328`, ratio `1.136`.
+  - Train `pre_ca` PUDO/park: Flyte `3,176`, Notebook `3,384`, ratio `0.939`.
+  - This suggests PUDO/park volume is now broadly aligned after accounting for generic's separate `park` buckets.
+- Main remaining gap:
+  - Train `dc` UNPUDO: Flyte `249`, Notebook `12,663`, ratio `0.020`.
+  - Train `dc` unparking: Flyte `908`, Notebook `7,489`, ratio `0.121`.
+  - Train `ca_long` UNPUDO: Flyte `835`, Notebook `7,725`, ratio `0.108`.
+  - Train `ca_short` UNPUDO: Flyte `465`, Notebook `3,290`, ratio `0.141`.
+  - Train `pre_ca` UNPUDO: Flyte `350`, Notebook `2,580`, ratio `0.136`.
+- Key-overlap interpretation:
+  - AV UNPUDO Flyte rows are mostly a subset of notebook rows in the same bucket, e.g. `train/ca_long_unpudo_usa` has `371/417` Flyte rows in notebook but notebook has `4,317` rows total.
+  - DC UNPUDO/unparking exact overlap is essentially zero for the biggest buckets, which points to anchor/window semantics being very different from the notebook, not only stricter filtering.
+  - PUDO/park exact overlap is mixed because generic has separate `park` buckets and bucket assignment differs; folded counts are closer than exact bucket overlap.
