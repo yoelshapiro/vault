@@ -66,3 +66,14 @@ Evidence:
 - W&B run lookup did not find a created run for the session id, consistent with failing before useful training metrics were emitted.
 
 Interpretation: likely infra/startup failure where the master/rank-0 pod or container died or became unavailable before distributed rendezvous completed. This does not look like a datamodule/config bug from the available evidence. Recommended next action is retry/restore as-is or inspect Datadog/Kubernetes events for the missing master container if the failure repeats.
+
+### Retry
+
+Restored failed Surfboard job `157814` as retry job `157951`.
+
+- Status after submit: `Dispatched`
+- Job name: `butterfly-fuchsia-outgoing-157951`
+- Priority: `P1`
+- Compute: `aks-prod-training-2-swe.nd96h100c`
+- Session: `session_2026_05_02_13_49_28_si_parking_bc_train_release_2026_5_11_may01_pudo_50_20_13_7_gc`
+- Datadog: `https://app.datadoghq.eu/logs?query=job_name%3Abutterfly-fuchsia-outgoing-157951&from_ts=1776537385307&cols=job_name%2Cnode_rank&live=true`

@@ -34,6 +34,7 @@
   - Balanced DC UNPUDO/unparking forward and reverse buckets 50/50 within each DC country aggregate to upsample reverse, while using row-count proportions for PUDO, CA/pre-CA, and gear-change child weights.
   - Added a config regression test for the registered datamodule mix, root usage, child-weight normalization, and forward/reverse balancing.
   - Submitted 80k-step training retry job `157814` (`butterfly-fuchsia-outgoing`) with corrected `+datamodule=...`; final observed state was `Dispatched`.
+  - Investigated failure of `157814` as likely infra/startup master rendezvous failure, then restored it as retry job `157951` (`butterfly-fuchsia-outgoing-157951`), observed `Dispatched`.
 
 > #### 2026-05-02 — Parking deploy for violet-happy-dolphin and pink-owl-vociferous
 - Topic: deploy two trained Parking/PUDO models with interleave control, trigger Model CI, add Console notes, and start the standard parking follow-up suites.
