@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-03 — Parking training with May 3 capped-window materialization
+- Topic: update the Parking BC PUDO/UNPUDO/unparking datamodule to the May 3 materialization root and submit an 80k-step training run.
+- Labels: #parking #training #pudo #unpudo #materialization #surfboard #vault
+- Branch: `boris/training/kangaroo_new_pudo_unpudo_unpark_root`
+- PR: none
+- Change type: code/operations
+- Areas: `wayve/ai/si/configs/parking/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-03-parking-training-may03-matcap]]: committed `2da114f0915` to point `parking_bc_may01_dir_unpudo_unpark_gc_datamodule` at materialization root `2026_05_03_08_25_40_root_parking_pudo_unpudo_unparking_with_short_buckets_all_disengagements_high_acc`, updated bucket-row stats, validated the datamodule pytest, and submitted Surfboard job `158202` / `flamingo-rose-avid` with session `session_2026_05_03_12_28_51_si_parking_bc_train_release_2026_5_11_may03_matcap_gc_shortdm` (`Dispatched`).
+
 > #### 2026-05-03 — Parking materialization UNPUDO/unparking window cap
 - Topic: cap UNPUDO/unparking materialization windows after the final gear change and filter uncategorised disengagement anchors.
 - Labels: #parking #materialization #pudo #unpudo #notebooks
