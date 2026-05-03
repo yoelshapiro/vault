@@ -19,7 +19,7 @@
 - Change type: operations
 - Areas: `agent_tasks/2026/05/Week-1/`
 - Changes:
-  - [[agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish]]: deployed checkpoint step `80000` from source session `session_2026_05_02_20_07_40_si_parking_bc_train_release_2026_5_11_may01_pudo_gc_shortdm_rootfix` as `stork-magenta-mysterious`, verified Gen2 radar config, added the standard Parking/PUDO note, and triggered Model CI build `69816` for Gen2 artefact `1752b39d-fde1-4bd6-a589-32ab55d84d8f`.
+  - [[agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish]]: deployed checkpoint step `80000` from source session `session_2026_05_02_20_07_40_si_parking_bc_train_release_2026_5_11_may01_pudo_gc_shortdm_rootfix` as `stork-magenta-mysterious`, verified Gen2 radar config, added the standard Parking/PUDO note, and triggered Model CI build `69816` for Gen2 artefact `1752b39d-fde1-4bd6-a589-32ab55d84d8f`, and created UK PUDO licensing experiment `2634bafc-7bae-4816-9e73-641447b9f573` (`pending_approval`).
 
 > #### 2026-05-02 — Parking training submission for May 1 PUDO mix
 - Topic: submit the committed May 1 Parking BC PUDO/UNPUDO/unparking training run, monitor startup, and record the immediate Hydra failure.

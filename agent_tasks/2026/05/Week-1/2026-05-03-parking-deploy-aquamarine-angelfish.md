@@ -43,3 +43,12 @@ bazel run //wayve/ai/si:deploy -- \
 - Deploy used the clean training worktree branch `boris/training/kangaroo_new_pudo_unpudo_unpark_root` at commit `de06dae0999`.
 - Source training job `158000` was completed before deployment.
 - The known non-blocking ONNX artefact upload validation warning appeared after ONNX export was skipped; main console upload succeeded.
+
+## UK Licensing Experiment
+- Experiment id: `2634bafc-7bae-4816-9e73-641447b9f573`
+- Experiment index: `25901`
+- Name: `:robot: PUDO licensing [UK] stork-magenta-mysterious 2026-05-03`
+- Status: `pending_approval`
+- Template: `[UK] PUDO Licensing` (`1faea8e5-b080-43b8-ab41-0ef364d57236`)
+- Vehicle model: `gen2-av-mache-alpha3`
+- Control artefact: `1752b39d-fde1-4bd6-a589-32ab55d84d8f`
