@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-03 — Parking materialization UNPUDO/unparking window cap
+- Topic: cap UNPUDO/unparking materialization windows after the final gear change and filter uncategorised disengagement anchors.
+- Labels: #parking #materialization #pudo #unpudo #notebooks
+- Branch: `boris/parking-materialization-config-dry-run`
+- PR: none
+- Change type: code
+- Areas: `wayve/ai/parking/notebooks/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-03-parking-materialization-window-cap]]: updated the materialization notebook to cap UNPUDO/unparking normal and AV windows at `last_gear_change_timestamp + 30s`, filter blacklisted `disengagement_what` anchors (`uncategorised` / `uncategorized`), and keep compatibility with event tables that lack `gear_change_timestamps`.
+
 > #### 2026-05-03 — Parking deploy for aquamarine-angelfish-mercurial
 - Topic: deploy `aquamarine-angelfish-mercurial` as a Parking/PUDO interleave-control model, add the standard Console note, and trigger Model CI.
 - Labels: #parking #deploy #interleave-control #model-ci #vault
