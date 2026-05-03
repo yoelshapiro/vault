@@ -115,7 +115,7 @@ weight(t) = 1 + (change_weight - 1) * exp(-change_decay * t)
     - `GEAR.LOSS_WEIGHT_CHANGE=20.0`
     - `GEAR.LOSS_CHANGE_DECAY=0.5`
   - `mcv_new_phase2_si_baseline.yml` disables these paths, but it is referenced by `experimental/scripts/compare_si_mcv.py`, so it looks like a comparison/SI-baseline config, not the actively tuned PUDO training config.
-
+	
 ### Zach Loss Behavior
 - `IndicatorLoss` reads future targets from `batch["indicator"][:, present + 1 : present + 1 + n_waypoints]`.
 - It masks invalid indicator labels, including Maxus `indicator == 7`, and uses either `bc_supervision_valid` or `auto` masking.

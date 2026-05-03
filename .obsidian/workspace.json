@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "newsletters/newsletter_generic-parking-pudo-materialisation.md",
+                "file": "projects/zach-gear-indicator-losses.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "newsletter_generic-parking-pudo-materialisation"
+              "title": "zach-gear-indicator-losses"
             }
           }
         ],
@@ -475,13 +475,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "newsletters/newsletter_generic-parking-pudo-materialisation.md",
+                "file": "projects/zach-gear-indicator-losses.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of newsletter_generic-parking-pudo-materialisation"
+              "title": "Outline of zach-gear-indicator-losses"
             }
           },
           {
@@ -516,6 +516,9 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish.md",
+    "projects.md",
+    "newsletters/newsletter_generic-parking-pudo-materialisation.md",
     "agent_tasks/2026/05/Week-1/2026-05-02-parking-training-short-datamodule-name-retry.md",
     "agent_tasks/2026/05/Week-1/2026-05-02-parking-training-may01-pudo-mix.md",
     "agent_tasks/2026/05/Week-1/2026-05-02-parking-may01-datamodule.md",
@@ -523,13 +526,11 @@
     "agent_tasks/2026/05/Week-1/2026-05-02-pink-owl-vociferous-interleave-deploy.md",
     "agent_tasks/2026/05/Week-1/2026-05-02-violet-happy-dolphin-interleave-deploy.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
-    "newsletters/newsletter_generic-parking-pudo-materialisation.md",
     "agent_tasks/2026/05/Week-1/2026-05-01-parking-training-job-restores.md",
     "agent_tasks/2026/05/Week-1",
     "agent_tasks/2026/05",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-wonjoon-full-aug.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-gi-parking-aug-retry.md",
-    "projects.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator.md",
     "projects/zach-gear-indicator-losses.md",
@@ -543,7 +544,6 @@
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-28--07-24-08--gen2-av-e283f167-65f5-495b-ab3e-0d60253a1545.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-28--06-02-16--gen2-av-2bbd129e-eb0f-4a78-8abd-b88371b917ff.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-29--11-47-52--gen2-av-3ff04ec0-7f70-42d6-8c67-afd25fd0c513.md",
-    "parking_model_analysis/report_cards/2026/04/Week-5/fme20027--2026-04-29--09-29-32--gen2-av-c7d89610-1705-4ace-b2a4-851207b2979a.md",
     "agent_tasks/2026/04/Week-5",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
