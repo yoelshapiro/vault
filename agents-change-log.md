@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-03 — Parking deploy for aquamarine-angelfish-mercurial
+- Topic: deploy `aquamarine-angelfish-mercurial` as a Parking/PUDO interleave-control model, add the standard Console note, and trigger Model CI.
+- Labels: #parking #deploy #interleave-control #model-ci #vault
+- Branch: `boris/training/kangaroo_new_pudo_unpudo_unpark_root`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-1/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish]]: deployed checkpoint step `80000` from source session `session_2026_05_02_20_07_40_si_parking_bc_train_release_2026_5_11_may01_pudo_gc_shortdm_rootfix` as `stork-magenta-mysterious`, verified Gen2 radar config, added the standard Parking/PUDO note, and triggered Model CI build `69816` for Gen2 artefact `1752b39d-fde1-4bd6-a589-32ab55d84d8f`.
+
 > #### 2026-05-02 — Parking training submission for May 1 PUDO mix
 - Topic: submit the committed May 1 Parking BC PUDO/UNPUDO/unparking training run, monitor startup, and record the immediate Hydra failure.
 - Labels: #parking #training #aks #surfboard #wandb #notion #vault
