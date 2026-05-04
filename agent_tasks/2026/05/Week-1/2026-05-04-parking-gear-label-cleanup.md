@@ -13,7 +13,8 @@
 - Did not port the manual `pred_park_intention` label override because SI `datamodules/parking.py` does not have that annotation source in the current OTF path.
 
 ## Implementation notes
-- The new cleanup is controlled by `enable_gear_label_cleanup` and parameterized with `gear_label_cleanup_*` fields.
+- The new cleanup is implemented in `wayve/ai/si/datamodules/parking_gear_cleanup.py`.
+- It is controlled by `enable_gear_label_cleanup` and parameterized with `gear_label_cleanup_*` fields.
 - The cleanup is applied consistently in both:
   - `fill_parking_scratch_table`, which feeds training labels and parking-mode detection.
   - `add_parking_related_early_flag`, which feeds early path gating / short-path clamping decisions.
