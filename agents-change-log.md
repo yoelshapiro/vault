@@ -2152,3 +2152,17 @@
     - Shortened the May 1 directional UNPUDO/unparking datamodule datastore name to fit W&B tag limits.
     - Submitted replacement train job `157988` / `dexterous-sapphire-crane`, which reached `Running`.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-02-parking-training-short-datamodule-name-retry]]
+
+- Topic: Parking gear label cleanup from PUDO experiments
+  - Labels: parking, pudo, training, datamodule, gear
+  - Branch: boris/training/kangaroo_with_50_and_route_shorten
+  - PR: N/A
+  - Change type: Feature / Test
+  - Areas: wayve/ai/si/datamodules, wayve/ai/si/configs/parking, vault
+  - Changes:
+    - Resolved `mollusk-teal-terrestrial` to source branch `boris/training/kangaroo_with_50_and_route_shorten` at commit `66a3f4878626`.
+    - Added opt-in `ParkingDataConfig.enable_gear_label_cleanup` plus cleanup thresholds for reverse blips, neutral/P blips, and stop-buffered neutral shifting.
+    - Applied the cleanup consistently in parking scratch-table creation and early path-gating detection.
+    - Enabled the cleanup for the parking BC datamodule used by the directional UNPUDO/unparking training config.
+    - Added regression tests for short-gear replacement and stop-buffer neutral cleanup.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]
