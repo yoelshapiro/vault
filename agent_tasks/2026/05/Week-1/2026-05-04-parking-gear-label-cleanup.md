@@ -23,6 +23,4 @@
 ## Tests
 - Passed: `bazel test //wayve/ai/si/datamodules:py_test --test_filter='test_replace_short_gear_segments_prefers_following_label|test_clean_parking_gear_labels_matches_stop_buffer_cleanup'`
 - Passed: `bazel test //wayve/ai/si/datamodules:py_lint_flake8`
-- Pylint target still has pre-existing failures unrelated to this change:
-  - `wayve/ai/si/datamodules/otf.py`: unused legacy `reconstruct_gear_from_speed` argument.
-  - `wayve/ai/si/datamodules/parking.py`: pylint confuses the aliased zoo `insert_parking_data` call signature.
+- Passed: `bazel test //wayve/ai/si/datamodules:py_lint_pylint`

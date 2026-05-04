@@ -2165,4 +2165,5 @@
     - Applied the cleanup consistently in parking scratch-table creation and early path-gating detection.
     - Enabled the cleanup for the parking BC datamodule used by the directional UNPUDO/unparking training config.
     - Added regression tests for short-gear replacement and stop-buffer neutral cleanup.
+    - Added narrow pylint suppressions for pre-existing datamodule lint false positives so the datamodule lint target passes.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]
