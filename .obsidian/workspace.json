@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/zach-gear-indicator-losses.md",
+                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "zach-gear-indicator-losses"
+              "title": "pudo-event-materialization-speed-gear-buckets"
             }
           }
         ],
@@ -516,10 +516,12 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup.md",
+    "projects.md",
+    "projects/zach-gear-indicator-losses.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-training-may03-matcap.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-materialization-window-cap.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish.md",
-    "projects.md",
     "newsletters/newsletter_generic-parking-pudo-materialisation.md",
     "agent_tasks/2026/05/Week-1/2026-05-02-parking-training-short-datamodule-name-retry.md",
     "agent_tasks/2026/05/Week-1/2026-05-02-parking-training-may01-pudo-mix.md",
@@ -535,7 +537,6 @@
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-gi-parking-aug-retry.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator.md",
-    "projects/zach-gear-indicator-losses.md",
     "projects/pudo-event-materialization-speed-gear-buckets.md",
     "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md",
@@ -543,7 +544,6 @@
     "parking_model_analysis/models/panther-white-intuitive.md",
     "parking_model_analysis/models/exotic-jellyfish-silver.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-28--08-43-02--gen2-av-a83a9db4-d843-46d4-9608-0ce7a2ddb45d.md",
-    "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-28--07-24-08--gen2-av-e283f167-65f5-495b-ab3e-0d60253a1545.md",
     "agent_tasks/2026/04/Week-5",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
