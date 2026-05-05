@@ -2167,3 +2167,15 @@
     - Added regression tests for short-gear replacement and stop-buffer neutral cleanup.
     - Added narrow pylint suppressions for pre-existing datamodule lint false positives so the datamodule lint target passes.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]
+
+- Topic: Parking gear cleanup training checkpoint monitor
+  - Labels: parking, training, checkpoint, monitoring
+  - Branch: boris/training/kangaroo_with_50_and_route_shorten
+  - PR: N/A
+  - Change type: Operations
+  - Areas: training submission, model catalogue, vault
+  - Changes:
+    - Pushed commit `1878e808db5e47fdf7b9197517c62e67170615ee` with parking gear-label cleanup.
+    - Submitted AKS training job `158744` / `aqua-singing-cormorant` using `parking_bc_new_driving_directional_unpudo_unpark_datamodule` for 100k steps.
+    - Monitored the run until the first checkpoint file `model-checkpoint-000010000.ckpt` was saved and Model Catalogue reported latest checkpoint `1`.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]
