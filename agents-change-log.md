@@ -2215,3 +2215,15 @@
     - Added a flag-level regression test for `fill_parking_scratch_table` proving `enable_gear_label_cleanup=True` changes the base gear signal and `False` keeps the old expanded-gear behavior.
     - Pushed commit `0223b792d4d6`.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup]]
+
+- Topic: Exotic Zak gear cleanup 80k training dispatch
+  - Labels: parking, pudo, training, gear
+  - Branch: boris/exotic-zak-gear-augmentations
+  - PR: N/A
+  - Change type: Operations
+  - Areas: training submission, surfboard, vault
+  - Changes:
+    - Pushed commit `0223b792d4d6` and submitted AKS training job `158960` / `sleek-bird-amaranth` for 80k steps.
+    - Used session tag `exotic_zak_gear_cleanup_raw_gear` with `parking_bc_datamodule` and `parking_bc_train_release_2026_5_11`.
+    - Initial observed status was `Dispatched`; Model Catalogue nickname was not indexed yet.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup]]
