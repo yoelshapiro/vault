@@ -2191,3 +2191,16 @@
     - Traced original job `158744` / `aqua-singing-cormorant` to resumed successor `158835` after SIGTERM/checkpoint save.
     - Cancelled active successor job `158835`; final status `Canceled`.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]
+
+- Topic: Exotic branch Zak gear cleanup
+  - Labels: parking, pudo, training, gear
+  - Branch: boris/exotic-zak-gear-augmentations
+  - PR: N/A
+  - Change type: Feature / Test
+  - Areas: wayve/ai/zoo/data/parking.py, wayve/ai/si/datamodules/otf.py, wayve/ai/si/configs/parking/parking_config.py
+  - Changes:
+    - Branched from `origin/guy/training/exotic-jellyfish-silver-70-15-10-5_fix_wj_aug_params`.
+    - Added opt-in Zak-style gear-label cleanup and enabled it for the exotic parking datamodule.
+    - Disabled speed-based gear reconstruction in that config so the cleanup uses raw gear labels.
+    - Added regression tests for short reverse blips and stop-buffer neutral shifting.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup]]
