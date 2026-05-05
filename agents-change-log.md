@@ -2179,3 +2179,15 @@
     - Submitted AKS training job `158744` / `aqua-singing-cormorant` using `parking_bc_new_driving_directional_unpudo_unpark_datamodule` for 100k steps.
     - Monitored the run until the first checkpoint file `model-checkpoint-000010000.ckpt` was saved and Model Catalogue reported latest checkpoint `1`.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]
+
+- Topic: Stop parking gear cleanup training jobs
+  - Labels: parking, training, operations
+  - Branch: boris/training/kangaroo_with_50_and_route_shorten
+  - PR: N/A
+  - Change type: Operations
+  - Areas: training submission, surfboard, vault
+  - Changes:
+    - Cancelled duplicate accidental training job `158750` / `cheeky-tapir-amaranth`.
+    - Traced original job `158744` / `aqua-singing-cormorant` to resumed successor `158835` after SIGTERM/checkpoint save.
+    - Cancelled active successor job `158835`; final status `Canceled`.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup]]

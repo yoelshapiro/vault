@@ -52,3 +52,9 @@ bazel run //wayve/ai/si/cli:cli -- \
   - Checkpoint file observed at `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_05_05_06_23_03_si_parking_bc_train_release_2026_5_11_dir_unpudo_unpark_gear_cleanup/checkpoints/model-checkpoint-000010000.ckpt` with size `7527523035` bytes.
   - Model Catalogue resolved `aqua-singing-cormorant` with latest checkpoint `1`, corresponding to the first training checkpoint.
 - Operational note: a duplicate accidental job `158750` / `cheeky-tapir-amaranth` was also running with session tag `y`; it was not cancelled without explicit approval.
+
+## Training stop requested
+- Stop requested by Boris after checkpoint ingestion.
+- Duplicate job `158750` / `cheeky-tapir-amaranth` was cancelled; final status `Canceled`.
+- Original job `158744` / `aqua-singing-cormorant` had already received `SIGTERM` and saved checkpoint `model-checkpoint-000029019.ckpt`; Surfboard marked it `Resumed` rather than allowing direct cancellation.
+- The active resumed successor was `158835` / `aqua-singing-cormorant`; cancellation was requested and final status is `Canceled`.
