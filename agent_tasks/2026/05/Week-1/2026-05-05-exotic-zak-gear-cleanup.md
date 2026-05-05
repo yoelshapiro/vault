@@ -15,3 +15,8 @@
 - Passed: `bazel test //wayve/ai/zoo/data:test_zoo_data --test_filter='test_replace_short_gear_segments_prefers_following_label|test_clean_parking_gear_labels_shifts_neutral_after_stop_buffer'`
 - Passed: `bazel test //wayve/ai/si/datamodules:py_lint_flake8 //wayve/ai/si/datamodules:py_lint_pylint`
 - Passed: `git diff --check`
+
+## Follow-up flag coverage
+- Added `test_fill_parking_scratch_table_uses_gear_cleanup_flag` to verify the flag-on path uses Zak cleanup and the flag-off path preserves the previous expanded-gear behavior.
+- Commit: `0223b792d4d6` - `test(parking): cover gear cleanup flag`
+- Passed: `bazel test //wayve/ai/zoo/data:test_zoo_data --test_filter='test_fill_parking_scratch_table_uses_gear_cleanup_flag|test_replace_short_gear_segments_prefers_following_label|test_clean_parking_gear_labels_shifts_neutral_after_stop_buffer'`

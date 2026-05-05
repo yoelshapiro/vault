@@ -2204,3 +2204,14 @@
     - Disabled speed-based gear reconstruction in that config so the cleanup uses raw gear labels.
     - Added regression tests for short reverse blips and stop-buffer neutral shifting.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup]]
+
+- Topic: Parking gear cleanup flag test coverage
+  - Labels: parking, pudo, tests, gear
+  - Branch: boris/exotic-zak-gear-augmentations
+  - PR: N/A
+  - Change type: Test
+  - Areas: wayve/ai/zoo/data/test/test_parking.py
+  - Changes:
+    - Added a flag-level regression test for `fill_parking_scratch_table` proving `enable_gear_label_cleanup=True` changes the base gear signal and `False` keeps the old expanded-gear behavior.
+    - Pushed commit `0223b792d4d6`.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup]]
