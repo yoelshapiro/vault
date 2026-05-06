@@ -2237,3 +2237,17 @@
     - Used session tag `exotic_zak_gear_cleanup_raw_gear` with `parking_bc_datamodule` and `parking_bc_train_release_2026_5_11`.
     - Initial observed status was `Dispatched`; Model Catalogue nickname was not indexed yet.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup]]
+
+- Topic: Singing Orange Magpie UNPUDO analysis
+  - Labels: parking, unpudo, model-analysis, databricks
+  - Branch: parking/notebooks
+  - PR: N/A
+  - Change type: Analysis / Tooling
+  - Areas: parking.model_analysis, parking_model_analysis, tools/databricks_queries, tools/parking_model_analysis_writer
+  - Changes:
+    - Analyzed `singing-orange-magpie` over 9 active runs from 2026-05-04 to 2026-05-05 using detector-derived events because the materialized event table covered only 6 runs.
+    - Processed runs with 4 incremental single-run workers and persisted 38 rows to `parking.model_analysis`.
+    - Generated 6 run report cards and the `singing-orange-magpie` model card.
+    - Validated 38 `card` links and all Foxglove ±5 minute windows.
+    - Restored helper support for query JSON export, per-worker Databricks cache override, and the parking model-analysis writer target.
+  - Note: [[agent_tasks/2026/05/Week-1/2026-05-06-singing-orange-magpie-unpudo-analysis]]
