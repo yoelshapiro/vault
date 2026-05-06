@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-06 - Parking training retry with osprey materialization root
+- Topic: submit the current-branch Parking BC training retry using the checked-in `osprey-aqua-cautious` PUDO/materialization root and monitor startup.
+- Labels: #parking #training #pudo #surfboard #wandb #notion #vault
+- Branch: `boris/exotic-zak-gear-augmentations`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-1/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-1/2026-05-06-parking-training-osprey-root-retry]]: submitted Surfboard job `159284` from commit `0223b792d4d6b671e51f4b38dcdc4d0ae8e8a0c8`, accepted session tag `si_parking_bc_train_release_2026_5_11_exotic_zak_gear_cleanup_osprey_root_80k`, captured session `session_2026_05_06_07_15_01_si_parking_bc_train_release_2026_5_11_exotic_zak_gear_cleanup_osprey_root_80k`, observed nickname `magenta-perceptive-crane`, confirmed the job reached `Running`, and created the Notion release row.
+
 > #### 2026-05-03 — Parking training with May 3 capped-window materialization
 - Topic: update the Parking BC PUDO/UNPUDO/unparking datamodule to the May 3 materialization root and submit an 80k-step training run.
 - Labels: #parking #training #pudo #unpudo #materialization #surfboard #vault
