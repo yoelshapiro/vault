@@ -319,24 +319,12 @@
             "id": "d766a0330d27d64f",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "projects/pudo-event-materialization-speed-gear-buckets.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "file": "Excalidraw/parking_model_arch.excalidraw.excalidraw"
               },
-              "icon": "lucide-file",
-              "title": "pudo-event-materialization-speed-gear-buckets"
+              "icon": "excalidraw-icon",
+              "title": "parking_model_arch.excalidraw"
             }
           }
         ],
@@ -516,6 +504,9 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "Excalidraw/model_release.excalidraw.md",
+    "Excalidraw/head_options.excalidraw.md",
+    "projects/pudo-event-materialization-speed-gear-buckets.md",
     "agent_tasks/2026/05/Week-1/2026-05-06-parking-training-osprey-root-retry.md",
     "agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup.md",
     "agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup.md",
@@ -539,11 +530,8 @@
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-gi-parking-aug-retry.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-parking-training-directional-unpudo-unpark-gear-indicator.md",
-    "projects/pudo-event-materialization-speed-gear-buckets.md",
-    "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/04/Week-5/2026-04-30-new-unpudo-model-analysis-runs.md",
     "parking_model_analysis/models/tomato-toucan-gorgeous.md",
-    "parking_model_analysis/models/panther-white-intuitive.md",
     "agent_tasks/2026/04/Week-5",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
