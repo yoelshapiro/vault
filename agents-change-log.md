@@ -2251,3 +2251,15 @@
     - Validated 38 `card` links and all Foxglove ±5 minute windows.
     - Restored helper support for query JSON export, per-worker Databricks cache override, and the parking model-analysis writer target.
   - Note: [[agent_tasks/2026/05/Week-1/2026-05-06-singing-orange-magpie-unpudo-analysis]]
+
+- Topic: Interleave understeer helper
+  - Labels: interleave, deployment, parking, tests
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: 102398
+  - Change type: Refactor / Test
+  - Areas: wayve/ai/zoo/deployment/deployment_wrapper.py
+  - Changes:
+    - Extracted default understeer lookup into `_default_understeer_coefficient`.
+    - Updated `_to_onboard_output` and `ParkingDeploymentWrapperImpl` to share the helper while keeping parking conversion explicit.
+    - Validated parking wrapper behavior with focused Bazel test coverage.
+  - Note: [[agent_tasks/2026/05/Week-2/2026-05-11-interleave-understeer-helper]]
