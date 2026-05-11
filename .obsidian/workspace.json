@@ -319,12 +319,24 @@
             "id": "d766a0330d27d64f",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/parking_model_arch.excalidraw.excalidraw"
+                "file": "projects.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "parking_model_arch.excalidraw"
+              "icon": "lucide-file",
+              "title": "projects"
             }
           }
         ],
@@ -487,7 +499,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -504,6 +517,18 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-2/2026-05-11-interleave-understeer-helper.md",
+    "agent_tasks/2026/05/Week-2",
+    "projects/zak-latest-work-concepts.md",
+    "projects.md",
+    "projects/pudo-event-materialization-speed-gear-buckets.md",
+    "projects/zach-gear-indicator-losses.md",
+    "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-28--08-43-02--gen2-av-a83a9db4-d843-46d4-9608-0ce7a2ddb45d.md",
+    "parking_model_analysis/models/prismatic-teal-bird.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
+    "agents-change-log.md",
+    "projects/generic-materialisation-parking-pudo-migration.md",
+    "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "agent_tasks/2026/05/Week-1/2026-05-06-singing-orange-magpie-unpudo-analysis.md",
     "parking_model_analysis/report_cards/2026/05/Week-2/fme10011--2026-05-04--16-05-12--gen2-av-9ffce118-ac49-492c-93b6-1713d4e56b14.md",
     "parking_model_analysis/models/singing-orange-magpie.md",
@@ -516,30 +541,18 @@
     "parking_model_analysis/report_cards/2026/05",
     "Excalidraw/model_release.excalidraw.md",
     "Excalidraw/head_options.excalidraw.md",
-    "projects/pudo-event-materialization-speed-gear-buckets.md",
     "agent_tasks/2026/05/Week-1/2026-05-06-parking-training-osprey-root-retry.md",
     "agent_tasks/2026/05/Week-1/2026-05-05-exotic-zak-gear-cleanup.md",
     "agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup.md",
-    "projects.md",
-    "projects/zach-gear-indicator-losses.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-training-may03-matcap.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-materialization-window-cap.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish.md",
-    "newsletters/newsletter_generic-parking-pudo-materialisation.md",
-    "agent_tasks/2026/05/Week-1/2026-05-02-parking-training-short-datamodule-name-retry.md",
-    "agent_tasks/2026/05/Week-1/2026-05-02-parking-training-may01-pudo-mix.md",
-    "agent_tasks/2026/05/Week-1/2026-05-02-parking-may01-datamodule.md",
-    "agent_tasks/2026/05/Week-1/2026-05-02-parking-deploy-violet-pink.md",
-    "agent_tasks/2026/05/Week-1/2026-05-02-pink-owl-vociferous-interleave-deploy.md",
-    "agent_tasks/2026/05/Week-1/2026-05-02-violet-happy-dolphin-interleave-deploy.md",
     "agent_tasks/2026/05/Week-1",
     "agent_tasks/2026/05",
     "agent_tasks/2026/04/Week-5",
     "parking_model_analysis/report_cards/2026/04/Week-5",
     "parking_model_analysis/report_cards/diagnostics",
     "parking_model_analysis/report_cards/2026/04/Week-4",
-    "parking_model_analysis/report_cards/2026/04/Week-3",
-    "parking_model_analysis/report_cards/2026/04/Week-2",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
