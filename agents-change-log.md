@@ -2261,5 +2261,7 @@
   - Changes:
     - Extracted default understeer lookup into `_default_understeer_coefficient`.
     - Updated `_to_onboard_output` and `ParkingDeploymentWrapperImpl` to share the helper while keeping parking conversion explicit.
+    - Merged `origin/main` at `2a760839c448` and resolved conflicts in SI deploy/model wiring plus deployment wrapper code.
+    - Updated stale gear-position wrapper test for the merged `DrivePositionV2.UNKNOWN` behavior.
     - Validated parking wrapper behavior with focused Bazel test coverage.
   - Note: [[agent_tasks/2026/05/Week-2/2026-05-11-interleave-understeer-helper]]
