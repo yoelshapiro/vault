@@ -2276,5 +2276,6 @@
     - Investigated the registered Parking BC model variants and train modes in `parking_config.py`.
     - Added a self-contained interactive HTML diagram for the latest Parking BC release and prior variants.
     - Included clickable architecture nodes, variant switching, lane filters, search, and data-mix tabs for D26.3 nested bucket ratios.
+    - Revised the main graph into a linear torch model path ending at `OutputAdaptor`, with datamodule/loss/train mode shown as separate training context.
     - Served the app on local port `3001` from tmux session `parking-model-diagram`.
   - Note: [[agent_tasks/2026/05/Week-2/2026-05-12-parking-model-diagram]]

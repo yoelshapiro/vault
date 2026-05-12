@@ -20,6 +20,13 @@ Investigated `parking_config.py` and built a self-contained interactive HTML dia
 ## Changes
 
 - Added `tools/parking_model_diagram/index.html`.
+- Revised the diagram to make the main graph a linear torch model path:
+  - `MIMOSTTransformer`
+  - `Preprocess`
+  - `InputAdaptor`
+  - `STTransformer`
+  - `OutputAdaptor`
+- Kept the D26.3 training data section and moved datamodule/loss/train-mode details into separate context cards, explicitly outside the torch model graph.
 - Served the static app from `/workspace/WayveCode` with:
   - `tmux` session: `parking-model-diagram`
   - URL: `http://127.0.0.1:3001/`
