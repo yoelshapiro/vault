@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects.md",
+                "file": "projects/generic-materialisation-parking-pudo-migration.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "projects"
+              "title": "generic-materialisation-parking-pudo-migration"
             }
           }
         ],
@@ -517,10 +517,11 @@
   },
   "active": "d766a0330d27d64f",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-2/2026-05-12-parking-model-diagram.md",
+    "projects.md",
     "agent_tasks/2026/05/Week-2/2026-05-11-interleave-understeer-helper.md",
     "agent_tasks/2026/05/Week-2",
     "projects/zak-latest-work-concepts.md",
-    "projects.md",
     "projects/pudo-event-materialization-speed-gear-buckets.md",
     "projects/zach-gear-indicator-losses.md",
     "parking_model_analysis/report_cards/2026/04/Week-5/fme20031--2026-04-28--08-43-02--gen2-av-a83a9db4-d843-46d4-9608-0ce7a2ddb45d.md",
@@ -546,7 +547,6 @@
     "agent_tasks/2026/05/Week-1/2026-05-04-parking-gear-label-cleanup.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-training-may03-matcap.md",
     "agent_tasks/2026/05/Week-1/2026-05-03-parking-materialization-window-cap.md",
-    "agent_tasks/2026/05/Week-1/2026-05-03-parking-deploy-aquamarine-angelfish.md",
     "agent_tasks/2026/05/Week-1",
     "agent_tasks/2026/05",
     "agent_tasks/2026/04/Week-5",
