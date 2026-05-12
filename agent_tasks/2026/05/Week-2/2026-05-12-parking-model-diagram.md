@@ -36,3 +36,5 @@ Investigated `parking_config.py` and built a self-contained interactive HTML dia
 - Confirmed port `3001` was free before starting the server.
 - Confirmed `curl -I http://127.0.0.1:3001/` returns HTTP 200.
 - Confirmed the served HTML contains the latest variant, the space-time transformer node, and the D26.3 data mix.
+- Fixed a rewrite regression where the default selected node still pointed at the removed `st` node, preventing the training data/context section from rendering.
+- Re-ran a Node-based page-script check confirming the context cards, training-data bars, and active model details render.
