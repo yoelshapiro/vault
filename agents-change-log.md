@@ -2265,3 +2265,16 @@
     - Updated stale gear-position wrapper test for the merged `DrivePositionV2.UNKNOWN` behavior.
     - Validated parking wrapper behavior with focused Bazel test coverage.
   - Note: [[agent_tasks/2026/05/Week-2/2026-05-11-interleave-understeer-helper]]
+
+- Topic: Parking model interactive diagram
+  - Labels: parking, model-config, visualization, frontend
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: N/A
+  - Change type: Tooling / Visualization
+  - Areas: wayve/ai/si/configs/parking/parking_config.py, tools/parking_model_diagram
+  - Changes:
+    - Investigated the registered Parking BC model variants and train modes in `parking_config.py`.
+    - Added a self-contained interactive HTML diagram for the latest Parking BC release and prior variants.
+    - Included clickable architecture nodes, variant switching, lane filters, search, and data-mix tabs for D26.3 nested bucket ratios.
+    - Served the app on local port `3001` from tmux session `parking-model-diagram`.
+  - Note: [[agent_tasks/2026/05/Week-2/2026-05-12-parking-model-diagram]]
