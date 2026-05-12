@@ -2289,3 +2289,18 @@
     - Revised the main graph into a linear torch model path ending at `OutputAdaptor`, with datamodule/loss/train mode shown as separate training context.
     - Served the app on local port `3001` from tmux session `parking-model-diagram`.
   - Note: [[agent_tasks/2026/05/Week-2/2026-05-12-parking-model-diagram]]
+
+- Topic: Chocolate Narwhal Adaptable UNPUDO analysis
+  - Labels: parking, unpudo, model-analysis, databricks
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: N/A
+  - Change type: Analysis / Tooling
+  - Areas: parking.model_analysis, parking_model_analysis, tools/databricks_queries, tools/parking_model_analysis_writer
+  - Changes:
+    - Resolved 5 `chocolate-narwhal-adaptable` model-episode run IDs for 2026-05-11.
+    - Derived UNPUDO candidates from `all_data` gear transitions because the materialized parking event table had no rows for the model.
+    - Deduped candidate events by `event_key` after the direct SQL fallback joined duplicate model-episode rows.
+    - Processed 3 scored runs and persisted 10 table-backed rows to `parking.model_analysis`: 9 pass and 1 fail.
+    - Generated 3 run report cards and refreshed the table-backed model card.
+    - Added Bazel support for the skill detector wrapper and Azure CLI auth in the parking model-analysis writer.
+  - Note: [[agent_tasks/2026/05/Week-2/2026-05-12-chocolate-narwhal-unpudo-analysis]]
