@@ -24,10 +24,15 @@ Deployed source nickname `ibex-lime-meritorious` with suffix `__ibex-lime-merito
 - Checkpoint load observed for source checkpoint `model-checkpoint-000100000.ckpt`.
 - Torchscript saved at `traces/model-000160000.torchscript`.
 - Console upload succeeded.
+- Added model-change note `11ec2ff4-ce79-4ec7-930a-93a8b0d299a3`:
+  - `Parking/PUDO model`
+  - `- deployed with interleave control group default`
+  - `- based on trained model ibex-lime-meritorious`
 - Radar verification passed in `gen2_model_inference_config.json`:
   - `tensor_name`: `radar_data`
   - `radar_features`: `RADAR_FEATURE_X_M`, `RADAR_FEATURE_Y_M`, `RADAR_FEATURE_Z_M`, `RADAR_FEATURE_RANGE_RATE_MPS`, `RADAR_FEATURE_SNR_DB`
   - `points_per_scan`: `800`
+- Gen3 Model CI was not triggered: the deployed model has only `gen1` and `gen2` artefacts, and the model-catalogue vehicle options for the `gen2` artefact are `gen2-av-mache` and `gen2-av-mache-alpha3`.
 
 ## Non-blocking warnings
 
