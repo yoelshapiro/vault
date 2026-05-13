@@ -2304,3 +2304,16 @@
     - Generated 3 run report cards and refreshed the table-backed model card.
     - Added Bazel support for the skill detector wrapper and Azure CLI auth in the parking model-analysis writer.
   - Note: [[agent_tasks/2026/05/Week-2/2026-05-12-chocolate-narwhal-unpudo-analysis]]
+
+- Topic: PR 102398 CI fixes
+  - Labels: si, ci, tests, buildkite
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: 102398
+  - Change type: Test / Config
+  - Areas: wayve/ai/si
+  - Changes:
+    - Regenerated the RL baseline reference config for the current schema.
+    - Updated BC and offline RL deployment-config tests for current driving-control key semantics.
+    - Added a concrete test wrapper subclass for abstract `DeploymentWrapperImpl`.
+    - Verified the affected SI config, lint, training, deployment, and offline RL targets locally.
+  - Note: [[agent_tasks/2026/05/Week-2/2026-05-13-pr-102398-ci-fixes]]
