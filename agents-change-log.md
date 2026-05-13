@@ -29,7 +29,7 @@
 - Change type: operations
 - Areas: `agent_tasks/2026/05/Week-3/`
 - Changes:
-  - [[agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy]]: started deploy with suffix `__loquacious-partridge-lime_interleave_control_v2` from the source session directly after confirming no source `full_config.yml` radar overlay keys were present; the exact requested command failed before checkpoint load because current `deploy.py` requires `--output_dir` for suffixed ABFSS-converted source paths, then the output-dir retry exposed a stale `include_tele_lens_blockage` config key, so a minimal `/tmp` config overlay retry is in progress.
+  - [[agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy]]: started deploy with suffix `__loquacious-partridge-lime_interleave_control_v2` from the source session directly after confirming no source `full_config.yml` radar overlay keys were present; later overlay retries removed stale `include_tele_lens_blockage`, set WFM pretraining loader `strict: false`, and disabled Model CI, but the final retry failed during trained checkpoint load because indicator-head checkpoint weights have 4 classes while the current model instantiated 3 classes.
 
 > #### 2026-05-13 - PR 102690 route shortening review fixes
 - Topic: address route-shortening PR review comments for parking stop offsets and validation.

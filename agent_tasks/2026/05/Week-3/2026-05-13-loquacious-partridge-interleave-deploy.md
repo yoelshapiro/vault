@@ -9,6 +9,8 @@
 - Retry command log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy_retry.log`
 - Overlay retry log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy_overlay.log`
 - Overlay session: `/tmp/session_2026_05_06_09_06_03_si_parking_bc_train_release_2026_5_11_parking_past30_no_standstill_gear_aug`
+- Overlay3 log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy_overlay3.log`
+- Overlay3 session: `/tmp/session_2026_05_06_09_06_03_si_parking_bc_train_release_2026_5_11_parking_past30_no_standstill_gear_aug_overlay3`
 
 ## Summary
 
@@ -24,16 +26,17 @@ bazel run //wayve/ai/si:deploy -- --suffix __loquacious-partridge-lime_interleav
 
 ## Results
 
-- Status: overlay retry in progress
-- Output session: pending
-- Assigned nickname: pending
-- Console URL: pending
-- Radar verification: pending
+- Status: failed before export/upload
+- Output session: not created by successful deploy
+- Assigned nickname: none
+- Console URL: none
+- Radar verification: not run after deploy because deploy failed
 - Non-blocking warnings observed so far:
   - External grpc BUILD targets warn that plugin targets are both rules and files.
   - `rules_jvm_external` debug warning about multiple bzlmod modules contributing to the Maven repository.
   - First exact requested deploy command failed before checkpoint load because current `deploy.py` requires `--output_dir` when converting a `/mnt/remote/azure_session_dir/...` source path to ABFSS while using a suffix.
   - First retry with `--output_dir` failed before checkpoint load because the source config had stale `model.model.output_adaptor.include_tele_lens_blockage`, which current `OutputAdaptor` no longer accepts.
+  - Overlay3 with `include_tele_lens_blockage` removed, WFM pretraining loader `strict: false`, and `--no-model-ci` reached trained checkpoint load, then failed because the trained checkpoint has 4-class indicator head weights while the current instantiated model has 3-class indicator heads.
 
 ## Retry
 
@@ -46,3 +49,5 @@ The retry adds:
 This keeps the output session beside the source session and preserves the requested suffix.
 
 The second retry uses a lightweight `/tmp` overlay that symlinks source session contents and copies `full_config.yml` with only `include_tele_lens_blockage` removed.
+
+Overlay3 additionally set `model.model.checkpoint_load_function.strict: false` for the WFM pretraining loader and disabled Model CI via `--no-model-ci`; no Notion update, Console note, or Model CI trigger was performed.
