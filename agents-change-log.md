@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-13 - Ibex Lime Meritorious interleave deploy
+- Topic: deploy `ibex-lime-meritorious` as a Parking/PUDO interleave-control model using the requested empty default group.
+- Labels: #parking #deploy #interleave-control #model-catalogue #radar #vault
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-3/2026-05-13-ibex-lime-meritorious-interleave-deploy]]: created a lightweight `/tmp` overlay for the source session by symlinking contents and filtering null radar config keys from `full_config.yml`, ran the requested sub-agent deploy with suffix `__ibex-lime-meritorious_interleave_control_v1` and empty interleave-control group, uploaded output session `session_2026_04_29_02_56_05_si_candidate_2026_6_19_combined_rl_tuned_driving_modes__ibex-lime-meritorious_interleave_control_v1_overlay__ibex-lime-meritorious_interleave_control_v1`, resolved assigned nickname `unofficial-cyan-pigeon`, and verified Gen2 radar config (`5` features, `800` points per scan).
+
 > #### 2026-05-13 - Loquacious Partridge Lime interleave deploy
 - Topic: deploy `loquacious-partridge-lime` as a Parking/PUDO interleave-control model.
 - Labels: #parking #deploy #interleave-control #model-catalogue #radar #vault
