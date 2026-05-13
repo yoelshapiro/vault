@@ -2373,3 +2373,15 @@
     - Verified Gen3 Model CI could not be triggered because Model Catalogue exposed no Gen3 vehicle option; the available options were only `gen2-av-mache` and `gen2-av-mache-alpha3`.
   - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-ibex-lime-meritorious-interleave-deploy]]
   - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy]]
+
+- Topic: PUDO UK licensing experiments
+  - Labels: parking, pudo, licensing, uk, on-road-experiment
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: N/A
+  - Change type: Operations
+  - Areas: Model Catalogue, Console on-road experiments
+  - Changes:
+    - Created `[UK] PUDO Licensing` experiment `fc21b13f-6232-4d80-857d-2b67a492c55e` for deployed model `unofficial-cyan-pigeon`.
+    - Created `[UK] PUDO Licensing` experiment `4823de4c-8c20-45ac-975b-2687bb15fe9d` for deployed model `practical-ostrich-turquoise`.
+    - Left both experiments in `pending_approval`; no assignments were approved or started.
+  - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-pudo-uk-licensing-experiments]]
