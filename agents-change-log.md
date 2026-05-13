@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-13 - Parking.py gear cleanup deep dive
+- Topic: explain `wayve/ai/si/datamodules/parking.py` from `guy/parking-gear-label-cleanup` with an interactive local HTML walkthrough.
+- Labels: #parking #datamodule #gear-cleanup #docs #html
+- Branch: `03-20-si-group-interleave-control-support` workspace, inspected `guy/parking-gear-label-cleanup`
+- PR: none
+- Change type: analysis/docs
+- Areas: `/home/borisindelman/.codex/pretty-html/`, `agent_tasks/2026/05/Week-2/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-2/2026-05-13-parking-py-gear-cleanup-deep-dive]]: built a React-style interactive explainer served at `http://localhost:3000/`, mapped the parking datapipe flow, gear-label cleanup path, parking/parked/unparking detection, drop points, output keys, and watchouts including reverse-only unparking detection.
+
 > #### 2026-05-13 - Ibex Lime Meritorious interleave deploy
 - Topic: deploy `ibex-lime-meritorious` as a Parking/PUDO interleave-control model using the requested empty default group.
 - Labels: #parking #deploy #interleave-control #model-catalogue #radar #vault
