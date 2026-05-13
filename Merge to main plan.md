@@ -3,6 +3,7 @@
 	- [ ] imu vs odometry
 	- [ ] deployment wrapper 
 	- [ ] park mode in parking 
+	- [ ] navigation shortening?
 - [ ] gear smoothing
 - [ ] data config updates
 - [ ] enable short route
