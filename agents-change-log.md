@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-13 - PR 102690 route shortening review fixes
+- Topic: address route-shortening PR review comments for parking stop offsets and validation.
+- Labels: #parking #route-map #pr-review #tests
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: `102690`
+- Change type: code/tests
+- Areas: `wayve/ai/lib/data/pipes/`, `wayve/ai/zoo/data/`, `wayve/ai/si/datamodules/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-3/2026-05-13-pr-102690-route-shortening-review]]: renamed parking stop route `jitter` to `offset`, replaced route-shortening asserts with `ValueError`, removed unused helper route-location parameters, kept scalar extraction inline, added focused route/parking tests, and verified with scoped Bazel pytest, flake8, and mypy targets.
+
 > #### 2026-05-12 - PR 102398 commit message gate
 - Topic: rewrite PR 102398 commit subjects that matched the reserved automatic release-bump pattern.
 - Labels: #github #pr #ci #commit-history
