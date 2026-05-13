@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-13 - Loquacious Partridge Lime interleave deploy
+- Topic: deploy `loquacious-partridge-lime` as a Parking/PUDO interleave-control model.
+- Labels: #parking #deploy #interleave-control #model-catalogue #radar #vault
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-3/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy]]: started deploy with suffix `__loquacious-partridge-lime_interleave_control_v2` from the source session directly after confirming no source `full_config.yml` radar overlay keys were present; final output session, nickname, console URL, and radar verification are pending.
+
 > #### 2026-05-13 - PR 102690 route shortening review fixes
 - Topic: address route-shortening PR review comments for parking stop offsets and validation.
 - Labels: #parking #route-map #pr-review #tests
