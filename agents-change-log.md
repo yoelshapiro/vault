@@ -2347,3 +2347,17 @@
     - Added a concrete test wrapper subclass for abstract `DeploymentWrapperImpl`.
     - Verified the affected SI config, lint, training, deployment, and offline RL targets locally.
   - Note: [[agent_tasks/2026/05/Week-2/2026-05-13-pr-102398-ci-fixes]]
+
+- Topic: Parking interleave deployments
+  - Labels: parking, deployment, model-ci
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: N/A
+  - Change type: Operations
+  - Areas: parking deploy, model catalogue
+  - Changes:
+    - Deployed `ibex-lime-meritorious` with empty/default interleave-control group as `unofficial-cyan-pigeon`.
+    - Added the model-change note for the deployed `ibex-lime-meritorious` session.
+    - Attempted `loquacious-partridge-lime` parking-group deployment with overlay retries, but stopped after current checkout/code incompatibilities caused trained checkpoint shape mismatch.
+    - Verified Gen3 Model CI could not be triggered for these deployments because Model Catalogue exposed only Gen1/Gen2 artefacts and Gen2 vehicle options.
+  - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-ibex-lime-meritorious-interleave-deploy]]
+  - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy]]
