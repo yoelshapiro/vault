@@ -6,6 +6,7 @@
 - Source session: `/mnt/remote/azure_session_dir/Parking/parking_bc/session_2026_05_06_09_06_03_si_parking_bc_train_release_2026_5_11_parking_past30_no_standstill_gear_aug`
 - Deploy suffix: `__loquacious-partridge-lime_interleave_control_v2`
 - Command log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy.log`
+- Retry command log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy_retry.log`
 
 ## Summary
 
@@ -21,7 +22,7 @@ bazel run //wayve/ai/si:deploy -- --suffix __loquacious-partridge-lime_interleav
 
 ## Results
 
-- Status: in progress
+- Status: retry in progress
 - Output session: pending
 - Assigned nickname: pending
 - Console URL: pending
@@ -29,3 +30,14 @@ bazel run //wayve/ai/si:deploy -- --suffix __loquacious-partridge-lime_interleav
 - Non-blocking warnings observed so far:
   - External grpc BUILD targets warn that plugin targets are both rules and files.
   - `rules_jvm_external` debug warning about multiple bzlmod modules contributing to the Maven repository.
+  - First exact requested deploy command failed before checkpoint load because current `deploy.py` requires `--output_dir` when converting a `/mnt/remote/azure_session_dir/...` source path to ABFSS while using a suffix.
+
+## Retry
+
+The retry adds:
+
+```bash
+--output_dir /mnt/remote/azure_session_dir/Parking/parking_bc
+```
+
+This keeps the output session beside the source session and preserves the requested suffix.
