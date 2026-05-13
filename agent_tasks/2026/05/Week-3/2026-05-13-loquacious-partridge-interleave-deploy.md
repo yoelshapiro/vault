@@ -7,6 +7,8 @@
 - Deploy suffix: `__loquacious-partridge-lime_interleave_control_v2`
 - Command log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy.log`
 - Retry command log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy_retry.log`
+- Overlay retry log: `/tmp/loquacious-partridge-lime_interleave_control_v2_deploy_overlay.log`
+- Overlay session: `/tmp/session_2026_05_06_09_06_03_si_parking_bc_train_release_2026_5_11_parking_past30_no_standstill_gear_aug`
 
 ## Summary
 
@@ -22,7 +24,7 @@ bazel run //wayve/ai/si:deploy -- --suffix __loquacious-partridge-lime_interleav
 
 ## Results
 
-- Status: retry in progress
+- Status: overlay retry in progress
 - Output session: pending
 - Assigned nickname: pending
 - Console URL: pending
@@ -31,6 +33,7 @@ bazel run //wayve/ai/si:deploy -- --suffix __loquacious-partridge-lime_interleav
   - External grpc BUILD targets warn that plugin targets are both rules and files.
   - `rules_jvm_external` debug warning about multiple bzlmod modules contributing to the Maven repository.
   - First exact requested deploy command failed before checkpoint load because current `deploy.py` requires `--output_dir` when converting a `/mnt/remote/azure_session_dir/...` source path to ABFSS while using a suffix.
+  - First retry with `--output_dir` failed before checkpoint load because the source config had stale `model.model.output_adaptor.include_tele_lens_blockage`, which current `OutputAdaptor` no longer accepts.
 
 ## Retry
 
@@ -41,3 +44,5 @@ The retry adds:
 ```
 
 This keeps the output session beside the source session and preserves the requested suffix.
+
+The second retry uses a lightweight `/tmp` overlay that symlinks source session contents and copies `full_config.yml` with only `include_tele_lens_blockage` removed.
