@@ -2362,12 +2362,14 @@
   - Labels: parking, deployment, model-ci
   - Branch: 03-20-si-group-interleave-control-support
   - PR: N/A
-  - Change type: Operations
-  - Areas: parking deploy, model catalogue
+  - Change type: Operations / Compatibility Fix
+  - Areas: parking deploy, model catalogue, deployment wrapper, indicator output head
   - Changes:
     - Deployed `ibex-lime-meritorious` with empty/default interleave-control group as `unofficial-cyan-pigeon`.
     - Added the model-change note for the deployed `ibex-lime-meritorious` session.
-    - Attempted `loquacious-partridge-lime` parking-group deployment with overlay retries, but stopped after current checkout/code incompatibilities caused trained checkpoint shape mismatch.
-    - Verified Gen3 Model CI could not be triggered for these deployments because Model Catalogue exposed only Gen1/Gen2 artefacts and Gen2 vehicle options.
+    - Added compatibility fixes for `loquacious-partridge-lime`: legacy 4-row indicator weights now load into the current 3-row head, parking deploy accepts behavior/nav/indicator combinations, parking DILC controls pass through, and parking interleave output has a TorchScript-compatible gear-output signature.
+    - Deployed `loquacious-partridge-lime` with parking interleave control as `practical-ostrich-turquoise`.
+    - Added the model-change note for the deployed `loquacious-partridge-lime` session.
+    - Verified Gen3 Model CI could not be triggered because Model Catalogue exposed no Gen3 vehicle option; the available options were only `gen2-av-mache` and `gen2-av-mache-alpha3`.
   - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-ibex-lime-meritorious-interleave-deploy]]
   - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy]]
