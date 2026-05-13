@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/generic-materialisation-parking-pudo-migration.md",
+                "file": "projects.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,11 +336,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "generic-materialisation-parking-pudo-migration"
+              "title": "projects"
+            }
+          },
+          {
+            "id": "178648f30ce4f3f2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Merge to main plan.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Merge to main plan"
             }
           }
         ],
-        "currentTab": 19
+        "currentTab": 20
       }
     ],
     "direction": "vertical"
@@ -515,8 +539,16 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "d766a0330d27d64f",
+  "active": "178648f30ce4f3f2",
   "lastOpenFiles": [
+    "projects.md",
+    "Merge to main plan.md",
+    "index.md",
+    "PUDO Update.md",
+    "Weekly tasks.md",
+    "Untitled 1.md",
+    "Tom Boris.md",
+    "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/05/Week-2/2026-05-12-chocolate-narwhal-unpudo-analysis.md",
     "parking_model_analysis/report_cards/2026/05/Week-3/fme20036--2026-05-11--13-11-47--gen2-av-26a1b5c6-1554-4a48-8fe1-553b2bce33d4.md",
     "parking_model_analysis/report_cards/2026/05/Week-3/fme20034--2026-05-11--12-59-22--gen2-av-74e43933-6e3b-42c8-b5ea-cc021431a02e.md",
@@ -525,7 +557,6 @@
     "parking_model_analysis/models/chocolate-narwhal-adaptable.md",
     "agent_tasks/2026/05/Week-2/2026-05-12-pr-102398-commit-message-gate.md",
     "agent_tasks/2026/05/Week-2/2026-05-12-parking-model-diagram.md",
-    "projects.md",
     "agent_tasks/2026/05/Week-2/2026-05-11-interleave-understeer-helper.md",
     "agent_tasks/2026/05/Week-2",
     "projects/zak-latest-work-concepts.md",
@@ -535,19 +566,12 @@
     "parking_model_analysis/models/prismatic-teal-bird.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
     "agents-change-log.md",
-    "projects/generic-materialisation-parking-pudo-migration.md",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "agent_tasks/2026/05/Week-1/2026-05-06-singing-orange-magpie-unpudo-analysis.md",
     "parking_model_analysis/report_cards/2026/05/Week-2/fme10011--2026-05-04--16-05-12--gen2-av-9ffce118-ac49-492c-93b6-1713d4e56b14.md",
     "parking_model_analysis/models/singing-orange-magpie.md",
-    "parking_model_analysis/report_cards/2026/05/Week-2/fme10011--2026-05-04--17-07-53--gen2-av-d0bba92d-8946-4607-a044-88b838593ce6.md",
-    "parking_model_analysis/report_cards/2026/05/Week-2/fme20027--2026-05-05--09-11-55--gen2-av-04758307-580e-429a-aa3e-8e24c6ab3b65.md",
-    "parking_model_analysis/report_cards/2026/05/Week-2/fme10005--2026-05-04--19-03-19--gen2-av-774f454c-5cd5-42ff-b3c3-e27cf3a9643a.md",
-    "parking_model_analysis/report_cards/2026/05/Week-2/fme10011--2026-05-04--19-06-29--gen2-av-3a5d29de-b71d-4ac0-991f-8c61809d87e4.md",
-    "parking_model_analysis/report_cards/2026/05/Week-2/fme20027--2026-05-05--16-34-17--gen2-av-3444a7a6-136d-4650-9b85-8f4cd1dc98c1.md",
     "parking_model_analysis/report_cards/2026/05/Week-2",
     "parking_model_analysis/report_cards/2026/05",
-    "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/05/Week-1",
     "agent_tasks/2026/05",
     "agent_tasks/2026/04/Week-5",

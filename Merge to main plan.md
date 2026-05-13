@@ -1,0 +1,9 @@
+- [ ] route shortening + blackout
+	- [ ] parking + unparking
+	- [ ] imu vs odometry
+	- [ ] deployment wrapper 
+	- [ ] park mode in parking 
+- [ ] gear smoothing
+- [ ] data config updates
+- [ ] enable short route
+- [ ] 
