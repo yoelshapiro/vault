@@ -18,9 +18,11 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - horizontal drag moves the box along the date axis while preserving duration.
   - vertical drag snaps the box to another feature-field row.
 - Updated details, tooltip text, filtering, clustering, and stats to use the live date windows.
+- Refined the boxes to show the feature name itself, removed product/date labels from the box face, widened the graph to a horizontally scrollable 3200px canvas, and changed initial box length to come from a rough complexity/time estimate.
 
 ## Verification
 
 - Ran an embedded-script syntax check with Node:
   - `node - <<'NODE' ... new Function(script) ... NODE`
+  - reran after the feature-label / wide-scroll refinement.
 - Browser screenshot verification was not possible in this environment because Playwright, jsdom/happy-dom, and Chromium were not installed.
