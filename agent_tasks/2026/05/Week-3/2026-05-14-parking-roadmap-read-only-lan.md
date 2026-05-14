@@ -19,6 +19,7 @@ Added a read-only sharing mode to the standalone Parking 2026 roadmap timeline a
 - Kept filtering, scrolling, hover tooltips, legend selection, and box selection available for review.
 - Updated `README.md` with LAN serving commands and read-only URL examples.
 - Added a Coder-specific note after confirming the raw `10.248.*` VM IP is reachable from inside the workspace but not a reliable laptop/team URL.
+- Corrected the teammate-sharing instruction to use Coder's `organization` sharing level for the Open Ports entry.
 - Started `python3 -m http.server 8765 --bind 0.0.0.0` from `wayve/ai/parking/roadmap_timeline/`.
 
 ## Verification
