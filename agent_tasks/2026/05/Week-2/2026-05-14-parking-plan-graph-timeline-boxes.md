@@ -25,7 +25,7 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - user-added boxes prompt for feature name, project/product, field, start date, and estimated duration.
   - all boxes now have left/right resize handles; resizing recomputes collision-aware lanes and truncates the label within the box if it becomes short.
 - Added editing controls:
-  - removed the `Product Gate` field and associated boxes from the rendered data.
+  - removed the `Product Gate` field and associated boxes from the embedded data.
   - selected boxes can be renamed or deleted from the detail panel.
   - feature field names can be renamed, propagating to boxes assigned to that field.
   - user-added sub-milestones now require a product and render in that product color while remaining visually lighter than original milestones.
