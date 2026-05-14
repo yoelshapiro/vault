@@ -19,7 +19,7 @@
 - Change type: UI/code
 - Areas: `tools/parking_2026_plan_graph/`
 - Changes:
-  - [[agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes]]: added a continuous 2026 time axis with month ticks and milestone markers, rendered capability items as product-colored feature boxes sized by rough complexity/time estimate, widened the canvas for horizontal scrolling, added shaded feature-field bands and collision-aware lane assignment for render/drag interactions, and updated tooltips/details/filtering to use live date windows.
+  - [[agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes]]: added a continuous 2026 time axis with month ticks and milestone markers, rendered capability items as product-colored feature boxes sized by rough complexity/time estimate, widened the canvas for horizontal scrolling, added shaded feature-field bands and collision-aware lane assignment for render/drag/resize interactions, added user-authored sub-milestones and feature boxes, and updated tooltips/details/filtering to use live date windows.
 
 > #### 2026-05-13 - Parking.py gear cleanup deep dive
 - Topic: explain `wayve/ai/si/datamodules/parking.py` from `guy/parking-gear-label-cleanup` with an interactive local HTML walkthrough.
