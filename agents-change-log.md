@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-14 - Parking plan graph timeline boxes
+- Topic: convert the Parking 2026 capability graph from milestone columns into a draggable timeline-box view.
+- Labels: #parking #timeline #html #visualization #vault
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: none
+- Change type: UI/code
+- Areas: `tools/parking_2026_plan_graph/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes]]: added a continuous 2026 time axis with month ticks and milestone markers, rendered capability items as product-colored date-range boxes, added horizontal/vertical drag interactions, and updated tooltips/details/filtering to use live date windows.
+
 > #### 2026-05-13 - Parking.py gear cleanup deep dive
 - Topic: explain `wayve/ai/si/datamodules/parking.py` from `guy/parking-gear-label-cleanup` with an interactive local HTML walkthrough.
 - Labels: #parking #datamodule #gear-cleanup #docs #html
