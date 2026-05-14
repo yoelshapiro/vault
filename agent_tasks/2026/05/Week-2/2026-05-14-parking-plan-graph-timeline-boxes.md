@@ -19,6 +19,7 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - vertical drag snaps the box to another feature-field row.
 - Updated details, tooltip text, filtering, clustering, and stats to use the live date windows.
 - Refined the boxes to show the feature name itself, removed product/date labels from the box face, widened the graph to a horizontally scrollable 3200px canvas, and changed initial box length to come from a rough complexity/time estimate.
+- Replaced fixed modulo lanes with collision-aware lane assignment per feature field, added shaded horizontal field bands and lane guide paths, widened the canvas to 4200px, and made drag moves recompute lanes so moved boxes snap to non-overlapping positions.
 
 ## Verification
 
@@ -26,3 +27,6 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - `node - <<'NODE' ... new Function(script) ... NODE`
   - reran after the feature-label / wide-scroll refinement.
 - Browser screenshot verification was not possible in this environment because Playwright, jsdom/happy-dom, and Chromium were not installed.
+- Added a lightweight fake-DOM Node smoke test:
+  - initial render: `91` capability boxes, `0` rectangle overlaps.
+  - synthetic move into a crowded field: `0` candidate overlaps.
