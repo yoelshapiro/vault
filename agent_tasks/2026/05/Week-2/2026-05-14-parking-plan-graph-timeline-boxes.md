@@ -4,7 +4,7 @@
 - Branch: `03-20-si-group-interleave-control-support`
 - PR: none
 - Change type: UI/code
-- Areas: `tools/parking_2026_plan_graph/`
+- Areas: `wayve/ai/parking/roadmap_timeline/` (moved from `tools/parking_2026_plan_graph/`)
 
 ## Summary
 
@@ -32,6 +32,7 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
 - Preloaded the 17 approved sub-milestones from the provided image, mapped to Robotaxi, P2P, PA, and APA in Q2/Q3/Q4 order, with approximate dates within each quarter and product-colored marker styling.
 - Added double-click rename for sub-milestones, including changing their product/color.
 - Improved sub-milestone readability by coloring line, pin, product, date, and title text with the product color; wrapping long titles across multiple lines; staggering labels vertically; and increasing the top timeline area so the graph can scroll instead of cramming labels.
+- Moved the standalone timeline from `tools/parking_2026_plan_graph/` to `wayve/ai/parking/roadmap_timeline/` for team handoff and added a README with run instructions, context, limitations, and next-step notes.
 
 ## Verification
 
@@ -48,3 +49,4 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - smoke-tested add sub-milestone, add box, rename box, rename field, and delete box paths.
   - verified preloaded sub-milestones: `17` markers across `APA`, `P2P`, `PA`, and `Robotaxi`; double-click rename path updates title and product.
   - verified sub-milestone rendering includes product-colored fills/lines and wrapped `<tspan>` labels.
+  - verified moved page with Node syntax check: `wayve/ai/parking/roadmap_timeline/index.html`.
