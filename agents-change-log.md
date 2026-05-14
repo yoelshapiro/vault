@@ -21,6 +21,16 @@
 - Changes:
   - [[agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes]]: added a continuous 2026 time axis with month ticks and milestone markers, rendered capability items as product-colored feature boxes sized by rough complexity/time estimate, widened the canvas for horizontal scrolling, added shaded feature-field bands and collision-aware lane assignment for render/drag/resize interactions, preloaded 17 product-colored sub-milestones from the provided image with drag and double-click rename support, added user-authored sub-milestones and feature boxes, added box rename/delete plus feature-field rename controls, removed `Product Gate`, updated tooltips/details/filtering to use live date windows, and moved the handoff artifact to `wayve/ai/parking/roadmap_timeline/` with run/context documentation.
 
+> #### 2026-05-14 - Parking roadmap read-only LAN serve
+- Topic: add a view-only sharing mode for the Parking roadmap timeline and serve it on the local network.
+- Labels: #parking #timeline #html #server #vault
+- Branch: `boris/parking-roadmap-timeline-handoff`
+- PR: none
+- Change type: UI/code/docs/server
+- Areas: `wayve/ai/parking/roadmap_timeline/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-3/2026-05-14-parking-roadmap-read-only-lan]]: added `?readonly=1` / `?mode=readonly` / `#readonly` handling to hide edit controls and disable box/sub-milestone mutation, documented LAN serving via `python3 -m http.server 8765 --bind 0.0.0.0`, pushed commit `66dd6088df7f` on `boris/parking-roadmap-timeline-handoff`, and started tmux session `parking-roadmap-timeline` serving `http://10.248.5.189:8765/?readonly=1`.
+
 > #### 2026-05-13 - Parking.py gear cleanup deep dive
 - Topic: explain `wayve/ai/si/datamodules/parking.py` from `guy/parking-gear-label-cleanup` with an interactive local HTML walkthrough.
 - Labels: #parking #datamodule #gear-cleanup #docs #html
