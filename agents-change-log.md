@@ -17,9 +17,9 @@
 - Branch: `03-20-si-group-interleave-control-support`
 - PR: none
 - Change type: UI/code
-- Areas: `tools/parking_2026_plan_graph/`
+- Areas: `wayve/ai/parking/roadmap_timeline/`
 - Changes:
-  - [[agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes]]: added a continuous 2026 time axis with month ticks and milestone markers, rendered capability items as product-colored feature boxes sized by rough complexity/time estimate, widened the canvas for horizontal scrolling, added shaded feature-field bands and collision-aware lane assignment for render/drag/resize interactions, preloaded 17 product-colored sub-milestones from the provided image with drag and double-click rename support, added user-authored sub-milestones and feature boxes, added box rename/delete plus feature-field rename controls, removed `Product Gate`, and updated tooltips/details/filtering to use live date windows.
+  - [[agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes]]: added a continuous 2026 time axis with month ticks and milestone markers, rendered capability items as product-colored feature boxes sized by rough complexity/time estimate, widened the canvas for horizontal scrolling, added shaded feature-field bands and collision-aware lane assignment for render/drag/resize interactions, preloaded 17 product-colored sub-milestones from the provided image with drag and double-click rename support, added user-authored sub-milestones and feature boxes, added box rename/delete plus feature-field rename controls, removed `Product Gate`, updated tooltips/details/filtering to use live date windows, and moved the handoff artifact to `wayve/ai/parking/roadmap_timeline/` with run/context documentation.
 
 > #### 2026-05-13 - Parking.py gear cleanup deep dive
 - Topic: explain `wayve/ai/si/datamodules/parking.py` from `guy/parking-gear-label-cleanup` with an interactive local HTML walkthrough.
