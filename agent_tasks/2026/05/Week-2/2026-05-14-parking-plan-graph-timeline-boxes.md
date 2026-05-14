@@ -29,6 +29,8 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - selected boxes can be renamed or deleted from the detail panel.
   - feature field names can be renamed, propagating to boxes assigned to that field.
   - user-added sub-milestones now require a product and render in that product color while remaining visually lighter than original milestones.
+- Preloaded the 17 approved sub-milestones from the provided image, mapped to Robotaxi, P2P, PA, and APA in Q2/Q3/Q4 order, with approximate dates within each quarter and product-colored marker styling.
+- Added double-click rename for sub-milestones, including changing their product/color.
 
 ## Verification
 
@@ -43,3 +45,4 @@ Updated the parking 2026 capability graph from a milestone-column scatter plot i
   - synthetic custom milestone and custom box insertion path rendered with `92` boxes.
   - latest render after removing `Product Gate`: `76` capability boxes, `0` rectangle overlaps.
   - smoke-tested add sub-milestone, add box, rename box, rename field, and delete box paths.
+  - verified preloaded sub-milestones: `17` markers across `APA`, `P2P`, `PA`, and `Robotaxi`; double-click rename path updates title and product.
