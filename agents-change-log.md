@@ -2385,3 +2385,15 @@
     - Created `[UK] PUDO Licensing` experiment `4823de4c-8c20-45ac-975b-2687bb15fe9d` for deployed model `practical-ostrich-turquoise`.
     - Left both experiments in `pending_approval`; no assignments were approved or started.
   - Note: [[agent_tasks/2026/05/Week-3/2026-05-13-pudo-uk-licensing-experiments]]
+
+- Topic: Parking 2026 plan graph
+  - Labels: parking, planning, visualization, frontend
+  - Branch: 03-20-si-group-interleave-control-support
+  - PR: N/A
+  - Change type: Tooling / Visualization
+  - Areas: tools/parking_2026_plan_graph, Parking_2026_Plan_-_WIP.xlsx
+  - Changes:
+    - Parsed the Parking 2026 WIP spreadsheet and mapped product milestones against feature fields.
+    - Created an interactive HTML/SVG capability graph with filters, search, tooltips, and selected-cluster details.
+    - Served the page locally on port `3002` from tmux session `parking-2026-plan-graph`.
+  - Note: [[agent_tasks/2026/05/Week-3/2026-05-14-parking-2026-plan-graph]]
