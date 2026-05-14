@@ -7,4 +7,4 @@
 - [ ] gear smoothing
 - [ ] data config updates
 - [ ] enable short route
-- [ ] 
+- [ ] indicators
