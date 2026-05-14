@@ -29,7 +29,7 @@
 - Change type: UI/code/docs/server
 - Areas: `wayve/ai/parking/roadmap_timeline/`
 - Changes:
-  - [[agent_tasks/2026/05/Week-3/2026-05-14-parking-roadmap-read-only-lan]]: added `?readonly=1` / `?mode=readonly` / `#readonly` handling to hide edit controls and disable box/sub-milestone mutation, documented LAN serving via `python3 -m http.server 8765 --bind 0.0.0.0`, pushed commit `66dd6088df7f` on `boris/parking-roadmap-timeline-handoff`, and started tmux session `parking-roadmap-timeline` serving `http://10.248.5.189:8765/?readonly=1`.
+  - [[agent_tasks/2026/05/Week-3/2026-05-14-parking-roadmap-read-only-lan]]: added `?readonly=1` / `?mode=readonly` / `#readonly` handling to hide edit controls and disable box/sub-milestone mutation, documented LAN serving via `python3 -m http.server 8765 --bind 0.0.0.0`, pushed commits `66dd6088df7f` and `8a48dac24adf` on `boris/parking-roadmap-timeline-handoff`, started tmux session `parking-roadmap-timeline`, and documented Coder port forwarding after the raw `10.248.*` VM URL proved externally unreachable.
 
 > #### 2026-05-13 - Parking.py gear cleanup deep dive
 - Topic: explain `wayve/ai/si/datamodules/parking.py` from `guy/parking-gear-label-cleanup` with an interactive local HTML walkthrough.
