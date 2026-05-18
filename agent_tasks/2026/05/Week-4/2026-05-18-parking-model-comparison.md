@@ -35,6 +35,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Added a detailed 8-head WTA explanation covering aligned ego/indicator/gear `ModuleList` heads, the classifier token and MLP, annealed soft WTA gradient routing, soft classifier targets, and consistency losses that reduce frame-to-frame head identity swapping.
 - Reorganized the report into a book-style chapter order: Start Here, Architecture Graphs, Data Recipe, Input Adaptors, Encoders, Output Adaptor, Latents & Multimodal, Losses & Preloads, BC vs RL, Config Evidence, Terminology, and Critique.
 - Replaced the previous parchment theme with a high-contrast signal-lab visual design using ordered sidebar navigation, chapter cards, dark shell, and high-contrast diagram/table styling.
+- Softened the theme after review: calmer field-notebook palette, lighter content surface, muted teal navigation, lower-contrast diagram strokes, softer table headers, and reduced card/code shadows.
 - Added `html_summaries/README.md` as the vault index for interactive HTML summaries and linked it from the vault root index.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
@@ -50,4 +51,5 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Re-ran `node --check` on all report JavaScript after the latent-action/WTA expansion.
 - Verified the served `content_model_blocks.js` includes the new latent-action grid, WFM preload, and eight-head consistency sections.
 - Re-ran JavaScript syntax checks from the vault copy and verified the page and stylesheet return HTTP 200 from port 3005.
+- Re-verified the softened stylesheet is served from port 3005 and all report JavaScript syntax checks still pass.
 - Served the report locally on port 3005 from `~/git/vault/html_summaries/parking-model-comparison`.

@@ -2439,6 +2439,7 @@
     - Expanded the visual diagrams with shared comparison column language and fuller raw-input labels, then added implementation answers for MCVSpaceTimeEncoder vs STTransformer, WTA classifier training, 8-head weight/training behavior, and SI behavior-control latent-action usage.
     - Added deeper code-traced sections for the SI 31x31 latent-action grid and behavior-control train/inference split, Zak's partial WFM checkpoint remapping into `MCVSpaceTimeEncoder`, and the WTA annealing/consistency mechanism that trains aligned ego/indicator/gear heads.
     - Reorganized the report into a book-style chapter order, renamed the main architecture section, and replaced the parchment UI with a high-contrast signal-lab theme.
+    - Softened the visual theme into a lower-contrast field-notebook style with muted navigation, calmer accents, lighter shadows, and more subdued diagram/table styling.
     - Moved the runnable HTML bundle into the vault under `html_summaries/parking-model-comparison/`, added `html_summaries/README.md`, linked it from the vault root index, removed the untracked repo copy, and restarted the server from the vault path.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.

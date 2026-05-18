@@ -402,7 +402,7 @@ li { margin: 5px 0; }
 .dense td,
 .dense th { font-size: 14px; }
 
-.section-lede { color: #dfeee1; font-size: 17px; max-width: 1080px; }
+.section-lede { color: #4f5d55; font-size: 17px; max-width: 1080px; }
 .src,
 .subtle { color: var(--muted); font-size: 13px; }
 .kpi { color: var(--green-dark); font-size: 30px; font-weight: 800; }
