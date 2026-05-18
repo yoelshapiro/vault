@@ -343,24 +343,12 @@
             "id": "178648f30ce4f3f2",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "html-view",
               "state": {
-                "file": "html_summaries/README.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "file": "html_summaries/parking-model-comparison/index.html"
               },
-              "icon": "lucide-file",
-              "title": "README"
+              "icon": "code-glyph",
+              "title": "index"
             }
           }
         ],
@@ -541,16 +529,16 @@
   },
   "active": "178648f30ce4f3f2",
   "lastOpenFiles": [
+    "html_summaries/README.md",
+    "html_summaries/parking-model-comparison/index.html",
     "Merge to main plan.md",
     "html_summaries/parking-model-comparison/style.css",
-    "html_summaries/parking-model-comparison/index.html",
     "html_summaries/parking-model-comparison/content_model_blocks.js",
     "html_summaries/parking-model-comparison/content_latents.js",
     "html_summaries/parking-model-comparison/content_core.js",
     "html_summaries/parking-model-comparison/content_arch.js",
     "html_summaries/parking-model-comparison/app.js",
     "html_summaries/parking-model-comparison",
-    "html_summaries/README.md",
     "html_summaries",
     "agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison.md",
     "agent_tasks/2026/05/Week-4",
