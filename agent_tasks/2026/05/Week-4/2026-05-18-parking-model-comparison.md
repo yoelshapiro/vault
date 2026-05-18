@@ -20,6 +20,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Split content into `content_core.js`, `content_latents.js`, and `content_arch.js` to keep each file under 500 lines.
 - Reworked the Latents & Multimodal section with selectable solution-specific diagrams for SI latent action, SI behavior control, and Zak WTA multimodal.
 - Added pseudo-code blocks for data signal construction, input adaptors, encoder flow, output heads, WTA loss, and offline RL training.
+- Added a Terminology tab and encoder callout defining "MCV tokens" as Zak's MCVPerceiver encoded context tokens.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
