@@ -145,9 +145,10 @@ Zak:
         <tr><td>Image context</td><td>Train mode uses 6 camera frames at 0.20s stride.</td><td>Base config uses 5 cameras with a longer temporal list; phase2x uses MCV temporal encoding and WTA multi-frame train.</td></tr>
         <tr><td>Radar</td><td>6 radar frames; radar late fusion enabled.</td><td>Not part of inferred WTA base path unless variant enables radar; SI-baseline variant explicitly enables radar.</td></tr>
         <tr><td>Parking signal</td><td>Zoo parking pass writes boolean <code>PARKING_MODE</code>.</td><td>Structured fields consumed by <code>ParkingEncoder</code>: request, direction, UI position, stopping/PUDO type.</td></tr>
+        <tr><td>Route shortening / navigation</td><td>Current SI parking uses the route map as provided by the SI parking datamodule path; no comparable route-end jitter is enabled in this config.</td><td>Zak builds per-segment route polyline metadata after gear cleanup, extends the final polyline toward the real parking location, samples a jittered route endpoint around the park/PUDO point, truncates the route map at that endpoint, and writes <code>route_end_position</code>/<code>route_end_distance</code>. This is route-map augmentation, not the full <code>NAVIGATION</code> token adaptor in the inferred WTA base.</td></tr>
         <tr><td>Augmentations</td><td>Route dropout 0, indicator dropout 0, gear-direction augmentation enabled. <code>ParkingDataConfig</code> advanced SI augmentations remain off by default.</td><td>Image blur/sharpen/color 0.2, temporal dropout 0.1, JPEG half-res 0.9, route dropout 0.25, route black dropout 0.9, random route end jitter.</td></tr>
       </table>
-      <p class="src">Sources: ${link(gh.cur, "wayve/ai/si/configs/parking/parking_config.py", 178, "SI D26.3 datamodule")}, ${link(gh.cur, "wayve/ai/si/datamodules/parking.py", 63, "ParkingDataConfig")}, ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_base0.yml", 18, "Zak base dataset/image")}, ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_phase2.yml", 18, "Zak sampler")}.</p>
+      <p class="src">Sources: ${link(gh.cur, "wayve/ai/si/configs/parking/parking_config.py", 178, "SI D26.3 datamodule")}, ${link(gh.cur, "wayve/ai/si/datamodules/parking.py", 63, "ParkingDataConfig")}, ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_base0.yml", 177, "Zak route config")}, ${link(gh.zak, "wayve/ai/experimental/dataset/single_run.py", 748, "route polyline metadata")}, ${link(gh.zak, "wayve/ai/experimental/dataset/ipace.py", 1942, "rasterize_route")}, ${link(gh.zak, "wayve/ai/experimental/models/input_adapters.py", 517, "NavigationEncoder")}.</p>
       <pre><code># Pseudo-code: why SI and Zak see different parking signals
 if si_parking:
     data["PARKING_MODE"] = detect_parking_window(gear, speed, time_threshold, distance_threshold)
@@ -160,7 +161,15 @@ if zak_mcv:
       + MLP(parking_position_ui_xy / 30.0)
       + Embedding2(stopping_type)      # PUDO/PARK type when enabled
     )
-    model_tokens += parking_token</code></pre>
+    model_tokens += parking_token
+
+# Zak route shortening / endpoint jitter
+polyline = extend_polyline_to_park(route_polyline, final_park_lonlat)
+center = distance_at_park_or_route_end(segment)
+jitter = sample_before_after_or_rand(valid_before_after_distances)
+final_vertex, end_idx = interpolate(polyline, center + jitter)
+route_map = rasterize(polyline[start_idx:end_idx] + final_vertex)
+data["route_end_position"] = ego_relative(final_vertex)</code></pre>
     `,
   },
   {
@@ -173,12 +182,13 @@ if zak_mcv:
       <table class="compare dense">
         <tr><th>Input</th><th>Current SI ST path</th><th>Zak MCV path</th></tr>
         <tr><td>Images</td><td><code>VideoSTAdaptor</code> uses the WFM vision encoder and returns image tokens to <code>InputAdaptor</code>.</td><td>ViT patch stem converts 5-camera images into MCV visual tokens.</td></tr>
-        <tr><td>Route</td><td><code>RouteSTAdaptor</code> encodes the SI route map; dropout is configured at datamodule level but is 0.0 here.</td><td><code>RouteCNNEncoderMission100x</code>: normalize route pixels, strided conv/groupnorm/ReLU, flatten, positional encode.</td></tr>
+        <tr><td>Route</td><td><code>RouteSTAdaptor</code> encodes the SI route map; dropout is configured at datamodule level but is 0.0 here.</td><td><code>RouteCNNEncoderMission100x</code>: normalize route pixels, strided conv/groupnorm/ReLU, flatten, positional encode. The dataset may shorten/jitter the route endpoint before rasterization.</td></tr>
         <tr><td>Parking</td><td><code>ParkingModeSTAdaptor</code>: 2-class embedding over <code>PARKING_MODE</code>.</td><td><code>ParkingEncoder</code>: request + direction + target UI MLP + stopping type. This is the largest parking-specific input change.</td></tr>
         <tr><td>Gear</td><td><code>GearDirectionSTAdaptor</code> is constructed, but Dec WFM inheritance makes it dropout-only unless the resolved config overrides <code>always_dropout_gear_direction</code>. Gear is still predicted by the output head.</td><td><code>GearAdaptor</code> embeds reverse/park/drive as gear+1; variants can use dropout-only gear for SI compatibility.</td></tr>
         <tr><td>Indicator</td><td><code>IndicatorSTAdaptor</code> plus <code>use_indicator_memory=True</code>.</td><td>Separate stick and state adaptors; state can include history, unknown values are mapped.</td></tr>
         <tr><td>Speed</td><td><code>SpeedSTAdaptor</code> with vehicle-frame context.</td><td><code>VectorInputAdapter</code> slices present plus five past values in WTA, normalizes by 17.777..., no symlog in phase2x.</td></tr>
         <tr><td>Speed limit</td><td><code>SpeedLimitSTAdaptor</code> inherited from WFM Dec config with NaN/inf handling.</td><td><code>ContinuousSpeedLimitAdaptor</code> encodes relative speed-limit delta using sin/cos features and learned NaN/inf tokens.</td></tr>
+        <tr><td>Navigation DMI tokens</td><td>Optional step/lane information can be part of the inherited WFM interface.</td><td><code>NavigationEncoder</code> wraps SI <code>StepAndLaneInfoSTAdaptor</code> and consumes grouped navigation tensors, but <code>NAVIGATION.ENABLED</code> is default-off in the inferred WTA base. The SI-baseline variant enables it.</td></tr>
         <tr><td>Other context</td><td>Country, driving side, automation, pose, waypoint dropout, optional step/lane info from base WFM config.</td><td>Country is active. Driving side, automation, waypoint dropout, nav, radar, intrinsics, and pose are conditional/variant modules for this inferred WTA chain.</td></tr>
       </table>
       <div class="codegrid">

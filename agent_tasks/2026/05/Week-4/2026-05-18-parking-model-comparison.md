@@ -33,6 +33,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Clarified that current SI parking has `enable_latent_action=False` and `enable_behavior_control=True`, so inference uses a supplied/default behavior token while the latent-action grid and internal latent-action module are primarily training-time behavior-label machinery.
 - Added a WFM preload explanation for Zak's `MCVSpaceTimeEncoder`: the same checkpoint is loaded through explicit key remapping and `strict=False`, with compatible WFM video/route/backbone tensors reused and new parking/WTA/multimodal heads initialized from scratch.
 - Added a detailed 8-head WTA explanation covering aligned ego/indicator/gear `ModuleList` heads, the classifier token and MLP, annealed soft WTA gradient routing, soft classifier targets, and consistency losses that reduce frame-to-frame head identity swapping.
+- Added route-shortening/navigation clarification: Zak's WTA base route-map augmentation extends the route polyline to the real parking point, samples a jittered endpoint around park/PUDO valid distances, truncates the route raster at that endpoint, emits `route_end_position` / `route_end_distance`, and keeps the full `NavigationEncoder`/DMI token path default-off outside the SI-baseline variant.
 - Reorganized the report into a book-style chapter order: Start Here, Architecture Graphs, Data Recipe, Input Adaptors, Encoders, Output Adaptor, Latents & Multimodal, Losses & Preloads, BC vs RL, Config Evidence, Terminology, and Critique.
 - Replaced the previous parchment theme with a high-contrast signal-lab visual design using ordered sidebar navigation, chapter cards, dark shell, and high-contrast diagram/table styling.
 - Softened the theme after review: calmer field-notebook palette, lighter content surface, muted teal navigation, lower-contrast diagram strokes, softer table headers, and reduced card/code shadows.
@@ -52,4 +53,5 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Verified the served `content_model_blocks.js` includes the new latent-action grid, WFM preload, and eight-head consistency sections.
 - Re-ran JavaScript syntax checks from the vault copy and verified the page and stylesheet return HTTP 200 from port 3005.
 - Re-verified the softened stylesheet is served from port 3005 and all report JavaScript syntax checks still pass.
+- Verified the updated Data Recipe/Input Adaptors content is served from port 3005 and `content_core.js` remains under 500 lines.
 - Served the report locally on port 3005 from `~/git/vault/html_summaries/parking-model-comparison`.
