@@ -2436,6 +2436,7 @@
     - Corrected component status details including SI gear-direction being constructed but inherited dropout-only and Zak driving-side conditioning being default-off/conditional in the inferred WTA config chain.
     - Replaced the connected graph section with real SVG visual architecture diagrams for each solution, using positioned nodes and arrowed branch/merge edges instead of only listing blocks.
     - Fixed graph readability by making SVG node backgrounds, label colors, and arrow colors explicit instead of relying on inherited theme colors.
+    - Expanded the visual diagrams with shared comparison column language and fuller raw-input labels, then added implementation answers for MCVSpaceTimeEncoder vs STTransformer, WTA classifier training, 8-head weight/training behavior, and SI behavior-control latent-action usage.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
