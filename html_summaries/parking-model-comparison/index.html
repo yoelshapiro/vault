@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parking Model Deep Dive</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">WayveCode parking model comparison</p>
+      <h1>Current SI parking BC vs Zak Murez MCV/WTA PUDO work</h1>
+      <p class="lede">
+        Deep-dive report comparing the deployed-style SI parking config in this branch with Zak's
+        latest experimental PUDO work on <code>origin/zmurez/pudo</code>. The critical evidence is that
+        <code>parking_config.py</code> itself has no diff; the architecture divergence is in Zak's
+        experimental <code>MCVPerceiver</code> configs and WTA driving head.
+      </p>
+    </div>
+    <div class="facts">
+      <span>Current HEAD <b>6108f48568c5</b></span>
+      <span>Zak branch <b>f904a17d930e</b></span>
+      <span>No PR found for <b>zmurez:pudo</b></span>
+      <span>Served from <b>wayve/ai/parking/model_comparison</b></span>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav id="tabs" class="tabs" aria-label="Report sections"></nav>
+    <main id="content" class="content"></main>
+  </div>
+
+  <script src="content_core.js"></script>
+  <script src="content_model_blocks.js"></script>
+  <script src="content_latents.js"></script>
+  <script src="content_arch.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
