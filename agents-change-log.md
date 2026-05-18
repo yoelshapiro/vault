@@ -2429,6 +2429,7 @@
     - Investigated Zak's newer experimental MCV/WTA configs and model code to identify the active multimodal BC architecture path.
     - Created an interactive HTML comparison report with tabs for architecture overview, data recipe, input adaptors, encoders, output adaptors, latent actions, losses, learning rates, preloads, BC/RL status, and critique.
     - Expanded the report with per-topic block diagrams, detailed comparison tables, and implementation-level explanations for SI adaptors/behavior control and Zak's MCV/WTA path.
+    - Added solution-specific Latents & Multimodal diagrams and pseudo-code-heavy deep dives for the major technical paths.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
