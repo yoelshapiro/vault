@@ -29,6 +29,10 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Fixed SVG graph contrast by setting explicit light node fills, dark label fills, no text stroke, and high-contrast arrow marker colors.
 - Expanded the model diagrams to use shared comparison language (`Raw inputs`, `Input encoders / adaptors`, `Token groups`, `Token merge`, `Space-time backbone`, `Output head/adaptor`, `Predictions`) and added fuller input labels directly into the graph nodes.
 - Added an implementation Q&A section explaining `MCVSpaceTimeEncoder` vs `STTransformer`, WTA mode-classifier inputs/training, separate weights for the 8 heads, and how SI behavior-control uses its internal `latent_action_module` during training versus inference.
+- Added a deeper implementation section for the SI latent-action grid: `ActionsDiscretizerCfg` uses a 31x31 2-second waypoint grid with radial-exponent mapping, producing 961 latent-action cells used by behavior-control label generation.
+- Clarified that current SI parking has `enable_latent_action=False` and `enable_behavior_control=True`, so inference uses a supplied/default behavior token while the latent-action grid and internal latent-action module are primarily training-time behavior-label machinery.
+- Added a WFM preload explanation for Zak's `MCVSpaceTimeEncoder`: the same checkpoint is loaded through explicit key remapping and `strict=False`, with compatible WFM video/route/backbone tensors reused and new parking/WTA/multimodal heads initialized from scratch.
+- Added a detailed 8-head WTA explanation covering aligned ego/indicator/gear `ModuleList` heads, the classifier token and MLP, annealed soft WTA gradient routing, soft classifier targets, and consistency losses that reduce frame-to-frame head identity swapping.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
@@ -40,4 +44,6 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Verified the new `content_model_blocks.js` asset is served from port 3005.
 - Confirmed the `Model Blocks` HTML contains two SVG visual graphs and 37 arrowed edges. Attempted a Playwright screenshot, but browser binaries are not installed in the workspace cache.
 - Verified the updated report JavaScript registers the Q&A section and refreshed graph labels.
+- Re-ran `node --check` on all report JavaScript after the latent-action/WTA expansion.
+- Verified the served `content_model_blocks.js` includes the new latent-action grid, WFM preload, and eight-head consistency sections.
 - Served the report locally on port 3005.
