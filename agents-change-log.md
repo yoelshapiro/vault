@@ -2417,3 +2417,17 @@
     - Created an interactive HTML/SVG capability graph with filters, search, tooltips, and selected-cluster details.
     - Served the page locally on port `3002` from tmux session `parking-2026-plan-graph`.
   - Note: [[agent_tasks/2026/05/Week-3/2026-05-14-parking-2026-plan-graph]]
+
+- Topic: Parking model comparison report
+  - Labels: parking, model-config, model-architecture, comparison, frontend
+  - Branch: boris/parking-roadmap-timeline-handoff
+  - PR: N/A
+  - Change type: Analysis / Tooling
+  - Areas: wayve/ai/parking/model_comparison, wayve/ai/si/configs/parking/parking_config.py, wayve/ai/experimental
+  - Changes:
+    - Compared the current branch `parking_config.py` against `origin/zmurez/pudo` and confirmed the parking config file itself is unchanged.
+    - Investigated Zak's newer experimental MCV/WTA configs and model code to identify the active multimodal BC architecture path.
+    - Created an interactive HTML comparison report with tabs for architecture overview, data recipe, input adaptors, encoders, output adaptors, latent actions, losses, learning rates, preloads, BC/RL status, and critique.
+    - Added GitHub links pinned to the current and Zak branch commits.
+    - Served the report locally on port `3005`.
+  - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
