@@ -2445,3 +2445,17 @@
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
+
+- Topic: Parking route-end input options
+  - Labels: parking, deployment, datamodule, route-map, navigation
+  - Branch: boris/03-23-park-route-shortening-v2
+  - PR: 102690
+  - Change type: Feature / Training-Inference Parity
+  - Areas: wayve/ai/si, wayve/ai/zoo/deployment, wayve/ai/lib/data/pipes
+  - Changes:
+    - Added opt-in train-time navigation cleanup for parking/parked samples while skipping unparking.
+    - Decoupled train-time route-map blackout from route shortening.
+    - Completed unparking route shortening by clipping the route from the current/stop anchor.
+    - Added opt-in deployment flags for end-of-route parking mode, map blackout, and navigation cleanup.
+    - Added a navigation-aware parking deployment wrapper for grouped DMI navigation tensors.
+  - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-route-end-input-options]]
