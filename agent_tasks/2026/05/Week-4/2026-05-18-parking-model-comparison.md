@@ -35,7 +35,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Added a detailed 8-head WTA explanation covering aligned ego/indicator/gear `ModuleList` heads, the classifier token and MLP, annealed soft WTA gradient routing, soft classifier targets, and consistency losses that reduce frame-to-frame head identity swapping.
 - Reorganized the report into a book-style chapter order: Start Here, Architecture Graphs, Data Recipe, Input Adaptors, Encoders, Output Adaptor, Latents & Multimodal, Losses & Preloads, BC vs RL, Config Evidence, Terminology, and Critique.
 - Replaced the previous parchment theme with a high-contrast signal-lab visual design using ordered sidebar navigation, chapter cards, dark shell, and high-contrast diagram/table styling.
-- Added `html_summaries/README.md` as the vault index for interactive HTML summaries.
+- Added `html_summaries/README.md` as the vault index for interactive HTML summaries and linked it from the vault root index.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
