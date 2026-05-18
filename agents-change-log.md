@@ -2435,6 +2435,7 @@
     - Added a dedicated `Model Blocks` tab after re-reading the actual model builders, with per-solution module graphs covering active, dropout-only, and variant/disabled components for SI `MIMOSTTransformer` and Zak `MCVPerceiver`.
     - Corrected component status details including SI gear-direction being constructed but inherited dropout-only and Zak driving-side conditioning being default-off/conditional in the inferred WTA config chain.
     - Replaced the connected graph section with real SVG visual architecture diagrams for each solution, using positioned nodes and arrowed branch/merge edges instead of only listing blocks.
+    - Fixed graph readability by making SVG node backgrounds, label colors, and arrow colors explicit instead of relying on inherited theme colors.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]

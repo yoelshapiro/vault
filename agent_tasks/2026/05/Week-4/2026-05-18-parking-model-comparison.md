@@ -26,6 +26,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Re-read the model construction code and added a dedicated `Model Blocks` tab with code-traced per-solution module graphs for SI `MIMOSTTransformer` and Zak `MCVPerceiver`.
 - Corrected active versus conditional components in the diagrams: SI gear-direction input is constructed but inherited dropout-only, while Zak `COUNTRY_CODE` is active and `DRIVING_SIDE` is conditional/default-off in the inferred WTA config chain.
 - Replaced the connected-module box lists with real SVG visual graphs for each solution, using positioned nodes and arrowed branch/merge edges: SI camera/context/parking/radar paths into `InputAdaptor`, `STTransformer`, and `OutputAdaptor`; Zak image-token and conditioning-token paths into positional encoding, `MCVSpaceTimeEncoder`, `RegressionDrivingHead`, and WTA heads.
+- Fixed SVG graph contrast by setting explicit light node fills, dark label fills, no text stroke, and high-contrast arrow marker colors.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
