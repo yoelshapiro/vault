@@ -25,7 +25,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Reworked data, encoder, output, loss, and training tabs into per-solution vertical flows plus aligned comparison tables.
 - Re-read the model construction code and added a dedicated `Model Blocks` tab with code-traced per-solution module graphs for SI `MIMOSTTransformer` and Zak `MCVPerceiver`.
 - Corrected active versus conditional components in the diagrams: SI gear-direction input is constructed but inherited dropout-only, while Zak `COUNTRY_CODE` is active and `DRIVING_SIDE` is conditional/default-off in the inferred WTA config chain.
-- Added explicit connected module graphs for each solution showing branch/merge structure: SI camera/context/parking/radar paths into `InputAdaptor`, `STTransformer`, and `OutputAdaptor`; Zak image-token and conditioning-token paths into positional encoding, `MCVSpaceTimeEncoder`, `RegressionDrivingHead`, and WTA heads.
+- Replaced the connected-module box lists with real SVG visual graphs for each solution, using positioned nodes and arrowed branch/merge edges: SI camera/context/parking/radar paths into `InputAdaptor`, `STTransformer`, and `OutputAdaptor`; Zak image-token and conditioning-token paths into positional encoding, `MCVSpaceTimeEncoder`, `RegressionDrivingHead`, and WTA heads.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
@@ -35,4 +35,5 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Ran `node --check` on all report JavaScript files.
 - Evaluated the content scripts in a Node VM to verify all tabs register.
 - Verified the new `content_model_blocks.js` asset is served from port 3005.
+- Confirmed the `Model Blocks` HTML contains two SVG visual graphs and 37 arrowed edges. Attempted a Playwright screenshot, but browser binaries are not installed in the workspace cache.
 - Served the report locally on port 3005.
