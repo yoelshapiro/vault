@@ -14,12 +14,14 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 
 ## Changes
 
-- Added `wayve/ai/parking/model_comparison/index.html`.
+- Added `wayve/ai/parking/model_comparison/index.html`, `style.css`, and `app.js`.
 - Included tabs for overview, config evidence, data, input adaptors, ST/MCV encoders, output adaptors, latent actions, losses/LR/preloads, BC vs RL, and critique.
+- Expanded the first draft into a denser deep dive with block diagrams on each major topic, detailed component tables, and fuller explanations of SI behavior control versus Zak's WTA multimodal head.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
 
 - Confirmed no `parking_config.py` diff between `HEAD` and `origin/zmurez/pudo`.
-- Confirmed the generated HTML is 303 lines.
+- Confirmed the generated files stay under 500 lines each.
+- Ran `node --check` on `app.js`.
 - Served the report locally on port 3005.
