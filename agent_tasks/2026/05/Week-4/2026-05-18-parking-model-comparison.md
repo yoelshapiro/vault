@@ -23,6 +23,8 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Added a Terminology tab and encoder callout defining "MCV tokens" as Zak's MCVPerceiver encoded context tokens.
 - Reworked the overview into true neural-network module flow diagrams, separating datamodule/loss/training concerns into their own tabs.
 - Reworked data, encoder, output, loss, and training tabs into per-solution vertical flows plus aligned comparison tables.
+- Re-read the model construction code and added a dedicated `Model Blocks` tab with code-traced per-solution module graphs for SI `MIMOSTTransformer` and Zak `MCVPerceiver`.
+- Corrected active versus conditional components in the diagrams: SI gear-direction input is constructed but inherited dropout-only, while Zak `COUNTRY_CODE` is active and `DRIVING_SIDE` is conditional/default-off in the inferred WTA config chain.
 - Added GitHub links pinned to the current commit and Zak branch commit.
 
 ## Verification
@@ -31,4 +33,5 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Confirmed the generated files stay under 500 lines each.
 - Ran `node --check` on all report JavaScript files.
 - Evaluated the content scripts in a Node VM to verify all tabs register.
+- Verified the new `content_model_blocks.js` asset is served from port 3005.
 - Served the report locally on port 3005.
