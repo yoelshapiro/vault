@@ -345,7 +345,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Merge to main plan.md",
+                "file": "html_summaries/README.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -360,7 +360,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Merge to main plan"
+              "title": "README"
             }
           }
         ],
@@ -541,6 +541,7 @@
   },
   "active": "178648f30ce4f3f2",
   "lastOpenFiles": [
+    "Merge to main plan.md",
     "html_summaries/parking-model-comparison/style.css",
     "html_summaries/parking-model-comparison/index.html",
     "html_summaries/parking-model-comparison/content_model_blocks.js",
@@ -561,9 +562,7 @@
     "agent_tasks/2026/05/Week-2/2026-05-13-parking-py-gear-cleanup-deep-dive.md",
     "agent_tasks/2026/05/Week-3/2026-05-13-ibex-lime-meritorious-interleave-deploy.md",
     "agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy.md",
-    "Merge to main plan.md",
     "agent_tasks/2026/05/Week-3/2026-05-13-pr-102690-route-shortening-review.md",
-    "agent_tasks/2026/05/Week-3",
     "agent_tasks/2026/05/Week-2/2026-05-13-pr-102398-ci-fixes.md",
     "projects.md",
     "index.md",
