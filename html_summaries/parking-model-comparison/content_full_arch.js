@@ -112,10 +112,29 @@ const siFullGraph = `
       items: ["context = OUTPUT_TOKENS", "latent-action path if enabled", "behavior token if enabled", "learned self.queries", "cross-attention decoder", "head-specific query slices", "waypoint/indicator/gear/variance heads"],
       cls: "blue",
     })}
-    ${bendEdge(1845, 458, 1900, 190)}
-    ${bendEdge(1845, 458, 1900, 315)}
-    ${bendEdge(1845, 458, 1900, 440)}
-    ${bendEdge(1845, 458, 1900, 565)}
+    ${svgNode({
+      x: 1505,
+      y: 705,
+      w: 340,
+      h: 120,
+      title: "LatentActionModule",
+      sub: "enabled: w_latent_action=1.0",
+      items: ["latent query -> x-attn", "logits over 31x31 action grid"],
+      cls: "yellow",
+    })}
+    ${svgNode({
+      x: 1505,
+      y: 855,
+      w: 340,
+      h: 120,
+      title: "Behavior control",
+      sub: "disabled: enable_behavior_control=False",
+      items: ["would add behavior token", "not active in this parking cfg"],
+      cls: "inactive yellow",
+    })}
+    ${bendEdge(1675, 705, 1675, 650)}
+    ${bendEdge(1675, 855, 1675, 650, "inactive")}
+    ${bendEdge(1845, 458, 1900, 405)}
     ${svgNode({
       x: 1900,
       y: 150,
@@ -182,12 +201,11 @@ const zakFullGraph = `
       y: 330,
       w: 300,
       h: 255,
-      title: "InputAdaptor equivalent",
-      sub: "MyModuleDict + positional encoding",
-      items: ["input_adapters(batch) -> xs", "named token groups", "image tokens stay separate", "ContinuousPositionalEncoding", "time/spatial/camera encoding", "condition groups remain named", "to MCVSpaceTimeEncoder"],
+      title: "Input/positional adaptor equiv.",
+      sub: "image tokens + xs token groups",
+      items: ["image tokens from ViT", "input_adapters(batch) -> xs", "named condition groups", "ContinuousPositionalEncoding", "time/spatial/camera encoding", "condition groups remain named", "to MCVSpaceTimeEncoder"],
       cls: "blue",
     })}
-    ${bendEdge(630, 84, 1090, 335)}
     ${bendEdge(1035, 458, 1090, 458)}
     ${svgNode({
       x: 1090,
@@ -210,10 +228,19 @@ const zakFullGraph = `
       items: ["context = encoded MCV tokens", "optional behavior token", "learned self.latents", "cross-attention decoder", "waypoint query slice", "WTA classifier query", "8 aligned head banks"],
       cls: "blue",
     })}
-    ${bendEdge(1845, 458, 1900, 170)}
-    ${bendEdge(1845, 458, 1900, 305)}
-    ${bendEdge(1845, 458, 1900, 440)}
-    ${bendEdge(1845, 458, 1900, 575)}
+    ${svgNode({
+      x: 1505,
+      y: 705,
+      w: 340,
+      h: 155,
+      title: "Mode classifier",
+      sub: "separate learned classifier query",
+      items: ["classifier latent after x-attn", "MLP: 1536 -> 256 -> 8 logits", "selects shared head index k"],
+      cls: "yellow",
+    })}
+    ${bendEdge(1675, 650, 1675, 705)}
+    ${bendEdge(1845, 458, 1900, 405)}
+    ${bendEdge(1845, 782, 1900, 530)}
     ${svgNode({
       x: 1900,
       y: 130,
@@ -221,7 +248,7 @@ const zakFullGraph = `
       h: 560,
       title: "WTA policy outputs",
       sub: "8-mode future bank",
-      items: ["egoposition_all_heads", "indicator_all_heads", "gear_all_heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k]", "gear[k]"],
+      items: ["8 ego heads", "8 indicator heads", "8 gear heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k]", "gear[k]"],
       cls: "green",
       connectInner: false,
     })}

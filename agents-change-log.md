@@ -2453,6 +2453,7 @@
     - Re-read the active current-branch model path and corrected the report from older release assumptions to `ParkingModelCfg -> WFMSt100xYoloCfg`: `large` / 11 ST blocks, YOLO WFM pretrain, active gear input, active latent-action conditioning, behavior control disabled, and radar/navigation disabled.
     - Rebuilt the full-architecture graphs so raw inputs are separate nodes, images alone feed `VideoSTAdaptor`, non-image tensors each feed their own tokenizer/adaptor, and `InputAdaptor` sits after those adaptor outputs as the ordered token merge.
     - Updated the Zak WTA graph to use the same comparison language while preserving implementation names: image stem, per-input `input_adapters`, positional encoding, `MCVSpaceTimeEncoder`, `RegressionDrivingHead`, and WTA head outputs; radar/navigation are shown as variant/off for the inferred WTA base.
+    - Cleaned graph wiring issues: removed duplicate image-to-transformer routing in Zak, collapsed multiple policy-output arrows into single logical flows, added an explicit disabled SI behavior-control block, and made Zak's mode classifier a visible block.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
