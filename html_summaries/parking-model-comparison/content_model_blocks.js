@@ -5,7 +5,7 @@ window.REPORT_SECTIONS.push({
   title: "Architecture Graphs",
   html: `
     <div class="callout warn book">
-      <p><b>Code-traced module diagrams.</b> This tab is built from the actual construction paths: SI <code>build_space_time_model</code> plus <code>ParkingModelCfg</code> / <code>WFMSt100xYoloCfg</code>, and Zak <code>make_mcv_perceiver</code> plus <code>mcv_new_phase2x_wta.yml</code>. The detailed Full Architecture tab now shows every raw input as a separate node, with images going through <code>VideoSTAdaptor</code> and non-image tensors going through their own tokenizer/adaptor before the token merge.</p>
+      <p><b>Code-traced module diagrams.</b> This tab is built from the actual construction paths: SI <code>build_space_time_model</code> plus <code>ParkingModelCfg</code> / <code>WFMSt100xYoloCfg</code>, and Zak <code>make_mcv_perceiver</code> plus <code>mcv_new_phase2x_wta.yml</code>. The detailed Full Architecture tab now shows every raw input as a separate node, with images going through <code>VideoSTAdaptor</code> and non-image tensors going through their own tokenizer/adaptor before the token merge. Wonjoon's PR 106346 architecture has its own <a href="#wonjoon">Wonjoon Diffusion</a> tab because the output adaptor is substantially different: path diffusion first, ordinary policy second.</p>
     </div>
     <div class="visual-stack">
       <div class="card">
