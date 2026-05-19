@@ -38,6 +38,8 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Added an output query-token breakdown contrasting SI `OutputAdaptor` query slices with Zak `RegressionDrivingHead` latents, including pseudo-code for both paths.
 - Clarified pseudo-code naming: SI `context_tokens` are data-dependent `STTransformer`/radar/behavior-conditioned tokens and `output_queries` are learned output slots; Zak `encoded_mcv_tokens` are data-dependent `MCVSpaceTimeEncoder` outputs and `output_latents` are learned output slots in `RegressionDrivingHead`.
 - Normalized Zak graph and pseudo-code vocabulary to SI-facing names: `Video adaptor`, `InputAdaptor equivalent`, `STTransformer equivalent`, `OutputAdaptor equivalent`, `encoder_context_tokens`, `learned_output_queries`, and `decoded_output_tokens`, with Zak implementation names kept in parentheses/comments.
+- Added a new `Full Architecture` tab with nested layer-level block diagrams for SI and Zak. Repeated structures are shown once with counts: SI/Zak ViT blocks `12x`, SI `STTransformer` blocks `10x`, and Zak `MCVSpaceTimeEncoder` blocks `11x`.
+- Added `arch_detail.css` for readable nested architecture boxes and wired `content_full_arch.js` into the report.
 - Reorganized the report into a book-style chapter order: Start Here, Architecture Graphs, Data Recipe, Input Adaptors, Encoders, Output Adaptor, Latents & Multimodal, Losses & Preloads, BC vs RL, Config Evidence, Terminology, and Critique.
 - Replaced the previous parchment theme with a high-contrast signal-lab visual design using ordered sidebar navigation, chapter cards, dark shell, and high-contrast diagram/table styling.
 - Softened the theme after review: calmer field-notebook palette, lighter content surface, muted teal navigation, lower-contrast diagram strokes, softer table headers, and reduced card/code shadows.
@@ -61,4 +63,5 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Verified the updated `content_model_blocks.js` output-query section is served from port 3005 and passes `node --check`.
 - Verified the revised token/latent naming pseudo-code is served from port 3005 and `content_model_blocks.js` remains under 500 lines.
 - Verified the graph label normalization and shared-name pseudo-code are served from port 3005; `content_model_blocks.js` passes `node --check` and remains under 500 lines.
+- Verified `content_full_arch.js` and `app.js` pass `node --check`, the new tab registers in the report script list, and the new CSS/JS assets return HTTP 200 from port 3005.
 - Served the report locally on port 3005 from `~/git/vault/html_summaries/parking-model-comparison`.
