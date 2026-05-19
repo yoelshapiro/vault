@@ -1,8 +1,8 @@
 const wonjoonFullGraph = `
   <svg class="full-arch-graph wide" viewBox="0 0 2200 1120" role="img" aria-label="Wonjoon full architecture graph with explicit inputs adaptors diffusion planner and ordinary policy head">
     ${svgDefs}
-    <text class="fa-col" x="30" y="26">Separate raw tensors / labels</text>
-    <text class="fa-col" x="335" y="26">Per-input adaptor / target processor</text>
+    <text class="fa-col" x="30" y="26">Separate runtime tensors</text>
+    <text class="fa-col" x="335" y="26">Per-input adaptor / tokenizer</text>
     <text class="fa-col" x="735" y="26">Token merge</text>
     <text class="fa-col" x="1085" y="26">Space-time backbone</text>
     <text class="fa-col" x="1500" y="26">Diffusion output adaptor</text>
@@ -17,10 +17,7 @@ const wonjoonFullGraph = `
       [24, 493, "PARKING_MODE", "parking mode input", "green", 330, 493, "ParkingModeSTAdaptor", "parking token", "blue"],
       [24, 566, "pose / curvature", "ego motion context", "green", 330, 566, "Pose/vehicle adaptors", "motion tokens", "blue"],
       [24, 639, "country / side / automation", "context ids", "green", 330, 639, "Context ST adaptors", "context tokens", "blue"],
-      [24, 735, "POLICY_PATH label", "train target [B,50,7]", "purple", 330, 735, "PathPosePrePostProcessor", "x,y -> delta/polar/chunk", "purple"],
-      [24, 832, "ordinary policy labels", "waypoint/indicator/gear", "purple", 330, 832, "Ordinary BC targets", "11-frame losses", "purple"],
-      [24, 929, "aux waypoint labels", "30 future frames", "purple", 330, 929, "DiffusionPrePostProcessor", "delta/polar/chunk", "purple"],
-      [24, 1026, "radar / nav", "disabled for this train cfg", "inactive yellow", 330, 1026, "Radar/Nav adaptors", "variant/off", "inactive yellow"],
+      [24, 735, "radar / nav", "disabled for this train cfg", "inactive yellow", 330, 735, "Radar/Nav adaptors", "variant/off", "inactive yellow"],
     ]
       .map(
         ([rx, y, rt, rs, rc, ax, ay, at, as, ac]) => `
@@ -105,6 +102,37 @@ const wonjoonFullGraph = `
       cls: "yellow",
     })}
     ${svgNode({
+      x: 24,
+      y: 882,
+      w: 260,
+      h: 135,
+      title: "POLICY_PATH label",
+      sub: "training target only",
+      items: ["[B,50,7]", "50 points @ 0.5m", "x,y,z,quaternion"],
+      cls: "purple",
+    })}
+    ${svgNode({
+      x: 330,
+      y: 868,
+      w: 300,
+      h: 165,
+      title: "Target processors",
+      sub: "not runtime input adaptors",
+      items: ["PathPosePrePostProcessor", "delta+polar primary target", "absolute path aux target", "waypoint diffusion aux target"],
+      cls: "purple",
+    })}
+    ${svgNode({
+      x: 24,
+      y: 1035,
+      w: 260,
+      h: 80,
+      title: "ordinary BC labels",
+      sub: "waypoint / indicator / gear",
+      items: [],
+      cls: "purple",
+      connectInner: false,
+    })}
+    ${svgNode({
       x: 1505,
       y: 980,
       w: 350,
@@ -138,14 +166,16 @@ const wonjoonFullGraph = `
     })}
     ${bendEdge(1678, 620, 1678, 710)}
     ${bendEdge(1505, 835, 1433, 850)}
-    ${bendEdge(630, 764, 735, 815, "inactive")}
-    ${bendEdge(1035, 848, 1505, 805)}
-    ${bendEdge(1855, 838, 1900, 232)}
+    ${bendEdge(284, 950, 330, 950, "train-only")}
+    ${bendEdge(630, 930, 1505, 805, "train-only")}
+    ${bendEdge(630, 940, 1088, 850, "train-only")}
+    ${bendEdge(630, 940, 735, 815, "train-only")}
+    ${bendEdge(1855, 838, 1900, 232, "inference")}
+    ${bendEdge(1855, 838, 735, 815, "inference")}
     ${bendEdge(1680, 620, 1680, 980)}
-    ${bendEdge(1035, 840, 1505, 1038)}
+    ${bendEdge(1035, 840, 1505, 1038, "train-only")}
+    ${bendEdge(284, 1075, 1505, 1038, "train-only")}
     ${bendEdge(1855, 1038, 1900, 675)}
-    ${bendEdge(630, 861, 1900, 675, "inactive")}
-    ${bendEdge(630, 958, 1088, 870, "inactive")}
   </svg>`;
 
 const wonjoonFullCard = `

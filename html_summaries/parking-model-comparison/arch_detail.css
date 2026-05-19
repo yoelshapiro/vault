@@ -66,6 +66,15 @@
   stroke-dasharray: 8 7;
   opacity: .75;
 }
+.fa-edge.train-only {
+  stroke: #8b6aa7;
+  stroke-dasharray: 6 7;
+  opacity: .86;
+}
+.fa-edge.inference {
+  stroke: #2f7d72;
+  stroke-width: 3.4;
+}
 .fa-inner-edge {
   fill: none;
   stroke: #7f9487;
