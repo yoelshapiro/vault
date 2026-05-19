@@ -8,7 +8,7 @@ Implemented opt-in parking route-end input controls on `boris/03-23-park-route-s
 
 - Added train-time `ParkingDataConfig.enable_end_of_route_navigation_cleanup`.
 - Renamed SI detection outputs to `PARKING_STATE`, `PARKED_STATE`, and `UNPARKING_STATE`; `PARKING_MODE` is now only the model-facing park-mode input.
-- Added `ParkingDataConfig.enable_park_mode_in_parking_state` and `ParkingDataConfig.enable_park_mode_in_parked_state` so the emitted park-mode signal is derived from selected internal states.
+- Added `ParkingDataConfig.enable_park_mode_in_parking_state` and `ParkingDataConfig.enable_park_mode_in_parked_state` so the emitted park-mode signal is derived from selected post-augmentation internal states.
 - Added train-time navigation cleanup after map/nav insertion, only when `PARKING_MODE` or `PARKED_MODE` is true and `UNPARKING_MODE` is false.
 - Exposed `PARKED_STATE` from the SI parking datamodule; left the older zoo parking datapipe untouched.
 - Decoupled train-time route-map blackout from route shortening so blackout can run independently.

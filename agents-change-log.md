@@ -2467,7 +2467,7 @@
   - Changes:
     - Added opt-in train-time navigation cleanup for parking/parked samples while skipping unparking.
     - Renamed SI detection outputs to `PARKING_STATE`, `PARKED_STATE`, and `UNPARKING_STATE`, keeping `PARKING_MODE` as the model-facing park-mode input.
-    - Added config flags to derive the emitted park-mode signal from selected internal states.
+    - Added config flags to derive the emitted park-mode signal from selected post-augmentation internal states.
     - Decoupled train-time route-map blackout from route shortening.
     - Completed unparking route shortening by clipping the route from the current/stop anchor without modifying the older zoo parking datapipe.
     - Added programmatic deployment options for end-of-route park mode, map blackout, and navigation cleanup without adding deploy CLI flags.
