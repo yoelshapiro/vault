@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-19 - PR 102690 merge readiness check
+- Topic: rehydrate and triage the parking route-shortening PR before merge.
+- Labels: #parking #route-map #pr-review #ci #tests
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: `102690`
+- Change type: PR triage/test verification
+- Areas: `wayve/ai/lib/data/pipes/`, `wayve/ai/si/datamodules/`, `wayve/ai/zoo/data/`, `wayve/ai/zoo/deployment/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]: inspected the PR diff and GitHub state, confirmed the branch is mergeable but blocked by required review, failing Buildkite contexts, and low Codecov patch coverage; verified the SI parking unit test fails during collection due stale `ParkingModeResult` imports after the implementation renamed the API to `ParkingStateResult`; noted route-shortening speed-limit slicing and `UNPARKING_MODE` compatibility risks.
+
 > #### 2026-05-19 - Parking model comparison adds Wonjoon path diffusion
 - Topic: extend the interactive parking model comparison with Wonjoon90's PR 106346 long-horizon path-diffusion model and linked Notion design.
 - Labels: #parking #model-architecture #diffusion #html #vault
