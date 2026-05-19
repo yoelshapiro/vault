@@ -1,0 +1,41 @@
+.arch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 18px;
+}
+.arch-block {
+  border: 1px solid #b9c5b8;
+  background: #fbfcf7;
+  padding: 12px;
+  margin: 12px 0;
+}
+.arch-title {
+  font-weight: 800;
+  color: #153326;
+  margin-bottom: 8px;
+}
+.layer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+}
+.layer-box {
+  border: 1px solid #8fa89a;
+  background: #eef7f1;
+  padding: 8px 10px;
+  min-width: 130px;
+  max-width: 240px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.layer-box strong { display: block; font-size: 13px; color: #13281e; }
+.repeat-badge {
+  border-color: #b66b64;
+  background: #fbefed;
+  font-weight: 800;
+}
+.split-badge {
+  border-style: dashed;
+  background: #eef7f9;
+}
