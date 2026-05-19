@@ -169,6 +169,18 @@ ${wonjoonFullCard}
       "<tr><th>Normalized block</th><th>Current SI implementation</th><th>Zak implementation</th><th>Wonjoon implementation</th></tr>"
     )
     .replace(
+      "<tr><td>Video adaptor</td><td><code>VideoSTAdaptor(ViTImageEncoder vit:large)</code>: 12x ViT SA blocks, then patch downsample to 1536.</td><td><code>ViTStemWrapper(ViTImageEncoder vit:large)</code>: same general ViT stack, wrapped to emit MCV-style merged camera tokens.</td></tr>",
+      "<tr><td>Video adaptor</td><td><code>VideoSTAdaptor(ViTImageEncoder vit:large)</code>: 12x ViT SA blocks, then patch downsample to 1536.</td><td><code>ViTStemWrapper(ViTImageEncoder vit:large)</code>: same general ViT stack, wrapped to emit MCV-style merged camera tokens.</td><td><code>VideoSTAdaptor</code> through the Dec 2025 WFM/ST stack; same SI-facing image-token contract as the current parking model family.</td></tr>"
+    )
+    .replace(
+      "<tr><td>InputAdaptor equivalent</td><td>One explicit <code>InputAdaptor</code> concatenates all adaptor outputs and applies time encoding.</td><td>Split across <code>input_adapters</code>, <code>ContinuousPositionalEncoding</code>, and the concat logic inside <code>MCVSpaceTimeEncoder</code>.</td></tr>",
+      "<tr><td>InputAdaptor equivalent</td><td>One explicit <code>InputAdaptor</code> concatenates all adaptor outputs and applies time encoding.</td><td>Split across <code>input_adapters</code>, <code>ContinuousPositionalEncoding</code>, and the concat logic inside <code>MCVSpaceTimeEncoder</code>.</td><td>Explicit SI <code>InputAdaptor</code> path with active gear-direction and parking-mode tokens; radar/navigation are disabled in the train config.</td></tr>"
+    )
+    .replace(
+      "<tr><td>ST backbone equivalent</td><td><code>STTransformer</code>: 11x Zoo <code>STBlock</code>, then output norm.</td><td><code>MCVSpaceTimeEncoder</code>: 11x causal/factorized ST blocks, then output norm.</td></tr>",
+      "<tr><td>ST backbone equivalent</td><td><code>STTransformer</code>: 11x Zoo <code>STBlock</code>, then output norm.</td><td><code>MCVSpaceTimeEncoder</code>: 11x causal/factorized ST blocks, then output norm.</td><td><code>WFMStDecember2025Cfg</code> ST backbone producing <code>OUTPUT_TOKENS</code> for the diffusion output adaptor.</td></tr>"
+    )
+    .replace(
       "<tr><td>OutputAdaptor equivalent</td><td><code>OutputAdaptor</code>: learned output queries -> cross-attn -> waypoint/indicator/gear/variance heads.</td><td><code>RegressionDrivingHead</code>: learned output queries (<code>self.latents</code>) -> cross-attn -> 8 WTA ego/indicator/gear head banks + mode selector.</td></tr>",
       "<tr><td>OutputAdaptor equivalent</td><td><code>OutputAdaptor</code>: learned output queries -> cross-attn -> waypoint/indicator/gear/variance heads.</td><td><code>RegressionDrivingHead</code>: learned output queries (<code>self.latents</code>) -> cross-attn -> 8 WTA ego/indicator/gear head banks + mode selector.</td><td><code>DiffusionOutputAdaptor</code>: learned pool queries -> primary path diffusion + auxiliary diffusion heads + path-conditioned <code>OrdinaryHead</code>.</td></tr>"
     )
