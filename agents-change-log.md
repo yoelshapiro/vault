@@ -20,6 +20,7 @@
 - Areas: `~/git/vault/html_summaries/parking-model-comparison/`, `agent_tasks/2026/05/Week-4/`
 - Changes:
   - [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]: fetched PR 106346 into `pr/106346`, inspected the parking config, diffusion output adaptor, deployment wrapper outputs, PR comments, and the linked Notion pages; added a dedicated Wonjoon Diffusion tab with a large directed architecture graph, code-backed component table, data recipe, losses/LR/preload/training-mode details, pseudo-code, and a three-way SI vs Zak vs Wonjoon comparison; updated the overview and architecture tabs to link the new section; verified JS syntax and live serving on port 3005.
+  - Added a third Wonjoon graph directly inside the existing Full Architecture tab using the same SI-facing graph language as the SI and Zak graphs, including explicit inputs, adaptors, ST backbone, diffusion output adaptor, primary/auxiliary diffusion heads, `PolicyPathConditioner`, `OrdinaryHead`, and path/policy outputs.
 
 > #### 2026-05-14 - Parking plan graph timeline boxes
 - Topic: convert the Parking 2026 capability graph from milestone columns into a draggable timeline-box view.

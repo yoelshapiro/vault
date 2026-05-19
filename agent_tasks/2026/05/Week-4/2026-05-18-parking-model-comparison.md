@@ -52,6 +52,8 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Extended the report to include Wonjoon90's PR 106346 long-horizon parking planning model and the linked Notion design.
 - Fetched and inspected PR 106346 with `gh pr view`, `gh pr view --comments`, and a local `pr/106346` ref.
 - Added `content_wonjoon.js` with a dedicated visual graph for the path-diffusion architecture: WFM/ST encoder, cross-attention pool split, primary path diffusion head, two auxiliary diffusion heads, `PolicyPathConditioner`, and ordinary waypoint/indicator/gear head.
+- Added `content_full_arch_wonjoon.js` so the existing `Full Architecture` tab now contains a third full graph for Wonjoon's model beside the SI and Zak graphs.
+- The Wonjoon full-architecture graph uses the same SI-facing language as the other two graphs and explicitly shows raw input tensors, per-input adaptors, `InputAdaptor`, `STTransformer`, `DiffusionOutputAdaptor`, primary path diffusion, auxiliary diffusion heads, `PolicyPathConditioner`, `OrdinaryHead`, path outputs, and ordinary policy outputs.
 - Updated the overview and architecture tabs to include a three-way SI vs Zak vs Wonjoon comparison and links to the new Wonjoon tab.
 - Added details from the Notion architecture/data pages: optional goal pose, path sampling at 50 points with 0.5m spacing, delta/polar/chunked path encoding, guided diffusion intent, and path-conditioned ordinary policy prediction.
 - Added PR-specific training details: 0.5 driving / 0.5 parking data mix, `w_diffusion=1.0`, ordinary policy losses, auxiliary diffusion loss, LR `1e-5`, output adaptor LR `1e-4`, 200k steps, bf16, BC-only training, and parking wrapper path outputs.
@@ -91,3 +93,4 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Evaluated all content scripts together in Node and confirmed 14 report tabs register, including `wonjoon`.
 - Verified `http://localhost:3005/` returns HTTP 200 and the served `index.html` includes `content_wonjoon.js`.
 - Could not run a Playwright screenshot because the local `playwright` package is not installed in this workspace.
+- Verified all report JavaScript after adding the Full Architecture Wonjoon companion script; the `fullarch` section now evaluates to three `full-arch-graph` SVGs and includes the explicit `OrdinaryHead` node.
