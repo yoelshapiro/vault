@@ -11,7 +11,8 @@ const svgNode = ({ x, y, w, h, title, sub = "", items, cls = "" }) => `
     ${items
       .map(
         (item, i) => `
-          <g transform="translate(12 ${58 + i * 32})">
+          ${i > 0 ? `<path class="fa-inner-edge" marker-end="url(#faArrow)" d="M${w / 2} ${48 + i * 34} L${w / 2} ${56 + i * 34}"></path>` : ""}
+          <g transform="translate(12 ${58 + i * 34})">
             <rect class="fa-inner" width="${w - 24}" height="24"></rect>
             <text class="fa-item" x="9" y="16">${item}</text>
           </g>`
@@ -27,88 +28,88 @@ const svgDefs = `
   </defs>`;
 
 const siFullGraph = `
-  <svg class="full-arch-graph" viewBox="0 0 1450 650" role="img" aria-label="SI full architecture graph with internal layers">
+  <svg class="full-arch-graph" viewBox="0 0 1450 800" role="img" aria-label="SI full architecture graph with internal layers">
     ${svgDefs}
     <text class="fa-col" x="28" y="22">Inputs</text>
     <text class="fa-col" x="270" y="22">Adaptors</text>
-    <text class="fa-col" x="560" y="132">ST Backbone</text>
-    <text class="fa-col" x="880" y="132">Output Adaptor</text>
-    <text class="fa-col" x="1190" y="132">Predictions</text>
+    <text class="fa-col" x="560" y="122">ST Backbone</text>
+    <text class="fa-col" x="880" y="122">Output Adaptor</text>
+    <text class="fa-col" x="1190" y="122">Outputs</text>
     ${svgEdge("M220 110 L260 110")}
-    ${svgEdge("M220 190 C245 190 230 415 260 415")}
-    ${svgEdge("M500 130 C535 130 530 245 550 260")}
-    ${svgEdge("M500 425 C535 425 530 320 550 305")}
-    ${svgEdge("M820 292 L860 292")}
-    ${svgEdge("M820 525 C850 525 850 390 860 350")}
+    ${svgEdge("M220 250 C245 250 230 530 260 530")}
+    ${svgEdge("M500 175 C535 175 530 260 550 275")}
+    ${svgEdge("M500 535 C535 535 530 350 550 340")}
+    ${svgEdge("M820 310 L860 310")}
+    ${svgEdge("M820 650 C850 650 850 430 860 395")}
     ${svgEdge("M1120 300 L1170 300")}
     ${svgNode({
       x: 20,
       y: 50,
       w: 200,
-      h: 190,
+      h: 330,
       title: "Raw inputs",
       sub: "SI parking tensors",
-      items: ["camera frames", "route map", "speed/pose/context", "PARKING_MODE"],
+      items: ["camera frames", "route map", "vehicle speed", "speed limit", "pose/country/side", "indicator state", "PARKING_MODE"],
       cls: "green",
     })}
     ${svgNode({
       x: 260,
       y: 45,
       w: 240,
-      h: 235,
+      h: 330,
       title: "Video adaptor",
       sub: "VideoSTAdaptor + ViT",
-      items: ["patch stem", "2D pos enc", "ViT SA block", "repeat: 12x", "patch downsample"],
+      items: ["image tensor", "PatchEmbeddingStem", "2D positional enc", "ViTBlock x12", "LN -> SelfAttn -> Add", "LN -> MLP -> Add", "PatchStem -> video tokens"],
       cls: "blue",
     })}
     ${svgNode({
       x: 260,
-      y: 320,
+      y: 420,
       w: 240,
-      h: 245,
+      h: 300,
       title: "InputAdaptor",
       sub: "explicit SI merge",
-      items: ["route CNN adaptor", "scalar/context MLPs", "embedding adaptors", "ordered concat", "time encoding"],
+      items: ["route/scalar/emb tokens", "dropout interface tokens", "ordered concat", "continuous time enc", "INPUT_TOKENS"],
       cls: "blue",
     })}
     ${svgNode({
       x: 550,
-      y: 160,
+      y: 140,
       w: 270,
-      h: 280,
+      h: 390,
       title: "STTransformer",
       sub: "large_l10, D=1536",
-      items: ["STBlock: spatial SA", "STBlock: causal time SA", "STBlock: MLP", "repeat: 10x", "output LayerNorm"],
+      items: ["INPUT_TOKENS", "STBlock x10", "reshape B*T,N,D", "LN -> spatial SA -> Add", "reshape B*N,T,D", "LN -> causal time SA -> Add", "LN -> MLP -> Add", "LayerNorm -> OUTPUT_TOKENS"],
       cls: "rust",
     })}
     ${svgNode({
       x: 550,
-      y: 470,
+      y: 570,
       w: 270,
-      h: 120,
+      h: 170,
       title: "Radar late fusion",
       sub: "after ST backbone",
-      items: ["radar AE/encoder", "SA / x-attn aggregator"],
+      items: ["radar frames", "radar AE/encoder", "x-attn aggregator"],
       cls: "yellow",
     })}
     ${svgNode({
       x: 860,
-      y: 170,
+      y: 140,
       w: 260,
-      h: 270,
+      h: 380,
       title: "OutputAdaptor",
       sub: "learned query decoder",
-      items: ["behavior token add", "self.queries", "cross-attention", "waypoint head", "indicator/gear/variance"],
+      items: ["OUTPUT_TOKENS + RADAR", "behavior token add", "self.queries", "CrossAttention", "decoded output tokens", "waypoint head", "indicator/gear/variance"],
       cls: "blue",
     })}
     ${svgNode({
       x: 1170,
-      y: 190,
+      y: 140,
       w: 230,
-      h: 225,
+      h: 330,
       title: "Policy outputs",
       sub: "single future",
-      items: ["waypoints", "waypoint variance", "indicator logits", "gear logits"],
+      items: ["POLICY_WAYPOINTS", "POLICY_LOG_VARIANCE", "INDICATOR_WEIGHTS", "GEAR_WEIGHTS", "POLICY_TIME_DELTA", "CROSS_ATTN_TOKENS"],
       cls: "green",
     })}
   </svg>`;
