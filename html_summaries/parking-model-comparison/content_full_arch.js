@@ -115,78 +115,78 @@ const siFullGraph = `
   </svg>`;
 
 const zakFullGraph = `
-  <svg class="full-arch-graph" viewBox="0 0 1450 650" role="img" aria-label="Zak full architecture graph with internal layers">
+  <svg class="full-arch-graph" viewBox="0 0 1450 800" role="img" aria-label="Zak full architecture graph with internal layers">
     ${svgDefs}
     <text class="fa-col" x="28" y="22">Inputs</text>
     <text class="fa-col" x="270" y="22">Adaptors</text>
-    <text class="fa-col" x="560" y="132">ST Backbone Equiv.</text>
-    <text class="fa-col" x="880" y="132">OutputAdaptor Equiv.</text>
-    <text class="fa-col" x="1190" y="132">Predictions</text>
+    <text class="fa-col" x="560" y="122">ST Backbone Equiv.</text>
+    <text class="fa-col" x="880" y="122">OutputAdaptor Equiv.</text>
+    <text class="fa-col" x="1190" y="122">Outputs</text>
     ${svgEdge("M220 110 L260 110")}
-    ${svgEdge("M220 200 C245 200 230 430 260 430")}
-    ${svgEdge("M500 130 C535 130 530 250 550 265")}
-    ${svgEdge("M500 430 C535 430 530 325 550 310")}
-    ${svgEdge("M820 292 L860 292")}
+    ${svgEdge("M220 265 C245 265 230 535 260 535")}
+    ${svgEdge("M500 175 C535 175 530 260 550 275")}
+    ${svgEdge("M500 535 C535 535 530 350 550 340")}
+    ${svgEdge("M820 310 L860 310")}
     ${svgEdge("M1120 300 L1170 300")}
-    ${svgEdge("M1290 420 C1250 510 1010 505 1000 445")}
+    ${svgEdge("M1290 560 C1240 690 1010 665 1000 525")}
     ${svgNode({
       x: 20,
       y: 50,
       w: 200,
-      h: 205,
+      h: 365,
       title: "Raw inputs",
       sub: "PUDO tensors",
-      items: ["5-camera frames", "route map", "speed/gear/context", "PUDO parking fields"],
+      items: ["5-camera frames", "route map", "speed history", "speed limit", "indicator stick/state", "gear + country", "PUDO request/target"],
       cls: "green",
     })}
     ${svgNode({
       x: 260,
       y: 45,
       w: 240,
-      h: 235,
+      h: 330,
       title: "Video adaptor",
       sub: "Zak: ViTStemWrapper",
-      items: ["patch stem", "2D pos enc", "ViT SA block", "repeat: 12x", "camera-token merge"],
+      items: ["image tensor", "PatchEmbeddingStem", "2D positional enc", "ViTBlock x12", "LN -> SelfAttn -> Add", "LN -> MLP -> Add", "camera-token merge"],
       cls: "blue",
     })}
     ${svgNode({
       x: 260,
-      y: 320,
+      y: 420,
       w: 240,
-      h: 255,
+      h: 330,
       title: "InputAdaptor equiv.",
       sub: "split across modules",
-      items: ["input_adapters dict", "route CNN", "ParkingEncoder", "scalar/context adaptors", "continuous pos/time"],
+      items: ["input_adapters dict", "route CNN tokens", "ParkingEncoder token", "scalar/context tokens", "continuous pos/time", "xs_dict token groups"],
       cls: "blue",
     })}
     ${svgNode({
       x: 550,
-      y: 160,
+      y: 140,
       w: 270,
-      h: 290,
+      h: 410,
       title: "STTransformer equiv.",
       sub: "Zak: MCVSpaceTimeEncoder",
-      items: ["concat xs_dict + image", "STBlock: spatial SA", "STBlock: causal time SA", "STBlock: MLP", "repeat: 11x", "output LayerNorm"],
+      items: ["image tokens + xs_dict", "concat condition before image", "STBlock x11", "LN -> spatial SA -> Add", "LN -> causal time SA -> Add", "LN -> MLP -> Add", "LayerNorm", "encoder_context_tokens"],
       cls: "rust",
     })}
     ${svgNode({
       x: 860,
-      y: 170,
+      y: 140,
       w: 260,
-      h: 285,
+      h: 390,
       title: "OutputAdaptor equiv.",
       sub: "Zak: RegressionDrivingHead",
-      items: ["behavior token add", "self.latents", "cross-attention", "waypoint query slice", "classifier query"],
+      items: ["encoder_context_tokens", "behavior token add", "self.latents", "CrossAttention", "decoded output tokens", "waypoint query slice", "classifier query"],
       cls: "blue",
     })}
     ${svgNode({
       x: 1170,
-      y: 175,
+      y: 140,
       w: 240,
-      h: 270,
+      h: 430,
       title: "WTA policy outputs",
       sub: "8-mode future bank",
-      items: ["8x ego heads", "8x indicator heads", "8x gear heads", "mode logits select k", "winner future"],
+      items: ["egoposition_all_heads", "indicator_all_heads", "gear_all_heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k] + gear[k]"],
       cls: "green",
     })}
   </svg>`;
