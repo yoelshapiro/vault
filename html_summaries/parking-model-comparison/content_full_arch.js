@@ -3,7 +3,7 @@ window.REPORT_SECTIONS = window.REPORT_SECTIONS || [];
 const layer = (title, body, cls = "") => `<div class="layer-box ${cls}"><strong>${title}</strong>${body}</div>`;
 const svgLineText = (lines, x, y, cls = "") =>
   lines.map((line, i) => `<tspan class="${cls}" x="${x}" y="${y + i * 17}">${line}</tspan>`).join("");
-const svgNode = ({ x, y, w, h, title, sub = "", items, cls = "" }) => `
+const svgNode = ({ x, y, w, h, title, sub = "", items, cls = "", connectInner = true }) => `
   <g class="fa-node ${cls}" transform="translate(${x} ${y})">
     <rect class="fa-outer" width="${w}" height="${h}"></rect>
     <text class="fa-title">${svgLineText([title], 12, 24)}</text>
@@ -11,7 +11,7 @@ const svgNode = ({ x, y, w, h, title, sub = "", items, cls = "" }) => `
     ${items
       .map(
         (item, i) => `
-          ${i > 0 ? `<path class="fa-inner-edge" marker-end="url(#faArrow)" d="M${w / 2} ${48 + i * 34} L${w / 2} ${56 + i * 34}"></path>` : ""}
+          ${connectInner && i > 0 ? `<path class="fa-inner-edge" marker-end="url(#faArrow)" d="M${w / 2} ${48 + i * 34} L${w / 2} ${56 + i * 34}"></path>` : ""}
           <g transform="translate(12 ${58 + i * 34})">
             <rect class="fa-inner" width="${w - 24}" height="24"></rect>
             <text class="fa-item" x="9" y="16">${item}</text>
@@ -28,34 +28,35 @@ const svgDefs = `
   </defs>`;
 
 const siFullGraph = `
-  <svg class="full-arch-graph" viewBox="0 0 1450 800" role="img" aria-label="SI full architecture graph with internal layers">
+  <svg class="full-arch-graph wide" viewBox="0 0 1800 950" role="img" aria-label="SI full architecture graph with internal layers">
     ${svgDefs}
-    <text class="fa-col" x="28" y="22">Inputs</text>
-    <text class="fa-col" x="270" y="22">Adaptors</text>
-    <text class="fa-col" x="560" y="122">ST Backbone</text>
-    <text class="fa-col" x="880" y="122">Output Adaptor</text>
-    <text class="fa-col" x="1190" y="122">Outputs</text>
-    ${svgEdge("M220 110 L260 110")}
-    ${svgEdge("M220 250 C245 250 230 530 260 530")}
-    ${svgEdge("M500 175 C535 175 530 260 550 275")}
-    ${svgEdge("M500 535 C535 535 530 350 550 340")}
-    ${svgEdge("M820 310 L860 310")}
-    ${svgEdge("M820 650 C850 650 850 430 860 395")}
-    ${svgEdge("M1120 300 L1170 300")}
+    <text class="fa-col" x="38" y="22">Inputs</text>
+    <text class="fa-col" x="360" y="22">Adaptors</text>
+    <text class="fa-col" x="735" y="122">ST Backbone</text>
+    <text class="fa-col" x="1135" y="122">Output Adaptor</text>
+    <text class="fa-col" x="1515" y="122">Outputs</text>
+    ${svgEdge("M280 110 L340 110")}
+    ${svgEdge("M280 285 C315 285 300 595 340 595")}
+    ${svgEdge("M640 190 C685 190 680 280 710 300")}
+    ${svgEdge("M640 610 C685 610 680 390 710 375")}
+    ${svgEdge("M1040 350 L1110 350")}
+    ${svgEdge("M1040 755 C1085 755 1080 500 1110 455")}
+    ${svgEdge("M1420 350 L1510 350")}
     ${svgNode({
-      x: 20,
+      x: 30,
       y: 50,
-      w: 200,
-      h: 330,
+      w: 250,
+      h: 365,
       title: "Raw inputs",
       sub: "SI parking tensors",
       items: ["camera frames", "route map", "vehicle speed", "speed limit", "pose/country/side", "indicator state", "PARKING_MODE"],
       cls: "green",
+      connectInner: false,
     })}
     ${svgNode({
-      x: 260,
+      x: 340,
       y: 45,
-      w: 240,
+      w: 300,
       h: 330,
       title: "Video adaptor",
       sub: "VideoSTAdaptor + ViT",
@@ -63,9 +64,9 @@ const siFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
-      x: 260,
-      y: 420,
-      w: 240,
+      x: 340,
+      y: 470,
+      w: 300,
       h: 300,
       title: "InputAdaptor",
       sub: "explicit SI merge",
@@ -73,9 +74,9 @@ const siFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
-      x: 550,
+      x: 710,
       y: 140,
-      w: 270,
+      w: 330,
       h: 390,
       title: "STTransformer",
       sub: "large_l10, D=1536",
@@ -83,9 +84,9 @@ const siFullGraph = `
       cls: "rust",
     })}
     ${svgNode({
-      x: 550,
-      y: 570,
-      w: 270,
+      x: 710,
+      y: 660,
+      w: 330,
       h: 170,
       title: "Radar late fusion",
       sub: "after ST backbone",
@@ -93,9 +94,9 @@ const siFullGraph = `
       cls: "yellow",
     })}
     ${svgNode({
-      x: 860,
+      x: 1110,
       y: 140,
-      w: 260,
+      w: 310,
       h: 380,
       title: "OutputAdaptor",
       sub: "learned query decoder",
@@ -103,46 +104,47 @@ const siFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
-      x: 1170,
+      x: 1510,
       y: 140,
-      w: 230,
+      w: 250,
       h: 330,
       title: "Policy outputs",
       sub: "single future",
       items: ["POLICY_WAYPOINTS", "POLICY_LOG_VARIANCE", "INDICATOR_WEIGHTS", "GEAR_WEIGHTS", "POLICY_TIME_DELTA", "CROSS_ATTN_TOKENS"],
       cls: "green",
+      connectInner: false,
     })}
   </svg>`;
 
 const zakFullGraph = `
-  <svg class="full-arch-graph" viewBox="0 0 1450 800" role="img" aria-label="Zak full architecture graph with internal layers">
+  <svg class="full-arch-graph wide" viewBox="0 0 1800 950" role="img" aria-label="Zak full architecture graph with internal layers">
     ${svgDefs}
-    <text class="fa-col" x="28" y="22">Inputs</text>
-    <text class="fa-col" x="270" y="22">Adaptors</text>
-    <text class="fa-col" x="560" y="122">ST Backbone Equiv.</text>
-    <text class="fa-col" x="880" y="122">OutputAdaptor Equiv.</text>
-    <text class="fa-col" x="1190" y="122">Outputs</text>
-    ${svgEdge("M220 110 L260 110")}
-    ${svgEdge("M220 265 C245 265 230 535 260 535")}
-    ${svgEdge("M500 175 C535 175 530 260 550 275")}
-    ${svgEdge("M500 535 C535 535 530 350 550 340")}
-    ${svgEdge("M820 310 L860 310")}
-    ${svgEdge("M1120 300 L1170 300")}
-    ${svgEdge("M1290 560 C1240 690 1010 665 1000 525")}
+    <text class="fa-col" x="38" y="22">Inputs</text>
+    <text class="fa-col" x="360" y="22">Adaptors</text>
+    <text class="fa-col" x="735" y="122">ST Backbone Equiv.</text>
+    <text class="fa-col" x="1135" y="122">OutputAdaptor Equiv.</text>
+    <text class="fa-col" x="1515" y="122">Outputs</text>
+    ${svgEdge("M280 110 L340 110")}
+    ${svgEdge("M280 305 C315 305 300 595 340 595")}
+    ${svgEdge("M640 190 C685 190 680 280 710 300")}
+    ${svgEdge("M640 610 C685 610 680 390 710 375")}
+    ${svgEdge("M1040 350 L1110 350")}
+    ${svgEdge("M1420 350 L1510 350")}
     ${svgNode({
-      x: 20,
+      x: 30,
       y: 50,
-      w: 200,
+      w: 250,
       h: 365,
       title: "Raw inputs",
       sub: "PUDO tensors",
       items: ["5-camera frames", "route map", "speed history", "speed limit", "indicator stick/state", "gear + country", "PUDO request/target"],
       cls: "green",
+      connectInner: false,
     })}
     ${svgNode({
-      x: 260,
+      x: 340,
       y: 45,
-      w: 240,
+      w: 300,
       h: 330,
       title: "Video adaptor",
       sub: "Zak: ViTStemWrapper",
@@ -150,9 +152,9 @@ const zakFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
-      x: 260,
-      y: 420,
-      w: 240,
+      x: 340,
+      y: 470,
+      w: 300,
       h: 330,
       title: "InputAdaptor equiv.",
       sub: "split across modules",
@@ -160,9 +162,9 @@ const zakFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
-      x: 550,
+      x: 710,
       y: 140,
-      w: 270,
+      w: 330,
       h: 410,
       title: "STTransformer equiv.",
       sub: "Zak: MCVSpaceTimeEncoder",
@@ -170,9 +172,9 @@ const zakFullGraph = `
       cls: "rust",
     })}
     ${svgNode({
-      x: 860,
+      x: 1110,
       y: 140,
-      w: 260,
+      w: 310,
       h: 390,
       title: "OutputAdaptor equiv.",
       sub: "Zak: RegressionDrivingHead",
@@ -180,14 +182,15 @@ const zakFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
-      x: 1170,
+      x: 1510,
       y: 140,
-      w: 240,
+      w: 250,
       h: 430,
       title: "WTA policy outputs",
       sub: "8-mode future bank",
       items: ["egoposition_all_heads", "indicator_all_heads", "gear_all_heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k] + gear[k]"],
       cls: "green",
+      connectInner: false,
     })}
   </svg>`;
 

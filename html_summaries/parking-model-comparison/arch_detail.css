@@ -50,6 +50,10 @@
     #f6f8f1;
   background-size: 28px 28px;
 }
+.full-arch-graph.wide {
+  min-width: 1400px;
+  min-height: 650px;
+}
 .fa-edge {
   fill: none;
   stroke: #9d625d;
