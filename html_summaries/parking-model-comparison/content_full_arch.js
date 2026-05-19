@@ -108,32 +108,20 @@ const siFullGraph = `
       w: 340,
       h: 365,
       title: "OutputAdaptor",
-      sub: "learned query decoder",
-      items: ["context = OUTPUT_TOKENS", "latent-action path if enabled", "behavior token if enabled", "learned self.queries", "cross-attention decoder", "head-specific query slices", "waypoint/indicator/gear/variance heads"],
+      sub: "conditioning + learned query decoder",
+      items: ["context = OUTPUT_TOKENS", "train GT / infer argmax latent", "behavior branch skipped", "latent query x-attn -> logits", "add latent-action token", "self.queries x-attend context", "waypoint/indicator/gear/variance heads"],
       cls: "blue",
     })}
     ${svgNode({
       x: 1505,
-      y: 705,
+      y: 720,
       w: 340,
       h: 120,
-      title: "LatentActionModule",
-      sub: "enabled: w_latent_action=1.0",
-      items: ["latent query -> x-attn", "logits over 31x31 action grid"],
-      cls: "yellow",
-    })}
-    ${svgNode({
-      x: 1505,
-      y: 855,
-      w: 340,
-      h: 120,
-      title: "Behavior control",
+      title: "Behavior-control branch",
       sub: "disabled: enable_behavior_control=False",
-      items: ["would add behavior token", "not active in this parking cfg"],
+      items: ["if enabled: compute/encode label", "not called in this parking cfg"],
       cls: "inactive yellow",
     })}
-    ${bendEdge(1675, 705, 1675, 650)}
-    ${bendEdge(1675, 855, 1675, 650, "inactive")}
     ${bendEdge(1845, 458, 1900, 405)}
     ${svgNode({
       x: 1900,
@@ -229,29 +217,52 @@ const zakFullGraph = `
       cls: "blue",
     })}
     ${svgNode({
+      x: 1900,
+      y: 235,
+      w: 260,
+      h: 265,
+      title: "WTA head banks",
+      sub: "parallel candidate futures",
+      items: ["8 ego heads", "8 indicator heads", "8 gear heads", "all heads produced"],
+      cls: "green",
+      connectInner: false,
+    })}
+    ${svgNode({
       x: 1505,
       y: 705,
       w: 340,
       h: 155,
       title: "Mode classifier",
-      sub: "separate learned classifier query",
-      items: ["classifier latent after x-attn", "MLP: 1536 -> 256 -> 8 logits", "selects shared head index k"],
+      sub: "parallel selector query",
+      items: ["classifier latent after x-attn", "MLP: 1536 -> 256 -> 8 logits", "does not feed trajectory heads"],
       cls: "yellow",
     })}
-    ${bendEdge(1675, 650, 1675, 705)}
-    ${bendEdge(1845, 458, 1900, 405)}
-    ${bendEdge(1845, 782, 1900, 530)}
     ${svgNode({
       x: 1900,
-      y: 130,
+      y: 620,
       w: 260,
-      h: 560,
-      title: "WTA policy outputs",
-      sub: "8-mode future bank",
-      items: ["8 ego heads", "8 indicator heads", "8 gear heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k]", "gear[k]"],
+      h: 145,
+      title: "Select head k",
+      sub: "argmax/EMA over mode_logits",
+      items: ["choose shared index k", "read ego/indicator/gear[k]"],
+      cls: "yellow",
+    })}
+    ${svgNode({
+      x: 1900,
+      y: 845,
+      w: 260,
+      h: 160,
+      title: "Selected policy output",
+      sub: "single returned future",
+      items: ["egoposition[k]", "indicator[k]", "gear[k]"],
       cls: "green",
       connectInner: false,
     })}
+    ${bendEdge(1845, 458, 1900, 368)}
+    ${bendEdge(1675, 650, 1675, 705)}
+    ${bendEdge(1845, 782, 1900, 690)}
+    ${directEdge(2030, 500, 2030, 620)}
+    ${directEdge(2030, 765, 2030, 845)}
   </svg>`;
 
 window.REPORT_SECTIONS.push({
