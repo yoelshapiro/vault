@@ -338,21 +338,9 @@
               "icon": "lucide-file",
               "title": "projects"
             }
-          },
-          {
-            "id": "178648f30ce4f3f2",
-            "type": "leaf",
-            "state": {
-              "type": "html-view",
-              "state": {
-                "file": "html_summaries/parking-model-comparison/index.html"
-              },
-              "icon": "code-glyph",
-              "title": "index"
-            }
           }
         ],
-        "currentTab": 20
+        "currentTab": 19
       }
     ],
     "direction": "vertical"
