@@ -2484,6 +2484,8 @@
     - Added config flags to derive the emitted park-mode signal from selected post-augmentation internal states.
     - Added an SI-local gear label cleanup option for parking state detection.
     - Added and enabled a datamodule-level short-path option in the parking BC config.
+    - Aligned short-path padding with main by carrying a path validity mask through path loading and bad-path filtering.
+    - Updated the parking BC datamodule config to use Guy branch's active BC parking values where supported by this branch.
     - Decoupled train-time route-map blackout from route shortening.
     - Completed unparking route shortening by clipping the route from the current/stop anchor using SI-local parking helpers, without modifying the older zoo parking datapipe.
     - Moved train-time route-stop positioning, route-map blackout, and navigation cleanup helpers into the SI parking datamodule.
