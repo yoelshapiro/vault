@@ -4,6 +4,7 @@ window.REPORT_AFTER_RENDER = window.REPORT_AFTER_RENDER || {};
 const gh = {
   cur: "https://github.com/wayveai/WayveCode/blob/6108f48568c534b097d10e38df969e7a466c2a4a/",
   zak: "https://github.com/wayveai/WayveCode/blob/f904a17d930e4184535568282c6f4e7962b31672/",
+  wonjoon: "https://github.com/wayveai/WayveCode/blob/b3fee2f79aa5795b1321710de3eac8c8cb8f7af2/",
 };
 const link = (base, path, line, text = `${path}#L${line}`) => `<a href="${base}${path}#L${line}">${text}</a>`;
 
@@ -40,7 +41,7 @@ outputs = RegressionDrivingHead(mcv_tokens, speed, curvature, parking_request)</
     title: "Start Here",
     html: `
       <div class="callout warn book">
-        <p><b>Core conclusion.</b> The SI parking config is identical between this branch and <code>origin/zmurez/pudo</code>. The model-level comparison is the current SI <code>MIMOSTTransformer</code> parking BC stack versus Zak's experimental <code>MCVPerceiver</code> + WTA output-head stack.</p>
+        <p><b>Core conclusion.</b> The SI parking config is identical between this branch and <code>origin/zmurez/pudo</code>. The model-level comparison is the current SI <code>MIMOSTTransformer</code> parking BC stack versus Zak's experimental <code>MCVPerceiver</code> + WTA output-head stack. PR 106346 adds a third branch: Wonjoon's long-horizon path-diffusion model, which keeps the WFM/ST encoder family but replaces the regular policy output adaptor with a diffusion path planner plus path-conditioned ordinary policy head.</p>
         <p><b>How to read the report.</b> Start with Architecture Graphs for the module wiring, then walk left-to-right through data, inputs, encoders, outputs, latent/multimodal behavior, losses, and training mode. Config evidence and terminology are now appendices.</p>
       </div>
       <div class="verdict-grid">
@@ -67,14 +68,15 @@ outputs = RegressionDrivingHead(mcv_tokens, speed, curvature, parking_request)</
         <a href="#encoder"><b>Encoders</b><span>STTransformer versus MCVSpaceTimeEncoder.</span></a>
         <a href="#outputs"><b>Output Adaptor</b><span>SI output queries versus Zak WTA head bank.</span></a>
         <a href="#latent"><b>Latents & Multimodal</b><span>SI latent grid, behavior control, Zak WTA modes.</span></a>
+        <a href="#wonjoon"><b>Wonjoon Diffusion</b><span>PR 106346 long-horizon path planner and policy conditioning.</span></a>
         <a href="#losses"><b>Losses & Preloads</b><span>LRs, checkpoints, WTA routing and consistency.</span></a>
         <a href="#training"><b>BC vs RL</b><span>Why the compared paths are BC, and where RL lives.</span></a>
       </div>
       <table class="compare dense aligned">
-        <tr><th>Question</th><th>SI parking answer</th><th>Zak MCV/WTA answer</th></tr>
-        <tr><td>What is the model?</td><td><code>MIMOSTTransformer</code> using the Zoo ST stack and <code>WFMSt100xYoloCfg</code>.</td><td><code>MCVPerceiver</code> using an MCV space-time encoder and WTA driving head.</td></tr>
-        <tr><td>What changes for parking?</td><td>Adds parking mode and gear-direction adaptors, PUDO/parking buckets, and latent-action output conditioning.</td><td>Adds a richer ParkingEncoder and an explicit multimodal output head for ambiguous parking/PUDO futures.</td></tr>
-        <tr><td>What is not present?</td><td>No explicit multimodal output distribution; behavior control is model-level but gated by parent config; radar is off in the current parking path; no RL in active SI mode.</td><td>No evidence that WTA and RL are combined in the inferred active config; RL is separate in <code>mcv_new_rl.yml</code>.</td></tr>
+        <tr><th>Question</th><th>SI parking answer</th><th>Zak MCV/WTA answer</th><th>Wonjoon PR 106346 answer</th></tr>
+        <tr><td>What is the model?</td><td><code>MIMOSTTransformer</code> using the Zoo ST stack and <code>WFMSt100xYoloCfg</code>.</td><td><code>MCVPerceiver</code> using an MCV space-time encoder and WTA driving head.</td><td><code>ParkingDiffusionModelCfg</code> on <code>WFMStDecember2025Cfg</code> with <code>DiffusionOutputAdaptor</code>.</td></tr>
+        <tr><td>What changes for parking?</td><td>Adds parking mode and gear-direction adaptors, PUDO/parking buckets, and latent-action output conditioning.</td><td>Adds a richer ParkingEncoder and an explicit multimodal output head for ambiguous parking/PUDO futures.</td><td>Predicts a 24.5m long-horizon <code>POLICY_PATH</code> first, then conditions waypoint/indicator/gear prediction on that generated path.</td></tr>
+        <tr><td>What is not present?</td><td>No explicit multimodal output distribution; behavior control is model-level but gated by parent config; radar is off in the current parking path; no RL in active SI mode.</td><td>No evidence that WTA and RL are combined in the inferred active config; RL is separate in <code>mcv_new_rl.yml</code>.</td><td>No WTA eight-head bank and no RL; multimodality comes from diffusion sampling over path futures.</td></tr>
       </table>
     `,
   },

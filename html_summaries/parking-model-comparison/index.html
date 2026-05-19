@@ -11,18 +11,19 @@
   <header class="hero">
     <div>
       <p class="eyebrow">WayveCode parking model comparison</p>
-      <h1>Current SI parking BC vs Zak Murez MCV/WTA PUDO work</h1>
+      <h1>Current SI parking BC vs Zak Murez MCV/WTA vs Wonjoon long-horizon diffusion</h1>
       <p class="lede">
         Deep-dive report comparing the deployed-style SI parking config in this branch with Zak's
-        latest experimental PUDO work on <code>origin/zmurez/pudo</code>. The critical evidence is that
-        <code>parking_config.py</code> itself has no diff; the architecture divergence is in Zak's
-        experimental <code>MCVPerceiver</code> configs and WTA driving head.
+        latest experimental PUDO work on <code>origin/zmurez/pudo</code>, plus Wonjoon's PR 106346
+        long-horizon parking path planner. The critical evidence is that Zak's SI
+        <code>parking_config.py</code> itself has no diff; Wonjoon's PR changes the SI parking config
+        to a diffusion output adaptor that predicts <code>POLICY_PATH</code> before ordinary policy outputs.
       </p>
     </div>
     <div class="facts">
       <span>Current HEAD <b>6108f48568c5</b></span>
       <span>Zak branch <b>f904a17d930e</b></span>
-      <span>No PR found for <b>zmurez:pudo</b></span>
+      <span>Wonjoon PR <b>106346</b></span>
       <span>Served from <b>wayve/ai/parking/model_comparison</b></span>
     </div>
   </header>
@@ -35,6 +36,7 @@
   <script src="content_core.js"></script>
   <script src="content_model_blocks.js"></script>
   <script src="content_full_arch.js"></script>
+  <script src="content_wonjoon.js"></script>
   <script src="content_latents.js"></script>
   <script src="content_arch.js"></script>
   <script src="app.js"></script>
