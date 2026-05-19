@@ -43,6 +43,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Reworked the top of the `Full Architecture` tab into actual directed SVG graphs for SI and Zak. Each graph now has arrows between modules and nested layer boxes inside each module; the previous block lists remain below as supporting detail.
 - Expanded the `Full Architecture` SVGs with explicit input and output node contents for both SI and Zak, including policy tensor names and WTA all-head/mode outputs.
 - Replaced unconnected inner lists with connected inner subgraphs: every module now draws arrows between internal layer boxes, and repeated structures are named as the repeated block itself (`ViTBlock x12`, SI `STBlock x10`, Zak `STBlock x11`) followed by their internal layer sequence.
+- Fixed graph semantics and spacing: raw input and output nodes are now independent tensor lists without fake sequential arrows, the misleading WTA-output back arrow was removed, and both graphs now use a wider canvas/min-width for more readable module spacing.
 - Reorganized the report into a book-style chapter order: Start Here, Architecture Graphs, Data Recipe, Input Adaptors, Encoders, Output Adaptor, Latents & Multimodal, Losses & Preloads, BC vs RL, Config Evidence, Terminology, and Critique.
 - Replaced the previous parchment theme with a high-contrast signal-lab visual design using ordered sidebar navigation, chapter cards, dark shell, and high-contrast diagram/table styling.
 - Softened the theme after review: calmer field-notebook palette, lighter content surface, muted teal navigation, lower-contrast diagram strokes, softer table headers, and reduced card/code shadows.
@@ -69,4 +70,5 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Verified `content_full_arch.js` and `app.js` pass `node --check`, the new tab registers in the report script list, and the new CSS/JS assets return HTTP 200 from port 3005.
 - Verified the `Full Architecture` tab renders two `full-arch-graph` SVGs with 14 directed edges total and the updated assets are served from port 3005.
 - Verified the revised `Full Architecture` tab still renders two SVG graphs, now with 14 module-level directed edges, 72 inner directed layer edges, and 13 module nodes; `content_full_arch.js` passes `node --check`.
+- Verified the widened full-architecture graphs render as two `1800x950` SVGs, the WTA back arrow is absent, raw-input boxes have no inner sequential edges, and the updated script passes `node --check`.
 - Served the report locally on port 3005 from `~/git/vault/html_summaries/parking-model-comparison`.

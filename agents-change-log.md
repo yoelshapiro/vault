@@ -2446,6 +2446,7 @@
     - Added a `Full Architecture` tab with nested layer-level boxes for SI and Zak, collapsing repeated structures into counted blocks such as 12x ViT, 10x SI STBlock, and 11x Zak MCV STBlock.
     - Reworked the `Full Architecture` tab into actual directed SVG graphs with nested layer boxes inside each module, keeping the block-list detail below the graphs.
     - Expanded the full-architecture graphs with explicit input/output tensors and connected inner layer subgraphs, replacing unconnected internal lists with arrowed layer sequences.
+    - Corrected full-architecture graph semantics by removing fake sequential arrows from independent input/output tensor lists, deleting the misleading WTA output back arrow, and widening the graph canvas for readability.
     - Reorganized the report into a book-style chapter order, renamed the main architecture section, and replaced the parchment UI with a high-contrast signal-lab theme.
     - Softened the visual theme into a lower-contrast field-notebook style with muted navigation, calmer accents, lighter shadows, and more subdued diagram/table styling.
     - Moved the runnable HTML bundle into the vault under `html_summaries/parking-model-comparison/`, added `html_summaries/README.md`, linked it from the vault root index, removed the untracked repo copy, and restarted the server from the vault path.
