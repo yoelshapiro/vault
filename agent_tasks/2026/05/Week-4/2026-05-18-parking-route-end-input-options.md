@@ -29,3 +29,13 @@ Implemented opt-in parking route-end input controls on `boris/03-23-park-route-s
 
 - Ran `git diff --check`.
 - Did not run tests, per request.
+
+## 2026-05-19 Main Merge
+
+- Committed and pushed current branch defaults as `ef4b78752be5` (`feat: update parking data defaults`).
+- Merged `origin/main` into `boris/03-23-park-route-shortening-v2` and pushed merge commit `c44d4c0c7892`.
+- Resolved conflicts in:
+  - `wayve/ai/si/datamodules/otf.py`: kept branch-local `effective_parking_config` while preserving main's MRM args, `allow_short_path`, and empty-navigation-tensor plumbing.
+  - `wayve/ai/si/datamodules/parking.py`: kept SI parking helpers/config defaults and compatibility construction while preserving main's odometry table-key changes and `PARKING_POSE` naming.
+  - `wayve/ai/si/models/deployment.py`: combined main's TSR/kinematic/understeer deployment args with this branch's end-of-route parking deployment flags.
+- Re-ran conflict-marker and whitespace checks on the resolved files.

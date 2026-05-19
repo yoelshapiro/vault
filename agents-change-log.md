@@ -2490,4 +2490,5 @@
     - Changed train-time route-map blackout and navigation cleanup to use the model-facing `PARKING_MODE` signal directly.
     - Added programmatic deployment options for end-of-route park mode, map blackout, and navigation cleanup without adding deploy CLI flags.
     - Kept parking deployment on the existing `ParkingDeploymentWrapperImpl`.
+    - Merged `origin/main` into the branch, resolving conflicts in SI OTF parking wiring, SI parking config/helpers, and deployment wrapper arguments while preserving main's MRM/TSR/kinematic additions.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-route-end-input-options]]
