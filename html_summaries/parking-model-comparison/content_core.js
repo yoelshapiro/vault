@@ -74,7 +74,7 @@ outputs = RegressionDrivingHead(mcv_tokens, speed, curvature, parking_request)</
         <tr><th>Question</th><th>SI parking answer</th><th>Zak MCV/WTA answer</th></tr>
         <tr><td>What is the model?</td><td><code>MIMOSTTransformer</code> using the Zoo ST stack and <code>WFMSt100xYoloCfg</code>.</td><td><code>MCVPerceiver</code> using an MCV space-time encoder and WTA driving head.</td></tr>
         <tr><td>What changes for parking?</td><td>Adds parking mode and gear-direction adaptors, PUDO/parking buckets, and latent-action output conditioning.</td><td>Adds a richer ParkingEncoder and an explicit multimodal output head for ambiguous parking/PUDO futures.</td></tr>
-        <tr><td>What is not present?</td><td>No explicit multimodal output distribution; behavior control is model-level but gated by parent config; radar is disabled in the current parking path; no RL in active SI mode.</td><td>No evidence that WTA and RL are combined in the inferred active config; RL is separate in <code>mcv_new_rl.yml</code>.</td></tr>
+        <tr><td>What is not present?</td><td>No explicit multimodal output distribution; behavior control is model-level but gated by parent config; radar is off in the current parking path; no RL in active SI mode.</td><td>No evidence that WTA and RL are combined in the inferred active config; RL is separate in <code>mcv_new_rl.yml</code>.</td></tr>
       </table>
     `,
   },

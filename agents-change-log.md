@@ -2454,7 +2454,8 @@
     - Rebuilt the full-architecture graphs so raw inputs are separate nodes, images alone feed `VideoSTAdaptor`, non-image tensors each feed their own tokenizer/adaptor, and `InputAdaptor` sits after those adaptor outputs as the ordered token merge.
     - Updated the Zak WTA graph to use the same comparison language while preserving implementation names: image stem, per-input `input_adapters`, positional encoding, `MCVSpaceTimeEncoder`, `RegressionDrivingHead`, and WTA head outputs; radar/navigation are shown as variant/off for the inferred WTA base.
     - Cleaned graph wiring issues: removed duplicate image-to-transformer routing in Zak, collapsed multiple policy-output arrows into single logical flows, added an explicit disabled SI behavior-control block, and made Zak's mode classifier a visible block.
-    - Corrected WTA selector semantics: mode classifier now feeds a post-head `Select head k` mux rather than the eight trajectory heads, and SI behavior control is shown as a disabled branch in the output-adaptor conditioning logic.
+    - Corrected WTA selector semantics: mode classifier now feeds a post-head `Select head k` mux rather than the eight trajectory heads.
+    - Corrected SI behavior-control semantics to represent the `ParkingOutputAdaptorCfg` architecture: behavior control is shown as a present branch gated by `${...enable_behavior_control}`, while the `parking_bc_cfg` train-wrapper override is kept as explanatory detail.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
