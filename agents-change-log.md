@@ -2483,7 +2483,7 @@
     - Renamed SI detection outputs to `PARKING_STATE`, `PARKED_STATE`, and `UNPARKING_STATE`, keeping `PARKING_MODE` as the model-facing park-mode input.
     - Added config flags to derive the emitted park-mode signal from selected post-augmentation internal states.
     - Added an SI-local gear label cleanup option for parking state detection.
-    - Enabled route shortening in the parking BC datamodule config.
+    - Added and enabled a datamodule-level short-path option in the parking BC config.
     - Decoupled train-time route-map blackout from route shortening.
     - Completed unparking route shortening by clipping the route from the current/stop anchor using SI-local parking helpers, without modifying the older zoo parking datapipe.
     - Moved train-time route-stop positioning, route-map blackout, and navigation cleanup helpers into the SI parking datamodule.
