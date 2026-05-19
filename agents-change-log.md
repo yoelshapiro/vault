@@ -2442,6 +2442,7 @@
     - Corrected the WTA architecture graph and deep-dive text to show the mode classifier as a separate learned output query token inside `RegressionDrivingHead`, computed in parallel with the eight ego/indicator/gear head banks and then used as the selector.
     - Added an output query-token breakdown comparing SI `OutputAdaptor` query slices with Zak `RegressionDrivingHead` latents, including pseudo-code for both output paths.
     - Refined the pseudo-code naming to distinguish data-dependent encoder context tokens (`OUTPUT_TOKENS` / `encoded_mcv_tokens`) from learned output slots (`output_queries` / `output_latents`).
+    - Normalized Zak graph and pseudo-code labels to SI-facing names, keeping Zak implementation names in parentheses/comments for easier side-by-side comparison.
     - Reorganized the report into a book-style chapter order, renamed the main architecture section, and replaced the parchment UI with a high-contrast signal-lab theme.
     - Softened the visual theme into a lower-contrast field-notebook style with muted navigation, calmer accents, lighter shadows, and more subdued diagram/table styling.
     - Moved the runnable HTML bundle into the vault under `html_summaries/parking-model-comparison/`, added `html_summaries/README.md`, linked it from the vault root index, removed the untracked repo copy, and restarted the server from the vault path.
