@@ -39,3 +39,57 @@
   border-style: dashed;
   background: #eef7f9;
 }
+.full-arch-graph {
+  width: 100%;
+  min-height: 430px;
+  display: block;
+  border: 1px solid #bbc7bb;
+  background:
+    linear-gradient(90deg, rgba(63, 122, 95, .06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(111, 157, 178, .05) 1px, transparent 1px),
+    #f6f8f1;
+  background-size: 28px 28px;
+}
+.fa-edge {
+  fill: none;
+  stroke: #9d625d;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.full-arch-graph marker path { fill: #9d625d; }
+.fa-outer {
+  fill: #fffdf7;
+  stroke: #607064;
+  stroke-width: 2;
+  rx: 7;
+  filter: drop-shadow(0 7px 10px rgba(37, 48, 41, .12));
+}
+.fa-node.green .fa-outer { fill: #eef8ee; stroke: #5d9474; }
+.fa-node.blue .fa-outer { fill: #eef7f9; stroke: #6f9db2; }
+.fa-node.rust .fa-outer { fill: #fbefed; stroke: #b66b64; }
+.fa-node.yellow .fa-outer { fill: #faf5df; stroke: #b79a54; }
+.fa-inner {
+  fill: rgba(255,255,255,.72);
+  stroke: rgba(86,102,90,.42);
+  stroke-width: 1.2;
+  rx: 4;
+}
+.fa-title,
+.fa-sub,
+.fa-item,
+.fa-col {
+  fill: #0b120e;
+  stroke: none;
+  font-family: "Space Grotesk", "Aptos", "Segoe UI", sans-serif;
+}
+.fa-title { font-size: 15px; font-weight: 850; }
+.fa-sub { fill: #4e5b52; font-size: 12px; font-weight: 750; }
+.fa-item { fill: #17251d; font-size: 12px; font-weight: 720; }
+.fa-col {
+  fill: #8b5b54;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}

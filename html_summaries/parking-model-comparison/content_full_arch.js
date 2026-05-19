@@ -1,6 +1,194 @@
 window.REPORT_SECTIONS = window.REPORT_SECTIONS || [];
 
 const layer = (title, body, cls = "") => `<div class="layer-box ${cls}"><strong>${title}</strong>${body}</div>`;
+const svgLineText = (lines, x, y, cls = "") =>
+  lines.map((line, i) => `<tspan class="${cls}" x="${x}" y="${y + i * 17}">${line}</tspan>`).join("");
+const svgNode = ({ x, y, w, h, title, sub = "", items, cls = "" }) => `
+  <g class="fa-node ${cls}" transform="translate(${x} ${y})">
+    <rect class="fa-outer" width="${w}" height="${h}"></rect>
+    <text class="fa-title">${svgLineText([title], 12, 24)}</text>
+    ${sub ? `<text class="fa-sub">${svgLineText([sub], 12, 43)}</text>` : ""}
+    ${items
+      .map(
+        (item, i) => `
+          <g transform="translate(12 ${58 + i * 32})">
+            <rect class="fa-inner" width="${w - 24}" height="24"></rect>
+            <text class="fa-item" x="9" y="16">${item}</text>
+          </g>`
+      )
+      .join("")}
+  </g>`;
+const svgEdge = (d) => `<path class="fa-edge" marker-end="url(#faArrow)" d="${d}"></path>`;
+const svgDefs = `
+  <defs>
+    <marker id="faArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z"></path>
+    </marker>
+  </defs>`;
+
+const siFullGraph = `
+  <svg class="full-arch-graph" viewBox="0 0 1450 650" role="img" aria-label="SI full architecture graph with internal layers">
+    ${svgDefs}
+    <text class="fa-col" x="28" y="22">Inputs</text>
+    <text class="fa-col" x="270" y="22">Adaptors</text>
+    <text class="fa-col" x="560" y="132">ST Backbone</text>
+    <text class="fa-col" x="880" y="132">Output Adaptor</text>
+    <text class="fa-col" x="1190" y="132">Predictions</text>
+    ${svgEdge("M220 110 L260 110")}
+    ${svgEdge("M220 190 C245 190 230 415 260 415")}
+    ${svgEdge("M500 130 C535 130 530 245 550 260")}
+    ${svgEdge("M500 425 C535 425 530 320 550 305")}
+    ${svgEdge("M820 292 L860 292")}
+    ${svgEdge("M820 525 C850 525 850 390 860 350")}
+    ${svgEdge("M1120 300 L1170 300")}
+    ${svgNode({
+      x: 20,
+      y: 50,
+      w: 200,
+      h: 190,
+      title: "Raw inputs",
+      sub: "SI parking tensors",
+      items: ["camera frames", "route map", "speed/pose/context", "PARKING_MODE"],
+      cls: "green",
+    })}
+    ${svgNode({
+      x: 260,
+      y: 45,
+      w: 240,
+      h: 235,
+      title: "Video adaptor",
+      sub: "VideoSTAdaptor + ViT",
+      items: ["patch stem", "2D pos enc", "ViT SA block", "repeat: 12x", "patch downsample"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 260,
+      y: 320,
+      w: 240,
+      h: 245,
+      title: "InputAdaptor",
+      sub: "explicit SI merge",
+      items: ["route CNN adaptor", "scalar/context MLPs", "embedding adaptors", "ordered concat", "time encoding"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 550,
+      y: 160,
+      w: 270,
+      h: 280,
+      title: "STTransformer",
+      sub: "large_l10, D=1536",
+      items: ["STBlock: spatial SA", "STBlock: causal time SA", "STBlock: MLP", "repeat: 10x", "output LayerNorm"],
+      cls: "rust",
+    })}
+    ${svgNode({
+      x: 550,
+      y: 470,
+      w: 270,
+      h: 120,
+      title: "Radar late fusion",
+      sub: "after ST backbone",
+      items: ["radar AE/encoder", "SA / x-attn aggregator"],
+      cls: "yellow",
+    })}
+    ${svgNode({
+      x: 860,
+      y: 170,
+      w: 260,
+      h: 270,
+      title: "OutputAdaptor",
+      sub: "learned query decoder",
+      items: ["behavior token add", "self.queries", "cross-attention", "waypoint head", "indicator/gear/variance"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 1170,
+      y: 190,
+      w: 230,
+      h: 225,
+      title: "Policy outputs",
+      sub: "single future",
+      items: ["waypoints", "waypoint variance", "indicator logits", "gear logits"],
+      cls: "green",
+    })}
+  </svg>`;
+
+const zakFullGraph = `
+  <svg class="full-arch-graph" viewBox="0 0 1450 650" role="img" aria-label="Zak full architecture graph with internal layers">
+    ${svgDefs}
+    <text class="fa-col" x="28" y="22">Inputs</text>
+    <text class="fa-col" x="270" y="22">Adaptors</text>
+    <text class="fa-col" x="560" y="132">ST Backbone Equiv.</text>
+    <text class="fa-col" x="880" y="132">OutputAdaptor Equiv.</text>
+    <text class="fa-col" x="1190" y="132">Predictions</text>
+    ${svgEdge("M220 110 L260 110")}
+    ${svgEdge("M220 200 C245 200 230 430 260 430")}
+    ${svgEdge("M500 130 C535 130 530 250 550 265")}
+    ${svgEdge("M500 430 C535 430 530 325 550 310")}
+    ${svgEdge("M820 292 L860 292")}
+    ${svgEdge("M1120 300 L1170 300")}
+    ${svgEdge("M1290 420 C1250 510 1010 505 1000 445")}
+    ${svgNode({
+      x: 20,
+      y: 50,
+      w: 200,
+      h: 205,
+      title: "Raw inputs",
+      sub: "PUDO tensors",
+      items: ["5-camera frames", "route map", "speed/gear/context", "PUDO parking fields"],
+      cls: "green",
+    })}
+    ${svgNode({
+      x: 260,
+      y: 45,
+      w: 240,
+      h: 235,
+      title: "Video adaptor",
+      sub: "Zak: ViTStemWrapper",
+      items: ["patch stem", "2D pos enc", "ViT SA block", "repeat: 12x", "camera-token merge"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 260,
+      y: 320,
+      w: 240,
+      h: 255,
+      title: "InputAdaptor equiv.",
+      sub: "split across modules",
+      items: ["input_adapters dict", "route CNN", "ParkingEncoder", "scalar/context adaptors", "continuous pos/time"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 550,
+      y: 160,
+      w: 270,
+      h: 290,
+      title: "STTransformer equiv.",
+      sub: "Zak: MCVSpaceTimeEncoder",
+      items: ["concat xs_dict + image", "STBlock: spatial SA", "STBlock: causal time SA", "STBlock: MLP", "repeat: 11x", "output LayerNorm"],
+      cls: "rust",
+    })}
+    ${svgNode({
+      x: 860,
+      y: 170,
+      w: 260,
+      h: 285,
+      title: "OutputAdaptor equiv.",
+      sub: "Zak: RegressionDrivingHead",
+      items: ["behavior token add", "self.latents", "cross-attention", "waypoint query slice", "classifier query"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 1170,
+      y: 175,
+      w: 240,
+      h: 270,
+      title: "WTA policy outputs",
+      sub: "8-mode future bank",
+      items: ["8x ego heads", "8x indicator heads", "8x gear heads", "mode logits select k", "winner future"],
+      cls: "green",
+    })}
+  </svg>`;
 
 window.REPORT_SECTIONS.push({
   id: "fullarch",
@@ -8,6 +196,16 @@ window.REPORT_SECTIONS.push({
   html: `
     <div class="callout blue book">
       <p><b>Reading convention.</b> The large block names use the same SI-facing vocabulary on both sides. Zak implementation names are shown in parentheses. Repeated structures are drawn once and marked with their repeat count.</p>
+    </div>
+    <div class="visual-stack">
+      <div class="card">
+        <p class="mini-title">Current SI full architecture graph</p>
+        ${siFullGraph}
+      </div>
+      <div class="card">
+        <p class="mini-title">Zak full architecture graph</p>
+        ${zakFullGraph}
+      </div>
     </div>
     <div class="arch-grid">
       <div class="card">
