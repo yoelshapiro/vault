@@ -105,6 +105,16 @@ const wonjoonFullGraph = `
       cls: "yellow",
     })}
     ${svgNode({
+      x: 1505,
+      y: 980,
+      w: 350,
+      h: 125,
+      title: "OrdinaryHead",
+      sub: "short-horizon policy, path-conditioned",
+      items: ["ordinary_cond + path embedding", "waypoint / indicator / gear heads"],
+      cls: "blue",
+    })}
+    ${svgNode({
       x: 1900,
       y: 110,
       w: 260,
@@ -126,14 +136,14 @@ const wonjoonFullGraph = `
       cls: "green",
       connectInner: false,
     })}
-    ${bendEdge(1855, 430, 1900, 232)}
     ${bendEdge(1678, 620, 1678, 710)}
     ${bendEdge(1505, 835, 1433, 850)}
     ${bendEdge(630, 764, 735, 815, "inactive")}
     ${bendEdge(1035, 848, 1505, 805)}
     ${bendEdge(1855, 838, 1900, 232)}
-    ${bendEdge(1855, 430, 1900, 620)}
-    ${bendEdge(1035, 840, 1900, 620)}
+    ${bendEdge(1680, 620, 1680, 980)}
+    ${bendEdge(1035, 840, 1505, 1038)}
+    ${bendEdge(1855, 1038, 1900, 675)}
     ${bendEdge(630, 861, 1900, 675, "inactive")}
     ${bendEdge(630, 958, 1088, 870, "inactive")}
   </svg>`;
