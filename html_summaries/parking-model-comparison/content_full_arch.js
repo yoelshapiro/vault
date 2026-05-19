@@ -259,7 +259,7 @@ window.REPORT_SECTIONS.push({
         </div>
 
         <div class="arch-block">
-          <div class="arch-title">Video adaptor (<code>VideoSTAdaptor</code> + <code>ViTImageEncoder vit:large_l10</code>)</div>
+          <div class="arch-title">Video adaptor (<code>VideoSTAdaptor</code> + <code>ViTImageEncoder vit:large</code>)</div>
           <div class="layer-row">
             ${layer("Patch stem", "<code>PatchEmbeddingStem</code> / stem to ViT dim 768")}
             ${layer("2D pos enc", "<code>SinCosPositionalEncoding</code> over image patch grid")}
@@ -275,37 +275,39 @@ window.REPORT_SECTIONS.push({
           <div class="layer-row">
             ${layer("Route adaptor", "NormZeroOne -> Conv2d/GN/ReLU downsample stack -> Flatten -> PositionalEncoding")}
             ${layer("Scalar adaptors", "small MLP / sinusoidal or learned projections to <code>D=1536</code> tokens")}
-            ${layer("Embedding adaptors", "indicator, parking mode, country, driving side, automation")}
-            ${layer("Dropout-only adaptors", "waypoints/nav/gear interface tokens where inherited config keeps dropout active")}
+            ${layer("Embedding adaptors", "indicator, gear direction, parking mode, country, driving side, automation")}
+            ${layer("Dropout-only adaptor", "waypoints are present as an always-dropout WFM interface slot")}
+            ${layer("Variant/off", "step/lane navigation and radar are not constructed in the current <code>WFMSt100xYoloCfg</code> parking path")}
             ${layer("Merge", "ordered concat over token dimension -> <code>INPUT_TOKENS</code>")}
             ${layer("Time encoding", "continuous time encoding applied at InputAdaptor level")}
           </div>
         </div>
 
         <div class="arch-block">
-          <div class="arch-title">STTransformer equivalent (<code>STTransformer large_l10</code>)</div>
+          <div class="arch-title">STTransformer equivalent (<code>STTransformer large</code>)</div>
           <div class="layer-row">
             ${layer("STBlock", "reshape to <code>B*T</code> -> spatial self-attn over tokens -> residual", "repeat-badge")}
             ${layer("Temporal part", "reshape to <code>B*N</code> -> causal temporal self-attn per token slot -> residual", "repeat-badge")}
             ${layer("MLP part", "LayerNorm -> SwiGLU/clipped-SwiGLU MLP -> residual", "repeat-badge")}
-            ${layer("Repeat", "<code>10x</code> STBlock, token dim 1536, 16 heads", "repeat-badge")}
+            ${layer("Repeat", "<code>11x</code> STBlock, token dim 1536, 16 heads", "repeat-badge")}
             ${layer("Output norm", "final LayerNorm -> <code>OUTPUT_TOKENS</code>")}
           </div>
         </div>
 
         <div class="arch-block">
-          <div class="arch-title">Radar late-fusion branch</div>
+          <div class="arch-title">Radar branch</div>
           <div class="layer-row">
-            ${layer("Radar encoder", "masked radar / radar AE checkpoint path")}
-            ${layer("Aggregator", "SA / cross-attn aggregation to fixed radar tokens")}
-            ${layer("Late fusion", "radar tokens join after ST backbone, before output decoding")}
+            ${layer("Current state", "not enabled by <code>ParkingModelCfg</code> / <code>WFMSt100xYoloCfg</code>")}
+            ${layer("If enabled", "early radar can enter <code>InputAdaptor</code>; late radar can concatenate after ST depending on config")}
+            ${layer("Graph treatment", "shown as variant/off, not part of the active current-branch parking model")}
           </div>
         </div>
 
         <div class="arch-block">
           <div class="arch-title">OutputAdaptor equivalent (<code>OutputAdaptor</code>)</div>
           <div class="layer-row">
-            ${layer("Behavior conditioning", "optional behavior label -> learned behavior token added to every encoder context token")}
+            ${layer("Behavior conditioning", "disabled in <code>parking_bc_cfg</code> because <code>enable_behavior_control=False</code>")}
+            ${layer("Latent action", "enabled by <code>w_latent_action=1.0</code>; predicts/uses a discretized latent-action auxiliary path")}
             ${layer("Learned output queries", "<code>self.queries</code>: waypoint slice + indicator + gear + variance slice")}
             ${layer("Cross-attention decoder", "queries attend into encoder context tokens", "split-badge")}
             ${layer("Waypoint head", "Linear per waypoint token -> delta waypoints")}
@@ -382,9 +384,9 @@ window.REPORT_SECTIONS.push({
 
     <table class="compare dense aligned">
       <tr><th>Normalized block</th><th>Current SI implementation</th><th>Zak implementation</th></tr>
-      <tr><td>Video adaptor</td><td><code>VideoSTAdaptor(ViTImageEncoder vit:large_l10)</code>: 12x ViT SA blocks, then patch downsample to 1536.</td><td><code>ViTStemWrapper(ViTImageEncoder vit:large)</code>: same general ViT stack, wrapped to emit MCV-style merged camera tokens.</td></tr>
+      <tr><td>Video adaptor</td><td><code>VideoSTAdaptor(ViTImageEncoder vit:large)</code>: 12x ViT SA blocks, then patch downsample to 1536.</td><td><code>ViTStemWrapper(ViTImageEncoder vit:large)</code>: same general ViT stack, wrapped to emit MCV-style merged camera tokens.</td></tr>
       <tr><td>InputAdaptor equivalent</td><td>One explicit <code>InputAdaptor</code> concatenates all adaptor outputs and applies time encoding.</td><td>Split across <code>input_adapters</code>, <code>ContinuousPositionalEncoding</code>, and the concat logic inside <code>MCVSpaceTimeEncoder</code>.</td></tr>
-      <tr><td>ST backbone equivalent</td><td><code>STTransformer</code>: 10x Zoo <code>STBlock</code>, then output norm.</td><td><code>MCVSpaceTimeEncoder</code>: 11x causal/factorized ST blocks, then output norm.</td></tr>
+      <tr><td>ST backbone equivalent</td><td><code>STTransformer</code>: 11x Zoo <code>STBlock</code>, then output norm.</td><td><code>MCVSpaceTimeEncoder</code>: 11x causal/factorized ST blocks, then output norm.</td></tr>
       <tr><td>OutputAdaptor equivalent</td><td><code>OutputAdaptor</code>: learned output queries -> cross-attn -> waypoint/indicator/gear/variance heads.</td><td><code>RegressionDrivingHead</code>: learned output queries (<code>self.latents</code>) -> cross-attn -> 8 WTA ego/indicator/gear head banks + mode selector.</td></tr>
     </table>
 

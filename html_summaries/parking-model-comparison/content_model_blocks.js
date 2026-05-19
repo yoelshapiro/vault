@@ -5,7 +5,7 @@ window.REPORT_SECTIONS.push({
   title: "Architecture Graphs",
   html: `
     <div class="callout warn book">
-      <p><b>Code-traced module diagrams.</b> This tab is built from the actual construction paths: SI <code>build_space_time_model</code> plus <code>ParkingModelRelease2026_6_14Cfg</code>, and Zak <code>make_mcv_perceiver</code> plus <code>mcv_new_phase2x_wta.yml</code>. Blocks are marked as active, dropout-only, or variant/disabled where the code path makes that distinction.</p>
+      <p><b>Code-traced module diagrams.</b> This tab is built from the actual construction paths: SI <code>build_space_time_model</code> plus <code>ParkingModelCfg</code> / <code>WFMSt100xYoloCfg</code>, and Zak <code>make_mcv_perceiver</code> plus <code>mcv_new_phase2x_wta.yml</code>. The detailed Full Architecture tab now shows every raw input as a separate node, with images going through <code>VideoSTAdaptor</code> and non-image tensors going through their own tokenizer/adaptor before the token merge.</p>
     </div>
     <div class="visual-stack">
       <div class="card">
@@ -42,17 +42,17 @@ window.REPORT_SECTIONS.push({
           <path class="vg-edge" marker-end="url(#siArrow)" d="M1400 305 C1445 305 1445 382 1470 382"></path>
           <g class="vg-node green" transform="translate(40 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">Camera frames</tspan><tspan class="vg-sub" x="12" y="45">6-frame context</tspan></text></g>
           <g class="vg-node" transform="translate(250 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">Preprocess</tspan><tspan class="vg-sub" x="12" y="45">ParkingPreprocessCfg</tspan></text></g>
-          <g class="vg-node blue" transform="translate(460 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">VideoSTAdaptor</tspan><tspan class="vg-sub" x="12" y="45">ViT large_l10</tspan></text></g>
+          <g class="vg-node blue" transform="translate(460 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">VideoSTAdaptor</tspan><tspan class="vg-sub" x="12" y="45">ViT large</tspan></text></g>
           <g class="vg-node" transform="translate(40 130)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">Route map</tspan><tspan class="vg-sub" x="12" y="45">SI route raster</tspan></text></g>
           <g class="vg-node blue" transform="translate(250 130)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">RouteSTAdaptor</tspan><tspan class="vg-sub" x="12" y="45">CNN route encoder</tspan></text></g>
-          <g class="vg-node" transform="translate(40 220)"><rect width="160" height="64"></rect><text><tspan x="12" y="22">Indicator, speed</tspan><tspan class="vg-sub" x="12" y="42">speed-limit, pose</tspan></text></g>
-          <g class="vg-node blue" transform="translate(250 220)"><rect width="160" height="64"></rect><text><tspan x="12" y="20">Scalar/context</tspan><tspan x="12" y="38">ST adaptors</tspan><tspan class="vg-sub" x="12" y="55">country/side/auto</tspan></text></g>
+          <g class="vg-node" transform="translate(40 220)"><rect width="160" height="64"></rect><text><tspan x="12" y="22">Speed, limit, pose</tspan><tspan class="vg-sub" x="12" y="42">separate tensors</tspan></text></g>
+          <g class="vg-node blue" transform="translate(250 220)"><rect width="160" height="64"></rect><text><tspan x="12" y="20">Per-input ST</tspan><tspan x="12" y="38">adaptors</tspan><tspan class="vg-sub" x="12" y="55">one token family each</tspan></text></g>
           <g class="vg-node green" transform="translate(40 310)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">PARKING_MODE</tspan><tspan class="vg-sub" x="12" y="45">boolean parking bit</tspan></text></g>
           <g class="vg-node green" transform="translate(250 310)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">ParkingMode</tspan><tspan class="vg-sub" x="12" y="45">2-class embedding</tspan></text></g>
-          <g class="vg-node yellow" transform="translate(40 400)"><rect width="160" height="64"></rect><text><tspan x="12" y="22">Waypoints, gear</tspan><tspan class="vg-sub" x="12" y="42">step/lane nav tokens</tspan></text></g>
-          <g class="vg-node yellow" transform="translate(250 400)"><rect width="160" height="64"></rect><text><tspan x="12" y="22">Dropout adaptors</tspan><tspan class="vg-sub" x="12" y="43">WFM interface tokens</tspan></text></g>
+          <g class="vg-node yellow" transform="translate(40 400)"><rect width="160" height="64"></rect><text><tspan x="12" y="22">Gear, country, side</tspan><tspan class="vg-sub" x="12" y="42">plus waypoint slot</tspan></text></g>
+          <g class="vg-node yellow" transform="translate(250 400)"><rect width="160" height="64"></rect><text><tspan x="12" y="22">Separate adaptors</tspan><tspan class="vg-sub" x="12" y="43">nav/radar variant-off</tspan></text></g>
           <g class="vg-node join" transform="translate(610 230)"><rect width="190" height="100"></rect><text><tspan x="16" y="32">InputAdaptor</tspan><tspan class="vg-sub" x="16" y="54">ordered concat</tspan><tspan class="vg-sub" x="16" y="74">+ time encoding</tspan></text></g>
-          <g class="vg-node rust" transform="translate(850 242)"><rect width="180" height="76"></rect><text><tspan x="14" y="28">STTransformer</tspan><tspan class="vg-sub" x="14" y="50">10 STBlock layers</tspan></text></g>
+          <g class="vg-node rust" transform="translate(850 242)"><rect width="180" height="76"></rect><text><tspan x="14" y="28">STTransformer</tspan><tspan class="vg-sub" x="14" y="50">11 STBlock layers</tspan></text></g>
           <g class="vg-node rust" transform="translate(1070 242)"><rect width="150" height="76"></rect><text><tspan x="13" y="29">OUTPUT_TOKENS</tspan></text></g>
           <g class="vg-node blue" transform="translate(1240 230)"><rect width="160" height="100"></rect><text><tspan x="13" y="31">OutputAdaptor</tspan><tspan class="vg-sub" x="13" y="53">behavior control</tspan><tspan class="vg-sub" x="13" y="73">+ output queries</tspan></text></g>
           <g class="vg-node yellow" transform="translate(850 422)"><rect width="180" height="64"></rect><text><tspan x="14" y="24">Radar frames</tspan><tspan class="vg-sub" x="14" y="45">late fusion path</tspan></text></g>
@@ -117,24 +117,24 @@ window.REPORT_SECTIONS.push({
     </div>
     <div class="module-compare">
       <div class="card">
-        <p class="mini-title">Current SI ParkingModelRelease2026_6_14Cfg</p>
+        <p class="mini-title">Current SI ParkingModelCfg / WFMSt100xYoloCfg</p>
         <div class="module-flow">
-          <div class="module-step green"><b>MIMOSTTransformer</b><small>Top-level module: <code>preprocess</code>, <code>input_adaptor</code>, <code>encoder</code>, <code>output_adaptor</code>, late <code>radar_input_adaptor</code>.</small></div>
-          <div class="module-step"><b>ParkingPreprocessCfg</b><small>Derived from <code>StPreprocessReducedBlindSpotCfg</code>; applies platform focal mapping from <code>BASELINE_DEFAULT_FOCALS</code>.</small></div>
+          <div class="module-step green"><b>MIMOSTTransformer</b><small>Top-level module: <code>preprocess</code>, <code>input_adaptor</code>, <code>encoder</code>, <code>output_adaptor</code>. Radar is not enabled in the current <code>ParkingModelCfg</code> path.</small></div>
+          <div class="module-step"><b>Preprocess</b><small>Inherited from <code>WFMSt100xYoloCfg</code> / <code>StPreprocessCfg</code>; images are the only tensor routed into <code>VideoSTAdaptor</code>.</small></div>
           <div class="module-step blue"><b>InputAdaptor(ModuleDict ordered by ADAPTOR_ORDER)</b><small>Concatenates all modality tokens along token dimension. Adds continuous time encoding at InputAdaptor level because Dec WFM sets <code>temporal_encoding_in_video_adaptor=False</code>.</small></div>
           <div class="module-step"><b>RouteSTAdaptor</b><small>Route map tokens via <code>CNNRouteInputAdaptor</code> because downsampling is 64: NormZeroOne(128,256) -> strided Conv2d/GroupNorm/ReLU stack -> Flatten -> PositionalEncoding.</small></div>
           <div class="module-step"><b>IndicatorSTAdaptor</b><small>Indicator conditioning token from current indicator state; indicator dropout rate is 0.0 in the datamodule.</small></div>
-          <div class="module-step"><b>SpeedSTAdaptor + SpeedLimitSTAdaptor + PoseSTAdaptor</b><small>Vehicle scalar/context conditioning. Dec WFM enables NaN/inf speed-limit handling and uses <code>vehicle_frames=1</code>.</small></div>
+          <div class="module-step"><b>SpeedSTAdaptor + SpeedLimitSTAdaptor + PoseSTAdaptor</b><small>Separate vehicle/context tokenizers. Parking enables NaN/inf speed-limit handling and uses <code>vehicle_frames=1</code>.</small></div>
           <div class="module-step"><b>CountrySTAdaptor + DrivingSideSTAdaptor + AutomationStateSTAdaptor</b><small>Context tokens inherited from <code>StModelCfg</code> and Dec WFM. Automation fills no-automation token when needed.</small></div>
           <div class="module-step yellow"><b>WaypointsSTAdaptor (always dropout)</b><small>Dec WFM sets <code>use_waypoints=True</code> and <code>always_dropout_waypoints=True</code>. It preserves the WFM token interface without conditioning on GT waypoints.</small></div>
-          <div class="module-step yellow"><b>StepAndLaneInfoSTAdaptor</b><small>Always present in Dec WFM with non-legacy params: E=256, D=512, L=2, H=8, Q=8, F=16. Emits dropout tokens when navigation data is absent.</small></div>
-          <div class="module-step yellow"><b>GearDirectionSTAdaptor (dropout-only inherited)</b><small>Parking sets <code>use_gear_direction_adaptor</code>, but Dec WFM sets <code>always_dropout_gear_direction=True</code>. The module exists, but input gear direction is not used unless resolved config overrides this.</small></div>
+          <div class="module-step yellow"><b>StepAndLaneInfoSTAdaptor</b><small>Not constructed in the current <code>WFMSt100xYoloCfg</code> parking path. Navigation is a variant/off adaptor unless <code>use_step_and_lane_info_adaptor</code> is enabled.</small></div>
+          <div class="module-step"><b>GearDirectionSTAdaptor</b><small>Parking sets <code>use_gear_direction_adaptor=True</code>; gear is an active separate input token, not bundled with waypoints or parking mode.</small></div>
           <div class="module-step green"><b>ParkingModeSTAdaptor</b><small>Parking-specific active input: 2-class embedding over <code>PARKING_MODE</code>, expanded over the 6-frame context.</small></div>
-          <div class="module-step"><b>VideoSTAdaptor</b><small>Vision encoder from <code>create_vision_encoder("vit:large_l10")</code>, patch stem, qk_norm l2, clipped SwiGLU, FA3, vectorized feature cache. Adds camera positional encoding.</small></div>
-          <div class="module-step rust"><b>STTransformer</b><small><code>large_l10</code>: token size 1536, 10 <code>STBlock</code>s, 16 heads, swiglu/clipped-swiglu config path, output norm. Checkpoint loader removes pretrained layer 10 and waypoint input weights.</small></div>
-          <div class="module-step yellow"><b>Late RadarInputAdaptor</b><small><code>radar_late_fusion=True</code>; radar does not enter InputAdaptor. Uses <code>msa-sa5-tok10-dim512-ae-sa2</code> radar AE checkpoint and emits <code>RADAR_TOKENS</code>.</small></div>
-          <div class="module-step blue"><b>OutputAdaptor</b><small>Fuses ST and radar tokens, stores average embedding, applies behavior/latent conditioning paths, then cross-attends learned output queries.</small></div>
-          <div class="module-step green"><b>Output heads</b><small>Active heads: <code>WaypointOutputHead</code> with delta waypoints, <code>IndicatorOutputHead</code>, <code>GearDirectionOutputHead</code>, <code>WaypointLogVarianceOutputHead</code>. Latent-action output disabled; behavior control enabled.</small></div>
+          <div class="module-step"><b>VideoSTAdaptor</b><small>Vision encoder from <code>create_vision_encoder("vit:large")</code>, patch stem, qk_norm none, clipped SwiGLU, and camera positional handling. It only consumes image tensors.</small></div>
+          <div class="module-step rust"><b>STTransformer</b><small><code>large</code>: token size 1536, 11 <code>STBlock</code>s, 16 heads, output norm. Checkpoint loader removes waypoint input weights when loading the YOLO WFM pretrain.</small></div>
+          <div class="module-step yellow"><b>RadarInputAdaptor</b><small>Not active in this current config because <code>enable_radar_input</code> is false. If enabled, radar can be early-input or late-fusion depending on config.</small></div>
+          <div class="module-step blue"><b>OutputAdaptor</b><small>Consumes ST context tokens, applies latent-action and/or behavior conditioning according to config, then cross-attends learned output queries.</small></div>
+          <div class="module-step green"><b>Output heads</b><small>Active heads: <code>WaypointOutputHead</code> with delta waypoints, <code>IndicatorOutputHead</code>, <code>GearDirectionOutputHead</code>, <code>WaypointLogVarianceOutputHead</code>. Latent-action auxiliary path is enabled by <code>w_latent_action=1.0</code>; behavior control is disabled by <code>enable_behavior_control=False</code>.</small></div>
         </div>
       </div>
       <div class="card">
@@ -162,7 +162,7 @@ window.REPORT_SECTIONS.push({
       <tr><td>Actual top-level class</td><td><code>MIMOSTTransformer</code>.</td><td><code>MCVPerceiver</code>.</td></tr>
       <tr><td>Image module</td><td><code>VideoSTAdaptor</code> wraps a Zoo ViT vision encoder built by <code>create_vision_encoder</code>.</td><td><code>ViTStemWrapper</code> wraps an exp-ai MCV-compatible ViT image encoder.</td></tr>
       <tr><td>Token merger</td><td><code>InputAdaptor</code> concatenates ordered adaptor outputs into one ST token tensor before the backbone.</td><td>Same conceptual block, but split: <code>MyModuleDict input_adapters</code> emits named token groups, <code>ContinuousPositionalEncoding</code> adds position/time, and <code>MCVSpaceTimeEncoder</code> performs the final condition-token merge internally.</td></tr>
-      <tr><td>Backbone</td><td><code>STTransformer</code> with 10 blocks for <code>large_l10</code>.</td><td>Same conceptual block, implemented as <code>MCVSpaceTimeEncoder</code> with 11 causal/factorized layers for <code>mcv_new_base0/phase2x</code>.</td></tr>
+      <tr><td>Backbone</td><td><code>STTransformer</code> with 11 blocks for <code>large</code>.</td><td>Same conceptual block, implemented as <code>MCVSpaceTimeEncoder</code> with 11 causal/factorized layers for <code>mcv_new_base0/phase2x</code>.</td></tr>
       <tr><td>Parking-specific module</td><td><code>ParkingModeSTAdaptor</code>: boolean parking-context token.</td><td><code>ParkingEncoder</code>: request + direction + UI position + PUDO/PARK type token.</td></tr>
       <tr><td>Multimodality</td><td>No WTA head. Behavior control is a conditioning token, not multiple output futures.</td><td><code>OutputAdaptor</code>-equivalent block is <code>RegressionDrivingHead</code>: learned output queries, 8 aligned WTA head banks, and a mode-selector query.</td></tr>
     </table>
