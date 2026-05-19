@@ -172,6 +172,7 @@ window.REPORT_SECTIONS.push({
     </div>
     <table class="compare dense aligned">
       <tr><th>Query/token family</th><th>Current SI <code>OutputAdaptor</code></th><th>Zak <code>RegressionDrivingHead</code></th></tr>
+      <tr><td>Naming distinction</td><td><code>tokens</code> in the SI output adaptor means encoder-produced context tokens: the already-computed representation from <code>STTransformer</code>, plus optional radar fusion and behavior conditioning. <code>queries</code> are separate learned output slots that ask those context tokens for waypoint/indicator/gear information.</td><td><code>encoded_mcv_tokens</code> means the already-computed output of <code>MCVSpaceTimeEncoder</code>: image tokens plus named conditioning tokens after MCV merging/attention. <code>latents</code> are separate learned output slots in <code>RegressionDrivingHead</code>; after cross-attention they become decoded output tokens.</td></tr>
       <tr><td>Context tokens consumed by the output module</td><td><code>OUTPUT_TOKENS</code> from <code>STTransformer</code>, optionally concatenated/fused with late <code>RADAR_TOKENS</code>. Behavior control then adds one learned behavior token vector to every context token before final output-query cross-attention.</td><td>Encoded tokens from <code>MCVSpaceTimeEncoder</code>. If behavior control is enabled, a behavior-codebook vector is added to every encoded token before the output latent cross-attention.</td></tr>
       <tr><td>Learned output queries</td><td><code>self.queries</code> is a learned parameter with one contiguous query slice per output head. The final queries cross-attend to the fused context tokens, and slices are then passed to each output head in configured order.</td><td><code>self.latents</code> is a learned parameter. The first <code>n</code> latents are waypoint query tokens. Conditional extra latents are appended for dedicated indicator/gear tokens, parking output, curvature, waypoint variance, and WTA classifier.</td></tr>
       <tr><td>Parking SI active query slices</td><td>With the current parking config path: waypoint head gets <code>future_frames - 1</code> queries because <code>enable_offset=False</code>; indicator gets <code>1</code>; gear gets <code>1</code>; waypoint log-variance gets <code>future_frames - 1</code> when log-likelihood loss enables auxiliary variance. With the default 11-frame train base that is <code>10 + 1 + 1 + 10 = 22</code> final output queries.</td><td>Not an <code>OutputAdaptor</code> class. Zak's WTA path uses <code>RegressionDrivingHead</code> latents instead of SI output-head slices.</td></tr>
@@ -179,42 +180,59 @@ window.REPORT_SECTIONS.push({
       <tr><td>Where mode/behavior lives</td><td>Behavior control is a conditioning vector added to context tokens before final query cross-attention. It is not a per-head selector and it is not one of the final waypoint/indicator/gear queries.</td><td>Mode is a classifier-query output inside <code>RegressionDrivingHead</code>. It produces 8 logits over the aligned WTA head banks. It is not a ninth trajectory head and does not consume decoded 8-head outputs.</td></tr>
       <tr><td>Final selection</td><td>All final heads are decoded directly. There is no WTA winner selection in current SI parking.</td><td>Training emits <code>egoposition_all_heads</code>, <code>indicator_all_heads</code>, <code>gear_all_heads</code>, and <code>mode_logits</code>. Inference chooses <code>winner = argmax(mode_logits)</code> or EMA-smoothed logits, then returns ego/indicator/gear from the same head index.</td></tr>
     </table>
-    <pre><code># Current SI OutputAdaptor final output-query layout, simplified
-tokens = OUTPUT_TOKENS
+    <pre><code># Current SI OutputAdaptor, simplified
+# "context_tokens" are produced before OutputAdaptor:
+#   image/route/scalar/parking adaptors -> InputAdaptor concat -> STTransformer
+# They are data-dependent encoder tokens, not learned output slots.
+context_tokens = outputs[OUTPUT_TOKENS]             # [B, N_context, D]
 if radar_late_fusion:
-    tokens = fuse(tokens, RADAR_TOKENS)
+    context_tokens = fuse(context_tokens, outputs[RADAR_TOKENS])
 
 if enable_behavior_control:
     behavior_token = BehaviorLabelEncoder(label_or_inference_default)
-    tokens = tokens + behavior_token[:, None, :]
+    # behavior is conditioning on every context token, not an output query
+    context_tokens = context_tokens + behavior_token[:, None, :]
 
-queries = [
+# "output_queries" are learned parameters owned by OutputAdaptor.
+# They do not come from data; they are slots that cross-attend into context_tokens.
+output_queries = [
     waypoint_q_0, ..., waypoint_q_{future_frames-2},
     indicator_q,
     gear_q,
     waypoint_log_variance_q_0, ..., waypoint_log_variance_q_{future_frames-2},
 ]
-out = cross_attention(queries, tokens)
-waypoints = WaypointOutputHead(out[waypoint_slice])
-indicator = IndicatorOutputHead(out[indicator_slice])
-gear = GearDirectionOutputHead(out[gear_slice])
-variance = WaypointLogVarianceOutputHead(out[variance_slice])</code></pre>
-    <pre><code># Zak WTA RegressionDrivingHead query layout, simplified
-latents = [
+output_tokens = cross_attention(query=output_queries, key_value=context_tokens)
+waypoints = WaypointOutputHead(output_tokens[waypoint_slice])
+indicator = IndicatorOutputHead(output_tokens[indicator_slice])
+gear = GearDirectionOutputHead(output_tokens[gear_slice])
+variance = WaypointLogVarianceOutputHead(output_tokens[variance_slice])</code></pre>
+    <pre><code># Zak WTA RegressionDrivingHead, simplified
+# "encoded_mcv_tokens" are produced before RegressionDrivingHead:
+#   ViT image tokens + xs_dict condition tokens -> ContinuousPositionalEncoding
+#   -> MCVSpaceTimeEncoder
+# They are data-dependent encoder tokens, analogous to SI context_tokens,
+# but the MCV encoder owns more of the token merge and conditioning-token policy.
+encoded_mcv_tokens = MCVSpaceTimeEncoder(image_tokens, xs_dict)  # [B,T,N_mcv,D]
+
+# "output_latents" are learned parameters owned by RegressionDrivingHead.
+# They are conceptually similar to SI output_queries, but Zak calls them latents
+# and packs waypoint, optional auxiliary, and WTA classifier slots together.
+output_latents = [
     wp_q_0, ..., wp_q_{n-1},
     maybe_parking_q,
     maybe_curvature_q,
     maybe_waypoint_variance_q_0, ..., maybe_waypoint_variance_q_{n-1},
     wta_classifier_q,
 ]
-h = cross_attention(latents, encoded_mcv_tokens)
+decoded_latent_tokens = cross_attention(query=output_latents, key_value=encoded_mcv_tokens)
 
-wp_tokens = h[:, :n]
+wp_tokens = decoded_latent_tokens[:, :n]
 all_ego[k] = egoposition_heads[k](wp_tokens)      # k = 0..7
 all_ind[k] = indicator_heads[k](wp_tokens)        # per-waypoint in phase2x WTA
 all_gear[k] = gear_heads[k](wp_tokens)            # per-waypoint in phase2x WTA
 
-mode_logits = mode_classifier(h[:, wta_classifier_index])
+classifier_token = decoded_latent_tokens[:, wta_classifier_index]
+mode_logits = mode_classifier(classifier_token)
 winner = argmax(mode_logits)
 output = {
     "egoposition": all_ego[winner],
