@@ -1,109 +1,130 @@
 const wonjoonFullGraph = `
-  <svg class="full-arch-graph wide" viewBox="0 0 2200 1120" role="img" aria-label="Wonjoon full architecture graph with explicit inputs adaptors diffusion planner and ordinary policy head">
+  <svg class="full-arch-graph wide" viewBox="0 0 2400 1320" role="img" aria-label="Wonjoon full architecture graph with separated runtime and training target flows">
     ${svgDefs}
-    <text class="fa-col" x="30" y="26">Separate runtime tensors</text>
-    <text class="fa-col" x="335" y="26">Per-input adaptor / tokenizer</text>
-    <text class="fa-col" x="735" y="26">Token merge</text>
-    <text class="fa-col" x="1085" y="26">Space-time backbone</text>
-    <text class="fa-col" x="1500" y="26">Diffusion output adaptor</text>
-    <text class="fa-col" x="1900" y="26">Predictions</text>
+    <text class="fa-col" x="30" y="26">Runtime tensors</text>
+    <text class="fa-col" x="325" y="26">Runtime adaptors</text>
+    <text class="fa-col" x="662" y="26">Token bus</text>
+    <text class="fa-col" x="760" y="26">Token merge</text>
+    <text class="fa-col" x="1090" y="26">Space-time backbone</text>
+    <text class="fa-col" x="1485" y="26">Output adaptor and heads</text>
+    <text class="fa-col" x="1980" y="26">Predictions</text>
     ${[
-      [24, 55, "CAMERA_PREPROCESSED_IMAGES", "6-frame image clip", "green", 330, 55, "VideoSTAdaptor", "Dec 2025 WFM video stack", "blue"],
-      [24, 128, "route map", "SI route raster", "green", 330, 128, "RouteSTAdaptor", "route tokens", "blue"],
-      [24, 201, "VEHICLE_SPEED", "speed scalar/history", "green", 330, 201, "SpeedSTAdaptor", "speed token", "blue"],
-      [24, 274, "speed limit", "continuous scalar", "green", 330, 274, "SpeedLimitSTAdaptor", "speed-limit token", "blue"],
-      [24, 347, "indicator state", "turn signal state", "green", 330, 347, "IndicatorSTAdaptor", "indicator token", "blue"],
-      [24, 420, "VEHICLE_GEAR_DIRECTION", "gear input enabled", "green", 330, 420, "GearDirectionSTAdaptor", "gear token", "blue"],
-      [24, 493, "PARKING_MODE", "parking mode input", "green", 330, 493, "ParkingModeSTAdaptor", "parking token", "blue"],
-      [24, 566, "pose / curvature", "ego motion context", "green", 330, 566, "Pose/vehicle adaptors", "motion tokens", "blue"],
-      [24, 639, "country / side / automation", "context ids", "green", 330, 639, "Context ST adaptors", "context tokens", "blue"],
-      [24, 735, "radar / nav", "disabled for this train cfg", "inactive yellow", 330, 735, "Radar/Nav adaptors", "variant/off", "inactive yellow"],
+      [24, 58, "CAMERA_PREPROCESSED_IMAGES", "6-frame image clip", "green", 320, 58, "VideoSTAdaptor", "Dec 2025 WFM video stack", "blue"],
+      [24, 126, "route map", "SI route raster", "green", 320, 126, "RouteSTAdaptor", "route tokens", "blue"],
+      [24, 194, "VEHICLE_SPEED", "speed scalar/history", "green", 320, 194, "SpeedSTAdaptor", "speed token", "blue"],
+      [24, 262, "speed limit", "continuous scalar", "green", 320, 262, "SpeedLimitSTAdaptor", "speed-limit token", "blue"],
+      [24, 330, "indicator state", "turn signal state", "green", 320, 330, "IndicatorSTAdaptor", "indicator token", "blue"],
+      [24, 398, "VEHICLE_GEAR_DIRECTION", "gear input enabled", "green", 320, 398, "GearDirectionSTAdaptor", "gear token", "blue"],
+      [24, 466, "PARKING_MODE", "parking mode input", "green", 320, 466, "ParkingModeSTAdaptor", "parking token", "blue"],
+      [24, 534, "pose / curvature", "ego motion context", "green", 320, 534, "Pose/vehicle adaptors", "motion tokens", "blue"],
+      [24, 602, "country / side / automation", "context ids", "green", 320, 602, "Context ST adaptors", "context tokens", "blue"],
+      [24, 690, "radar / nav", "disabled for this train cfg", "inactive yellow", 320, 690, "Radar/Nav adaptors", "variant/off", "inactive yellow"],
     ]
       .map(
         ([rx, y, rt, rs, rc, ax, ay, at, as, ac]) => `
-          ${smallNode(rx, y, rt, rs, rc, 260)}
-          ${smallNode(ax, ay, at, as, ac, 300)}
-          ${directEdge(rx + 260, y + 29, ax, ay + 29, rc.includes("inactive") ? "inactive" : "")}`
+          ${smallNode(rx, y, rt, rs, rc, 250)}
+          ${smallNode(ax, ay, at, as, ac, 280)}
+          ${directEdge(rx + 250, y + 29, ax, ay + 29, rc.includes("inactive") ? "inactive" : "")}
+          ${directEdge(ax + 280, ay + 29, 652, ay + 29, rc.includes("inactive") ? "inactive" : "")}`
       )
       .join("")}
-    ${[
-      [630, 84],
-      [630, 157],
-      [630, 230],
-      [630, 303],
-      [630, 376],
-      [630, 449],
-      [630, 522],
-      [630, 595],
-      [630, 668],
-    ]
-      .map(([x, y]) => bendEdge(x, y, 735, 458))
-      .join("")}
+    <path class="fa-inner-edge" d="M652 87 L652 631"></path>
+    ${directEdge(652, 360, 760, 360)}
     ${svgNode({
-      x: 735,
-      y: 330,
-      w: 300,
-      h: 255,
+      x: 760,
+      y: 235,
+      w: 285,
+      h: 250,
       title: "InputAdaptor",
-      sub: "same SI-facing token contract",
-      items: ["ModuleDict adaptor outputs", "video + route + scalar tokens", "gear_direction token", "parking_mode token", "concat token dimension", "continuous time encoding", "INPUT_TOKENS"],
+      sub: "runtime tokens only",
+      items: ["ModuleDict adaptor outputs", "video + route + scalars", "gear_direction token", "parking_mode token", "concat token dimension", "time encoding", "INPUT_TOKENS"],
       cls: "blue",
     })}
-    ${bendEdge(1035, 458, 1090, 458)}
+    ${directEdge(1045, 360, 1100, 360)}
     ${svgNode({
-      x: 1090,
-      y: 285,
-      w: 350,
-      h: 365,
+      x: 1100,
+      y: 205,
+      w: 340,
+      h: 320,
       title: "STTransformer",
       sub: "WFMStDecember2025Cfg",
-      items: ["INPUT_TOKENS [B,T,N,D]", "Dec 2025 preprocess family", "STBlock stack", "spatial self-attention", "causal temporal self-attention", "clipped-SwiGLU MLP", "final LayerNorm", "OUTPUT_TOKENS"],
+      items: ["INPUT_TOKENS [B,T,N,D]", "Dec 2025 preprocess family", "STBlock stack", "spatial self-attention", "causal temporal attention", "clipped-SwiGLU MLP", "OUTPUT_TOKENS"],
       cls: "rust",
     })}
-    ${bendEdge(1440, 458, 1505, 458)}
+    ${directEdge(1440, 360, 1495, 360)}
     ${svgNode({
-      x: 1505,
-      y: 255,
-      w: 350,
-      h: 365,
+      x: 1495,
+      y: 170,
+      w: 355,
+      h: 330,
       title: "DiffusionOutputAdaptor",
-      sub: "replaces regular OutputAdaptor",
-      items: ["learned pool queries", "cross-attend OUTPUT_TOKENS", "split pooled sequence", "diffusion_cond [B,128,D]", "auxiliary_conds x2", "ordinary_cond", "run diffusion before ordinary head"],
+      sub: "learned pool-query cross-attn",
+      items: ["flatten OUTPUT_TOKENS", "pool_queries + XBlock", "pool_mlp", "diffusion_cond [B,128,D]", "auxiliary_conds x2", "ordinary_cond"],
       cls: "blue",
     })}
     ${svgNode({
-      x: 1505,
-      y: 710,
-      w: 350,
-      h: 255,
+      x: 1495,
+      y: 610,
+      w: 355,
+      h: 250,
       title: "Primary path diffusion",
       sub: "DiffusionHead + PathPosePrePostProcessor",
-      items: ["MMDiT-style denoiser", "embed=768, heads=8", "DiTBlock x2", "train samples=50", "inference steps=10", "decode to POLICY_PATH"],
+      items: ["x_t Fourier features", "MMDiTBlock x2", "DDIM velocity field", "10 inference steps", "decode generated POLICY_PATH"],
       cls: "purple",
     })}
     ${svgNode({
-      x: 1088,
-      y: 740,
-      w: 345,
-      h: 220,
-      title: "Auxiliary diffusion heads",
-      sub: "training regularizers",
-      items: ["Aux A: absolute path", "Aux B: 30-frame waypoints", "same pooled-token split", "aux loss weight=1.0", "not the main deployed policy"],
-      cls: "purple",
-    })}
-    ${svgNode({
-      x: 735,
-      y: 755,
+      x: 1985,
+      y: 590,
       w: 300,
+      h: 250,
+      title: "Path outputs",
+      sub: "first-stage generated plan",
+      items: ["POLICY_PATH [B,50,7]", "POLICY_PATH_DISTANCE", "POSITION_FORWARD", "POSITION_LEFT", "parking goal proposal"],
+      cls: "green",
+      connectInner: false,
+    })}
+    ${svgNode({
+      x: 1095,
+      y: 890,
+      w: 330,
       h: 185,
       title: "PolicyPathConditioner",
-      sub: "path -> ordinary policy embedding",
-      items: ["train: true POLICY_PATH", "inference: generated path", "delta xy sequence", "Conv1d -> GELU -> Conv1d", "ego-proximity weighted pool"],
+      sub: "path -> policy embedding",
+      items: ["train: true POLICY_PATH", "inference: generated path", "delta xy Conv1d stack", "ego-proximity weighted pool", "projection + LayerNorm"],
       cls: "yellow",
     })}
     ${svgNode({
+      x: 1495,
+      y: 940,
+      w: 355,
+      h: 165,
+      title: "OrdinaryHead",
+      sub: "short-horizon policy",
+      items: ["ordinary_cond + path embedding", "IndicatorOutputHead", "WaypointOutputHead", "GearDirectionOutputHead"],
+      cls: "blue",
+    })}
+    ${svgNode({
+      x: 1985,
+      y: 930,
+      w: 300,
+      h: 230,
+      title: "Ordinary policy outputs",
+      sub: "path-conditioned short horizon",
+      items: ["POLICY_WAYPOINTS", "INDICATOR_WEIGHTS", "GEAR_WEIGHTS", "POLICY_TIME_DELTA"],
+      cls: "green",
+      connectInner: false,
+    })}
+    ${directEdge(1672, 500, 1672, 610)}
+    ${directEdge(1850, 735, 1985, 715, "inference")}
+    ${bendEdge(1985, 825, 1425, 980, "inference")}
+    ${directEdge(1425, 982, 1495, 1018)}
+    ${directEdge(1850, 1022, 1985, 1045)}
+    ${bendEdge(1672, 500, 1672, 940)}
+
+    <text class="fa-col" x="30" y="850">Training targets and losses (not runtime adaptors)</text>
+    ${svgNode({
       x: 24,
-      y: 882,
+      y: 900,
       w: 260,
       h: 135,
       title: "POLICY_PATH label",
@@ -112,70 +133,30 @@ const wonjoonFullGraph = `
       cls: "purple",
     })}
     ${svgNode({
-      x: 330,
-      y: 868,
-      w: 300,
+      x: 320,
+      y: 900,
+      w: 285,
       h: 165,
       title: "Target processors",
-      sub: "not runtime input adaptors",
-      items: ["PathPosePrePostProcessor", "delta+polar primary target", "absolute path aux target", "waypoint diffusion aux target"],
+      sub: "loss-space encoders",
+      items: ["delta+polar path target", "absolute path aux target", "waypoint diffusion target", "ordinary BC targets"],
       cls: "purple",
     })}
     ${svgNode({
-      x: 24,
-      y: 1035,
-      w: 260,
-      h: 80,
-      title: "ordinary BC labels",
-      sub: "waypoint / indicator / gear",
-      items: [],
+      x: 760,
+      y: 920,
+      w: 285,
+      h: 135,
+      title: "Training losses",
+      sub: "supervised BC only",
+      items: ["primary diffusion MSE", "aux diffusion losses", "waypoint / indicator / gear"],
       cls: "purple",
-      connectInner: false,
     })}
-    ${svgNode({
-      x: 1505,
-      y: 980,
-      w: 350,
-      h: 125,
-      title: "OrdinaryHead",
-      sub: "short-horizon policy, path-conditioned",
-      items: ["ordinary_cond + path embedding", "waypoint / indicator / gear heads"],
-      cls: "blue",
-    })}
-    ${svgNode({
-      x: 1900,
-      y: 110,
-      w: 260,
-      h: 245,
-      title: "Path outputs",
-      sub: "inspectable long-horizon plan",
-      items: ["POLICY_PATH [B,50,7]", "POLICY_PATH_DISTANCE", "POSITION_FORWARD", "POSITION_LEFT", "parking goal proposals"],
-      cls: "green",
-      connectInner: false,
-    })}
-    ${svgNode({
-      x: 1900,
-      y: 505,
-      w: 260,
-      h: 310,
-      title: "Ordinary policy outputs",
-      sub: "path-conditioned short horizon",
-      items: ["POLICY_WAYPOINTS", "INDICATOR_WEIGHTS", "GEAR_WEIGHTS", "POLICY_TIME_DELTA", "covariance / variance path"],
-      cls: "green",
-      connectInner: false,
-    })}
-    ${bendEdge(1678, 620, 1678, 710)}
-    ${bendEdge(1505, 835, 1433, 850)}
-    ${bendEdge(284, 950, 330, 950, "train-only")}
-    ${bendEdge(630, 930, 1505, 805, "train-only")}
-    ${bendEdge(630, 940, 1088, 850, "train-only")}
-    ${bendEdge(630, 940, 735, 815, "train-only")}
-    ${bendEdge(1855, 838, 1900, 232, "inference")}
-    ${bendEdge(1855, 838, 735, 815, "inference")}
-    ${bendEdge(1680, 620, 1680, 980)}
-    ${bendEdge(1035, 840, 1505, 1038, "train-only")}
-    ${bendEdge(284, 1075, 1505, 1038, "train-only")}
-    ${bendEdge(1855, 1038, 1900, 675)}
+    ${directEdge(284, 967, 320, 982, "train-only")}
+    ${directEdge(605, 982, 760, 988, "train-only")}
+    ${bendEdge(1045, 988, 1495, 735, "train-only")}
+    ${bendEdge(1045, 988, 1095, 982, "train-only")}
+    ${bendEdge(1045, 988, 1495, 1028, "train-only")}
   </svg>`;
 
 const wonjoonFullCard = `
