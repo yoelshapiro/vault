@@ -11,6 +11,7 @@ Implemented opt-in parking route-end input controls on `boris/03-23-park-route-s
 - Added `ParkingDataConfig.enable_park_mode_in_parking_state` and `ParkingDataConfig.enable_park_mode_in_parked_state` so the emitted park-mode signal is derived from selected post-augmentation internal states.
 - Added SI-local `ParkingDataConfig.enable_gear_label_cleanup` with thresholds for removing short reverse/neutral gear label glitches before always expanding neutral gear over adjacent standstill frames.
 - Added train-time navigation cleanup after map/nav insertion, using the model-facing `PARKING_MODE` signal.
+- Enabled `enable_route_shortening_for_parking=True` in the parking BC datamodule config while keeping `stop_route_offset_m=20.0`.
 - Exposed `PARKED_STATE` from the SI parking datamodule; left the older zoo parking datapipe untouched.
 - Decoupled train-time route-map blackout from route shortening so blackout can run independently.
 - Moved SI route-stop positioning, route-map blackout, and navigation cleanup helpers into `wayve/ai/si/datamodules/parking.py` so parking-specific train-time transforms live with the SI parking state logic.
