@@ -2444,6 +2444,7 @@
     - Refined the pseudo-code naming to distinguish data-dependent encoder context tokens (`OUTPUT_TOKENS` / `encoded_mcv_tokens`) from learned output slots (`output_queries` / `output_latents`).
     - Normalized Zak graph and pseudo-code labels to SI-facing names, keeping Zak implementation names in parentheses/comments for easier side-by-side comparison.
     - Added a `Full Architecture` tab with nested layer-level boxes for SI and Zak, collapsing repeated structures into counted blocks such as 12x ViT, 10x SI STBlock, and 11x Zak MCV STBlock.
+    - Reworked the `Full Architecture` tab into actual directed SVG graphs with nested layer boxes inside each module, keeping the block-list detail below the graphs.
     - Reorganized the report into a book-style chapter order, renamed the main architecture section, and replaced the parchment UI with a high-contrast signal-lab theme.
     - Softened the visual theme into a lower-contrast field-notebook style with muted navigation, calmer accents, lighter shadows, and more subdued diagram/table styling.
     - Moved the runnable HTML bundle into the vault under `html_summaries/parking-model-comparison/`, added `html_summaries/README.md`, linked it from the vault root index, removed the untracked repo copy, and restarted the server from the vault path.
@@ -2459,8 +2460,9 @@
   - Areas: wayve/ai/si, wayve/ai/zoo/deployment, wayve/ai/lib/data/pipes
   - Changes:
     - Added opt-in train-time navigation cleanup for parking/parked samples while skipping unparking.
+    - Exposed `PARKED_MODE` alongside the existing parking/unparking mode signals.
     - Decoupled train-time route-map blackout from route shortening.
     - Completed unparking route shortening by clipping the route from the current/stop anchor.
-    - Added opt-in deployment flags for end-of-route parking mode, map blackout, and navigation cleanup.
-    - Added a navigation-aware parking deployment wrapper for grouped DMI navigation tensors.
+    - Added programmatic deployment options for end-of-route park mode, map blackout, and navigation cleanup without adding deploy CLI flags.
+    - Kept parking deployment on the existing `ParkingDeploymentWrapperImpl`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-route-end-input-options]]
