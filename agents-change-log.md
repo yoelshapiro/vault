@@ -2519,4 +2519,5 @@
     - Merged latest `origin/main` into the branch with no conflicts, reran targeted checks successfully, and pushed merge commit `a63d2c8c825a`.
     - Enabled `allow_short_path=True` and `odometry_source="wheel_imu"` on the D26.3 parking datamodule base config and verified config loading.
     - Confirmed parking stop-route jitter is not applied to unparking route shortening, clarified the config documentation, and added SI/datapipe regression tests for the producer and consumer paths.
+    - Removed the `wayve.ai.zoo` data-key dependency from the AI lib route-map pipe by re-declaring the needed parking key strings locally.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]

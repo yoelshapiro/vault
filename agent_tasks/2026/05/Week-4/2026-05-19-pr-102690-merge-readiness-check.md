@@ -129,3 +129,23 @@ bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/te
 Results: passed.
 
 Note: a one-test SI datamodule run for `test_parking_stop_route_position_does_not_jitter_unparking` passed the selected pytest test but failed the target-level coverage gate because only one test was selected. The full parking unit file passed.
+
+## AI Lib Key Dependency Follow-Up
+
+Addressed PR feedback on `wayve/ai/lib/data/pipes/routes.py`: `wayve.ai.lib` should not depend on `wayve.ai.zoo` just for data-key constants.
+
+Changes:
+
+- Removed `from wayve.ai.zoo.data import keys as DataKeys` from `routes.py`.
+- Re-declared the small set of route-shortening string keys locally in `routes.py`.
+- Removed the same zoo key import from `wayve/ai/lib/test/data/pipes/test_generate_route_map.py` and used local string constants in the tests.
+
+Verification:
+
+```bash
+rg -n "wayve\\.ai\\.zoo|DataKeys" wayve/ai/lib/data/pipes/routes.py wayve/ai/lib/test/data/pipes/test_generate_route_map.py
+git diff --check
+bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py::test_planned_route_fetch_route_map_ignores_offset_for_unparking --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py::test_planned_route_fetch_route_map_shortens_without_speed_limits --test_arg=--no-cov
+```
+
+Results: grep found no matches; diff check and Bazel test passed.
