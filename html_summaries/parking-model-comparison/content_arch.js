@@ -13,13 +13,13 @@ window.REPORT_SECTIONS.push(
             <div class="module-step blue"><b>InputAdaptor</b><small>Builds a single <code>[B,T,N,C]</code> token tensor from video and conditioning adaptors.</small></div>
             <div class="module-step rust"><b>STTransformer.blocks</b><small>Sequential <code>STBlock</code> stack. Each block applies space/time attention and MLP transformation over the token tensor.</small></div>
             <div class="module-step"><b>STTransformer.output_norm</b><small>Final norm produces <code>OUTPUT_TOKENS</code>.</small></div>
-            <div class="module-step yellow"><b>Radar late-fusion adaptor</b><small>Separate radar branch produces <code>RADAR_TOKENS</code> after the ST backbone.</small></div>
+            <div class="module-step yellow"><b>Radar adaptor</b><small>Variant/off in the current <code>ParkingModelCfg</code>; radar is only produced if <code>enable_radar_input</code> is enabled.</small></div>
           </div>
           <ul>
-            <li><code>MIMOSTTransformer.forward_encoder</code> preprocesses images, calls the input adaptor, runs <code>STTransformer</code>, then optionally computes radar tokens.</li>
+            <li><code>MIMOSTTransformer.forward_encoder</code> preprocesses images, calls the input adaptor, runs <code>STTransformer</code>, then optionally computes radar tokens if configured.</li>
             <li><code>STTransformer</code> is a list of <code>STBlock</code>s followed by a final norm. It preserves the token tensor shape.</li>
-            <li>Parking latest release uses Dec 2025 WFM, <code>large_l10</code>, layer-10 removal, flash attention v3, and vectorized feature cache.</li>
-            <li>The radar path uses <code>msa-sa5-tok10-dim512-ae-sa2</code> with an AE checkpoint and is fused later, not inside the ST backbone.</li>
+            <li>The current branch's <code>parking_config.py</code> uses <code>WFMSt100xYoloCfg</code>, <code>name="large"</code>, 11 ST blocks, qk_norm none, and a YOLO WFM pretrain with waypoint input weights removed.</li>
+            <li>Radar and step/lane navigation are not active in this resolved current-branch parking model path.</li>
           </ul>
         </div>
         <div class="card">
@@ -54,7 +54,7 @@ outputs = {}
 inputs = preprocess(inputs)
 input_tokens = input_adaptor(inputs)     # [B, T, N, C]
 output_tokens = st_transformer(input_tokens)
-radar_tokens = radar_adaptor(inputs)     # optional [B, T, Kr, C]
+radar_tokens = radar_adaptor(inputs)     # only if radar configured
 outputs = output_adaptor(inputs, {output_tokens, radar_tokens})</code></pre>
         <pre><code># Zak MCV forward shape sketch
 x = stem(images)                         # [B, T, visual_tokens, C]
@@ -128,10 +128,10 @@ winner = argmax(mode_logits)</code></pre>
       <table class="compare dense">
         <tr><th>Area</th><th>Current SI parking</th><th>Zak MCV/WTA</th></tr>
         <tr><td>Supervised losses</td><td><code>w_waypoints=1</code>, <code>w_waypoints_log_likelihood=1</code>, <code>w_indicator=1</code>, <code>w_behavior_control=1</code>, <code>w_gear_direction=1</code>.</td><td>WTA loss supervises ego, cross-track, indicator, gear, mode classifier, optional delta, jerk, and consistency terms.</td></tr>
-        <tr><td>Disabled terms</td><td><code>w_latent_action=0</code>, <code>w_cross_track=0</code>.</td><td>Standalone indicator/gear losses are skipped when WTA is enabled; they are absorbed into WTA.</td></tr>
+        <tr><td>Disabled terms</td><td><code>w_cross_track=0</code>; behavior-control training is disabled by <code>enable_behavior_control=False</code>.</td><td>Standalone indicator/gear losses are skipped when WTA is enabled; they are absorbed into WTA.</td></tr>
         <tr><td>LR</td><td><code>lr=1e-5</code>, <code>output_adaptor_lr=1e-5</code>.</td><td>AdamW base <code>LR=1e-4</code>, <code>FINETUNE_LR=1e-5</code>, phase2 finetune delay 5k.</td></tr>
         <tr><td>Steps</td><td>100k, checkpoint interval 10k.</td><td>150k in phase2/WTA, checkpoint interval 5k.</td></tr>
-        <tr><td>Preload</td><td>Dec 2025 WFM 500k; remove waypoint input weights and layer 10; radar AE 20k.</td><td>Dec 2025 WFM 500k through <code>mcv_new_base.yml</code>; separate SI-baseline variant finetunes from SI 2026.5.11 candidate.</td></tr>
+        <tr><td>Preload</td><td>YOLO WFM checkpoint <code>model-checkpoint-001000000.ckpt</code>; removes waypoint input weights when loading.</td><td>Dec 2025 WFM 500k through <code>mcv_new_base.yml</code>; separate SI-baseline variant finetunes from SI 2026.5.11 candidate.</td></tr>
       </table>
       <div class="module-compare">
         <div class="card">
