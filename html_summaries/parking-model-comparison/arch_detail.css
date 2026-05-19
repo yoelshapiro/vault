@@ -84,6 +84,7 @@
 .fa-node.blue .fa-outer { fill: #eef7f9; stroke: #6f9db2; }
 .fa-node.rust .fa-outer { fill: #fbefed; stroke: #b66b64; }
 .fa-node.yellow .fa-outer { fill: #faf5df; stroke: #b79a54; }
+.fa-node.purple .fa-outer { fill: #f3edf9; stroke: #8b6aa7; }
 .fa-node.inactive .fa-outer {
   stroke-dasharray: 8 6;
   fill: #f5f1dc;
