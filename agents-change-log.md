@@ -2462,9 +2462,10 @@
   - Areas: wayve/ai/si, wayve/ai/zoo/deployment, wayve/ai/lib/data/pipes
   - Changes:
     - Added opt-in train-time navigation cleanup for parking/parked samples while skipping unparking.
-    - Exposed `PARKED_MODE` alongside the existing parking/unparking mode signals.
+    - Exposed `PARKED_MODE` alongside the existing parking/unparking mode signals in the SI datamodule.
+    - Added config flags to control whether `PARKING_MODE` is emitted for approaching-parking and stay-parked samples.
     - Decoupled train-time route-map blackout from route shortening.
-    - Completed unparking route shortening by clipping the route from the current/stop anchor.
+    - Completed unparking route shortening by clipping the route from the current/stop anchor without modifying the older zoo parking datapipe.
     - Added programmatic deployment options for end-of-route park mode, map blackout, and navigation cleanup without adding deploy CLI flags.
     - Kept parking deployment on the existing `ParkingDeploymentWrapperImpl`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-route-end-input-options]]
