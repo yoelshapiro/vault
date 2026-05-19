@@ -60,7 +60,7 @@ This matches the diff: `wayve/ai/si/datamodules/parking.py` now exposes `Parking
 - Updated `wayve/ai/si/datamodules/test/test_parking_unit.py` from the deleted `ParkingModeResult` / `add_parking_mode` API to the current `ParkingStateResult` / `add_parking_state` API.
 - Fixed `_shorten_route_polyline_from_stop` in `wayve/ai/lib/data/pipes/routes.py` so a mid-segment unparking route clip preserves the current segment speed limit.
 - Added a regression test for the partial-segment unparking speed-limit case in `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`.
-- Added `UNPARKING_MODE` as a compatibility alias emitted by the SI parking datapipe, and updated parking metrics to prefer `UNPARKING_STATE` with fallback to `UNPARKING_MODE`.
+- Removed the stale `UNPARKING_MODE` compatibility path from the PR-side code and migrated route shortening, metrics, and SI tests to `UNPARKING_STATE`.
 - Corrected the SI parking datapipe docstring that still claimed the zoo dataloader path was the default.
 
 ## Verification After Fixes
@@ -72,8 +72,11 @@ git diff --check
 bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py
 bazel test //wayve/ai/si:test_parking_metrics
 bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py::test_shorten_route_polyline_from_stop_preserves_partial_segment_speed_limit --test_arg=--no-cov
+bazel test //wayve/ai/si:test_bokeh_visualise
 ```
 
 Results: all passed.
 
 One earlier aggregate route-map run without `--no-cov` executed all 39 selected pytest tests successfully, then failed the Bazel target's coverage threshold because only one file was selected from a larger coverage-enforced target.
+
+The only remaining `UNPARKING_MODE` reference under `wayve/ai` is the global key constant in `wayve/ai/zoo/data/keys.py`; it is not emitted or consumed by this PR path.

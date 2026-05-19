@@ -2514,6 +2514,6 @@
     - Updated SI parking unit tests to the current parking state API after the old parking mode symbols were removed.
     - Fixed unparking route shortening so partial-segment clipping keeps the current segment speed limit.
     - Added a route-map regression test for partial-segment unparking speed limits.
-    - Added `UNPARKING_MODE` compatibility output and updated parking metrics to read `UNPARKING_STATE` with fallback to `UNPARKING_MODE`.
-    - Verified the targeted SI datamodule test, parking metrics test, focused route-map regression, and `git diff --check`.
+    - Removed stale `UNPARKING_MODE` usage from the PR-side route shortening, metrics, and SI test path, using `UNPARKING_STATE` only.
+    - Verified the targeted SI datamodule test, parking metrics test, focused route-map regression, bokeh visualisation test, and `git diff --check`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]
