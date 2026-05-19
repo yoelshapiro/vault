@@ -103,6 +103,8 @@ Pushed merge commit `a63d2c8c825a` to the PR branch. GitHub checks were pending 
 
 Enabled `allow_short_path=True` on `parking_pudo_bc_datamodule_D26_3_cfg` in `wayve/ai/si/configs/parking/parking_config.py`. The derived D26.3 parking/PUDO datamodule variants inherit this setting.
 
+Also set `odometry_source="wheel_imu"` on the same D26.3 parking datamodule config so the parking/PUDO training config uses IMU odometry supervision explicitly instead of inheriting the generic wheel-odometry default.
+
 Verification:
 
 ```bash
