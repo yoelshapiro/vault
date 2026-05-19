@@ -128,7 +128,7 @@ winner = argmax(mode_logits)</code></pre>
       <table class="compare dense">
         <tr><th>Area</th><th>Current SI parking</th><th>Zak MCV/WTA</th></tr>
         <tr><td>Supervised losses</td><td><code>w_waypoints=1</code>, <code>w_waypoints_log_likelihood=1</code>, <code>w_indicator=1</code>, <code>w_behavior_control=1</code>, <code>w_gear_direction=1</code>.</td><td>WTA loss supervises ego, cross-track, indicator, gear, mode classifier, optional delta, jerk, and consistency terms.</td></tr>
-        <tr><td>Disabled terms</td><td><code>w_cross_track=0</code>; behavior-control training is disabled by <code>enable_behavior_control=False</code>.</td><td>Standalone indicator/gear losses are skipped when WTA is enabled; they are absorbed into WTA.</td></tr>
+        <tr><td>Disabled / gated terms</td><td><code>w_cross_track=0</code>; behavior control is a model-level path gated by <code>${'${...enable_behavior_control}'}</code>, with <code>parking_bc_cfg</code> setting that gate false for the stored train wrapper.</td><td>Standalone indicator/gear losses are skipped when WTA is enabled; they are absorbed into WTA.</td></tr>
         <tr><td>LR</td><td><code>lr=1e-5</code>, <code>output_adaptor_lr=1e-5</code>.</td><td>AdamW base <code>LR=1e-4</code>, <code>FINETUNE_LR=1e-5</code>, phase2 finetune delay 5k.</td></tr>
         <tr><td>Steps</td><td>100k, checkpoint interval 10k.</td><td>150k in phase2/WTA, checkpoint interval 5k.</td></tr>
         <tr><td>Preload</td><td>YOLO WFM checkpoint <code>model-checkpoint-001000000.ckpt</code>; removes waypoint input weights when loading.</td><td>Dec 2025 WFM 500k through <code>mcv_new_base.yml</code>; separate SI-baseline variant finetunes from SI 2026.5.11 candidate.</td></tr>

@@ -31,7 +31,7 @@ if enable_latent_action:
   si_behavior: {
     label: "SI behavior-control path",
     diagram: `
-      <div class="flow-title">SI behavior-control mechanism (available, disabled in current parking config)</div>
+      <div class="flow-title">SI behavior-control mechanism (model-level branch, config-gated)</div>
       <div class="diagram"><div class="lane" style="--cols:7">
         <div class="node green"><b>ST context tokens</b><small>OutputAdaptor consumes ST tokens; radar would only join if separately enabled.</small></div>
         <div class="node blue"><b>Behavior-unconditioned branch</b><small>Internal latent-action module samples candidate outputs.</small></div>
@@ -42,7 +42,7 @@ if enable_latent_action:
         <div class="node"><b>Final outputs</b><small>Cross-attention output heads predict waypoints/indicator/gear.</small></div>
       </div></div>`,
     text: `
-      <p><b>Status in current parking config:</b> disabled. <code>parking_bc_cfg</code> sets <code>enable_behavior_control=False</code>. The behavior-control implementation is still useful to understand because nearby SI configs use it, but this current parking config does not add a behavior token at train or inference time.</p>
+      <p><b>Status in <code>ParkingOutputAdaptorCfg</code>:</b> present and gated by <code>${'${...enable_behavior_control}'}</code>. This is part of the model architecture defined in <code>parking_config.py</code>. The separate <code>parking_bc_cfg</code> train wrapper currently sets that gate to <code>False</code>, but the branch still belongs in the model-architecture diagram.</p>
       <pre><code># Pseudo-code for enabled SI behavior control
 tokens = fuse_radar_tokens(output_tokens, radar_tokens)
 
@@ -62,7 +62,7 @@ if BEHAVIOR_LABEL not in inputs:
 behavior_token = behavior_codebook(bin20(behavior_label))
 tokens = tokens + behavior_token
 policy = output_heads(cross_attend(output_queries, tokens))</code></pre>
-      <p>This is a controllability feature when enabled: it gives the output adaptor a coarse behavior intensity or assertiveness label. It is not an explicit eight-mode distribution, and it is not active in the current parking config being compared.</p>`,
+      <p>This is a controllability feature: it gives the output adaptor a coarse behavior intensity or assertiveness label. It is not an explicit eight-mode distribution. In this report's architecture graph, it is shown as a model-level gated branch rather than erased by one train-wrapper override.</p>`,
   },
   zak_wta: {
     label: "Zak MCV/WTA multimodal path",
@@ -116,7 +116,7 @@ window.REPORT_SECTIONS.push({
     <table class="compare dense">
       <tr><th>Mechanism</th><th>What it represents</th><th>Training status</th><th>Output impact</th></tr>
       <tr><td>SI latent action</td><td>A discretized target-action token derived from a future waypoint.</td><td>Enabled: <code>enable_latent_action=True</code>, <code>w_latent_action=1</code>.</td><td>Adds a learned latent-action codebook token before final output cross-attention.</td></tr>
-      <tr><td>SI behavior control</td><td>A scalar behavior percentile computed from top-k latent-action candidate speeds.</td><td>Disabled in current parking config: <code>enable_behavior_control=False</code>.</td><td>No behavior token is added in this config.</td></tr>
+      <tr><td>SI behavior control</td><td>A scalar behavior percentile computed from top-k latent-action candidate speeds.</td><td>Model-level branch present and gated by <code>${'${...enable_behavior_control}'}</code>; <code>parking_bc_cfg</code> resolves the gate to false for that train wrapper.</td><td>When enabled, adds a learned behavior token before final output-query cross-attention.</td></tr>
       <tr><td>Zak WTA multimodal</td><td>Eight alternative future modes plus classifier logits.</td><td>Enabled in inferred WTA config: <code>NUM_HEADS=8</code>.</td><td>Final predicted trajectory/indicator/gear comes from selected head; all heads trained with WTA routing.</td></tr>
     </table>
     <p class="src">Sources: SI discretizer ${link(gh.cur, "wayve/ai/si/config.py", 1974, "ActionsDiscretizerCfg")}; SI behavior control ${link(gh.cur, "wayve/ai/zoo/outputs/behavior_control.py", 10, "BehaviorLabelCalculator")}; SI conditioning ${link(gh.cur, "wayve/ai/zoo/outputs/output_adaptor.py", 481, "OutputAdaptor conditioning")}; Zak WTA config ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml", 10, "WTA config")}; Zak WTA forward ${link(gh.zak, "wayve/ai/experimental/models/mcv_perceiver.py", 3381, "WTA head")}.</p>

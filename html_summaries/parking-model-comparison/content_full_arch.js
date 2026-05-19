@@ -109,7 +109,7 @@ const siFullGraph = `
       h: 365,
       title: "OutputAdaptor",
       sub: "conditioning + learned query decoder",
-      items: ["context = OUTPUT_TOKENS", "train GT / infer argmax latent", "behavior branch skipped", "latent query x-attn -> logits", "add latent-action token", "self.queries x-attend context", "waypoint/indicator/gear/variance heads"],
+      items: ["context = OUTPUT_TOKENS", "behavior-control branch", "train GT / infer argmax latent", "latent query x-attn -> logits", "add conditioning token(s)", "self.queries x-attend context", "waypoint/indicator/gear/variance heads"],
       cls: "blue",
     })}
     ${svgNode({
@@ -118,10 +118,11 @@ const siFullGraph = `
       w: 340,
       h: 120,
       title: "Behavior-control branch",
-      sub: "disabled: enable_behavior_control=False",
-      items: ["if enabled: compute/encode label", "not called in this parking cfg"],
-      cls: "inactive yellow",
+      sub: "gated by ${...enable_behavior_control}",
+      items: ["train: compute label if absent", "encode label -> behavior token"],
+      cls: "yellow",
     })}
+    ${bendEdge(1675, 720, 1675, 650)}
     ${bendEdge(1845, 458, 1900, 405)}
     ${svgNode({
       x: 1900,
@@ -344,7 +345,7 @@ window.REPORT_SECTIONS.push({
         <div class="arch-block">
           <div class="arch-title">OutputAdaptor equivalent (<code>OutputAdaptor</code>)</div>
           <div class="layer-row">
-            ${layer("Behavior conditioning", "disabled in <code>parking_bc_cfg</code> because <code>enable_behavior_control=False</code>")}
+            ${layer("Behavior conditioning", "model-level branch is present in <code>ParkingOutputAdaptorCfg</code> and gated by <code>${'${...enable_behavior_control}'}</code>; the <code>parking_bc_cfg</code> wrapper resolves that gate to false for that train mode")}
             ${layer("Latent action", "enabled by <code>w_latent_action=1.0</code>; predicts/uses a discretized latent-action auxiliary path")}
             ${layer("Learned output queries", "<code>self.queries</code>: waypoint slice + indicator + gear + variance slice")}
             ${layer("Cross-attention decoder", "queries attend into encoder context tokens", "split-badge")}
