@@ -93,6 +93,7 @@ window.REPORT_SECTIONS.push({
           <path class="vg-edge" marker-end="url(#zakArrow)" d="M1490 276 C1520 276 1515 202 1530 202"></path>
           <path class="vg-edge" marker-end="url(#zakArrow)" d="M1490 276 C1520 276 1515 292 1530 292"></path>
           <path class="vg-edge" marker-end="url(#zakArrow)" d="M1490 276 C1520 276 1515 382 1530 382"></path>
+          <path class="vg-edge dashed" marker-end="url(#zakArrow)" d="M1530 382 C1495 455 1450 455 1390 323"></path>
           <g class="vg-node green" transform="translate(40 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">5-camera images</tspan><tspan class="vg-sub" x="12" y="45">temporal context</tspan></text></g>
           <g class="vg-node blue" transform="translate(250 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">_encode</tspan><tspan class="vg-sub" x="12" y="45">batch reshape/cache</tspan></text></g>
           <g class="vg-node blue" transform="translate(460 40)"><rect width="160" height="64"></rect><text><tspan x="12" y="24">ViTStemWrapper</tspan><tspan class="vg-sub" x="12" y="45">patch + ViT + downsample</tspan></text></g>
@@ -106,11 +107,11 @@ window.REPORT_SECTIONS.push({
           <g class="vg-node join" transform="translate(690 230)"><rect width="160" height="92"></rect><text><tspan x="12" y="30">conditioning</tspan><tspan x="12" y="50">token dict</tspan><tspan class="vg-sub" x="12" y="71">named token groups</tspan></text></g>
           <g class="vg-node rust" transform="translate(910 232)"><rect width="160" height="88"></rect><text><tspan x="12" y="29">Continuous</tspan><tspan x="12" y="49">PositionalEncoding</tspan><tspan class="vg-sub" x="12" y="70">space + time</tspan></text></g>
           <g class="vg-node rust" transform="translate(1110 232)"><rect width="180" height="88"></rect><text><tspan x="14" y="29">MCVSpaceTime</tspan><tspan x="14" y="49">Encoder</tspan><tspan class="vg-sub" x="14" y="70">11 causal layers</tspan></text></g>
-          <g class="vg-node blue" transform="translate(1330 232)"><rect width="160" height="88"></rect><text><tspan x="12" y="29">Regression</tspan><tspan x="12" y="49">DrivingHead</tspan><tspan class="vg-sub" x="12" y="70">latent x-attn</tspan></text></g>
+          <g class="vg-node blue" transform="translate(1330 232)"><rect width="160" height="88"></rect><text><tspan x="12" y="29">Regression</tspan><tspan x="12" y="49">DrivingHead</tspan><tspan class="vg-sub" x="12" y="70">query-token x-attn</tspan></text></g>
           <g class="vg-node green" transform="translate(1530 82)"><rect width="90" height="60"></rect><text><tspan x="10" y="24">8 ego</tspan><tspan class="vg-sub" x="10" y="43">heads</tspan></text></g>
           <g class="vg-node green" transform="translate(1530 172)"><rect width="90" height="60"></rect><text><tspan x="10" y="24">8 ind.</tspan><tspan class="vg-sub" x="10" y="43">heads</tspan></text></g>
           <g class="vg-node green" transform="translate(1530 262)"><rect width="90" height="60"></rect><text><tspan x="10" y="24">8 gear</tspan><tspan class="vg-sub" x="10" y="43">heads</tspan></text></g>
-          <g class="vg-node green" transform="translate(1530 352)"><rect width="90" height="60"></rect><text><tspan x="10" y="24">mode</tspan><tspan class="vg-sub" x="10" y="43">classifier</tspan></text></g>
+          <g class="vg-node green" transform="translate(1530 352)"><rect width="90" height="60"></rect><text><tspan x="10" y="20">mode</tspan><tspan x="10" y="38">logits</tspan><tspan class="vg-sub" x="10" y="54">select k</tspan></text></g>
         </svg>
       </div>
     </div>
@@ -165,6 +166,61 @@ window.REPORT_SECTIONS.push({
       <tr><td>Parking-specific module</td><td><code>ParkingModeSTAdaptor</code>: boolean parking-context token.</td><td><code>ParkingEncoder</code>: request + direction + UI position + PUDO/PARK type token.</td></tr>
       <tr><td>Multimodality</td><td>No WTA head. Behavior control is a conditioning token, not multiple output futures.</td><td>Explicit WTA output bank with eight trajectory/discrete-output futures.</td></tr>
     </table>
+    <h3>Output query-token breakdown</h3>
+    <div class="callout book">
+      <p><b>Important correction:</b> in Zak's WTA head, mode is not computed after the 8 trajectory heads as a function of their decoded outputs. It is computed in the output head from a separate learned classifier query token, in parallel with the waypoint query tokens. The resulting <code>mode_logits</code> then select which aligned head index <code>k</code> to use.</p>
+    </div>
+    <table class="compare dense aligned">
+      <tr><th>Query/token family</th><th>Current SI <code>OutputAdaptor</code></th><th>Zak <code>RegressionDrivingHead</code></th></tr>
+      <tr><td>Context tokens consumed by the output module</td><td><code>OUTPUT_TOKENS</code> from <code>STTransformer</code>, optionally concatenated/fused with late <code>RADAR_TOKENS</code>. Behavior control then adds one learned behavior token vector to every context token before final output-query cross-attention.</td><td>Encoded tokens from <code>MCVSpaceTimeEncoder</code>. If behavior control is enabled, a behavior-codebook vector is added to every encoded token before the output latent cross-attention.</td></tr>
+      <tr><td>Learned output queries</td><td><code>self.queries</code> is a learned parameter with one contiguous query slice per output head. The final queries cross-attend to the fused context tokens, and slices are then passed to each output head in configured order.</td><td><code>self.latents</code> is a learned parameter. The first <code>n</code> latents are waypoint query tokens. Conditional extra latents are appended for dedicated indicator/gear tokens, parking output, curvature, waypoint variance, and WTA classifier.</td></tr>
+      <tr><td>Parking SI active query slices</td><td>With the current parking config path: waypoint head gets <code>future_frames - 1</code> queries because <code>enable_offset=False</code>; indicator gets <code>1</code>; gear gets <code>1</code>; waypoint log-variance gets <code>future_frames - 1</code> when log-likelihood loss enables auxiliary variance. With the default 11-frame train base that is <code>10 + 1 + 1 + 10 = 22</code> final output queries.</td><td>Not an <code>OutputAdaptor</code> class. Zak's WTA path uses <code>RegressionDrivingHead</code> latents instead of SI output-head slices.</td></tr>
+      <tr><td>Zak WTA active query slices</td><td>No WTA mode queries in SI parking.</td><td>Phase2x WTA uses the first <code>n</code> waypoint latents for ego trajectory and, because indicator/gear are per-waypoint in this config, those same waypoint tokens also feed every indicator and gear head. One extra <code>wta_classifier_index</code> latent feeds <code>mode_classifier</code>. Dedicated indicator/gear query tokens only exist when <code>indicator_per_waypoint=False</code> or <code>gear_per_waypoint=False</code>.</td></tr>
+      <tr><td>Where mode/behavior lives</td><td>Behavior control is a conditioning vector added to context tokens before final query cross-attention. It is not a per-head selector and it is not one of the final waypoint/indicator/gear queries.</td><td>Mode is a classifier-query output inside <code>RegressionDrivingHead</code>. It produces 8 logits over the aligned WTA head banks. It is not a ninth trajectory head and does not consume decoded 8-head outputs.</td></tr>
+      <tr><td>Final selection</td><td>All final heads are decoded directly. There is no WTA winner selection in current SI parking.</td><td>Training emits <code>egoposition_all_heads</code>, <code>indicator_all_heads</code>, <code>gear_all_heads</code>, and <code>mode_logits</code>. Inference chooses <code>winner = argmax(mode_logits)</code> or EMA-smoothed logits, then returns ego/indicator/gear from the same head index.</td></tr>
+    </table>
+    <pre><code># Current SI OutputAdaptor final output-query layout, simplified
+tokens = OUTPUT_TOKENS
+if radar_late_fusion:
+    tokens = fuse(tokens, RADAR_TOKENS)
+
+if enable_behavior_control:
+    behavior_token = BehaviorLabelEncoder(label_or_inference_default)
+    tokens = tokens + behavior_token[:, None, :]
+
+queries = [
+    waypoint_q_0, ..., waypoint_q_{future_frames-2},
+    indicator_q,
+    gear_q,
+    waypoint_log_variance_q_0, ..., waypoint_log_variance_q_{future_frames-2},
+]
+out = cross_attention(queries, tokens)
+waypoints = WaypointOutputHead(out[waypoint_slice])
+indicator = IndicatorOutputHead(out[indicator_slice])
+gear = GearDirectionOutputHead(out[gear_slice])
+variance = WaypointLogVarianceOutputHead(out[variance_slice])</code></pre>
+    <pre><code># Zak WTA RegressionDrivingHead query layout, simplified
+latents = [
+    wp_q_0, ..., wp_q_{n-1},
+    maybe_parking_q,
+    maybe_curvature_q,
+    maybe_waypoint_variance_q_0, ..., maybe_waypoint_variance_q_{n-1},
+    wta_classifier_q,
+]
+h = cross_attention(latents, encoded_mcv_tokens)
+
+wp_tokens = h[:, :n]
+all_ego[k] = egoposition_heads[k](wp_tokens)      # k = 0..7
+all_ind[k] = indicator_heads[k](wp_tokens)        # per-waypoint in phase2x WTA
+all_gear[k] = gear_heads[k](wp_tokens)            # per-waypoint in phase2x WTA
+
+mode_logits = mode_classifier(h[:, wta_classifier_index])
+winner = argmax(mode_logits)
+output = {
+    "egoposition": all_ego[winner],
+    "indicator": all_ind[winner],
+    "gear": all_gear[winner],
+}</code></pre>
     <h3>Specific implementation answers</h3>
     <table class="compare dense aligned">
       <tr><th>Question</th><th>Answer</th><th>Code evidence</th></tr>
