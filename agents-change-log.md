@@ -2517,4 +2517,5 @@
     - Removed stale `UNPARKING_MODE` usage from the PR-side route shortening, metrics, and SI test path, using `UNPARKING_STATE` only.
     - Verified the targeted SI datamodule test, parking metrics test, focused route-map regression, bokeh visualisation test, and `git diff --check`.
     - Merged latest `origin/main` into the branch with no conflicts, reran targeted checks successfully, and pushed merge commit `a63d2c8c825a`.
+    - Enabled `allow_short_path=True` on the D26.3 parking datamodule base config and verified config loading.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]

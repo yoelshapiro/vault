@@ -98,3 +98,16 @@ bazel test //wayve/ai/si:test_bokeh_visualise
 Results: all passed.
 
 Pushed merge commit `a63d2c8c825a` to the PR branch. GitHub checks were pending after the new push, and the PR still required review.
+
+## Short Path Config
+
+Enabled `allow_short_path=True` on `parking_pudo_bc_datamodule_D26_3_cfg` in `wayve/ai/si/configs/parking/parking_config.py`. The derived D26.3 parking/PUDO datamodule variants inherit this setting.
+
+Verification:
+
+```bash
+git diff --check
+bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration
+```
+
+Results: passed.
