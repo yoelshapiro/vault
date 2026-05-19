@@ -19,97 +19,110 @@ const svgNode = ({ x, y, w, h, title, sub = "", items, cls = "", connectInner = 
       )
       .join("")}
   </g>`;
-const svgEdge = (d) => `<path class="fa-edge" marker-end="url(#faArrow)" d="${d}"></path>`;
+const svgEdge = (d, cls = "") => `<path class="fa-edge ${cls}" marker-end="url(#faArrow)" d="${d}"></path>`;
 const svgDefs = `
   <defs>
     <marker id="faArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <path d="M0,0 L10,3 L0,6 Z"></path>
     </marker>
   </defs>`;
+const smallNode = (x, y, title, sub, cls = "green", w = 245) =>
+  svgNode({ x, y, w, h: 58, title, sub, items: [], cls, connectInner: false });
+const directEdge = (x1, y1, x2, y2, cls = "") => svgEdge(`M${x1} ${y1} L${x2} ${y2}`, cls);
+const bendEdge = (x1, y1, x2, y2, cls = "") =>
+  svgEdge(`M${x1} ${y1} C${x1 + 85} ${y1} ${x2 - 85} ${y2} ${x2} ${y2}`, cls);
 
 const siFullGraph = `
-  <svg class="full-arch-graph wide" viewBox="0 0 1800 950" role="img" aria-label="SI full architecture graph with internal layers">
+  <svg class="full-arch-graph wide" viewBox="0 0 2200 1120" role="img" aria-label="SI full architecture graph with explicit inputs adaptors and internal layers">
     ${svgDefs}
-    <text class="fa-col" x="38" y="22">Inputs</text>
-    <text class="fa-col" x="360" y="22">Adaptors</text>
-    <text class="fa-col" x="735" y="122">ST Backbone</text>
-    <text class="fa-col" x="1135" y="122">Output Adaptor</text>
-    <text class="fa-col" x="1515" y="122">Outputs</text>
-    ${svgEdge("M280 110 L340 110")}
-    ${svgEdge("M280 285 C315 285 300 595 340 595")}
-    ${svgEdge("M640 190 C685 190 680 280 710 300")}
-    ${svgEdge("M640 610 C685 610 680 390 710 375")}
-    ${svgEdge("M1040 350 L1110 350")}
-    ${svgEdge("M1040 755 C1085 755 1080 500 1110 455")}
-    ${svgEdge("M1420 350 L1510 350")}
+    <text class="fa-col" x="30" y="26">Separate raw tensors</text>
+    <text class="fa-col" x="335" y="26">Per-input adaptor / tokenizer</text>
+    <text class="fa-col" x="735" y="26">Token merge</text>
+    <text class="fa-col" x="1085" y="26">Space-time backbone</text>
+    <text class="fa-col" x="1500" y="26">Output adaptor</text>
+    <text class="fa-col" x="1900" y="26">Predictions</text>
+    ${[
+      [24, 55, "CAMERA_PREPROCESSED_IMAGES", "multi-camera image clip", "green", 330, 55, "VideoSTAdaptor", "ViT image encoder only", "blue"],
+      [24, 128, "route map", "raster route image", "green", 330, 128, "RouteSTAdaptor", "route tokens", "blue"],
+      [24, 201, "VEHICLE_SPEED", "present vehicle scalar", "green", 330, 201, "SpeedSTAdaptor", "speed token", "blue"],
+      [24, 274, "speed limit", "continuous scalar", "green", 330, 274, "SpeedLimitSTAdaptor", "speed-limit token", "blue"],
+      [24, 347, "indicator state", "turn signal state", "green", 330, 347, "IndicatorSTAdaptor", "indicator token", "blue"],
+      [24, 420, "VEHICLE_GEAR_DIRECTION", "gear input", "green", 330, 420, "GearDirectionSTAdaptor", "gear token", "blue"],
+      [24, 493, "automation state", "filled no-auto when absent", "green", 330, 493, "AutomationStateSTAdaptor", "automation token", "blue"],
+      [24, 566, "PARKING_MODE", "parking context bit", "green", 330, 566, "ParkingModeSTAdaptor", "parking token", "blue"],
+      [24, 639, "country code", "country id", "green", 330, 639, "CountrySTAdaptor", "country token", "blue"],
+      [24, 712, "driving side", "left/right road side", "green", 330, 712, "DrivingSideSTAdaptor", "side token", "blue"],
+      [24, 785, "pose", "ego pose context", "green", 330, 785, "PoseSTAdaptor", "pose token", "blue"],
+      [24, 858, "waypoints interface", "always-dropout WFM slot", "yellow", 330, 858, "WaypointsSTAdaptor", "dropout token slot", "yellow"],
+      [24, 955, "step/lane navigation", "not active in WFMSt100xYoloCfg", "inactive yellow", 330, 955, "StepAndLaneInfoSTAdaptor", "variant/off", "inactive yellow"],
+      [24, 1028, "radar input", "not enabled in this config", "inactive yellow", 330, 1028, "RadarInputAdaptor", "variant/off", "inactive yellow"],
+    ]
+      .map(
+        ([rx, y, rt, rs, rc, ax, ay, at, as, ac]) => `
+          ${smallNode(rx, y, rt, rs, rc, 260)}
+          ${smallNode(ax, ay, at, as, ac, 300)}
+          ${directEdge(rx + 260, y + 29, ax, ay + 29, rc.includes("inactive") ? "inactive" : "")}`
+      )
+      .join("")}
+    ${[
+      [630, 84],
+      [630, 157],
+      [630, 230],
+      [630, 303],
+      [630, 376],
+      [630, 449],
+      [630, 522],
+      [630, 595],
+      [630, 668],
+      [630, 741],
+      [630, 814],
+      [630, 887],
+    ]
+      .map(([x, y]) => bendEdge(x, y, 735, 458))
+      .join("")}
     ${svgNode({
-      x: 30,
-      y: 50,
-      w: 250,
-      h: 365,
-      title: "Raw inputs",
-      sub: "SI parking tensors",
-      items: ["camera frames", "route map", "vehicle speed", "speed limit", "pose/country/side", "indicator state", "PARKING_MODE"],
-      cls: "green",
-      connectInner: false,
-    })}
-    ${svgNode({
-      x: 340,
-      y: 45,
+      x: 735,
+      y: 330,
       w: 300,
-      h: 330,
-      title: "Video adaptor",
-      sub: "VideoSTAdaptor + ViT",
-      items: ["image tensor", "PatchEmbeddingStem", "2D positional enc", "ViTBlock x12", "LN -> SelfAttn -> Add", "LN -> MLP -> Add", "PatchStem -> video tokens"],
-      cls: "blue",
-    })}
-    ${svgNode({
-      x: 340,
-      y: 470,
-      w: 300,
-      h: 300,
+      h: 255,
       title: "InputAdaptor",
-      sub: "explicit SI merge",
-      items: ["route/scalar/emb tokens", "dropout interface tokens", "ordered concat", "continuous time enc", "INPUT_TOKENS"],
+      sub: "after every adaptor output",
+      items: ["ModuleDict in ADAPTOR_ORDER", "video deliberately last", "call each adaptor(inputs)", "optional per-adaptor LN", "concat over token dimension", "continuous time encoding", "INPUT_TOKENS"],
       cls: "blue",
     })}
+    ${bendEdge(1035, 458, 1090, 458)}
     ${svgNode({
-      x: 710,
-      y: 140,
-      w: 330,
-      h: 390,
+      x: 1090,
+      y: 285,
+      w: 350,
+      h: 365,
       title: "STTransformer",
-      sub: "large_l10, D=1536",
-      items: ["INPUT_TOKENS", "STBlock x10", "reshape B*T,N,D", "LN -> spatial SA -> Add", "reshape B*N,T,D", "LN -> causal time SA -> Add", "LN -> MLP -> Add", "LayerNorm -> OUTPUT_TOKENS"],
+      sub: "WFMSt100xYoloCfg: large, D=1536",
+      items: ["INPUT_TOKENS [B,T,N,D]", "STBlock x11", "reshape B*T,N,D", "spatial self-attention", "reshape B*N,T,D", "causal temporal self-attention", "clipped-SwiGLU MLP", "LayerNorm -> OUTPUT_TOKENS"],
       cls: "rust",
     })}
+    ${bendEdge(1440, 458, 1505, 458)}
     ${svgNode({
-      x: 710,
-      y: 660,
-      w: 330,
-      h: 170,
-      title: "Radar late fusion",
-      sub: "after ST backbone",
-      items: ["radar frames", "radar AE/encoder", "x-attn aggregator"],
-      cls: "yellow",
-    })}
-    ${svgNode({
-      x: 1110,
-      y: 140,
-      w: 310,
-      h: 380,
+      x: 1505,
+      y: 285,
+      w: 340,
+      h: 365,
       title: "OutputAdaptor",
       sub: "learned query decoder",
-      items: ["OUTPUT_TOKENS + RADAR", "behavior token add", "self.queries", "CrossAttention", "decoded output tokens", "waypoint head", "indicator/gear/variance"],
+      items: ["context = OUTPUT_TOKENS", "latent-action path if enabled", "behavior token if enabled", "learned self.queries", "cross-attention decoder", "head-specific query slices", "waypoint/indicator/gear/variance heads"],
       cls: "blue",
     })}
+    ${bendEdge(1845, 458, 1900, 190)}
+    ${bendEdge(1845, 458, 1900, 315)}
+    ${bendEdge(1845, 458, 1900, 440)}
+    ${bendEdge(1845, 458, 1900, 565)}
     ${svgNode({
-      x: 1510,
-      y: 140,
-      w: 250,
-      h: 330,
+      x: 1900,
+      y: 150,
+      w: 260,
+      h: 520,
       title: "Policy outputs",
-      sub: "single future",
+      sub: "single decoded future",
       items: ["POLICY_WAYPOINTS", "POLICY_LOG_VARIANCE", "INDICATOR_WEIGHTS", "GEAR_WEIGHTS", "POLICY_TIME_DELTA", "CROSS_ATTN_TOKENS"],
       cls: "green",
       connectInner: false,
@@ -117,78 +130,98 @@ const siFullGraph = `
   </svg>`;
 
 const zakFullGraph = `
-  <svg class="full-arch-graph wide" viewBox="0 0 1800 950" role="img" aria-label="Zak full architecture graph with internal layers">
+  <svg class="full-arch-graph wide" viewBox="0 0 2200 1120" role="img" aria-label="Zak full architecture graph with explicit inputs adaptors and internal layers">
     ${svgDefs}
-    <text class="fa-col" x="38" y="22">Inputs</text>
-    <text class="fa-col" x="360" y="22">Adaptors</text>
-    <text class="fa-col" x="735" y="122">ST Backbone Equiv.</text>
-    <text class="fa-col" x="1135" y="122">OutputAdaptor Equiv.</text>
-    <text class="fa-col" x="1515" y="122">Outputs</text>
-    ${svgEdge("M280 110 L340 110")}
-    ${svgEdge("M280 305 C315 305 300 595 340 595")}
-    ${svgEdge("M640 190 C685 190 680 280 710 300")}
-    ${svgEdge("M640 610 C685 610 680 390 710 375")}
-    ${svgEdge("M1040 350 L1110 350")}
-    ${svgEdge("M1420 350 L1510 350")}
+    <text class="fa-col" x="30" y="26">Separate raw tensors</text>
+    <text class="fa-col" x="335" y="26">Per-input adaptor / tokenizer</text>
+    <text class="fa-col" x="735" y="26">Named token groups</text>
+    <text class="fa-col" x="1085" y="26">ST backbone equiv.</text>
+    <text class="fa-col" x="1500" y="26">Output adaptor equiv.</text>
+    <text class="fa-col" x="1900" y="26">Predictions</text>
+    ${[
+      [24, 55, "IMAGE", "5 cameras x temporal clip", "green", 330, 55, "ViTStemWrapper", "image-only video adaptor", "blue"],
+      [24, 128, "route", "route raster", "green", 330, 128, "RouteCNNEncoderMission100x", "route tokens", "blue"],
+      [24, 201, "speed", "present + 5 past", "green", 330, 201, "VectorInputAdapter", "speed token", "blue"],
+      [24, 274, "speed_limit", "continuous limit scalar", "green", 330, 274, "ContinuousSpeedLimitAdaptor", "speed-limit token", "blue"],
+      [24, 347, "indicator_stick", "driver stalk", "green", 330, 347, "IndicatorAdaptor", "stick token", "blue"],
+      [24, 420, "indicator_state", "past state history", "green", 330, 420, "IndicatorAdaptor", "state token", "blue"],
+      [24, 493, "gear_state", "current gear", "green", 330, 493, "GearAdaptor", "gear token", "blue"],
+      [24, 566, "parking_request", "PUDO request flag", "green", 330, 566, "ParkingEncoder", "request embedding", "blue"],
+      [24, 639, "parking_direction", "PUDO direction", "green", 330, 639, "ParkingEncoder", "direction embedding", "blue"],
+      [24, 712, "parking_position_ui", "target UI xy", "green", 330, 712, "ParkingEncoder", "position MLP", "blue"],
+      [24, 785, "stopping_type", "parking stop type", "green", 330, 785, "ParkingEncoder", "type embedding", "blue"],
+      [24, 858, "country_code", "country id", "green", 330, 858, "CountryAdaptor", "country token", "blue"],
+      [24, 955, "navigation", "default-off in WTA config", "inactive yellow", 330, 955, "NavigationEncoder", "variant/off", "inactive yellow"],
+      [24, 1028, "radar", "default-off; late concat if enabled", "inactive yellow", 330, 1028, "RadarEncoder", "variant/off after MCV", "inactive yellow"],
+    ]
+      .map(
+        ([rx, y, rt, rs, rc, ax, ay, at, as, ac]) => `
+          ${smallNode(rx, y, rt, rs, rc, 260)}
+          ${smallNode(ax, ay, at, as, ac, 300)}
+          ${directEdge(rx + 260, y + 29, ax, ay + 29, rc.includes("inactive") ? "inactive" : "")}`
+      )
+      .join("")}
+    ${[
+      [630, 84],
+      [630, 157],
+      [630, 230],
+      [630, 303],
+      [630, 376],
+      [630, 449],
+      [630, 522],
+      [630, 595],
+      [630, 668],
+      [630, 741],
+      [630, 814],
+      [630, 887],
+    ]
+      .map(([x, y]) => bendEdge(x, y, 735, 458))
+      .join("")}
     ${svgNode({
-      x: 30,
-      y: 50,
-      w: 250,
+      x: 735,
+      y: 330,
+      w: 300,
+      h: 255,
+      title: "InputAdaptor equivalent",
+      sub: "MyModuleDict + positional encoding",
+      items: ["input_adapters(batch) -> xs", "named token groups", "image tokens stay separate", "ContinuousPositionalEncoding", "time/spatial/camera encoding", "condition groups remain named", "to MCVSpaceTimeEncoder"],
+      cls: "blue",
+    })}
+    ${bendEdge(630, 84, 1090, 335)}
+    ${bendEdge(1035, 458, 1090, 458)}
+    ${svgNode({
+      x: 1090,
+      y: 285,
+      w: 350,
       h: 365,
-      title: "Raw inputs",
-      sub: "PUDO tensors",
-      items: ["5-camera frames", "route map", "speed history", "speed limit", "indicator stick/state", "gear + country", "PUDO request/target"],
-      cls: "green",
-      connectInner: false,
-    })}
-    ${svgNode({
-      x: 340,
-      y: 45,
-      w: 300,
-      h: 330,
-      title: "Video adaptor",
-      sub: "Zak: ViTStemWrapper",
-      items: ["image tensor", "PatchEmbeddingStem", "2D positional enc", "ViTBlock x12", "LN -> SelfAttn -> Add", "LN -> MLP -> Add", "camera-token merge"],
-      cls: "blue",
-    })}
-    ${svgNode({
-      x: 340,
-      y: 470,
-      w: 300,
-      h: 330,
-      title: "InputAdaptor equiv.",
-      sub: "split across modules",
-      items: ["input_adapters dict", "route CNN tokens", "ParkingEncoder token", "scalar/context tokens", "continuous pos/time", "xs_dict token groups"],
-      cls: "blue",
-    })}
-    ${svgNode({
-      x: 710,
-      y: 140,
-      w: 330,
-      h: 410,
-      title: "STTransformer equiv.",
-      sub: "Zak: MCVSpaceTimeEncoder",
-      items: ["image tokens + xs_dict", "concat condition before image", "STBlock x11", "LN -> spatial SA -> Add", "LN -> causal time SA -> Add", "LN -> MLP -> Add", "LayerNorm", "encoder_context_tokens"],
+      title: "STTransformer equivalent",
+      sub: "MCVSpaceTimeEncoder, D=1536",
+      items: ["image tokens + xs dict", "expand condition groups over T", "concat condition before image", "STBlock x11", "spatial self-attention", "causal temporal self-attention", "clipped-SwiGLU MLP", "encoder_context_tokens"],
       cls: "rust",
     })}
+    ${bendEdge(1440, 458, 1505, 458)}
     ${svgNode({
-      x: 1110,
-      y: 140,
-      w: 310,
-      h: 390,
-      title: "OutputAdaptor equiv.",
-      sub: "Zak: RegressionDrivingHead",
-      items: ["encoder_context_tokens", "behavior token add", "self.latents", "CrossAttention", "decoded output tokens", "waypoint query slice", "classifier query"],
+      x: 1505,
+      y: 285,
+      w: 340,
+      h: 365,
+      title: "OutputAdaptor equivalent",
+      sub: "RegressionDrivingHead",
+      items: ["context = encoded MCV tokens", "optional behavior token", "learned self.latents", "cross-attention decoder", "waypoint query slice", "WTA classifier query", "8 aligned head banks"],
       cls: "blue",
     })}
+    ${bendEdge(1845, 458, 1900, 170)}
+    ${bendEdge(1845, 458, 1900, 305)}
+    ${bendEdge(1845, 458, 1900, 440)}
+    ${bendEdge(1845, 458, 1900, 575)}
     ${svgNode({
-      x: 1510,
-      y: 140,
-      w: 250,
-      h: 430,
+      x: 1900,
+      y: 130,
+      w: 260,
+      h: 560,
       title: "WTA policy outputs",
       sub: "8-mode future bank",
-      items: ["egoposition_all_heads", "indicator_all_heads", "gear_all_heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k] + gear[k]"],
+      items: ["egoposition_all_heads", "indicator_all_heads", "gear_all_heads", "mode_logits", "argmax/EMA selects k", "egoposition[k]", "indicator[k]", "gear[k]"],
       cls: "green",
       connectInner: false,
     })}
