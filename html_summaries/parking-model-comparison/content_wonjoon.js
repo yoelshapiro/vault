@@ -42,7 +42,7 @@ const wonjoonGraph = `
   <text x="42" y="54" class="lane-label">Inputs and targets</text>
   ${wjBox(40, 90, 285, 142, "Camera frames", ["6 camera frames", "Dec 2025 WFM preprocess", "image tokens"], "input")}
   ${wjBox(40, 255, 285, 142, "Driving context", ["route map", "speed / curvature / pose", "indicator history"], "input")}
-  ${wjBox(40, 420, 285, 142, "Parking context", ["gear_direction token", "parking_mode token", "optional goal pose"], "input")}
+  ${wjBox(40, 420, 285, 142, "Parking context", ["gear_direction token", "parking_mode token", "no goal-pose adaptor wired"], "input")}
   ${wjBox(40, 585, 285, 168, "Training labels", ["POLICY_PATH [B,50,7]", "11-frame ordinary policy", "30-frame aux diffusion", "absolute path aux target"], "train")}
 
   <text x="392" y="54" class="lane-label">ST encoder</text>
@@ -97,15 +97,36 @@ window.REPORT_SECTIONS.push({
       <p><b>Notion intent.</b> The linked Long-Horizon Parking Planning page frames this as a way to stabilize parking intent beyond the current short waypoint horizon, reduce plan switching, and create a path-level offline evaluation target.</p>
     </div>
     ${wonjoonGraph}
+    <div class="callout warn book">
+      <p><b>Graph correction after re-reading the code.</b> The full-architecture graph now separates runtime tensors from training targets. <code>POLICY_PATH</code> labels are not input-adaptor tokens. They feed <code>PathPosePrePostProcessor.encode()</code> for diffusion loss and feed <code>PolicyPathConditioner</code> only during training. At robot inference, the primary diffusion head generates <code>POLICY_PATH</code> first, then <code>PolicyPathConditioner</code> consumes that generated path before <code>OrdinaryHead</code> predicts waypoints/indicator/gear.</p>
+    </div>
+    <h2>Solution in Plain Engineering Terms</h2>
+    <div class="module-flow">
+      <div class="module-step green"><b>1. Keep the SI/WFM perception stack</b><small>Wonjoon does not move to Zak's MCVPerceiver. The backbone remains a WFM/ST model family: SI input adaptors produce <code>INPUT_TOKENS</code>, then the ST encoder emits <code>OUTPUT_TOKENS</code>.</small></div>
+      <div class="module-step blue"><b>2. Pool encoder tokens into task conditions</b><small><code>DiffusionOutputAdaptor._pool_all()</code> uses learned pool queries and an <code>XBlock</code> cross-attention layer to produce primary diffusion condition tokens, two auxiliary condition groups, and ordinary-head condition tokens.</small></div>
+      <div class="module-step rust"><b>3. Generate long-horizon path</b><small>The primary <code>DiffusionHead</code> learns a distribution over 50 path poses. The denoiser sees 10 sequence tokens because 50 xy points are chunked by 5.</small></div>
+      <div class="module-step yellow"><b>4. Condition short-horizon control</b><small><code>PolicyPathConditioner</code> converts the path into one embedding and adds it to all ordinary-head condition tokens. The ordinary head then predicts the deployable short-horizon policy outputs.</small></div>
+    </div>
     <h2>Code-Backed Architecture</h2>
     <table class="compare dense aligned">
       <tr><th>Block</th><th>Implementation</th><th>Inputs</th><th>Outputs / role</th></tr>
       <tr><td>Backbone model</td><td><code>ParkingDiffusionModelCfg</code> inherits <code>WFMStDecember2025Cfg</code>.</td><td>Video, route, speed, indicator, gear direction, parking mode. Radar config exists but this train config sets <code>enable_radar_input=False</code>.</td><td><code>OUTPUT_TOKENS</code> consumed by the diffusion output adaptor.</td></tr>
-      <tr><td>Output adaptor</td><td><code>DiffusionOutputAdaptor</code> with <code>pool_token_length=128</code>.</td><td><code>OUTPUT_TOKENS</code>.</td><td>Cross-attention pooled conditions split into primary diffusion, two auxiliary diffusion blocks, and ordinary policy condition.</td></tr>
-      <tr><td>Primary path head</td><td><code>DiffusionHead</code> + <code>PathPosePrePostProcessor</code>.</td><td><code>diffusion_cond [B,128,D]</code> and path labels at train time.</td><td><code>POLICY_PATH [B,50,7]</code>, path distance, forward/left positions, parking-goal pose proposals.</td></tr>
+      <tr><td>Output adaptor</td><td><code>DiffusionOutputAdaptor</code> with <code>pool_token_length=128</code>.</td><td><code>OUTPUT_TOKENS</code>.</td><td>Cross-attention pooled conditions split into primary diffusion, two auxiliary diffusion blocks, and ordinary policy condition. The ordinary condition length is exactly the sum of required tokens for indicator, waypoint, gear, and optional variance heads.</td></tr>
+      <tr><td>Primary path head</td><td><code>DiffusionHead</code> + <code>PathPosePrePostProcessor</code>.</td><td><code>diffusion_cond [B,128,D]</code> and path labels at train time. Robot inference starts from zero <code>initial_noise</code> with one sample.</td><td><code>POLICY_PATH [B,50,7]</code>, path distance, forward/left positions, parking-goal pose proposals.</td></tr>
       <tr><td>Auxiliary diffusion heads</td><td>Two extra <code>DiffusionHead</code> instances.</td><td>Aux cond blocks and labels.</td><td>Absolute path aux loss and waypoint diffusion aux loss. They regularize training; they are not the main deployed policy output path.</td></tr>
-      <tr><td>PolicyPathConditioner</td><td>Delta-xy Conv1d stack + ego-proximity weighted pooling + projection + LayerNorm.</td><td>Training uses ground-truth <code>POLICY_PATH</code>; inference uses generated <code>POLICY_PATH</code>.</td><td>One path embedding added into <code>ordinary_cond</code>.</td></tr>
+      <tr><td>Path encoder/decoder</td><td><code>PathPosePrePostProcessor</code> uses only x/y for diffusion.</td><td><code>POLICY_PATH [B,50,7]</code>.</td><td>Encode: x/y -> optional deltas -> polar -> Welford norm -> chunk 5, so the denoiser sees <code>[B,10,10]</code>. Decode: reconstruct x/y, set z=0, infer yaw from xy finite differences, build yaw quaternion.</td></tr>
+      <tr><td>PolicyPathConditioner</td><td>Delta-xy Conv1d stack + ego-proximity weighted pooling + projection + LayerNorm.</td><td>Training uses ground-truth <code>POLICY_PATH</code>; inference uses generated <code>POLICY_PATH</code>.</td><td>One path embedding added into every token of <code>ordinary_cond</code>. Training drops this embedding with probability 0.5.</td></tr>
       <tr><td>OrdinaryHead</td><td>Ordinary waypoint/indicator/gear head with <code>policy_path_conditioning_enabled=True</code>.</td><td><code>ordinary_cond + path_embedding</code>.</td><td>11-frame waypoints, indicator weights, gear-direction weights.</td></tr>
+      <tr><td>Goal pose status</td><td>The Notion plan discusses optional goal-pose conditioning, but this PR config does not show a separate goal-pose input adaptor.</td><td>Parking data can produce parking pose/path labels.</td><td>The deployed observable pose is produced from the generated path's final point as <code>POLICY_PARKING_GOAL_POSE_PROPOSALS</code>.</td></tr>
+    </table>
+    <h2>Diffusion Head Mechanics</h2>
+    <table class="compare dense aligned">
+      <tr><th>Internal piece</th><th>What it does</th><th>Why it matters</th></tr>
+      <tr><td><code>c_adaptor</code> and pooled condition</td><td>Projects pooled ST condition tokens to diffusion embed size 768; mean-pools them and adapts the pooled vector for AdaLN-style time conditioning.</td><td>The denoiser gets both token-level context and a global conditioning vector.</td></tr>
+      <tr><td><code>x_fourier</code> + <code>x_mlp</code></td><td>Fourier-encodes noisy path state <code>x_t</code> after scaling by 3, then adds learned path-token positional embeddings.</td><td>The denoiser operates on continuous noisy path tokens, not ordinary learned output queries.</td></tr>
+      <tr><td><code>MMDiTBlock x2</code></td><td>Runs joint attention over noisy path tokens and condition tokens with modulation from timestep/global condition.</td><td>This is the actual path denoiser. It is small: 2 blocks, 8 heads, embed dim 768.</td></tr>
+      <tr><td><code>LastLayer</code></td><td>Final modulated attention/feed-forward layer and linear projection to the processor output dimension.</td><td>Predicts the velocity field used by the DDIM scheduler.</td></tr>
+      <tr><td>DDIM scheduler</td><td>Training samples timesteps from 1000 train steps. Inference uses 10 denoising steps from the config.</td><td>This is supervised diffusion/flow-style denoising, not RL and not WTA.</td></tr>
     </table>
     <h2>Data Recipe and Labels</h2>
     <div class="module-flow">
@@ -134,38 +155,83 @@ window.REPORT_SECTIONS.push({
     </table>
     <h2>Pseudo-code</h2>
     <div class="codegrid">
-      <pre><code># Training forward
-tokens = st_backbone(input_adaptors(batch))
-diff_cond, aux_conds, ordinary_cond = pool_all(tokens)
+      <pre><code># Training forward, matching DiffusionOutputAdaptor._train
+outputs = st_model.forward_encoder(inputs)
+# outputs[OUTPUT_TOKENS] may be [B,T,N,D]; pool flattens to [B,T*N,D].
+diff_cond, aux_conds, ordinary_cond = output_adaptor._pool_all(outputs)
 
-loss = primary_path_diffusion(
-    diff_cond,
-    target=batch["POLICY_PATH"],
-)
-loss += aux_weight * absolute_path_diffusion(aux_conds[0], batch["POLICY_PATH"])
-loss += aux_weight * waypoint_diffusion(aux_conds[1], batch["WAYPOINTS_AND_INDICATOR"])
+# Primary long-horizon path loss.
+# PathPosePrePostProcessor.encode(inputs):
+#   POLICY_PATH [B,50,7] -> xy -> delta -> polar -> norm -> [B,10,10]
+diff_loss = diffusion_head(diff_cond, inputs, outputs)
 
-path_for_policy = batch["POLICY_PATH"]
-path_embedding = PolicyPathConditioner(path_for_policy)
-if random() < 0.5:
-    path_embedding = 0
-ordinary_outputs = OrdinaryHead(ordinary_cond + path_embedding)
-loss += waypoint_loss + indicator_loss + gear_direction_loss</code></pre>
-      <pre><code># Robot inference
-tokens = st_backbone(input_adaptors(robot_inputs))
-diff_cond, aux_conds, ordinary_cond = pool_all(tokens)
+# Auxiliary losses use separate condition tokens from the same pool.
+for aux_head, aux_cond in zip(auxiliary_heads, aux_conds):
+    aux_loss = aux_head(aux_cond, inputs, aux_outputs={})
+    diff_loss = diff_loss + auxiliary_weight * aux_loss
+outputs["_diffusion_loss"] = diff_loss
 
-sampled_path = primary_path_diffusion.sample(
-    diff_cond,
-    steps=10,
-)
-outputs["POLICY_PATH"] = decode_path(sampled_path)
-outputs["POLICY_PATH_DISTANCE"] = arc_length(outputs["POLICY_PATH"])
-outputs["POLICY_PARKING_GOAL_POSE_PROPOSALS"] = final_pose(outputs["POLICY_PATH"])
+# The adaptor also samples paths under no_grad for diagnostics / compatibility.
+with torch.no_grad():
+    inputs["initial_noise"] = randn([B, num_samples_for_behavior_control, K, output_dim])
+    diffusion_head.inference(diff_cond, inputs, outputs)
 
+# OrdinaryHead training uses ground-truth POLICY_PATH, not generated path.
+path = inputs["POLICY_PATH"]
+path_embedding = PolicyPathConditioner(path)
+path_embedding *= bernoulli_keep(prob=0.5)  # policy_path_conditioning_dropout
+ordinary_cond = ordinary_cond + path_embedding[:, None, :]
+outputs.update(ordinary_output_heads(ordinary_cond))
+
+# BcLossModule consumes:
+#   outputs["_diffusion_loss"], POLICY_WAYPOINTS, INDICATOR, GEAR, log-likelihood terms</code></pre>
+      <pre><code># Robot inference, matching DiffusionOutputAdaptor.robot_inference
+outputs = st_model.forward_encoder(robot_inputs)
+B = outputs[OUTPUT_TOKENS].shape[0]
+
+# The PR's robot path starts from zeros, one sample.
+inputs["initial_noise"] = zeros([B, 1, diffusion_head.K, output_dim])
+
+# Because OrdinaryHead.require_diffusion_inference is true:
+sampled = output_adaptor.diffusion_inference(inputs, outputs)
+for key, value in sampled.items():
+    clean_key = remove_prefix("top_k_sampled/", key)
+    if clean_key == POLICY_PARKING_GOAL_POSE_PROPOSALS:
+        outputs[clean_key] = value          # keep [B,N,8]
+    else:
+        outputs[clean_key] = value[:, 0]    # take first sample
+
+# Now ordinary inference sees outputs[POLICY_PATH].
+ordinary_cond = output_adaptor._pool_for_ordinary_head(outputs)
 path_embedding = PolicyPathConditioner(outputs["POLICY_PATH"])
-outputs.update(OrdinaryHead(ordinary_cond + path_embedding))</code></pre>
+ordinary_cond = ordinary_cond + path_embedding[:, None, :]
+outputs.update(ordinary_output_heads(ordinary_cond))
+
+# ParkingDeploymentWrapper returns ordinary policy outputs plus
+# policy_parking_pose, policy_path_distance, policy_path_position_forward/left.</code></pre>
     </div>
+    <h2>Where the Path Comes From</h2>
+    <pre><code># Label construction from the Notion/code design
+parking_window = compute_parking_mode(
+    gear_direction,
+    speed,
+    min_duration_sec=2.0,
+    time_threshold_sec=50.0,
+    distance_threshold_m=30.0,
+)
+
+source_pose = additional_parking_pose if available else path_pose
+path = sample_by_arc_length(
+    source_pose,
+    num_points=50,
+    step_m=0.5,
+)
+if goal_reached_before_24_5m:
+    path[after_goal:] = final_goal_pose
+
+inputs["POLICY_PATH"] = path  # [B, 50, 7], used as diffusion target
+inputs["PARKING_MODE"] = parking_window.mode
+inputs["PARKING_POSE"] = final_goal_pose</code></pre>
     <h2>Three-Way Comparison</h2>
     <table class="compare dense aligned">
       <tr><th>Axis</th><th>SI parking</th><th>Zak MCV/WTA</th><th>Wonjoon long-horizon diffusion</th></tr>

@@ -182,6 +182,7 @@ const wonjoonFullCard = `
       <div class="card">
         <p class="mini-title">Wonjoon full architecture graph</p>
         ${wonjoonFullGraph}
+        <p class="src">Wonjoon graph legend: solid red/brown arrows are normal model flow, green arrows are inference-only generated-path flow, and dashed purple arrows are training-only target/loss flow.</p>
       </div>`;
 
 const fullArchSection = window.REPORT_SECTIONS.find((section) => section.id === "fullarch");
