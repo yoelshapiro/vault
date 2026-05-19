@@ -72,9 +72,9 @@ outputs = RegressionDrivingHead(mcv_tokens, speed, curvature, parking_request)</
       </div>
       <table class="compare dense aligned">
         <tr><th>Question</th><th>SI parking answer</th><th>Zak MCV/WTA answer</th></tr>
-        <tr><td>What is the model?</td><td><code>MIMOSTTransformer</code> using the Zoo ST stack and Dec 2025 WFM.</td><td><code>MCVPerceiver</code> using an MCV space-time encoder and WTA driving head.</td></tr>
-        <tr><td>What changes for parking?</td><td>Adds parking mode and gear-direction adaptors, PUDO/parking buckets, and behavior-control output conditioning.</td><td>Adds a richer ParkingEncoder and an explicit multimodal output head for ambiguous parking/PUDO futures.</td></tr>
-        <tr><td>What is not present?</td><td>No explicit multimodal output distribution; latent-action prediction disabled; no RL in active SI mode.</td><td>No evidence that WTA and RL are combined in the inferred active config; RL is separate in <code>mcv_new_rl.yml</code>.</td></tr>
+        <tr><td>What is the model?</td><td><code>MIMOSTTransformer</code> using the Zoo ST stack and <code>WFMSt100xYoloCfg</code>.</td><td><code>MCVPerceiver</code> using an MCV space-time encoder and WTA driving head.</td></tr>
+        <tr><td>What changes for parking?</td><td>Adds parking mode and gear-direction adaptors, PUDO/parking buckets, and latent-action output conditioning.</td><td>Adds a richer ParkingEncoder and an explicit multimodal output head for ambiguous parking/PUDO futures.</td></tr>
+        <tr><td>What is not present?</td><td>No explicit multimodal output distribution; behavior control and radar are disabled in the current parking config; no RL in active SI mode.</td><td>No evidence that WTA and RL are combined in the inferred active config; RL is separate in <code>mcv_new_rl.yml</code>.</td></tr>
       </table>
     `,
   },
@@ -88,18 +88,19 @@ outputs = RegressionDrivingHead(mcv_tokens, speed, curvature, parking_request)</
       <table class="compare dense">
         <tr><th>Evidence</th><th>Current SI parking</th><th>Zak branch</th></tr>
         <tr><td>File diff</td><td colspan="2"><code>git diff HEAD..origin/zmurez/pudo -- wayve/ai/si/configs/parking/parking_config.py</code> is empty.</td></tr>
-        <tr><td>Train mode</td><td><code>ParkingBcTrainRelease2026_6_14Cfg</code>: ${link(gh.cur, "wayve/ai/si/configs/parking/parking_config.py", 654, "parking_config.py#L654")}.</td><td>No SI mode-store entry for the WTA path. Experimental config: ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml", 1, "mcv_new_phase2x_wta.yml#L1")}.</td></tr>
-        <tr><td>Model cfg</td><td><code>ParkingModelRelease2026_6_14Cfg</code>: Dec WFM base, <code>large_l10</code>, layer-10 removal, radar late fusion: ${link(gh.cur, "wayve/ai/si/configs/parking/parking_config.py", 531, "#L531")}.</td><td><code>mcv_new_phase2x_wta</code> inherits <code>phase2x -> phase2 -> base -> base0</code>; <code>base0</code> sets <code>MODEL.NAME=MCVPerceiver</code>: ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_base0.yml", 57, "base0#L57")}.</td></tr>
+        <tr><td>Train mode</td><td><code>parking_bc</code> / <code>parking_bc_cfg</code>: ${link(gh.cur, "wayve/ai/si/configs/parking/parking_config.py", 218, "parking_bc_cfg")}.</td><td>No SI mode-store entry for the WTA path. Experimental config: ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml", 1, "mcv_new_phase2x_wta.yml#L1")}.</td></tr>
+        <tr><td>Model cfg</td><td><code>ParkingModelCfg</code>: <code>WFMSt100xYoloCfg</code> base, <code>name="large"</code>, 11 ST blocks, gear + parking-mode adaptors, no active radar/nav: ${link(gh.cur, "wayve/ai/si/configs/parking/parking_config.py", 196, "ParkingModelCfg")}.</td><td><code>mcv_new_phase2x_wta</code> inherits <code>phase2x -> phase2 -> base -> base0</code>; <code>base0</code> sets <code>MODEL.NAME=MCVPerceiver</code>: ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_base0.yml", 57, "base0#L57")}.</td></tr>
         <tr><td>WTA enablement</td><td>Not present.</td><td><code>EGOPOSITION.WTA.ENABLED=True</code>, <code>NUM_HEADS=8</code>, multi-frame training, classifier soft target, consistency weights: ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml", 10, "WTA block")}.</td></tr>
         <tr><td>SI-like Zak variant</td><td>Current SI mode is the source of truth.</td><td><code>mcv_new_phase2_si_baseline.yml</code> is a separate bridge config: SI crop/undistort, SI candidate finetune checkpoint, radar/nav enabled, parking disabled: ${link(gh.zak, "wayve/ai/experimental/configs/mcv_new_phase2_si_baseline.yml", 15, "si baseline")}.</td></tr>
       </table>
       <pre><code># Mental model for config inheritance
 SI:
-  parking_bc_train_release_2026_6_14
-    -> parking_bc_release_2026_6_14_cfg
-      -> ParkingModelRelease2026_6_14Cfg
+  parking_bc
+    -> parking_bc_cfg
+      -> ParkingModelCfg
+        -> WFMSt100xYoloCfg
       -> default_losses_parking
-      -> parking_pudo_bc_datamodule_D26_3_cfg
+      -> ParkingOutputAdaptorCfg
 
 Zak:
   mcv_new_phase2x_wta.yml
@@ -184,12 +185,12 @@ data["route_end_position"] = ego_relative(final_vertex)</code></pre>
         <tr><td>Images</td><td><code>VideoSTAdaptor</code> uses the WFM vision encoder and returns image tokens to <code>InputAdaptor</code>.</td><td>ViT patch stem converts 5-camera images into MCV visual tokens.</td></tr>
         <tr><td>Route</td><td><code>RouteSTAdaptor</code> encodes the SI route map; dropout is configured at datamodule level but is 0.0 here.</td><td><code>RouteCNNEncoderMission100x</code>: normalize route pixels, strided conv/groupnorm/ReLU, flatten, positional encode. The dataset may shorten/jitter the route endpoint before rasterization.</td></tr>
         <tr><td>Parking</td><td><code>ParkingModeSTAdaptor</code>: 2-class embedding over <code>PARKING_MODE</code>.</td><td><code>ParkingEncoder</code>: request + direction + target UI MLP + stopping type. This is the largest parking-specific input change.</td></tr>
-        <tr><td>Gear</td><td><code>GearDirectionSTAdaptor</code> is constructed, but Dec WFM inheritance makes it dropout-only unless the resolved config overrides <code>always_dropout_gear_direction</code>. Gear is still predicted by the output head.</td><td><code>GearAdaptor</code> embeds reverse/park/drive as gear+1; variants can use dropout-only gear for SI compatibility.</td></tr>
+        <tr><td>Gear</td><td><code>GearDirectionSTAdaptor</code> is active because <code>parking_bc_cfg</code> sets <code>use_gear_direction=True</code>. It is a separate input token and gear is also predicted by the output head.</td><td><code>GearAdaptor</code> embeds reverse/park/drive as gear+1; variants can use dropout-only gear for SI compatibility.</td></tr>
         <tr><td>Indicator</td><td><code>IndicatorSTAdaptor</code> plus <code>use_indicator_memory=True</code>.</td><td>Separate stick and state adaptors; state can include history, unknown values are mapped.</td></tr>
         <tr><td>Speed</td><td><code>SpeedSTAdaptor</code> with vehicle-frame context.</td><td><code>VectorInputAdapter</code> slices present plus five past values in WTA, normalizes by 17.777..., no symlog in phase2x.</td></tr>
         <tr><td>Speed limit</td><td><code>SpeedLimitSTAdaptor</code> inherited from WFM Dec config with NaN/inf handling.</td><td><code>ContinuousSpeedLimitAdaptor</code> encodes relative speed-limit delta using sin/cos features and learned NaN/inf tokens.</td></tr>
-        <tr><td>Navigation DMI tokens</td><td>Optional step/lane information can be part of the inherited WFM interface.</td><td><code>NavigationEncoder</code> wraps SI <code>StepAndLaneInfoSTAdaptor</code> and consumes grouped navigation tensors, but <code>NAVIGATION.ENABLED</code> is default-off in the inferred WTA base. The SI-baseline variant enables it.</td></tr>
-        <tr><td>Other context</td><td>Country, driving side, automation, pose, waypoint dropout, optional step/lane info from base WFM config.</td><td>Country is active. Driving side, automation, waypoint dropout, nav, radar, intrinsics, and pose are conditional/variant modules for this inferred WTA chain.</td></tr>
+        <tr><td>Navigation DMI tokens</td><td>Not active in the current <code>WFMSt100xYoloCfg</code> parking path; <code>StepAndLaneInfoSTAdaptor</code> is a variant/off adaptor unless enabled by config.</td><td><code>NavigationEncoder</code> wraps SI <code>StepAndLaneInfoSTAdaptor</code> and consumes grouped navigation tensors, but <code>NAVIGATION.ENABLED</code> is default-off in the inferred WTA base. The SI-baseline variant enables it.</td></tr>
+        <tr><td>Other context</td><td>Country, driving side, automation, pose, and waypoint dropout are separate adaptor/token families. Radar is not active in this path.</td><td>Country is active. Driving side, automation, waypoint dropout, nav, radar, intrinsics, and pose are conditional/variant modules for this inferred WTA chain.</td></tr>
       </table>
       <div class="codegrid">
         <pre><code># SI adaptor pseudo-code

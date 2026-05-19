@@ -33,7 +33,7 @@ if enable_latent_action:
     diagram: `
       <div class="flow-title">SI behavior-control mechanism (available, disabled in current parking config)</div>
       <div class="diagram"><div class="lane" style="--cols:7">
-        <div class="node green"><b>Fused ST + radar tokens</b><small>OutputAdaptor fuses camera/ST and radar tokens first.</small></div>
+        <div class="node green"><b>ST context tokens</b><small>OutputAdaptor consumes ST tokens; radar would only join if separately enabled.</small></div>
         <div class="node blue"><b>Behavior-unconditioned branch</b><small>Internal latent-action module samples candidate outputs.</small></div>
         <div class="node"><b>Top-k latent actions</b><small>Top 10 action logits are decoded into candidate waypoint futures.</small></div>
         <div class="node rust"><b>Mean-speed percentile</b><small>Compare top-k candidate speeds to GT policy speed.</small></div>
