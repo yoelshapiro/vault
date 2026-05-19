@@ -314,33 +314,9 @@
               "icon": "lucide-file",
               "title": "zach-gear-indicator-losses"
             }
-          },
-          {
-            "id": "d766a0330d27d64f",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "projects.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "projects"
-            }
           }
         ],
-        "currentTab": 19
+        "currentTab": 18
       }
     ],
     "direction": "vertical"
@@ -515,13 +491,14 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "421689602b4afc34",
+  "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "html_summaries/README.md",
+    "projects.md",
+    "html_summaries/parking-model-comparison/index.html",
     "html_summaries/parking-model-comparison/content_full_arch.js",
     "html_summaries/parking-model-comparison/arch_detail.css",
     "agent_tasks/2026/05/Week-4/2026-05-18-parking-route-end-input-options.md",
-    "html_summaries/README.md",
-    "html_summaries/parking-model-comparison/index.html",
     "Merge to main plan.md",
     "html_summaries/parking-model-comparison/style.css",
     "html_summaries/parking-model-comparison/content_model_blocks.js",
@@ -530,7 +507,6 @@
     "html_summaries/parking-model-comparison/content_arch.js",
     "html_summaries/parking-model-comparison/app.js",
     "html_summaries/parking-model-comparison",
-    "html_summaries",
     "agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison.md",
     "agent_tasks/2026/05/Week-3/2026-05-14-parking-roadmap-read-only-lan.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
@@ -542,7 +518,6 @@
     "agent_tasks/2026/05/Week-3/2026-05-13-loquacious-partridge-interleave-deploy.md",
     "agent_tasks/2026/05/Week-3/2026-05-13-pr-102690-route-shortening-review.md",
     "agent_tasks/2026/05/Week-2/2026-05-13-pr-102398-ci-fixes.md",
-    "projects.md",
     "index.md",
     "PUDO Update.md",
     "Weekly tasks.md",
