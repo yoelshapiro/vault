@@ -2433,7 +2433,7 @@
     - Added a terminology section that explicitly defines "MCV tokens" and related shorthand.
     - Reworked the overview into neural-network module flow diagrams and replaced wide mixed-purpose diagrams with per-solution vertical flows and aligned tables across the data/encoder/output/loss/training tabs.
     - Added a dedicated `Model Blocks` tab after re-reading the actual model builders, with per-solution module graphs covering active, dropout-only, and variant/disabled components for SI `MIMOSTTransformer` and Zak `MCVPerceiver`.
-    - Corrected component status details including SI gear-direction being constructed but inherited dropout-only and Zak driving-side conditioning being default-off/conditional in the inferred WTA config chain.
+    - Corrected component status details including SI gear-direction being an active separate input adaptor in the current `WFMSt100xYoloCfg` parking path, SI radar/navigation being disabled, and Zak driving-side conditioning being default-off/conditional in the inferred WTA config chain.
     - Replaced the connected graph section with real SVG visual architecture diagrams for each solution, using positioned nodes and arrowed branch/merge edges instead of only listing blocks.
     - Fixed graph readability by making SVG node backgrounds, label colors, and arrow colors explicit instead of relying on inherited theme colors.
     - Expanded the visual diagrams with shared comparison column language and fuller raw-input labels, then added implementation answers for MCVSpaceTimeEncoder vs STTransformer, WTA classifier training, 8-head weight/training behavior, and SI behavior-control latent-action usage.
@@ -2450,6 +2450,9 @@
     - Reorganized the report into a book-style chapter order, renamed the main architecture section, and replaced the parchment UI with a high-contrast signal-lab theme.
     - Softened the visual theme into a lower-contrast field-notebook style with muted navigation, calmer accents, lighter shadows, and more subdued diagram/table styling.
     - Moved the runnable HTML bundle into the vault under `html_summaries/parking-model-comparison/`, added `html_summaries/README.md`, linked it from the vault root index, removed the untracked repo copy, and restarted the server from the vault path.
+    - Re-read the active current-branch model path and corrected the report from older release assumptions to `ParkingModelCfg -> WFMSt100xYoloCfg`: `large` / 11 ST blocks, YOLO WFM pretrain, active gear input, active latent-action conditioning, behavior control disabled, and radar/navigation disabled.
+    - Rebuilt the full-architecture graphs so raw inputs are separate nodes, images alone feed `VideoSTAdaptor`, non-image tensors each feed their own tokenizer/adaptor, and `InputAdaptor` sits after those adaptor outputs as the ordered token merge.
+    - Updated the Zak WTA graph to use the same comparison language while preserving implementation names: image stem, per-input `input_adapters`, positional encoding, `MCVSpaceTimeEncoder`, `RegressionDrivingHead`, and WTA head outputs; radar/navigation are shown as variant/off for the inferred WTA base.
     - Added GitHub links pinned to the current and Zak branch commits.
     - Served the report locally on port `3005`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]
