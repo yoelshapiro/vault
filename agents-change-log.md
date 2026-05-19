@@ -2472,6 +2472,7 @@
     - Added config flags to derive the emitted park-mode signal from selected post-augmentation internal states.
     - Decoupled train-time route-map blackout from route shortening.
     - Completed unparking route shortening by clipping the route from the current/stop anchor using SI-local parking helpers, without modifying the older zoo parking datapipe.
+    - Moved train-time route-stop positioning, route-map blackout, and navigation cleanup helpers into the SI parking datamodule.
     - Changed train-time route-map blackout and navigation cleanup to use the model-facing `PARKING_MODE` signal directly.
     - Added programmatic deployment options for end-of-route park mode, map blackout, and navigation cleanup without adding deploy CLI flags.
     - Kept parking deployment on the existing `ParkingDeploymentWrapperImpl`.
