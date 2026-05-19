@@ -11,8 +11,6 @@ Implemented opt-in parking route-end input controls on `boris/03-23-park-route-s
 - Added `ParkingDataConfig.enable_park_mode_in_parking_state` and `ParkingDataConfig.enable_park_mode_in_parked_state` so the emitted park-mode signal is derived from selected post-augmentation internal states.
 - Added SI-local `ParkingDataConfig.enable_gear_label_cleanup` with thresholds for removing short reverse/neutral gear label glitches before always expanding neutral gear over adjacent standstill frames.
 - Added train-time navigation cleanup after map/nav insertion, using the model-facing `PARKING_MODE` signal.
-- Added a datamodule-level `allow_short_path` option and enabled it in the parking BC datamodule config.
-- Aligned `allow_short_path` behavior with main: path loading now stores `PATH_VALID`, padded short-path points are marked invalid, and bad-path filtering can keep samples while invalidating path data.
 - Set the parking BC datamodule's parking-specific config values to match the actually used BC values from `origin/guy/parking-past30-no-standstill-gear-aug` where equivalent fields exist in this branch: SI dataloader, 30s past window, route shortening, leading-standstill strip, gear cleanup, parked-unparking probability 0.5, and unparking gear augmentation probability 1.0.
 - Exposed `PARKED_STATE` from the SI parking datamodule; left the older zoo parking datapipe untouched.
 - Decoupled train-time route-map blackout from route shortening so blackout can run independently.
