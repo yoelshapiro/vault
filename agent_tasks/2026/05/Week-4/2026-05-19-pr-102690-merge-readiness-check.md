@@ -105,11 +105,27 @@ Enabled `allow_short_path=True` on `parking_pudo_bc_datamodule_D26_3_cfg` in `wa
 
 Also set `odometry_source="wheel_imu"` on the same D26.3 parking datamodule config so the parking/PUDO training config uses IMU odometry supervision explicitly instead of inheriting the generic wheel-odometry default.
 
+## Unparking Route Jitter Guard
+
+Confirmed that route-stop jitter is sampled only for parking route shortening, not for unparking:
+
+- `wayve/ai/si/datamodules/parking.py` emits `_parking_stop_route_offset_m = 0.0` for `UNPARKING_STATE`.
+- `wayve/ai/lib/data/pipes/routes.py` uses `_shorten_route_polyline_from_stop` for `UNPARKING_STATE` and only passes `stop_route_offset_m` to the parking `_shorten_route_polyline_to_stop` path.
+
+Added regression coverage:
+
+- `test_parking_stop_route_position_does_not_jitter_unparking`
+- `test_planned_route_fetch_route_map_ignores_offset_for_unparking`
+
 Verification:
 
 ```bash
 git diff --check
 bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration
+bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py
+bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py::test_planned_route_fetch_route_map_ignores_offset_for_unparking --test_arg=--no-cov
 ```
 
 Results: passed.
+
+Note: a one-test SI datamodule run for `test_parking_stop_route_position_does_not_jitter_unparking` passed the selected pytest test but failed the target-level coverage gate because only one test was selected. The full parking unit file passed.
