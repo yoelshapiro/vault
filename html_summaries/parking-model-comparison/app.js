@@ -3,6 +3,7 @@ const content = document.getElementById("content");
 const SECTION_ORDER = [
   "overview",
   "modelblocks",
+  "fullarch",
   "data",
   "inputs",
   "encoder",
