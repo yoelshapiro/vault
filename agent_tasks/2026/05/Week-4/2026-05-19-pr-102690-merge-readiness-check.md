@@ -80,3 +80,21 @@ Results: all passed.
 One earlier aggregate route-map run without `--no-cov` executed all 39 selected pytest tests successfully, then failed the Bazel target's coverage threshold because only one file was selected from a larger coverage-enforced target.
 
 The only remaining `UNPARKING_MODE` reference under `wayve/ai` is the global key constant in `wayve/ai/zoo/data/keys.py`; it is not emitted or consumed by this PR path.
+
+## Main Merge Check
+
+Merged latest `origin/main` into `boris/03-23-park-route-shortening-v2` on 2026-05-19. The merge completed cleanly with no conflicts.
+
+Post-merge verification:
+
+```bash
+git diff --check
+bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py
+bazel test //wayve/ai/si:test_parking_metrics
+bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py::test_shorten_route_polyline_from_stop_preserves_partial_segment_speed_limit --test_arg=--no-cov
+bazel test //wayve/ai/si:test_bokeh_visualise
+```
+
+Results: all passed.
+
+Pushed merge commit `a63d2c8c825a` to the PR branch. GitHub checks were pending after the new push, and the PR still required review.
