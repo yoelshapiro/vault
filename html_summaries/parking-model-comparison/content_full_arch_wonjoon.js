@@ -1,5 +1,5 @@
 const wonjoonFullGraph = `
-  <svg class="full-arch-graph wide" viewBox="0 0 2400 1320" role="img" aria-label="Wonjoon full architecture graph with separated runtime and training target flows">
+  <svg class="full-arch-graph wide" viewBox="0 0 2400 1160" role="img" aria-label="Wonjoon full architecture graph with runtime neural module flow only">
     ${svgDefs}
     <text class="fa-col" x="30" y="26">Runtime tensors</text>
     <text class="fa-col" x="325" y="26">Runtime adaptors</text>
@@ -90,7 +90,7 @@ const wonjoonFullGraph = `
       h: 185,
       title: "PolicyPathConditioner",
       sub: "path -> policy embedding",
-      items: ["train: true POLICY_PATH", "inference: generated path", "delta xy Conv1d stack", "ego-proximity weighted pool", "projection + LayerNorm"],
+      items: ["input: POLICY_PATH tensor", "train source: label", "inference source: generated path", "delta xy Conv1d stack", "ego-proximity weighted pool"],
       cls: "yellow",
     })}
     ${svgNode({
@@ -120,50 +120,13 @@ const wonjoonFullGraph = `
     ${directEdge(1425, 982, 1495, 1018)}
     ${directEdge(1850, 1022, 1985, 1045)}
     ${bendEdge(1672, 500, 1672, 940)}
-
-    <text class="fa-col" x="30" y="850">Training targets and losses (not runtime adaptors)</text>
-    ${svgNode({
-      x: 24,
-      y: 900,
-      w: 260,
-      h: 135,
-      title: "POLICY_PATH label",
-      sub: "training target only",
-      items: ["[B,50,7]", "50 points @ 0.5m", "x,y,z,quaternion"],
-      cls: "purple",
-    })}
-    ${svgNode({
-      x: 320,
-      y: 900,
-      w: 285,
-      h: 165,
-      title: "Target processors",
-      sub: "loss-space encoders",
-      items: ["delta+polar path target", "absolute path aux target", "waypoint diffusion target", "ordinary BC targets"],
-      cls: "purple",
-    })}
-    ${svgNode({
-      x: 760,
-      y: 920,
-      w: 285,
-      h: 135,
-      title: "Training losses",
-      sub: "supervised BC only",
-      items: ["primary diffusion MSE", "aux diffusion losses", "waypoint / indicator / gear"],
-      cls: "purple",
-    })}
-    ${directEdge(284, 967, 320, 982, "train-only")}
-    ${directEdge(605, 982, 760, 988, "train-only")}
-    ${bendEdge(1045, 988, 1495, 735, "train-only")}
-    ${bendEdge(1045, 988, 1095, 982, "train-only")}
-    ${bendEdge(1045, 988, 1495, 1028, "train-only")}
   </svg>`;
 
 const wonjoonFullCard = `
       <div class="card">
         <p class="mini-title">Wonjoon full architecture graph</p>
         ${wonjoonFullGraph}
-        <p class="src">Wonjoon graph legend: solid red/brown arrows are normal model flow, green arrows are inference-only generated-path flow, and dashed purple arrows are training-only target/loss flow.</p>
+        <p class="src">Wonjoon graph legend: this is the neural module graph only. Training targets, target processors, and losses are intentionally excluded from this Full Architecture view and covered in the Wonjoon Diffusion tab. Green arrows mark the inference-time generated-path flow.</p>
       </div>`;
 
 const fullArchSection = window.REPORT_SECTIONS.find((section) => section.id === "fullarch");
