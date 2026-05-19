@@ -220,16 +220,16 @@ if OFFLINE_RL.ENABLED:
     title: "Critique",
     html: `
       <div class="callout warn book">
-        <p><b>Coverage critique.</b> This is now closer to a technical note than a dashboard: it includes architecture block diagrams, solution-specific latent/multimodal diagrams, pseudo-code, config evidence, code links, and detailed comparison tables. The main residual gap is not presentation, but provenance: I still need Zak's exact launched command or run metadata to prove the WTA config is the current live run rather than the best branch-tip inference.</p>
+        <p><b>Coverage critique.</b> This is now closer to a technical note than a dashboard: it includes architecture block diagrams, solution-specific latent/multimodal diagrams, pseudo-code, config evidence, code links, and detailed comparison tables for SI, Zak, and Wonjoon. The main residual gap is not presentation, but provenance: I still need Zak's exact launched command/run metadata and Wonjoon's exact intended launch checkpoint to prove which config was or will be used beyond PR branch-tip evidence.</p>
       </div>
       <table class="compare dense">
         <tr><th>Need</th><th>Included?</th><th>Remaining risk</th></tr>
-        <tr><td>Both model architectures</td><td>Yes: SI ST and Zak MCV/WTA diagrams and pseudo-code.</td><td>Not an auto-generated torch module graph from a checkpoint.</td></tr>
+        <tr><td>All compared model architectures</td><td>Yes: SI ST, Zak MCV/WTA, and Wonjoon WFM/ST + diffusion-output diagrams and pseudo-code.</td><td>Not an auto-generated torch module graph from a checkpoint.</td></tr>
         <tr><td>Inputs/adaptors</td><td>Yes: image, route, parking, gear, indicator, speed, speed limit, context tokens.</td><td>Some inherited WFM defaults are summarized rather than fully resolved.</td></tr>
-        <tr><td>ST / encoder</td><td>Yes: SI STTransformer and Zak MCVSpaceTimeEncoder.</td><td>Layer-by-layer parameter counts are not included.</td></tr>
-        <tr><td>Output adaptor/head</td><td>Yes: SI OutputAdaptor and Zak RegressionDrivingHead/WTA.</td><td>Exact tensor sizes depend on resolved config/runtime shape.</td></tr>
+        <tr><td>ST / encoder</td><td>Yes: SI STTransformer, Zak MCVSpaceTimeEncoder, and Wonjoon WFMStDecember2025 ST backbone.</td><td>Layer-by-layer parameter counts are not included.</td></tr>
+        <tr><td>Output adaptor/head</td><td>Yes: SI OutputAdaptor, Zak RegressionDrivingHead/WTA, and Wonjoon DiffusionOutputAdaptor plus path-conditioned OrdinaryHead.</td><td>Exact tensor sizes depend on resolved config/runtime shape.</td></tr>
         <tr><td>Latent actions / behavior latent actions</td><td>Yes: now split into three separate selectable diagrams.</td><td>Terminology remains overloaded in code; the tab explicitly disambiguates it.</td></tr>
-        <tr><td>Data, augmentations, losses, LR, preloads, BC/RL</td><td>Yes.</td><td>Fully resolved Zak YAML would require running the exp-ai config resolver.</td></tr>
+        <tr><td>Data, augmentations, losses, LR, preloads, BC/RL</td><td>Yes, including Wonjoon's policy-path sampling, diffusion losses, LR split, and BC-only status.</td><td>Fully resolved Zak YAML and Wonjoon Hydra runtime composition would require running each branch's config resolver.</td></tr>
       </table>
     `,
   },

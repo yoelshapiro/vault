@@ -49,6 +49,12 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Softened the theme after review: calmer field-notebook palette, lighter content surface, muted teal navigation, lower-contrast diagram strokes, softer table headers, and reduced card/code shadows.
 - Added `html_summaries/README.md` as the vault index for interactive HTML summaries and linked it from the vault root index.
 - Added GitHub links pinned to the current commit and Zak branch commit.
+- Extended the report to include Wonjoon90's PR 106346 long-horizon parking planning model and the linked Notion design.
+- Fetched and inspected PR 106346 with `gh pr view`, `gh pr view --comments`, and a local `pr/106346` ref.
+- Added `content_wonjoon.js` with a dedicated visual graph for the path-diffusion architecture: WFM/ST encoder, cross-attention pool split, primary path diffusion head, two auxiliary diffusion heads, `PolicyPathConditioner`, and ordinary waypoint/indicator/gear head.
+- Updated the overview and architecture tabs to include a three-way SI vs Zak vs Wonjoon comparison and links to the new Wonjoon tab.
+- Added details from the Notion architecture/data pages: optional goal pose, path sampling at 50 points with 0.5m spacing, delta/polar/chunked path encoding, guided diffusion intent, and path-conditioned ordinary policy prediction.
+- Added PR-specific training details: 0.5 driving / 0.5 parking data mix, `w_diffusion=1.0`, ordinary policy losses, auxiliary diffusion loss, LR `1e-5`, output adaptor LR `1e-4`, 200k steps, bf16, BC-only training, and parking wrapper path outputs.
 
 ## Verification
 
@@ -81,3 +87,7 @@ Created an interactive HTML report comparing the current branch's `parking_confi
 - Corrected SI behavior-control graph semantics again to distinguish `ParkingOutputAdaptorCfg` from the `parking_bc_cfg` train wrapper: the model-level branch is now shown as present and gated by `${...enable_behavior_control}`, with the wrapper override kept as text detail rather than removing/marking the module disabled.
 - Verified all report JS files with `node --check` and evaluated the content scripts in a Node VM; the `fullarch` section contains the corrected `VEHICLE_GEAR_DIRECTION` graph and no `large_l10` references remain.
 - Served the report locally on port 3005 from `~/git/vault/html_summaries/parking-model-comparison`.
+- Verified `content_wonjoon.js`, `content_core.js`, and `content_model_blocks.js` pass `node --check`.
+- Evaluated all content scripts together in Node and confirmed 14 report tabs register, including `wonjoon`.
+- Verified `http://localhost:3005/` returns HTTP 200 and the served `index.html` includes `content_wonjoon.js`.
+- Could not run a Playwright screenshot because the local `playwright` package is not installed in this workspace.

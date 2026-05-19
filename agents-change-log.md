@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-19 - Parking model comparison adds Wonjoon path diffusion
+- Topic: extend the interactive parking model comparison with Wonjoon90's PR 106346 long-horizon path-diffusion model and linked Notion design.
+- Labels: #parking #model-architecture #diffusion #html #vault
+- Branch: `03-20-si-group-interleave-control-support`
+- PR: `106346` inspected, no local PR opened
+- Change type: docs/html/research
+- Areas: `~/git/vault/html_summaries/parking-model-comparison/`, `agent_tasks/2026/05/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison]]: fetched PR 106346 into `pr/106346`, inspected the parking config, diffusion output adaptor, deployment wrapper outputs, PR comments, and the linked Notion pages; added a dedicated Wonjoon Diffusion tab with a large directed architecture graph, code-backed component table, data recipe, losses/LR/preload/training-mode details, pseudo-code, and a three-way SI vs Zak vs Wonjoon comparison; updated the overview and architecture tabs to link the new section; verified JS syntax and live serving on port 3005.
+
 > #### 2026-05-14 - Parking plan graph timeline boxes
 - Topic: convert the Parking 2026 capability graph from milestone columns into a draggable timeline-box view.
 - Labels: #parking #timeline #html #visualization #vault
