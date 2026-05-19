@@ -149,3 +149,17 @@ bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/te
 ```
 
 Results: grep found no matches; diff check and Bazel test passed.
+
+## CI Monitoring
+
+Monitored PR 102690 presubmit in tmux after pushing merge commit `add3a4e791ae`.
+
+Initial Buildkite build `482695` had failed in lint on an out-of-scope generated OpenAPI path under `wayve/services/fleet360/generated`, while also reporting high disk usage on the agent. Buildkite retry/create permissions were unavailable from this environment, so the branch was refreshed with latest `origin/main` and pushed to trigger a fresh presubmit.
+
+Fresh Buildkite build `482724` passed:
+
+```bash
+gh pr checks 102690 --watch=false
+```
+
+Result: `buildkite/presubmit` passed in 38m55s, with all Buildkite suites green including lint, static-check, cpu, gpu, integration, result-summary, and coverage. No additional CI-fix commit was needed after the fresh run.
