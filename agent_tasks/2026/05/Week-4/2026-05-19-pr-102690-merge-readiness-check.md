@@ -229,8 +229,8 @@ Final state: reverted from the workspace. No committed code changes remain from 
 
 Implemented a simpler fixed two-arm config knob on `ParkingDataConfig`:
 
-- `park_mode_blackout_probability=0.0` is the default route-shortening-only mode
-- `park_mode_blackout_probability=None` keeps the existing scalar booleans unchanged
+- `park_mode_blackout_probability` is always a float and defaults to `0.0`
+- `park_mode_blackout_probability=0.0` is the route-shortening-only mode
 - `park_mode_blackout_probability=p` samples per training sample:
   - probability `p`: emit park mode and allow end-of-route blackout, while disabling route shortening for that sample
   - probability `1-p`: suppress park mode and use route shortening, while disabling blackout for that sample
