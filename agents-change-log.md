@@ -2525,4 +2525,5 @@
     - Refreshed the PR description to match the final branch state, including SI route-shortening semantics, unparking jitter guard, D26.3 config updates, dependency cleanup, verification, and passing presubmit.
     - Reverted PR-side changes to `wayve/ai/zoo/data/parking.py`, stopped forwarding new SI-only route-shortening args into the zoo path, and removed zoo tests for the deleted helpers.
     - Prototyped, tested, and reverted an uncommitted SI-only weighted route-context variant config after deciding it was too complicated for this PR.
+    - Added a simpler SI-only `park_mode_blackout_probability` knob that samples between park-mode+blackout and no-park-mode+route-shortening, including explicit support for `p=1.0`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]
