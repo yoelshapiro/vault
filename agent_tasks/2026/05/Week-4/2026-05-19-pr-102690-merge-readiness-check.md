@@ -163,3 +163,14 @@ gh pr checks 102690 --watch=false
 ```
 
 Result: `buildkite/presubmit` passed in 38m55s, with all Buildkite suites green including lint, static-check, cpu, gpu, integration, result-summary, and coverage. No additional CI-fix commit was needed after the fresh run.
+
+## PR Description Refresh
+
+Updated PR 102690 description after CI passed to reflect the current branch state:
+
+- train-time parking route shortening instead of route-map blackout
+- explicit `PARKING_STATE`, `PARKED_STATE`, and `UNPARKING_STATE` semantics
+- no parking stop-route jitter on unparking route shortening
+- D26.3 parking config updates for `allow_short_path=True` and `odometry_source="wheel_imu"`
+- removal of the `wayve.ai.zoo` data-key dependency from the AI lib route pipe
+- current focused Bazel verification and passing Buildkite presubmit `482724`

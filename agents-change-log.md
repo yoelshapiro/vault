@@ -2521,4 +2521,5 @@
     - Confirmed parking stop-route jitter is not applied to unparking route shortening, clarified the config documentation, and added SI/datapipe regression tests for the producer and consumer paths.
     - Removed the `wayve.ai.zoo` data-key dependency from the AI lib route-map pipe by re-declaring the needed parking key strings locally.
     - Monitored refreshed presubmit build `482724` for PR 102690; all Buildkite/GitHub checks passed on merge commit `add3a4e791ae` with no additional CI-fix commit required.
+    - Refreshed the PR description to match the final branch state, including SI route-shortening semantics, unparking jitter guard, D26.3 config updates, dependency cleanup, verification, and passing presubmit.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]
