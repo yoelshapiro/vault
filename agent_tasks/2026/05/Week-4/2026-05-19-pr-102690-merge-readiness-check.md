@@ -174,3 +174,23 @@ Updated PR 102690 description after CI passed to reflect the current branch stat
 - D26.3 parking config updates for `allow_short_path=True` and `odometry_source="wheel_imu"`
 - removal of the `wayve.ai.zoo` data-key dependency from the AI lib route pipe
 - current focused Bazel verification and passing Buildkite presubmit `482724`
+
+## Zoo Parking Revert
+
+Removed the PR-side route-shortening changes from `wayve/ai/zoo/data/parking.py` so the legacy zoo parking datapipe stays at the `origin/main` implementation while it is slated for later deprecation.
+
+Follow-up edits:
+
+- stopped the SI wrapper from forwarding `distance_threshold_jitter_m` and `store_entry_index` into the zoo parking path
+- removed zoo parking tests that only covered the deleted route-shortening entry-index/stop-route helpers
+- kept the SI-local parking stop route-position implementation and route-map consumer tests intact
+
+Verification:
+
+```bash
+git diff --check
+bazel test //wayve/ai/zoo/data:test_zoo_data_py_test --test_arg=wayve/ai/zoo/data/test/test_parking.py
+bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py --test_arg=wayve/ai/si/datamodules/test/test_otf.py --test_arg=--no-cov
+```
+
+Results: all passed. A prior run of the same SI test selection without `--no-cov` executed all selected tests successfully but failed the target-level coverage gate because it did not run the full coverage-enforced target.
