@@ -224,3 +224,28 @@ bazel test //wayve/ai/si/datamodules:ty
 Results: all passed.
 
 Final state: reverted from the workspace. No committed code changes remain from this prototype.
+
+## Fixed Park-Mode Blackout Sampling
+
+Implemented a simpler fixed two-arm config knob on `ParkingDataConfig`:
+
+- `park_mode_blackout_probability=None` keeps the existing scalar booleans unchanged
+- `park_mode_blackout_probability=p` samples per training sample:
+  - probability `p`: emit park mode and allow end-of-route blackout, while disabling route shortening for that sample
+  - probability `1-p`: suppress park mode and use route shortening, while disabling blackout for that sample
+- `p=1.0` is supported and avoids wiring route-shortening entry-index storage
+- validation keeps the value finite and in `[0, 1]`
+- non-train datapipes reset the probability to `None` alongside the existing val-time route-end disablement
+- the legacy zoo parking dataloader rejects this SI-only option
+
+Verification:
+
+```bash
+git diff --check
+bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py --test_arg=wayve/ai/si/datamodules/test/test_otf.py --test_arg=--no-cov
+bazel test //wayve/ai/si/datamodules:py_lint_ruff //wayve/ai/si/datamodules:py_lint_flake8
+bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration
+bazel test //wayve/ai/si/datamodules:ty
+```
+
+Results: all passed.
