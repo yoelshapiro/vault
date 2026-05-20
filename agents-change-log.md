@@ -2522,4 +2522,5 @@
     - Removed the `wayve.ai.zoo` data-key dependency from the AI lib route-map pipe by re-declaring the needed parking key strings locally.
     - Monitored refreshed presubmit build `482724` for PR 102690; all Buildkite/GitHub checks passed on merge commit `add3a4e791ae` with no additional CI-fix commit required.
     - Refreshed the PR description to match the final branch state, including SI route-shortening semantics, unparking jitter guard, D26.3 config updates, dependency cleanup, verification, and passing presubmit.
+    - Reverted PR-side changes to `wayve/ai/zoo/data/parking.py`, stopped forwarding new SI-only route-shortening args into the zoo path, and removed zoo tests for the deleted helpers.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]
