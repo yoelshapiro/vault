@@ -194,3 +194,31 @@ bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/
 ```
 
 Results: all passed. A prior run of the same SI test selection without `--no-cov` executed all selected tests successfully but failed the target-level coverage gate because it did not run the full coverage-enforced target.
+
+## Route Context Variant Prototype
+
+Implemented, but did not commit, an SI-only weighted route-context variant mechanism for parking augmentation.
+
+Shape:
+
+- added `ParkingRouteContextVariant`
+- added optional `ParkingDataConfig.route_context_variants`
+- when variants are configured, one variant is sampled per sample and controls:
+  - model-facing `PARKING_MODE` emission for parking / parked state
+  - parking route shortening
+  - end-of-route blackout
+  - end-of-route navigation cleanup
+- kept existing scalar booleans as the backwards-compatible behavior when variants are unset
+- kept variants unsupported on the legacy zoo dataloader path
+
+Verification:
+
+```bash
+git diff --check
+bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py --test_arg=wayve/ai/si/datamodules/test/test_otf.py --test_arg=--no-cov
+bazel test //wayve/ai/si/datamodules:py_lint_ruff //wayve/ai/si/datamodules:py_lint_flake8
+bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration
+bazel test //wayve/ai/si/datamodules:ty
+```
+
+Results: all passed.
