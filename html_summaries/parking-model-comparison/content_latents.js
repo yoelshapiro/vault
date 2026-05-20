@@ -79,6 +79,7 @@ policy = output_heads(cross_attend(output_queries, tokens))</code></pre>
       </div></div>`,
     text: `
       <p><b>Status in inferred Zak config:</b> enabled. <code>mcv_new_phase2x_wta.yml</code> sets <code>EGOPOSITION.WTA.ENABLED=True</code> and <code>NUM_HEADS=8</code>. The head bottleneck is 256 and activation is GELU.</p>
+      <p><b>WTA means Winner-Take-All.</b> Zak has one demonstrated trajectory per sample, not eight labels. Each of the eight heads is compared against that same trajectory/indicator/gear target; the per-head supervised errors produce an annealed soft WTA target <code>softmax(-loss_per_head / tau)</code>. This is MoE-like because a classifier chooses an expert head at inference, but it is not an ensemble: the heads share one backbone, train jointly, and their outputs are selected rather than averaged.</p>
       <pre><code># Pseudo-code for Zak WTA driving head
 x = mcv_encoder(image_tokens, conditioning_tokens)
 latents = learned_latents.expand(batch)
@@ -95,7 +96,7 @@ if training:
 else:
     k = argmax(mode_logits)
     output = all_ego[k], all_ind[k], all_gear[k]</code></pre>
-      <p>The WTA head is the new multimodal approach Zak added near the output adaptor equivalent. The multimodality lives in the output head: the backbone produces one representation, then the head fans out into eight alternative futures and learns a classifier over them.</p>`,
+      <p>The WTA head is the new multimodal approach Zak added near the output adaptor equivalent. The multimodality lives in the output head: the backbone produces one representation, then the head fans out into eight alternative futures and learns a classifier over them. During training the classifier does not decide which head trains; the WTA loss oracle computes the head assignment from per-head errors, and the classifier learns to imitate that assignment.</p>`,
   },
 };
 
