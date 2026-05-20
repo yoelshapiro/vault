@@ -197,7 +197,7 @@ Results: all passed. A prior run of the same SI test selection without `--no-cov
 
 ## Route Context Variant Prototype
 
-Implemented, but did not commit, an SI-only weighted route-context variant mechanism for parking augmentation.
+Implemented, tested, and then reverted without committing an SI-only weighted route-context variant mechanism for parking augmentation because the approach was too complicated for the current PR.
 
 Shape:
 
@@ -222,3 +222,5 @@ bazel test //wayve/ai/si/datamodules:ty
 ```
 
 Results: all passed.
+
+Final state: reverted from the workspace. No committed code changes remain from this prototype.

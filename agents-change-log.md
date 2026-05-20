@@ -2524,5 +2524,5 @@
     - Monitored refreshed presubmit build `482724` for PR 102690; all Buildkite/GitHub checks passed on merge commit `add3a4e791ae` with no additional CI-fix commit required.
     - Refreshed the PR description to match the final branch state, including SI route-shortening semantics, unparking jitter guard, D26.3 config updates, dependency cleanup, verification, and passing presubmit.
     - Reverted PR-side changes to `wayve/ai/zoo/data/parking.py`, stopped forwarding new SI-only route-shortening args into the zoo path, and removed zoo tests for the deleted helpers.
-    - Prototyped an uncommitted SI-only weighted route-context variant config that samples per-sample park-mode, route-shortening, blackout, and navigation-cleanup recipes while preserving existing scalar booleans as defaults.
+    - Prototyped, tested, and reverted an uncommitted SI-only weighted route-context variant config after deciding it was too complicated for this PR.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]
