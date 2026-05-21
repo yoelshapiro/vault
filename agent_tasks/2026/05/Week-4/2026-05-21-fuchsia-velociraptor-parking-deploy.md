@@ -29,3 +29,13 @@
 - No Console note was added.
 - No Model CI was triggered.
 - No Pudo-Unpudo Eval Studio execution was triggered.
+
+## Detached Training-Commit Retry
+- Worktree: `/tmp/wayvecode-fuchsia-model-branch`.
+- Commit: `1beb40334ef9cbaf8ac17a45299066570755171c`.
+- Spawned a deploy sub-agent and ran the requested deploy command directly from the detached training-commit worktree.
+- Result: failed with exit code `1` before an output session path, Console URL, or deployed nickname was printed.
+- Blocker: Azure credential failure while downloading from `wayveprodmlexperiments.blob.core.windows.net/training-session-store`.
+- Exact core error:
+  - `pyarrow.lib.ArrowException: Unknown error: Check for Hierarchical Namespace support on 'https://wayveprodmlexperiments.blob.core.windows.net/training-session-store' failed: N5Azure4Core11Credentials23AuthenticationExceptionE: Failed to get token from DefaultAzureCredential.`
+- Export verification was not run because no output session was produced.
