@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-21 - Fuchsia Velociraptor parking deploy attempt
+- Topic: deploy `fuchsia-multicolored-velociraptor` as a Parking/PUDO interleave-control model and run the Pudo-Unpudo Eval Studio suite.
+- Labels: #parking #deploy #interleave-control #model-ci #eval-studio #vault
+- Branch: `boris/03-23-park-route-shortening-v2`
+- PR: none
+- Change type: operations
+- Areas: `agent_tasks/2026/05/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-4/2026-05-21-fuchsia-velociraptor-parking-deploy]]: resolved source session `session_2026_05_20_17_05_40_si_parking_bc_train_release_2026_5_11_unpudo_moving_speed_intervention` and latest checkpoint `10` / step `100000`, confirmed no radar overlay was needed, spawned the required deploy sub-agent, and recorded the failed deploy because the current branch's `deploy.py` lacks `--enable_interleave_control` / `--interleave_control_group`; identified `03-20-si-group-interleave-control-support` as a branch containing the needed deploy flags and resolved the requested Eval Studio suite history to canonical suite UUID `ea663952-b914-47a3-8cc1-729db3683dce`.
+
 > #### 2026-05-19 - PR 102690 merge readiness check
 - Topic: rehydrate and triage the parking route-shortening PR before merge.
 - Labels: #parking #route-map #pr-review #ci #tests
