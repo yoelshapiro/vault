@@ -128,7 +128,7 @@ Existing generated artifacts:
 
 ## Pull-over Source Gap
 
-Pull-over is explicitly in scope, but this seed has not yet mapped its dedicated code paths or docs. Candidate search terms:
+Pull-over is explicitly in scope, but this wiki pass has not yet mapped its dedicated code paths or docs. Candidate search terms:
 
 - `pull over`
 - `pullover`

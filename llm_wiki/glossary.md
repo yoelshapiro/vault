@@ -23,7 +23,7 @@ Seed glossary for terms used in the wiki. Expand each term into a dedicated page
 | PUDO | Pick-up/drop-off parking-related capability area. Exact operational definition should be sourced from Notion or code. |
 | UNPUDO | Un-pick-up/drop-off or departure-from-PUDO capability area. Exact operational definition should be sourced. |
 | Unparking | Leaving a parked or standstill state into driving. Exact event taxonomy should be sourced. |
-| Pull-over | Robotaxi pull-over capability. Source gap in this seed. |
+| Pull-over | Robotaxi pull-over capability. Source gap in the current wiki until product/SOP sources are ingested. |
 | Datamodule | Training data configuration and loading component in SI. |
 | Materialization | Process of producing dataset roots/buckets/tables used by training or evaluation. |
 | Materialisation | UK spelling used by repo docs and Notion for materialized dataset workflows. Same concept as Materialization. |

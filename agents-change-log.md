@@ -2552,3 +2552,18 @@
     - Prototyped, tested, and reverted an uncommitted SI-only weighted route-context variant config after deciding it was too complicated for this PR.
     - Added a simpler SI-only float `park_mode_blackout_probability` knob, defaulting to `0.0`, that samples between park-mode+blackout and no-park-mode+route-shortening, including explicit support for `p=1.0`.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check]]
+
+- Topic: LLM wiki expansion for Wayve MLE
+  - Labels: llm-wiki, parking, model-architecture, data, evaluation
+  - Branch: main
+  - PR: none
+  - Change type: Documentation / Knowledge Base
+  - Areas: vault/llm_wiki, vault/agent_tasks
+  - Changes:
+    - Expanded `llm_wiki` from a seed scaffold into a source-backed working wiki for Wayve MLE model development.
+    - Added source summaries for a fetched Notion training page, Notion discovery pointers, inspected model/data/parking code, vault parking newsletters, and parking lifecycle skills.
+    - Added system pages covering model-vehicle interface, space-time architecture, data/materialisation, parking labels, parking model architecture, deployment, and evaluation/Model CI.
+    - Added workflow pages for training a driving model, parking development, on-road experiments, and a 2026-05-23 wiki health review.
+    - Updated the wiki home, index, end-to-end stack, parking hub, model-development workflow, BC/RL page, codebase map, glossary, open questions, and log.
+    - Captured known gaps: timed-out Notion pages, Slack search timeout, pull-over source gap, stopping-mode enum drift, hazard-only PUDO proxy, and missing canonical evaluation suite IDs.
+  - Note: [[agent_tasks/2026/05/Week-4/2026-05-23-llm-wiki-expansion]]

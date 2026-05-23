@@ -4,7 +4,7 @@ type: map
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - sources
