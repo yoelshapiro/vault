@@ -1,88 +1,134 @@
-const wjColors = {
-  input: "#f7efe5",
-  adapter: "#dff3ee",
-  encoder: "#d8e6fb",
-  output: "#fbe5c6",
-  train: "#eadff5",
-  deploy: "#e8efdc",
-  risk: "#f6d6d6",
-  stroke: "#3e4a46",
-};
-
-const wjEsc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const wjLines = (lines) =>
-  lines.map((line, i) => `<tspan x="18" dy="${i === 0 ? 0 : 19}">${wjEsc(line)}</tspan>`).join("");
-const wjBox = (x, y, w, h, title, lines, kind = "adapter") => `
-  <g transform="translate(${x},${y})">
-    <rect width="${w}" height="${h}" rx="12" fill="${wjColors[kind]}" stroke="${wjColors.stroke}" stroke-width="2"/>
-    <text x="18" y="28" class="node-title">${wjEsc(title)}</text>
-    <text x="18" y="56" class="node-copy">${wjLines(lines)}</text>
-  </g>`;
-const wjArrow = (x1, y1, x2, y2, label = "") => `
-  <path d="M ${x1} ${y1} C ${(x1 + x2) / 2} ${y1}, ${(x1 + x2) / 2} ${y2}, ${x2} ${y2}"
-        fill="none" stroke="#51625d" stroke-width="2.4" marker-end="url(#wjArrow)"/>
-  ${label ? `<text x="${(x1 + x2) / 2 - 58}" y="${(y1 + y2) / 2 - 8}" class="edge-label">${wjEsc(label)}</text>` : ""}`;
-
 const wonjoonGraph = `
-<div class="wide-diagram">
-<svg class="full-arch-graph wonjoon-graph" viewBox="0 0 2360 1320" role="img" aria-label="Wonjoon PR 106346 path diffusion architecture">
-  <defs>
-    <marker id="wjArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#51625d"/>
-    </marker>
-  </defs>
-  <style>
-    .wonjoon-graph{min-width:1500px;background:#fbf8f1;border:1px solid #d6cab7;border-radius:16px}
-    .node-title{font:700 22px Fraunces, Georgia, serif;fill:#1d2a27}
-    .node-copy{font:500 15px Atkinson Hyperlegible, Verdana, sans-serif;fill:#243531}
-    .edge-label{font:700 14px Atkinson Hyperlegible, Verdana, sans-serif;fill:#34423e}
-    .lane-label{font:800 26px Fraunces, Georgia, serif;fill:#4f3d29}
-  </style>
-
-  <text x="42" y="54" class="lane-label">Data and labels</text>
-  ${wjBox(40, 92, 305, 142, "Runtime inputs", ["6 camera frames", "route map", "speed / pose / indicator"], "input")}
-  ${wjBox(40, 260, 305, 142, "Parking inputs", ["gear_direction adaptor", "parking_mode adaptor", "no separate goal-pose adaptor"], "input")}
-  ${wjBox(40, 430, 305, 190, "Path labels", ["POLICY_PATH [B,50,7]", "sampled every 0.5m", "clamped at goal", "PARKING_POSE label"], "train")}
-  ${wjBox(40, 650, 305, 166, "Ordinary labels", ["waypoints", "indicator state", "gear direction", "short horizon policy"], "train")}
-
-  <text x="405" y="54" class="lane-label">SI / WFM encoder</text>
-  ${wjBox(405, 120, 315, 172, "Input adaptors", ["Dec 2025 WFM video path", "route and scalar adaptors", "gear and parking tokens"], "adapter")}
-  ${wjBox(790, 120, 365, 172, "InputAdaptor", ["concatenate token groups", "add temporal metadata", "emit INPUT_TOKENS"], "adapter")}
-  ${wjBox(1225, 120, 380, 172, "STTransformer", ["WFMStDecember2025Cfg", "flash attention v3", "emit OUTPUT_TOKENS"], "encoder")}
-
-  <text x="1670" y="54" class="lane-label">Output adaptor</text>
-  ${wjBox(1665, 120, 350, 190, "DiffusionOutputAdaptor", ["learned pool queries", "XBlock cross-attn", "split pooled conditions"], "output")}
-  ${wjBox(2055, 80, 260, 120, "diffusion_cond", ["[B,128,D]", "primary path head"], "output")}
-  ${wjBox(2055, 235, 260, 120, "auxiliary_conds", ["two [B,128,D]", "training only"], "train")}
-  ${wjBox(2055, 390, 260, 120, "ordinary_cond", ["policy output tokens", "ordinary head"], "output")}
-
-  <text x="405" y="890" class="lane-label">Planner then controller</text>
-  ${wjBox(405, 940, 380, 210, "Primary DiffusionHead", ["DDIM velocity denoiser", "embed=768, heads=8", "MMDiTBlock x2", "10 inference steps"], "output")}
-  ${wjBox(850, 940, 380, 210, "PathPosePrePostProcessor", ["encode x/y only", "delta + polar + Welford", "chunk 50 points into 10 tokens", "decode yaw from xy"], "output")}
-  ${wjBox(1300, 920, 340, 250, "Generated plan", ["POLICY_PATH [B,50,7]", "path distance", "forward / left tensors", "final point as pose proposal"], "deploy")}
-  ${wjBox(1710, 865, 330, 160, "Aux head A", ["absolute path encoding", "aux diffusion loss", "not primary inference path"], "train")}
-  ${wjBox(1710, 1055, 330, 160, "Aux head B", ["30-frame waypoint diffusion", "aux diffusion loss", "not deployed controller"], "train")}
-  ${wjBox(1300, 1210, 340, 94, "PolicyPathConditioner", ["delta xy Conv1d + ego-proximity pool"], "output")}
-  ${wjBox(1990, 1115, 320, 158, "OrdinaryHead", ["ordinary_cond + path embedding", "11-frame waypoints", "indicator + gear"], "deploy")}
-
-  ${wjArrow(345, 162, 405, 185)}
-  ${wjArrow(345, 331, 405, 207)}
-  ${wjArrow(720, 206, 790, 206, "tokens")}
-  ${wjArrow(1155, 206, 1225, 206, "INPUT_TOKENS")}
-  ${wjArrow(1605, 206, 1665, 206, "OUTPUT_TOKENS")}
-  ${wjArrow(2015, 196, 2055, 140)}
-  ${wjArrow(2015, 215, 2055, 295)}
-  ${wjArrow(2015, 235, 2055, 452)}
-  ${wjArrow(2185, 200, 585, 940, "primary cond")}
-  ${wjArrow(345, 525, 850, 1008, "path target")}
-  ${wjArrow(785, 1045, 850, 1045, "x_t")}
-  ${wjArrow(1230, 1045, 1300, 1045, "decode")}
-  ${wjArrow(2185, 355, 1710, 945, "aux")}
-  ${wjArrow(2185, 355, 1710, 1135, "aux")}
-  ${wjArrow(1470, 1170, 1470, 1210, "path")}
-  ${wjArrow(1640, 1255, 1990, 1194, "embedding")}
-  ${wjArrow(2185, 510, 1990, 1165, "ordinary cond")}
-</svg>
+<style>
+  .wj-map {
+    background: #fbf8f1;
+    border: 1px solid #d6cab7;
+    box-shadow: var(--shadow);
+    margin: 14px 0 22px;
+    padding: 16px;
+  }
+  .wj-map-title {
+    color: #4f3d29;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .wj-flow {
+    align-items: stretch;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(5, minmax(145px, 1fr));
+  }
+  .wj-card {
+    background: #ffffff;
+    border: 1px solid #9fb0a6;
+    border-left: 6px solid #6f9db2;
+    min-height: 150px;
+    padding: 12px;
+    position: relative;
+  }
+  .wj-card:not(:last-child)::after {
+    color: #a8605a;
+    content: ">";
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 24px;
+    font-weight: 800;
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  .wj-card b {
+    color: #13261e;
+    display: block;
+    font-size: 16px;
+    margin-bottom: 7px;
+  }
+  .wj-card span {
+    color: #526159;
+    display: block;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .wj-card.input { border-left-color: #3f7a5f; }
+  .wj-card.encoder { border-left-color: #6f9db2; }
+  .wj-card.planner { border-left-color: #c46b61; }
+  .wj-card.deploy { border-left-color: #d7b76a; }
+  .wj-card.output { border-left-color: #8b86b5; }
+  .wj-branches {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    margin-top: 14px;
+  }
+  .wj-branch {
+    background: #fffdf8;
+    border: 1px dashed #b8a989;
+    padding: 12px;
+  }
+  .wj-branch b {
+    color: #13261e;
+    display: block;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .wj-branch span {
+    color: #526159;
+    display: block;
+    font-size: 13px;
+  }
+  .wj-branch.train { border-left: 6px solid #8b86b5; }
+  .wj-branch.runtime { border-left: 6px solid #3f7a5f; }
+  @media (max-width: 1100px) {
+    .wj-flow,
+    .wj-branches { grid-template-columns: 1fr; }
+    .wj-card:not(:last-child)::after {
+      bottom: -25px;
+      content: "v";
+      left: 50%;
+      right: auto;
+      top: auto;
+      transform: translateX(-50%);
+    }
+  }
+</style>
+<div class="wj-map" role="img" aria-label="Wonjoon path diffusion architecture, simplified">
+  <div class="wj-map-title">Runtime path: generate a plan, then condition the ordinary policy on it</div>
+  <div class="wj-flow">
+    <div class="wj-card input">
+      <b>1. Runtime inputs</b>
+      <span>Cameras, route/scalar inputs, gear-direction tokens, and parking-mode tokens enter the normal SI adaptor stack.</span>
+    </div>
+    <div class="wj-card encoder">
+      <b>2. SI / WFM encoder</b>
+      <span><code>WFMStDecember2025Cfg</code> and <code>STTransformer</code> produce <code>OUTPUT_TOKENS</code>.</span>
+    </div>
+    <div class="wj-card planner">
+      <b>3. Diffusion planner</b>
+      <span><code>DiffusionOutputAdaptor</code> pools encoder tokens into <code>diffusion_cond</code>, then <code>DiffusionHead</code> denoises a compact path representation.</span>
+    </div>
+    <div class="wj-card deploy">
+      <b>4. Generated path</b>
+      <span><code>PathPosePrePostProcessor</code> decodes <code>POLICY_PATH [B,50,7]</code>, path distance, forward/left tensors, and the final-point parking pose.</span>
+    </div>
+    <div class="wj-card output">
+      <b>5. Ordinary policy</b>
+      <span><code>PolicyPathConditioner</code> embeds the path and adds it to <code>ordinary_cond</code>; <code>OrdinaryHead</code> predicts 11-frame waypoints, indicator, and gear.</span>
+    </div>
+  </div>
+  <div class="wj-branches">
+    <div class="wj-branch train">
+      <b>Training-only supervision</b>
+      <span>Labels supply <code>POLICY_PATH</code>, waypoint, indicator, and gear targets. The ordinary head is trained against the ground-truth path, with 50% path-conditioning dropout.</span>
+    </div>
+    <div class="wj-branch train">
+      <b>Auxiliary diffusion losses</b>
+      <span>Two aux diffusion heads regularize the shared representation: one absolute-path head and one 30-frame waypoint/indicator head. They are training aids, not the deployed controller path.</span>
+    </div>
+  </div>
 </div>`;
 
 window.REPORT_SECTIONS.push({
