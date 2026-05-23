@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "llm_wiki/systems/end-to-end-driving-stack.md",
+                "file": "llm_wiki/index.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "end-to-end-driving-stack"
+              "title": "index"
             }
           }
         ],
@@ -493,6 +493,8 @@
   "active": "117f440063e12be8",
   "lastOpenFiles": [
     "llm_wiki/README.md",
+    "llm_wiki/systems/parking-and-pull-over.md",
+    "llm_wiki/systems/end-to-end-driving-stack.md",
     "llm_wiki/glossary.md",
     "projects.md",
     "llm_wiki/raw/notion/README.md",
@@ -510,8 +512,6 @@
     "llm_wiki/workflows/model-development-cycle.md",
     "llm_wiki/workflows/agent-skill-map.md",
     "llm_wiki/systems/world-model-pretraining.md",
-    "llm_wiki/systems/parking-and-pull-over.md",
-    "llm_wiki/systems/end-to-end-driving-stack.md",
     "llm_wiki/systems/bc-rl-training.md",
     "llm_wiki/sources/README.md",
     "llm_wiki/maps/knowledge-sources.md",
