@@ -1,134 +1,307 @@
+const wjEsc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const wjSvgNode = ({ x, y, w, h, title, sub, items, cls = "blue" }) => `
+  <g class="wj-node ${cls}" transform="translate(${x},${y})">
+    <rect class="wj-outer" width="${w}" height="${h}" rx="7"/>
+    <text class="wj-title" x="14" y="24">${wjEsc(title)}</text>
+    ${sub ? `<text class="wj-sub" x="14" y="44">${wjEsc(sub)}</text>` : ""}
+    ${(items || [])
+      .map((item, i) => `<text class="wj-item" x="16" y="${sub ? 70 + i * 19 : 52 + i * 19}">${wjEsc(item)}</text>`)
+      .join("")}
+  </g>`;
+const wjEdge = (x1, y1, x2, y2, cls = "", label = "") => `
+  <path class="wj-edge ${cls}" d="M ${x1} ${y1} L ${x2} ${y2}" marker-end="url(#wjArrow)"/>
+  ${label ? `<text class="wj-edge-label" x="${(x1 + x2) / 2 - 42}" y="${(y1 + y2) / 2 - 8}">${wjEsc(label)}</text>` : ""}`;
+const wjBend = (x1, y1, x2, y2, cls = "", label = "") => {
+  const midX = Math.round((x1 + x2) / 2);
+  return `
+    <path class="wj-edge ${cls}" d="M ${x1} ${y1} H ${midX} V ${y2} H ${x2}" marker-end="url(#wjArrow)"/>
+    ${label ? `<text class="wj-edge-label" x="${midX + 8}" y="${(y1 + y2) / 2 - 8}">${wjEsc(label)}</text>` : ""}`;
+};
+
 const wonjoonGraph = `
-<style>
-  .wj-map {
-    background: #fbf8f1;
-    border: 1px solid #d6cab7;
-    box-shadow: var(--shadow);
-    margin: 14px 0 22px;
-    padding: 16px;
-  }
-  .wj-map-title {
-    color: #4f3d29;
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 12px;
-    font-weight: 800;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-  .wj-flow {
-    align-items: stretch;
-    display: grid;
-    gap: 10px;
-    grid-template-columns: repeat(5, minmax(145px, 1fr));
-  }
-  .wj-card {
-    background: #ffffff;
-    border: 1px solid #9fb0a6;
-    border-left: 6px solid #6f9db2;
-    min-height: 150px;
-    padding: 12px;
-    position: relative;
-  }
-  .wj-card:not(:last-child)::after {
-    color: #a8605a;
-    content: ">";
-    font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 24px;
-    font-weight: 800;
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2;
-  }
-  .wj-card b {
-    color: #13261e;
-    display: block;
-    font-size: 16px;
-    margin-bottom: 7px;
-  }
-  .wj-card span {
-    color: #526159;
-    display: block;
-    font-size: 13px;
-    line-height: 1.35;
-  }
-  .wj-card.input { border-left-color: #3f7a5f; }
-  .wj-card.encoder { border-left-color: #6f9db2; }
-  .wj-card.planner { border-left-color: #c46b61; }
-  .wj-card.deploy { border-left-color: #d7b76a; }
-  .wj-card.output { border-left-color: #8b86b5; }
-  .wj-branches {
-    display: grid;
-    gap: 12px;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    margin-top: 14px;
-  }
-  .wj-branch {
-    background: #fffdf8;
-    border: 1px dashed #b8a989;
-    padding: 12px;
-  }
-  .wj-branch b {
-    color: #13261e;
-    display: block;
-    font-size: 15px;
-    margin-bottom: 6px;
-  }
-  .wj-branch span {
-    color: #526159;
-    display: block;
-    font-size: 13px;
-  }
-  .wj-branch.train { border-left: 6px solid #8b86b5; }
-  .wj-branch.runtime { border-left: 6px solid #3f7a5f; }
-  @media (max-width: 1100px) {
-    .wj-flow,
-    .wj-branches { grid-template-columns: 1fr; }
-    .wj-card:not(:last-child)::after {
-      bottom: -25px;
-      content: "v";
-      left: 50%;
-      right: auto;
-      top: auto;
-      transform: translateX(-50%);
-    }
-  }
-</style>
-<div class="wj-map" role="img" aria-label="Wonjoon path diffusion architecture, simplified">
-  <div class="wj-map-title">Runtime path: generate a plan, then condition the ordinary policy on it</div>
-  <div class="wj-flow">
-    <div class="wj-card input">
-      <b>1. Runtime inputs</b>
-      <span>Cameras, route/scalar inputs, gear-direction tokens, and parking-mode tokens enter the normal SI adaptor stack.</span>
-    </div>
-    <div class="wj-card encoder">
-      <b>2. SI / WFM encoder</b>
-      <span><code>WFMStDecember2025Cfg</code> and <code>STTransformer</code> produce <code>OUTPUT_TOKENS</code>.</span>
-    </div>
-    <div class="wj-card planner">
-      <b>3. Diffusion planner</b>
-      <span><code>DiffusionOutputAdaptor</code> pools encoder tokens into <code>diffusion_cond</code>, then <code>DiffusionHead</code> denoises a compact path representation.</span>
-    </div>
-    <div class="wj-card deploy">
-      <b>4. Generated path</b>
-      <span><code>PathPosePrePostProcessor</code> decodes <code>POLICY_PATH [B,50,7]</code>, path distance, forward/left tensors, and the final-point parking pose.</span>
-    </div>
-    <div class="wj-card output">
-      <b>5. Ordinary policy</b>
-      <span><code>PolicyPathConditioner</code> embeds the path and adds it to <code>ordinary_cond</code>; <code>OrdinaryHead</code> predicts 11-frame waypoints, indicator, and gear.</span>
-    </div>
-  </div>
-  <div class="wj-branches">
-    <div class="wj-branch train">
-      <b>Training-only supervision</b>
-      <span>Labels supply <code>POLICY_PATH</code>, waypoint, indicator, and gear targets. The ordinary head is trained against the ground-truth path, with 50% path-conditioning dropout.</span>
-    </div>
-    <div class="wj-branch train">
-      <b>Auxiliary diffusion losses</b>
-      <span>Two aux diffusion heads regularize the shared representation: one absolute-path head and one 30-frame waypoint/indicator head. They are training aids, not the deployed controller path.</span>
-    </div>
-  </div>
+<div class="wide-diagram">
+<svg class="full-arch-graph wide wonjoon-arch" viewBox="0 0 2240 1040" role="img" aria-label="Wonjoon full path diffusion architecture with training and inference flows">
+  <defs>
+    <marker id="wjArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+  <style>
+    .wonjoon-arch{min-width:1780px;background:#fbf8f1;border:1px solid #d6cab7}
+    .wj-lane{fill:rgba(255,253,248,.74);stroke:#cdbf9f;stroke-width:1.5}
+    .wj-lane-alt{fill:rgba(238,247,249,.55);stroke:#bdd0d3;stroke-width:1.5}
+    .wj-lane-title{font:800 18px "IBM Plex Mono",ui-monospace,monospace;fill:#5d4630;text-transform:uppercase}
+    .wj-outer{fill:#fffdf8;stroke:#56665a;stroke-width:2;filter:drop-shadow(0 7px 10px rgba(37,48,41,.12))}
+    .wj-node.green .wj-outer{fill:#eef8ee;stroke:#5d9474}
+    .wj-node.blue .wj-outer{fill:#eef7f9;stroke:#6f9db2}
+    .wj-node.rust .wj-outer{fill:#fbefed;stroke:#b66b64}
+    .wj-node.yellow .wj-outer{fill:#faf5df;stroke:#b79a54}
+    .wj-node.purple .wj-outer{fill:#f3edf9;stroke:#8b6aa7}
+    .wj-node.inactive .wj-outer{fill:#f5f1dc;stroke:#9f9568;stroke-dasharray:8 6;opacity:.82}
+    .wj-title{font:850 15px "Space Grotesk","Aptos","Segoe UI",sans-serif;fill:#0b120e}
+    .wj-sub{font:750 12px "Space Grotesk","Aptos","Segoe UI",sans-serif;fill:#4e5b52}
+    .wj-item{font:720 12px "Space Grotesk","Aptos","Segoe UI",sans-serif;fill:#17251d}
+    .wj-edge{fill:none;stroke:#9d625d;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .wj-edge.runtime{stroke:#2f7d72;stroke-width:3.4}
+    .wj-edge.train{stroke:#8b6aa7;stroke-dasharray:7 7}
+    .wj-edge.aux{stroke:#a98138;stroke-dasharray:9 7}
+    .wj-edge.cond{stroke:#4d7891}
+    .wj-edge-label{font:800 12px "IBM Plex Mono",ui-monospace,monospace;fill:#39473f}
+    .wj-legend{font:800 12px "IBM Plex Mono",ui-monospace,monospace;fill:#4e5b52}
+    .wonjoon-arch marker path{fill:#9d625d}
+  </style>
+
+  <rect class="wj-lane" x="20" y="34" width="2200" height="190" rx="8"/>
+  <rect class="wj-lane-alt" x="20" y="250" width="2200" height="230" rx="8"/>
+  <rect class="wj-lane" x="20" y="505" width="2200" height="230" rx="8"/>
+  <rect class="wj-lane-alt" x="20" y="760" width="2200" height="245" rx="8"/>
+  <text class="wj-lane-title" x="40" y="64">Training labels and target construction</text>
+  <text class="wj-lane-title" x="40" y="280">Runtime encoder path</text>
+  <text class="wj-lane-title" x="40" y="535">Long-horizon diffusion planner</text>
+  <text class="wj-lane-title" x="40" y="790">Path-conditioned ordinary policy</text>
+
+  ${wjSvgNode({
+    x: 40,
+    y: 92,
+    w: 230,
+    h: 105,
+    title: "Train partitions",
+    sub: "ParkingBcDiffusionTrainCfg",
+    items: ["driving = 0.5", "parking = 0.5", "GC parking/unparking buckets"],
+    cls: "green",
+  })}
+  ${wjSvgNode({
+    x: 310,
+    y: 82,
+    w: 260,
+    h: 125,
+    title: "Parking datamodule",
+    sub: "ParkingDataConfig",
+    items: ["reconstruct gear from speed", "compute PARKING_MODE", "strip leading standstill", "clamp after P/N"],
+    cls: "yellow",
+  })}
+  ${wjSvgNode({
+    x: 610,
+    y: 76,
+    w: 285,
+    h: 135,
+    title: "Supervised labels",
+    sub: "materialized per sample",
+    items: ["POLICY_PATH [B,50,7]", "waypoints and time delta", "indicator labels", "gear direction labels"],
+    cls: "green",
+  })}
+  ${wjSvgNode({
+    x: 935,
+    y: 76,
+    w: 300,
+    h: 135,
+    title: "Target processors",
+    sub: "diffusion.py",
+    items: ["path: delta + polar + Welford", "chunk 50 points into 10 tokens", "aux absolute-path encoding", "aux 30-frame waypoint encoding"],
+    cls: "purple",
+  })}
+  ${wjSvgNode({
+    x: 1780,
+    y: 76,
+    w: 390,
+    h: 135,
+    title: "Training losses",
+    sub: "BcLossModuleCfg",
+    items: ["primary diffusion loss", "two auxiliary diffusion losses", "waypoint + log-likelihood", "indicator + gear direction"],
+    cls: "rust",
+  })}
+
+  ${wjSvgNode({
+    x: 40,
+    y: 320,
+    w: 230,
+    h: 120,
+    title: "Runtime inputs",
+    sub: "normal SI sensors",
+    items: ["6 camera frames", "route + vehicle scalars", "indicator / pose / speed"],
+    cls: "green",
+  })}
+  ${wjSvgNode({
+    x: 310,
+    y: 305,
+    w: 260,
+    h: 150,
+    title: "Input adaptors",
+    sub: "ParkingDiffusionModelCfg",
+    items: ["Dec 2025 video path", "route and scalar adaptors", "gear_direction adaptor", "parking_mode adaptor"],
+    cls: "blue",
+  })}
+  ${wjSvgNode({
+    x: 610,
+    y: 320,
+    w: 250,
+    h: 120,
+    title: "InputAdaptor",
+    sub: "SI token merge",
+    items: ["concatenate token groups", "add temporal metadata", "emit INPUT_TOKENS"],
+    cls: "blue",
+  })}
+  ${wjSvgNode({
+    x: 900,
+    y: 300,
+    w: 290,
+    h: 160,
+    title: "STTransformer",
+    sub: "WFMStDecember2025Cfg",
+    items: ["Dec 2025 WFM backbone", "flash attention v3", "space-time token mixing", "emit OUTPUT_TOKENS"],
+    cls: "rust",
+  })}
+  ${wjSvgNode({
+    x: 1230,
+    y: 292,
+    w: 300,
+    h: 175,
+    title: "DiffusionOutputAdaptor",
+    sub: "learned pool-query cross-attn",
+    items: ["flatten OUTPUT_TOKENS", "pool queries + XBlock", "pool_mlp", "split pooled conditions"],
+    cls: "blue",
+  })}
+  ${wjSvgNode({
+    x: 1570,
+    y: 292,
+    w: 300,
+    h: 175,
+    title: "Condition split",
+    sub: "three consumers",
+    items: ["diffusion_cond [B,128,D]", "auxiliary_conds x2", "ordinary_cond", "same encoder tokens"],
+    cls: "yellow",
+  })}
+  ${wjSvgNode({
+    x: 1910,
+    y: 312,
+    w: 250,
+    h: 130,
+    title: "Disabled in config",
+    sub: "important boundary",
+    items: ["radar input off", "nav instructions off", "behavior control off"],
+    cls: "inactive",
+  })}
+
+  ${wjSvgNode({
+    x: 935,
+    y: 560,
+    w: 260,
+    h: 130,
+    title: "Initial noise / x0",
+    sub: "train vs inference",
+    items: ["train: noisy encoded path", "robot: zero initial noise", "10 DDIM inference steps"],
+    cls: "yellow",
+  })}
+  ${wjSvgNode({
+    x: 1230,
+    y: 550,
+    w: 300,
+    h: 150,
+    title: "Primary DiffusionHead",
+    sub: "path planner",
+    items: ["Fourier timestep features", "MMDiTBlock x2", "velocity field prediction", "denoise path tokens"],
+    cls: "purple",
+  })}
+  ${wjSvgNode({
+    x: 1570,
+    y: 550,
+    w: 300,
+    h: 150,
+    title: "PathPosePrePostProcessor",
+    sub: "decode generated path",
+    items: ["recover x/y trajectory", "infer yaw from finite diff", "flip yaw for reverse motion", "pure-yaw quaternion"],
+    cls: "purple",
+  })}
+  ${wjSvgNode({
+    x: 1910,
+    y: 540,
+    w: 250,
+    h: 170,
+    title: "Planner outputs",
+    sub: "visible deployment object",
+    items: ["POLICY_PATH [B,50,7]", "POLICY_PATH_DISTANCE", "POSITION_FORWARD / LEFT", "final-point PARKING_POSE"],
+    cls: "green",
+  })}
+  ${wjSvgNode({
+    x: 610,
+    y: 560,
+    w: 250,
+    h: 130,
+    title: "Aux diffusion heads",
+    sub: "training only",
+    items: ["absolute path head", "30-frame waypoint head", "aux loss weight = 1.0"],
+    cls: "purple",
+  })}
+
+  ${wjSvgNode({
+    x: 935,
+    y: 820,
+    w: 260,
+    h: 135,
+    title: "PolicyPathConditioner",
+    sub: "path -> policy embedding",
+    items: ["delta xy Conv1d stack", "ego-proximity pooling", "dropout p = 0.5 in train"],
+    cls: "yellow",
+  })}
+  ${wjSvgNode({
+    x: 1230,
+    y: 810,
+    w: 300,
+    h: 155,
+    title: "OrdinaryHead",
+    sub: "short-horizon controller",
+    items: ["ordinary_cond + path embedding", "future_frames = 11", "waypoint head", "indicator + gear heads"],
+    cls: "blue",
+  })}
+  ${wjSvgNode({
+    x: 1570,
+    y: 820,
+    w: 300,
+    h: 135,
+    title: "Policy outputs",
+    sub: "deployable control signals",
+    items: ["POLICY_WAYPOINTS", "INDICATOR_WEIGHTS", "GEAR_WEIGHTS"],
+    cls: "green",
+  })}
+  ${wjSvgNode({
+    x: 1910,
+    y: 815,
+    w: 250,
+    h: 145,
+    title: "BC loss branch",
+    sub: "training only",
+    items: ["ordinary labels", "automation lateral mask", "waypoint + indicator + gear"],
+    cls: "rust",
+  })}
+
+  ${wjEdge(270, 144, 310, 144, "train")}
+  ${wjEdge(570, 144, 610, 144, "train")}
+  ${wjEdge(895, 144, 935, 144, "train")}
+  ${wjBend(1235, 144, 1780, 144, "train", "targets")}
+  ${wjBend(760, 211, 760, 560, "train", "aux targets")}
+  ${wjBend(760, 211, 1065, 560, "train", "path x0")}
+
+  ${wjEdge(270, 380, 310, 380, "runtime")}
+  ${wjEdge(570, 380, 610, 380, "runtime")}
+  ${wjEdge(860, 380, 900, 380, "runtime")}
+  ${wjEdge(1190, 380, 1230, 380, "runtime")}
+  ${wjEdge(1530, 380, 1570, 380, "cond")}
+  ${wjEdge(1870, 380, 1910, 380, "aux")}
+
+  ${wjBend(1720, 467, 1380, 550, "cond", "diffusion_cond")}
+  ${wjEdge(1195, 625, 1230, 625, "train")}
+  ${wjEdge(1530, 625, 1570, 625, "runtime")}
+  ${wjEdge(1870, 625, 1910, 625, "runtime")}
+  ${wjBend(1720, 467, 735, 560, "aux", "aux_conds")}
+
+  ${wjBend(2035, 710, 1065, 820, "runtime", "generated path")}
+  ${wjEdge(1195, 888, 1230, 888, "runtime", "embedding")}
+  ${wjBend(1720, 467, 1380, 810, "cond", "ordinary_cond")}
+  ${wjEdge(1530, 888, 1570, 888, "runtime")}
+  ${wjEdge(1870, 888, 1910, 888, "train")}
+
+  <text class="wj-legend" x="40" y="1022">Legend: green solid = inference/runtime path, blue solid = pooled conditions, purple dashed = supervised training targets/losses, ochre dashed = auxiliary training-only heads.</text>
+</svg>
 </div>`;
 
 window.REPORT_SECTIONS.push({
