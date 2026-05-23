@@ -53,7 +53,7 @@ Usually do not file:
 Use inline source anchors:
 
 - `Source: /workspace/WayveCode/wayve/ai/si/README.md`
-- `Source: [[llm_wiki/sources/2026-05-23-example|Example source summary]]`
+- `Source: llm_wiki/sources/YYYY-MM-DD-example.md`
 - `Source: PR #12345, branch <branch>, file <path>`
 
 For uncertain synthesis, say `working synthesis` or `hypothesis`.

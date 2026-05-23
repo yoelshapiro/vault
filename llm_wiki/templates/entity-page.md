@@ -35,7 +35,7 @@ How it affects model development, evaluation, deployment, or operations.
 
 ## Source History
 
-- [[llm_wiki/sources/example|Example source]]
+- Example source summary: `llm_wiki/sources/YYYY-MM-DD-example.md`
 
 ## Open Questions
 
