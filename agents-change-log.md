@@ -11,6 +11,16 @@
 ## 2026-05
 > [!note] 2026-05
 
+> #### 2026-05-23 - Wayve MLE LLM wiki scaffold
+- Topic: create a persistent LLM-maintained wiki for Wayve model-development knowledge, focused on end-to-end driving, parking, and robotaxi pull-over.
+- Labels: #llm-wiki #vault #wayve #parking #mle #agents
+- Branch: none
+- PR: none
+- Change type: docs/wiki scaffold
+- Areas: `llm_wiki/`, `agent_tasks/2026/05/Week-4/`
+- Changes:
+  - [[agent_tasks/2026/05/Week-4/2026-05-23-llm-wiki-scaffold]]: created the initial `llm_wiki` tree with an agent operating guide, index, log, raw-source guide, codebase/source maps, seed system pages for the end-to-end driving stack, WFM pre-training, SI BC/RL training, parking/pull-over, model-development and wiki-maintenance workflows, a curated skill map, open questions, glossary, and reusable templates.
+
 > #### 2026-05-21 - Fuchsia Velociraptor parking deploy attempt
 - Topic: deploy `fuchsia-multicolored-velociraptor` as a Parking/PUDO interleave-control model and run the Pudo-Unpudo Eval Studio suite.
 - Labels: #parking #deploy #interleave-control #model-ci #eval-studio #vault
