@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-4/2026-05-23-llm-wiki-expansion.md",
     "llm_wiki/workflows/wiki-health-review-2026-05-23.md",
     "llm_wiki/workflows/training-a-driving-model.md",
     "llm_wiki/workflows/parking-development-workflow.md",
@@ -517,7 +518,6 @@
     "llm_wiki/glossary.md",
     "projects.md",
     "llm_wiki/raw/notion/README.md",
-    "llm_wiki/raw/slack/README.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
