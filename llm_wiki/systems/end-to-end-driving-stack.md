@@ -4,7 +4,7 @@ type: system
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - driving-model
@@ -13,6 +13,8 @@ sources:
   - user seed, 2026-05-23
   - /workspace/WayveCode/wayve/ai/si/README.md
   - /workspace/WayveCode/wayve/ai/foundation/models/world_model/README.md
+  - [[llm_wiki/sources/2026-05-23-notion-training-driving-model|Notion - Training a Driving Model]]
+  - [[llm_wiki/sources/2026-05-23-code-model-interface-and-st-architecture|Code - Model Interface and Space-Time Architecture]]
 ---
 
 # End-to-End Driving Stack
@@ -43,7 +45,7 @@ flowchart LR
     analysis --> source
 ```
 
-## Core idea
+## Core Idea
 
 The system should be understood as a learned driving policy stack:
 
@@ -52,6 +54,13 @@ The system should be understood as a learned driving policy stack:
 - Outputs: future trajectory or action-related outputs, plus auxiliary heads where configured.
 - Training: pre-training for representation/world modeling, then BC/RL for driving behavior.
 - Evaluation: offline metrics, simulation/evaluation suites, Model CI, Shadow Gym, HiL, and on-road analysis.
+
+The current architecture pages break this down into implementation layers:
+
+- [[llm_wiki/systems/model-vehicle-interface|Model-vehicle interface]] explains robot/model input and output keys.
+- [[llm_wiki/systems/space-time-model-architecture|Space-time model architecture]] explains the input-adaptor to ST-encoder to output-head path.
+- [[llm_wiki/systems/data-and-materialisation|Data and materialisation]] explains how corpus rows become training batches.
+- [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and Model Catalogue]] explains how checkpoints become deployable artifacts.
 
 ## Key code anchors
 
@@ -75,6 +84,6 @@ Related page: [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]].
 
 ## Source gaps
 
-- Need a source-backed model architecture page with a concrete current baseline graph.
 - Need a source-backed page for active pull-over code paths and metrics.
-- Need a source-backed page for Model Catalogue, model artifacts, and deployment states.
+- Need a concrete current release config selected as the canonical architecture graph.
+- Need current RL reward/state/action details.

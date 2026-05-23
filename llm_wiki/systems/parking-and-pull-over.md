@@ -4,7 +4,7 @@ type: system
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - parking
@@ -15,6 +15,9 @@ sources:
   - /workspace/WayveCode/wayve/ai/si/configs/parking/README.md
   - /workspace/WayveCode/wayve/ai/parking/README.md
   - /home/borisindelman/git/vault/agents-change-log.md
+  - [[llm_wiki/sources/2026-05-23-code-data-materialisation-and-parking|Code - Data Materialisation and Parking]]
+  - [[llm_wiki/sources/2026-05-23-vault-parking-newsletters|Vault Parking Newsletters]]
+  - [[llm_wiki/sources/2026-05-23-skill-workflows-parking-model-lifecycle|Skill Workflows - Parking Model Lifecycle]]
 ---
 
 # Parking and Pull-over
@@ -92,6 +95,22 @@ Parking capability work usually touches several layers:
 
 This synthesis is supported by the existing vault change log, which contains many prior parking training, deploy, evaluation, and PR-triage sessions.
 
+## Current working model
+
+Use these focused pages for implementation details:
+
+- [[llm_wiki/systems/parking-data-and-labels|Parking data and labels]] - event taxonomy, bucket families, stopping-mode enum, and materialisation caveats.
+- [[llm_wiki/systems/parking-model-architecture|Parking model architecture]] - parking input adaptors, output heads, losses, and release alignment.
+- [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]] - end-to-end loop from failure mode to on-road analysis.
+- [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]] - evaluation layers and what each one can and cannot prove.
+
+Key current caveats:
+
+- Current code defines `STOPPING_MODE` as `0=UNAVAILABLE`, `1=PUDO`, `2=PARK`; older notes may use legacy values.
+- Generic materialisation currently uses hazard presence in the parked segment as a PUDO proxy, while notebook/event-table workflows may use richer trip/destination context.
+- Current inspected parking datamodule code detects reverse-out unparking but deliberately does not detect forward unparking in that path.
+- Pull-over remains a source gap until product/SOP docs are ingested.
+
 ## Existing vault sources to ingest next
 
 High-value historical notes:
@@ -107,7 +126,7 @@ Existing generated artifacts:
 - `/home/borisindelman/git/vault/html_summaries/parking-model-comparison/`
 - `/home/borisindelman/git/vault/parking_model_analysis/`
 
-## Pull-over source gap
+## Pull-over Source Gap
 
 Pull-over is explicitly in scope, but this seed has not yet mapped its dedicated code paths or docs. Candidate search terms:
 

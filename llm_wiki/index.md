@@ -4,7 +4,7 @@ type: index
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
 ---
@@ -35,19 +35,30 @@ Read this page first when navigating the wiki.
 | Page | Summary |
 | --- | --- |
 | [[llm_wiki/systems/end-to-end-driving-stack|End-to-end driving stack]] | High-level Wayve driving-model stack from WFM pre-training through BC/RL and deployment. |
+| [[llm_wiki/systems/model-vehicle-interface|Model-vehicle interface]] | How robot/data inputs become model input keys, adaptors, outputs, and deployment wrapper expectations. |
+| [[llm_wiki/systems/space-time-model-architecture|Space-time model architecture]] | Input adaptors, ST encoder, output adaptor, and heads used by the current SI/Zoo driving model path. |
+| [[llm_wiki/systems/data-and-materialisation|Data and materialisation]] | Corpus rows, materialised roots, buckets, OTF loading, and training batch assembly. |
 | [[llm_wiki/systems/world-model-pretraining|World model pre-training]] | WFM code structure, config model, training workflow, experiments, and validation hooks. |
 | [[llm_wiki/systems/bc-rl-training|BC and RL training]] | SI training path, Hydra modes, datamodules, control-model checks, Model CI, and interleaving. |
 | [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]] | Parking/PUDO/UNPUDO/unparking map plus robotaxi pull-over source gaps. |
+| [[llm_wiki/systems/parking-data-and-labels|Parking data and labels]] | Event taxonomy, parking/PUDO labels, bucket families, and notebook/generic materialisation differences. |
+| [[llm_wiki/systems/parking-model-architecture|Parking model architecture]] | Parking-specific model inputs, heads, losses, release alignment, and deployment checks. |
+| [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]] | Model CI, Eval Studio, Shadow Gym, AV test, HiL, on-road, and event-analysis roles. |
+| [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and Model Catalogue]] | Model identity chain from training checkpoint through deployed artifact, notes, CI, and on-road use. |
 
 ## Workflows
 
 | Page | Summary |
 | --- | --- |
 | [[llm_wiki/workflows/model-development-cycle|Model development cycle]] | Idea-to-on-road lifecycle for model work. |
+| [[llm_wiki/workflows/training-a-driving-model|Training a driving model]] | SI training preflight, local debug, remote submission, monitoring, and checkpoint handoff. |
+| [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]] | Parking/PUDO capability loop from failure definition to data, model, training, evaluation, road, and analysis. |
+| [[llm_wiki/workflows/on-road-experiment-workflow|On-road experiment workflow]] | Requirements and guardrails for interleaved on-road and BRT experiments. |
 | [[llm_wiki/workflows/wiki-ingest-workflow|Wiki ingest workflow]] | Step-by-step source import and synthesis procedure. |
 | [[llm_wiki/workflows/wiki-query-workflow|Wiki query workflow]] | How to answer questions from the wiki and file durable answers. |
 | [[llm_wiki/workflows/wiki-lint-workflow|Wiki lint workflow]] | Health checks for stale, contradictory, or orphaned knowledge. |
 | [[llm_wiki/workflows/agent-skill-map|Agent skill map]] | Relevant local skills for model lookup, training, deployment, evaluation, parking analysis, and PR work. |
+| [[llm_wiki/workflows/wiki-health-review-2026-05-23|Wiki health review - 2026-05-23]] | Review of coverage, remaining gaps, and next lint steps after the expansion pass. |
 
 ## Questions and Glossary
 
@@ -67,4 +78,11 @@ Read this page first when navigating the wiki.
 
 ## Source Summaries
 
-No separate source-summary pages have been ingested yet. The seed pages currently cite local repo READMEs, user-provided context, existing vault logs, and local skill inventory directly. See [[llm_wiki/sources/README|Source summaries guide]] before adding the first source summary.
+| Page | Summary |
+| --- | --- |
+| [[llm_wiki/sources/2026-05-23-notion-training-driving-model|Notion - Training a Driving Model]] | Fetched Notion page covering end-to-end driving model basics, interface, data, BC training, and Console upload. |
+| [[llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation|Notion discovery - parking, evaluation, and pull-over pointers]] | Search-result inventory of high-value Notion pages that still need full fetches. |
+| [[llm_wiki/sources/2026-05-23-code-model-interface-and-st-architecture|Code - model interface and ST architecture]] | Inspected code for model inputs/outputs, ST model, output adaptor, training module, and deployment wrapper. |
+| [[llm_wiki/sources/2026-05-23-code-data-materialisation-and-parking|Code - data materialisation and parking]] | Inspected SI materialisation, OTF datamodule, parking data config, and parking/stopping/gear adaptors. |
+| [[llm_wiki/sources/2026-05-23-vault-parking-newsletters|Vault parking newsletters]] | Existing vault writeups on generic parking/PUDO materialisation, stopping mode, release deltas, and maneuver filters. |
+| [[llm_wiki/sources/2026-05-23-skill-workflows-parking-model-lifecycle|Skill workflows - parking model lifecycle]] | Local skills for parking training, deployment, evaluation, model lookup, event analysis, and on-road experiments. |

@@ -4,7 +4,7 @@ type: home
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - wayve
@@ -24,8 +24,14 @@ The wiki is meant to compound across sessions. Raw sources stay immutable. The L
 - [[llm_wiki/AGENTS|Agent operating guide]] - rules future Codex sessions should follow when maintaining this wiki.
 - [[llm_wiki/maps/codebase-map|Codebase map]] - current WayveCode entry points for the model-development stack.
 - [[llm_wiki/systems/end-to-end-driving-stack|End-to-end driving stack]] - high-level architecture narrative.
+- [[llm_wiki/systems/model-vehicle-interface|Model-vehicle interface]] - robot/model input-output contract.
+- [[llm_wiki/systems/space-time-model-architecture|Space-time model architecture]] - adaptors, ST encoder, and output heads.
+- [[llm_wiki/systems/data-and-materialisation|Data and materialisation]] - corpus, buckets, materialised roots, and OTF loading.
 - [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]] - focused working map for Boris's domain.
+- [[llm_wiki/systems/parking-data-and-labels|Parking data and labels]] - event taxonomy and label semantics.
+- [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]] - evaluation layers and limitations.
 - [[llm_wiki/workflows/model-development-cycle|Model development cycle]] - idea-to-on-road workflow.
+- [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]] - capability loop for parking/PUDO work.
 
 ## Source layers
 
@@ -35,14 +41,23 @@ The wiki is meant to compound across sessions. Raw sources stay immutable. The L
 
 ## Current scope
 
-The first seed covers:
+The current wiki covers:
 
 - End-to-end trajectory-prediction framing.
+- Robot/model interface and mandatory output keys.
+- Space-time model architecture: input adaptors, ST encoder, output adaptor, and heads.
+- Materialisation, bucket mixes, OTF data loading, and parking label insertion.
 - World model pre-training.
 - Behavioural cloning and offline RL in SI.
-- Parking/PUDO/UNPUDO/unparking source maps.
+- Parking/PUDO/UNPUDO/unparking taxonomy, data, labels, model IO, and deployment checks.
 - Model CI, Eval Studio, on-road experiment, and post-run analysis workflow hooks.
 - How agents should ingest Notion, GitHub, Slack, and skill knowledge into durable wiki pages.
+
+## Current caveats
+
+- Several high-value Notion pages were discovered but timed out during fetch; they are tracked in [[llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation|Notion discovery - parking, evaluation, and pull-over pointers]].
+- Slack public search also timed out in this pass, so no Slack thread has been source-summarized yet.
+- Pull-over is in scope but remains under-specified until a product/SOP source is ingested. Do not treat PUDO evidence as automatically proving pull-over behavior.
 
 ## Maintenance rule
 

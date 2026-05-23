@@ -16,7 +16,7 @@ This page tracks source gaps and investigation candidates.
 
 ## Model architecture
 
-- What is the current production or candidate baseline architecture graph for end-to-end trajectory prediction?
+- Which exact current production or candidate release config should be treated as the canonical architecture graph for [[llm_wiki/systems/space-time-model-architecture|Space-time model architecture]]?
 - Which input adaptors are considered core versus experimental for parking and pull-over?
 - Which outputs are primary driving outputs versus auxiliary heads?
 - How are WFM checkpoints selected and loaded into SI BC?
@@ -35,6 +35,8 @@ This page tracks source gaps and investigation candidates.
 - Which materialization tables are authoritative for PUDO, UNPUDO, unparking, and pull-over?
 - Which source docs explain route-shortening, end-of-route blackout, and stopping-mode behavior?
 - Which parking evaluation suites should be run for each candidate class?
+- Should generic materialisation's hazard-only PUDO proxy be promoted to release usage, or should it incorporate destination/trip context first?
+- Which workflow owns forward-unparking detection if that becomes a release requirement?
 
 ## Evaluation and on-road
 
@@ -42,9 +44,12 @@ This page tracks source gaps and investigation candidates.
 - How do Eval Studio, Shadow Gym, HiL, AV test, and on-road experiments relate?
 - Which failures block model promotion versus only inform follow-up work?
 - What is the standard report-card format for parking and pull-over candidates?
+- Which Eval Studio suite ids and AV test scenario collection ids are mandatory for parking/PUDO release candidates?
 
 ## Wiki operations
 
 - Should source summaries mirror Notion page hierarchy or stay flat by date?
 - Should this wiki add a local search tool, or is `index.md` plus `rg` enough for now?
 - Which existing vault notes should be ingested first?
+- Retry full Notion fetches for the pages listed in [[llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation|Notion discovery - parking, evaluation, and pull-over pointers]].
+- Retry Slack search once the connector is responsive and ingest any durable public threads on parking/PUDO release workflows.
