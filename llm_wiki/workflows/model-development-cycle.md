@@ -4,7 +4,7 @@ type: workflow
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - workflow
@@ -14,6 +14,7 @@ sources:
   - /workspace/WayveCode/wayve/ai/si/README.md
   - /workspace/WayveCode/wayve/ai/foundation/models/world_model/AGENTS.md
   - /home/borisindelman/git/vault/agents-change-log.md
+  - [[llm_wiki/sources/2026-05-23-skill-workflows-parking-model-lifecycle|Skill Workflows - Parking Model Lifecycle]]
 ---
 
 # Model Development Cycle
@@ -91,7 +92,9 @@ Local checks should match the blast radius:
 
 ## Step 5: Cluster training
 
-Use:
+Use [[llm_wiki/workflows/training-a-driving-model|Training a driving model]] for SI preflight, command capture, prompt handling, monitoring, and checkpoint handoff.
+
+Common launch surfaces:
 
 - `//tools/wayvecli` for WFM hydra submissions.
 - `//wayve/ai/si/cli:cli` for SI BC/RL submissions.
@@ -119,13 +122,12 @@ Before deployment, answer:
 
 ## Step 7: Deployment and evaluation
 
-Typical hooks:
+Use:
 
-- Model Catalogue lookup skills.
+- [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and Model Catalogue]]
+- [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]]
 - Parking deploy or interleave deploy skills.
-- Model CI and Shadow Gym debug skills.
-- Eval Studio or AV test workflows.
-- HiL checks when hardware latency or on-device behavior matters.
+- Eval Studio, Shadow Gym, AV test, and HiL checks when appropriate.
 
 ## Step 8: On-road and post-run analysis
 
@@ -138,6 +140,8 @@ For parking and pull-over, post-run analysis should capture:
 - Driver transcript alignment when relevant.
 - AV-owned versus setup/environment failures.
 - Next data/model/config action.
+
+Detailed parking sequence: [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]].
 
 ## Step 9: Feed the wiki
 

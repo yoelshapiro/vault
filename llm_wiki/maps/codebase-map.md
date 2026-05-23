@@ -4,7 +4,7 @@ type: map
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - wayvecode
@@ -69,6 +69,12 @@ Related page: [[llm_wiki/systems/bc-rl-training|BC and RL training]].
 - `/workspace/WayveCode/wayve/ai/zoo/outputs/indicator_output_head.py` - indicator output head.
 - `/workspace/WayveCode/wayve/ai/si/trajectory.py` - trajectory-related SI utilities.
 
+Related pages:
+
+- [[llm_wiki/systems/model-vehicle-interface|Model-vehicle interface]]
+- [[llm_wiki/systems/space-time-model-architecture|Space-time model architecture]]
+- [[llm_wiki/systems/parking-model-architecture|Parking model architecture]]
+
 ## Parking, PUDO, UNPUDO, and unparking
 
 - `/workspace/WayveCode/wayve/ai/parking/` - parking package, evaluation scripts, notebooks, and model-analysis utilities.
@@ -84,7 +90,11 @@ Related page: [[llm_wiki/systems/bc-rl-training|BC and RL training]].
 - `/workspace/WayveCode/wayve/ai/parking/model_analysis/` - model-analysis utilities for parking events.
 - `/workspace/WayveCode/wayve/ai/parking/evaluation/` - parking evaluation scripts and tests.
 
-Related page: [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]].
+Related pages:
+
+- [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]]
+- [[llm_wiki/systems/parking-data-and-labels|Parking data and labels]]
+- [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]]
 
 ## Evaluation and data flywheel
 
@@ -94,12 +104,16 @@ Related page: [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]].
 - `/workspace/WayveCode/wayve/ai/services/data_flywheel/model_catalogue.py` - Model Catalogue integration in data flywheel.
 - `/workspace/WayveCode/wayve/ai/services/data_flywheel/release_table.py` - release-table integration.
 
+Related page: [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]].
+
 ## Deployment and interleaving
 
 - `/workspace/WayveCode/wayve/ai/si/README.md` - interleaving commands and Model CI options.
 - `/workspace/WayveCode/wayve/ai/scripts/interleaved/` - interleaved model compile/upload path referenced by SI docs.
 - `/workspace/WayveCode/wayve/ai/distillation/deployment/` - deployment package for distillation models.
 - `/workspace/WayveCode/wayve/ai/safety/training/deployment/` - safety deployment examples.
+
+Related page: [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and Model Catalogue]].
 
 ## Existing vault artifacts to mine
 

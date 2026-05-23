@@ -4,7 +4,7 @@ type: map
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - glossary
@@ -26,10 +26,22 @@ Seed glossary for terms used in the wiki. Expand each term into a dedicated page
 | Pull-over | Robotaxi pull-over capability. Source gap in this seed. |
 | Datamodule | Training data configuration and loading component in SI. |
 | Materialization | Process of producing dataset roots/buckets/tables used by training or evaluation. |
-| Model Catalogue | Service that stores and resolves model sessions, nicknames, checkpoints, artifacts, notes, and related metadata. Needs dedicated page. |
-| Model CI | Automated evaluation/build pipeline attached to model artifacts. Needs dedicated page. |
-| Eval Studio | Evaluation suite system used for scenario or suite executions. Needs dedicated page. |
-| Shadow Gym | Evaluation environment referenced in Model CI debugging workflows. Needs dedicated page. |
+| Materialisation | UK spelling used by repo docs and Notion for materialized dataset workflows. Same concept as Materialization. |
+| OTF | On-the-fly loading. Training rows reference run/timestamp examples while tensors are fetched and assembled at load time. |
+| Data key | Named tensor or value passed through dataloaders, model adaptors, and deployment interfaces. |
+| Input adaptor | Model module that turns one family of input keys into tokens for the space-time model. |
+| ST Transformer | Space-time transformer encoder used by the inspected SI/Zoo model path. |
+| Output adaptor | Module that attaches output heads such as waypoints, indicators, gear direction, and variance. |
+| STOPPING_MODE | Current code enum: `0=UNAVAILABLE`, `1=PUDO`, `2=PARK`. Older notes may use legacy values. |
+| PARKING_MODE | Boolean-ish conditioning key marking parking-style context. |
+| Gear direction | Input/output signal for drive/reverse/park/neutral style behavior, important for parking deployment. |
+| DC | Direct-control data bucket family in parking materialisation. |
+| CA | Corrective action bucket family around interventions. |
+| Pre-CA | Frames before a corrective action/intervention, usually still AV-owned. |
+| Model Catalogue | Service that stores and resolves model sessions, nicknames, checkpoints, artifacts, notes, and related metadata. See [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and Model Catalogue]]. |
+| Model CI | Automated evaluation/build pipeline attached to model artifacts. See [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]]. |
+| Eval Studio | Evaluation suite system used for scenario or suite executions. See [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]]. |
+| Shadow Gym | Open-loop replay/gym evaluation environment referenced in Model CI debugging workflows. It is not sufficient for latency risk by itself. |
 | HiL | Hardware-in-the-loop testing, often important for on-device behavior and latency. |
 | Interleave control | Deployment pattern where a variant model is interleaved with a control or routed by group/capability. |
 | Surfboard | Training job platform referenced by skills and task logs. |

@@ -4,7 +4,7 @@ type: system
 owner: Boris Indelman
 created: 2026-05-23
 updated: 2026-05-23
-status: seed
+status: active
 tags:
   - llm-wiki
   - behavioural-cloning
@@ -13,6 +13,7 @@ tags:
 sources:
   - /workspace/WayveCode/wayve/ai/si/README.md
   - /workspace/WayveCode/wayve/ai/si/configs/model_ci.py
+  - [[llm_wiki/sources/2026-05-23-notion-training-driving-model|Notion - Training a Driving Model]]
 ---
 
 # BC and RL Training
@@ -100,7 +101,11 @@ Parking BC modes and datamodules live under SI config and datamodule paths:
 - `/workspace/WayveCode/wayve/ai/si/configs/parking/`
 - `/workspace/WayveCode/wayve/ai/si/datamodules/parking.py`
 
-Related page: [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]].
+Related pages:
+
+- [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]]
+- [[llm_wiki/workflows/training-a-driving-model|Training a driving model]]
+- [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]]
 
 ## Source gaps
 
