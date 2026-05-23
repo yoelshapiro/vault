@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "llm_wiki/README.md",
+                "file": "llm_wiki/systems/end-to-end-driving-stack.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "end-to-end-driving-stack"
             }
           }
         ],
@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "llm_wiki/README.md",
     "llm_wiki/glossary.md",
     "projects.md",
     "llm_wiki/raw/notion/README.md",
@@ -527,7 +528,6 @@
     "llm_wiki/systems",
     "llm_wiki/sources",
     "llm_wiki/raw",
-    "llm_wiki/log.md",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
