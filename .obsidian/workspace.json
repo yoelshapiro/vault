@@ -295,12 +295,24 @@
             "id": "117f440063e12be8",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
+                "file": "projects.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "unparking_scenarios.excalidraw"
+              "icon": "lucide-file",
+              "title": "projects"
             }
           }
         ],
@@ -463,8 +475,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -481,18 +492,21 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects/zak-latest-work-concepts.md",
+    "agent_tasks/2026/04/Week-3/2026-04-14-zak-latest-work-concepts-project.md",
+    "projects.md",
+    "Merge to main plan.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/05/Week-4/2026-05-21-fuchsia-velociraptor-parking-deploy.md",
     "projects/zach-gear-indicator-losses.md",
     "agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check.md",
     "html_summaries/parking-model-comparison/content_full_arch_wonjoon.js",
     "html_summaries/parking-model-comparison/content_wonjoon.js",
     "html_summaries/README.md",
-    "projects.md",
     "html_summaries/parking-model-comparison/index.html",
     "html_summaries/parking-model-comparison/content_full_arch.js",
     "html_summaries/parking-model-comparison/arch_detail.css",
     "agent_tasks/2026/05/Week-4/2026-05-18-parking-route-end-input-options.md",
-    "Merge to main plan.md",
     "html_summaries/parking-model-comparison/style.css",
     "html_summaries/parking-model-comparison/content_model_blocks.js",
     "html_summaries/parking-model-comparison/content_latents.js",
@@ -500,7 +514,6 @@
     "html_summaries/parking-model-comparison/content_arch.js",
     "agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison.md",
     "agent_tasks/2026/05/Week-3/2026-05-14-parking-roadmap-read-only-lan.md",
-    "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/05/Week-2/2026-05-14-parking-plan-graph-timeline-boxes.md",
     "agent_tasks/2026/05/Week-3/2026-05-14-parking-2026-plan-graph.md",
     "agent_tasks/2026/05/Week-3/2026-05-13-pudo-uk-licensing-experiments.md",
@@ -515,8 +528,6 @@
     "Untitled 1.md",
     "Tom Boris.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
-    "agent_tasks/2026/05/Week-2/2026-05-12-chocolate-narwhal-unpudo-analysis.md",
-    "parking_model_analysis/report_cards/2026/05/Week-3/fme20036--2026-05-11--13-11-47--gen2-av-26a1b5c6-1554-4a48-8fe1-553b2bce33d4.md",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
