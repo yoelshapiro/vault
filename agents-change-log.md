@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-24 - Parking Indicator Memory Validation
+
+- Topic: Keep indicator memory enabled for parking without re-enabling behavioral control.
+- Labels: parking, deployment, indicator-memory, behavior-control.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/no_behave`.
+- PR: N/A.
+- Change type: Code fix / deployment validation.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking`, `/workspace/WayveCode/wayve/ai/si/models`, `/workspace/WayveCode/wayve/ai/si/test/models`.
+- Changes:
+  - Restored `use_indicator_memory=True` in parking training configs while leaving behavior control disabled.
+  - Allowed the parking deployment wrapper to use navigation input and indicator memory together.
+  - Added a regression test for parking deployment with navigation and indicator memory enabled.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-parking-indicator-memory-validation|2026-05-24 Parking Indicator Memory Validation]]
+
 ## 2026-05-24 - Checkout PUDO/UNPUDO Materialization Notebook
 
 - Topic: Check out the parking PUDO/UNPUDO materialization notebook from `origin/alon/unpudo_unsafe_fix`.
