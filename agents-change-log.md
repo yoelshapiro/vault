@@ -85,3 +85,14 @@
   - Reworked README and index around reading paths.
   - Expanded glossary and refreshed parking hub caveats.
 - Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-llm-wiki-newcomer-readiness|2026-05-24 LLM Wiki Newcomer Readiness]]
+
+- Topic: Parking 2026.6.21 PUDO train startup failure
+  - Labels: parking, training, config
+  - Branch: `boris/05-21-updated-pudo-config`
+  - PR: n/a
+  - Change type: fix
+  - Areas: `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/test/configs/test_config.py`
+  - Changes:
+    - Fixed `ParkingModelRelease2026_6_21Cfg` output adaptor interpolation by setting explicit WFM Feb dimensions and output flags.
+    - Added config regression coverage for `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule`.
+    - Documented in [[agent_tasks/2026/05/Week-4/2026-05-24-parking-621-pudo-train-failure]].
