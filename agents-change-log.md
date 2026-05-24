@@ -96,3 +96,17 @@
     - Fixed `ParkingModelRelease2026_6_21Cfg` output adaptor interpolation by setting explicit WFM Feb dimensions and output flags.
     - Added config regression coverage for `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule`.
     - Documented in [[agent_tasks/2026/05/Week-4/2026-05-24-parking-621-pudo-train-failure]].
+
+## 2026-05-24 - Condor Fearless Ivory PUDO Licensing
+
+- Topic: Add Parking/PUDO model note and create UK licensing experiment for `condor-fearless-ivory`.
+- Labels: parking, pudo, licensing, on-road-experiment, model-catalogue.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/no_behave`.
+- PR: N/A.
+- Change type: Model Catalogue / Console operation.
+- Areas: `https://console.sso.wayve.ai/model/session_2026_05_22_08_40_39_si_parking_bc_train_release_2026_5_11_no_behave_no_imem_params_80k__lavender-ferret-ubiquitous_interleave_control_v1`, `https://console.sso.wayve.ai/on-road-experiments/29332a9a-f91b-478d-83cd-e1bc58e9a2d6`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Checked out `/tmp/wayvecode-fuchsia-model-branch` to `boris/parking-past30-no-standstill-gear-aug/no_behave`.
+  - Added the standard Parking/PUDO `model_change_note` to deployed model `condor-fearless-ivory`.
+  - Created UK PUDO licensing on-road experiment `29332a9a-f91b-478d-83cd-e1bc58e9a2d6` in `pending_approval`.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-condor-fearless-ivory-pudo-licensing|2026-05-24 Condor Fearless Ivory PUDO Licensing]]
