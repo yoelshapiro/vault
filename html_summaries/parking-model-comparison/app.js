@@ -5,6 +5,7 @@ const SECTION_ORDER = [
   "modelblocks",
   "fullarch",
   "data",
+  "parkingdatamodule",
   "inputs",
   "encoder",
   "outputs",
