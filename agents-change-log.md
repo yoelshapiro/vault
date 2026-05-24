@@ -124,3 +124,15 @@
   - Reused the controller, route template, SBW-on driving feature config, tags, and theme from reference experiment `8685ed72-b127-456d-b272-7f6cf0a5dfa3`.
   - Created interleave experiment `6b6dc929-76a1-48c4-a69d-7b2118d7dfbb` in `pending_approval` with `unofficial-cyan-pigeon` as control and `condor-fearless-ivory` as variant.
 - Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-condor-unofficial-interleave-experiment|2026-05-24 Condor / Unofficial Drift PUDO Interleave Experiment]]
+
+
+- Topic: Parking input adaptor LR fix
+  - Labels: parking, training, optimizer, learning-rate
+  - Branch: `boris/parking-past30-no-standstill-gear-aug/no_behave_lr_fix`
+  - PR: N/A
+  - Change type: fix
+  - Areas: `wayve/ai/si/models/training.py`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/test/models/test_training.py`
+  - Changes:
+    - Added dedicated optimizer LR groups for gear direction and parking mode input adaptors.
+    - Set parking configs to train those fresh input adaptors at `1e-4` while keeping base LR at `1e-5`.
+    - Documented validation and the current unrelated Bazel analysis blocker in [[agent_tasks/2026/05/Week-4/2026-05-24-parking-input-adaptor-lr-fix]].
