@@ -229,8 +229,9 @@ def run_actual_pipeline_for_origin(
         )
 
     route_before_sum = float(np.sum(data.get(parking.DataKeys.MAP_ROUTE, np.asarray([np.nan]))))
-    if run_route_steps:
+    if run_route_steps and cfg.can_enable_route_shortening_for_parking():
         table, data = parking._add_parking_stop_route_position((table, data), additional_indices, cfg.stop_route_offset_m)
+    if run_route_steps and cfg.can_enable_end_of_route_blackout():
         table, data = parking._blackout_route_when_parking((table, data))
     route_after_sum = float(np.sum(data.get(parking.DataKeys.MAP_ROUTE, np.asarray([np.nan]))))
 
@@ -341,6 +342,7 @@ def sidebar_config(parking):
         unparking_gear_augment_prob=st.sidebar.slider("unparking_gear_augment_prob", 0.0, 1.0, float(cfg.unparking_gear_augment_prob), 0.05),
         park_mode_blackout_probability=st.sidebar.slider("park_mode_blackout_probability", 0.0, 1.0, float(cfg.park_mode_blackout_probability), 0.05),
         enable_route_shortening_for_parking=st.sidebar.checkbox("enable_route_shortening_for_parking", cfg.enable_route_shortening_for_parking),
+        enable_end_of_route_blackout=st.sidebar.checkbox("enable_end_of_route_blackout", cfg.enable_end_of_route_blackout),
         stop_route_offset_m=st.sidebar.number_input("stop_route_offset_m", 0.0, 100.0, float(cfg.stop_route_offset_m), 1.0),
         enable_strip_leading_standstill=st.sidebar.checkbox("enable_strip_leading_standstill", cfg.enable_strip_leading_standstill),
         enable_augment_standstill_gear=st.sidebar.checkbox("enable_augment_standstill_gear", cfg.enable_augment_standstill_gear),
