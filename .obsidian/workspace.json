@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-4/2026-05-24-llm-wiki-index-lint.md",
     "llm_wiki/systems/end-to-end-driving-stack.md",
     "llm_wiki/README.md",
     "llm_wiki/index.md",
@@ -517,7 +518,6 @@
     "llm_wiki/maps/codebase-map.md",
     "llm_wiki/systems/parking-and-pull-over.md",
     "llm_wiki/glossary.md",
-    "projects.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
