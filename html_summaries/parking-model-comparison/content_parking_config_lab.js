@@ -200,6 +200,7 @@ window.REPORT_SECTIONS.push({
       .pcl-chart .chart-label { font-size: 12px; }
       .pcl-chart .gear-state { fill: #fffdf8; stroke: #b8c5ba; stroke-width: 1; }
       .pcl-chart .gear-state-text { font-size: 10px; }
+      .pcl-chart .origin-line { stroke: #a8605a; stroke-dasharray: 4 4; stroke-width: 2; }
       .pcl-chart text { fill: #26362e; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 800; }
       .pcl-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
       .pcl-legend span { color: #37443d; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 800; }
@@ -273,6 +274,13 @@ window.REPORT_SECTIONS.push({
               </div>
             </div>
             <div class="pcl-list"><b id="pcl-scenario-title"></b><ul id="pcl-scenario-notes"></ul></div>
+          </div>
+        </div>
+        <div class="pcl-panel" style="margin-top:14px">
+          <span class="mini-title">Critical toggle semantics</span>
+          <div class="pcl-cols">
+            <div class="pcl-list"><b>What the graph is allowed to change</b><ul id="pcl-toggle-semantics"></ul></div>
+            <div class="pcl-list"><b>Current scenario interpretation</b><ul id="pcl-scenario-semantics"></ul></div>
           </div>
         </div>
         <div class="pcl-cols" style="margin-top:14px">
@@ -511,17 +519,18 @@ const PCL_SCENARIOS = {
     title: "Unparking from P/N to drive with standstill before speed",
     origin: 0,
     times: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-    gear: ["P", "P", "P", "P", "P", "D", "D", "D", "D"],
+    gear: ["P", "P", "D", "D", "D", "D", "D", "D", "D"],
     speed: [0, 0, 0, 0, 2, 5, 8, 9, 9],
+    parkedOriginCandidate: true,
     notes: [
-      "The raw labels intentionally keep P through the first moving point; reconstruction changes that moving sample to D because signed speed is positive.",
+      "The original trace keeps gear physically consistent: P only while stopped, then D before positive motion starts.",
       "The detector's real past-neutral unparking logic only catches P/N -> R, so forward P/N -> D is a known gap when detected from history.",
       "If the origin is treated as parked and _augment_parked_state selects unparking, augment_unparking_gear can make the current model-facing gear D/R instead of P/N.",
       "With strip_leading_standstill enabled, policy speed is shifted so movement starts shortly after origin instead of waiting through the full standstill.",
     ],
     transform: (s, base) => {
       const out = structuredClone(base);
-      if (s.unparking_gear_augment_prob > 0) out.gear = out.gear.map((g, i) => (i < 2 ? "D" : g));
+      if (s.parked_unparking_prob > 0 && s.unparking_gear_augment_prob > 0) out.gear = out.gear.map((g, i) => (i < 2 ? "D" : g));
       if (s.enable_strip_leading_standstill) out.speed = [0, 1.5, 4, 7, 8.5, 9, 9, 9, 9];
       return out;
     },
@@ -530,12 +539,12 @@ const PCL_SCENARIOS = {
     title: "Unparking with multiple drive / reverse maneuvers",
     origin: 0,
     times: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    gear: ["P", "R", "R", "R", "D", "D", "D", "D", "D", "R", "D", "D"],
+    gear: ["P", "R", "R", "R", "D", "D", "R", "R", "D", "D", "D", "D"],
     speed: [0, -1, -4, -3, 0, 2, -2, -2, 0, 3, 6, 8],
     notes: [
-      "The raw labels include direction disagreements at t=6, t=7, and t=9; reconstruction flips them to match signed speed.",
+      "The original trace keeps D with positive speed and R with negative speed; reconstruction should not invent changes when the signal is already self-consistent.",
       "Reverse-out unparking is the case the detector handles: a prior/active neutral segment followed by reverse and standstill can become UNPARKING_STATE.",
-      "Gear reconstruction preserves D/R from signed speed, so multi-maneuver direction changes survive when the speed sign is clear.",
+      "Gear reconstruction preserves the sustained D/R direction changes when the speed sign is clear.",
       "Short gear-label cleanup can remove tiny isolated reverse or neutral glitches, but real sustained D/R maneuvers remain.",
     ],
     transform: (s, base) => {
@@ -573,10 +582,12 @@ const PCL_SCENARIOS = {
     title: "Parking with reverse / forward position correction",
     origin: 0,
     times: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-    gear: ["D", "D", "D", "D", "D", "R", "D", "D", "D", "P", "P", "P"],
+    gear: ["D", "D", "D", "D", "R", "R", "D", "D", "D", "P", "P", "P"],
     speed: [6, 4, 1, 0, -2, -2, 0, 1.5, 1, 0, 0, 0],
+    origin: 6,
+    parkingStateAtOrigin: true,
     notes: [
-      "The raw labels delay the reverse correction; reconstruction marks t=4 as R because speed is already negative.",
+      "The original trace keeps reverse correction physically consistent: negative signed speed is paired with R.",
       "This is parking, not unparking: the future P/N segment is within the time/distance threshold, so PARKING_STATE is true.",
       "A real reverse correction segment should remain if it spans enough distance; only very short reverse glitches are cleaned away.",
       "When the final P/N is reached, policy targets after that point are clamped to the stopped pose and zero speed.",
@@ -622,7 +633,7 @@ function pclScenarioAfter(s, scenario) {
     base.gear = pclReconstructScenarioGear(s, base);
   }
   const out = scenario.transform(s, base);
-  return pclApplyStandstillGearAugment(s, out);
+  return pclApplyStandstillGearAugment(s, scenario, out);
 }
 
 function pclReconstructScenarioGear(s, base) {
@@ -649,14 +660,12 @@ function pclReconstructScenarioGear(s, base) {
   });
 }
 
-function pclApplyStandstillGearAugment(s, base) {
-  if (!s.enable_augment_standstill_gear) return base;
+function pclApplyStandstillGearAugment(s, scenario, base) {
+  if (!s.enable_augment_standstill_gear || !scenario.parkingStateAtOrigin) return base;
+  const origin = scenario.origin ?? 0;
+  if (Math.abs(base.speed[origin] ?? 0) >= 0.5) return base;
   const out = { gear: [...base.gear], speed: [...base.speed] };
-  out.gear = out.gear.map((gear, i) => {
-    if (Math.abs(out.speed[i]) >= 0.5) return gear;
-    if (gear === "P" || gear === "N") return i % 2 === 0 ? "D" : "R";
-    return gear === "D" ? "R" : "D";
-  });
+  out.gear[origin] = "N";
   return out;
 }
 
@@ -673,6 +682,8 @@ function pclRenderScenario(s) {
   const row2 = 220;
   const maxAbsSpeed = Math.max(1, ...scenario.speed.map(Math.abs), ...after.speed.map(Math.abs));
   const xFor = (t) => left + ((t - times[0]) / (times[times.length - 1] - times[0])) * plotW;
+  const originIndex = scenario.origin ?? 0;
+  const originX = xFor(times[originIndex] ?? times[0]);
   const speedOrig = times.map((t, i) => [xFor(t), pclSpeedY(scenario.speed[i], row1, rowH, maxAbsSpeed)]);
   const speedAfter = times.map((t, i) => [xFor(t), pclSpeedY(after.speed[i], row2, rowH, maxAbsSpeed)]);
   const gearOrig = times.map((t, i) => [xFor(t), pclGearY(scenario.gear[i], row1, rowH)]);
@@ -702,6 +713,8 @@ function pclRenderScenario(s) {
   document.getElementById("pcl-scenario-chart").innerHTML = `
     <svg class="pcl-chart" viewBox="0 0 ${width} 430" role="img" aria-label="${scenario.title} gear and speed timeline">
       ${grid}
+      <line class="origin-line" x1="${originX.toFixed(1)}" y1="20" x2="${originX.toFixed(1)}" y2="392"/>
+      <text x="${(originX + 5).toFixed(1)}" y="30">origin sample</text>
       <line class="axis" x1="${left}" y1="${row1 + rowH / 2}" x2="${left + plotW}" y2="${row1 + rowH / 2}"/>
       <line class="axis" x1="${left}" y1="${row2 + rowH / 2}" x2="${left + plotW}" y2="${row2 + rowH / 2}"/>
       <path class="speed-original" d="${pclPath(speedOrig)}"/>
@@ -718,7 +731,9 @@ function pclRenderScenario(s) {
   if (!s.reconstruct_gear_from_speed) configNotes.push("reconstruct_gear_from_speed is off: the after gear trace starts from the raw scenario labels, then only later cleanup/augmentation stages can change it.");
   if (!s.enable_strip_leading_standstill) configNotes.push("strip_leading_standstill is off, so speed is not shifted earlier in standstill-heavy examples.");
   if (!s.enable_gear_label_cleanup) configNotes.push("gear label cleanup is off, so short isolated gear glitches remain in the after timeline.");
-  if (s.enable_augment_standstill_gear) configNotes.push("augment standstill gear is on: stopped points in the after trace are deliberately flipped between D/R to show the randomized standstill vehicle-gear augmentation.");
+  if (s.unparking_gear_augment_prob > 0 && s.parked_unparking_prob <= 0) configNotes.push("unparking_gear_augment_prob is non-zero, but parked_unparking_prob is 0, so synthetic parked-origin unparking is disabled and this augment should not fire.");
+  if (s.enable_augment_standstill_gear && scenario.parkingStateAtOrigin) configNotes.push("augment standstill gear is on: the graph changes only the origin-sample vehicle gear, matching augment_standstill_gear rather than rewriting the whole timeline.");
+  if (s.enable_augment_standstill_gear && !scenario.parkingStateAtOrigin) configNotes.push("augment standstill gear is on, but this scenario's origin is not a standstill parking_state sample, so the timeline correctly does not change for that toggle.");
   document.getElementById("pcl-scenario-notes").innerHTML = pclList([...scenario.notes, ...configNotes]);
   document.querySelectorAll("[data-scenario]").forEach((button) => button.classList.toggle("active", button.dataset.scenario === pclScenarioId));
 }
@@ -771,6 +786,24 @@ function pclRender() {
   if (s.parking_goal_dropout_probability > 0 && d.policyPath) effects.push("PARKING_POSE can be dropped to NaN after ORIGINAL_PARKING_GOAL_POSE is preserved.");
   if (!effects.length) effects.push("Only basic parking mode insertion remains active.");
   document.getElementById("pcl-effects").innerHTML = pclList(effects);
+
+  const activeScenario = PCL_SCENARIOS[pclScenarioId] || PCL_SCENARIOS.unpark_drive;
+  const toggleSemantics = [
+    "reconstruct_gear_from_speed rebuilds the cleaned scratch gear from signed speed plus validated P/N segments; it should not alter already-consistent D/R movement.",
+    "unparking_gear_augment_prob only matters after _augment_parked_state has converted a parked-origin sample into UNPARKING_STATE, so parked_unparking_prob=0 gates it off.",
+    "enable_augment_standstill_gear writes only VEHICLE_GEAR_DIRECTION[-1] for the current origin sample when result.parking_state and speed is near zero; it is not a policy-timeline rewrite.",
+  ];
+  document.getElementById("pcl-toggle-semantics").innerHTML = pclList(toggleSemantics);
+
+  const scenarioSemantics = [];
+  if (activeScenario.parkedOriginCandidate) {
+    scenarioSemantics.push(s.parked_unparking_prob > 0 ? "This scenario can represent a parked-origin sample converted into synthetic unparking." : "This scenario remains parked/stay-parked because parked_unparking_prob is 0; unparking_gear_augment_prob cannot change it by itself.");
+  } else {
+    scenarioSemantics.push("This scenario is not using the parked-origin synthetic-unparking branch.");
+  }
+  scenarioSemantics.push(activeScenario.parkingStateAtOrigin ? "The origin sample is a standstill parking_state point, so standstill vehicle-gear augmentation is visible at the origin marker." : "The origin sample is not a standstill parking_state point, so standstill vehicle-gear augmentation should be visually inert here.");
+  scenarioSemantics.push(s.reconstruct_gear_from_speed ? "Reconstruction is enabled: visible changes should come from P/N validation/expansion or signed-speed repair, not from arbitrary gear flipping." : "Reconstruction is disabled: the after trace starts from raw labels before later parking-specific rewrites.");
+  document.getElementById("pcl-scenario-semantics").innerHTML = pclList(scenarioSemantics);
 
   const route = [];
   if (d.routeShortening) route.push("add_parking_state stores an entry lookahead index when a parking/unparking state is detected.");
