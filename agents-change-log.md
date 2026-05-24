@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-05-24 - Parking Moving Buckets Config
+
+- Topic: Update parking BC config to consume moving UnPUDO buckets.
+- Labels: parking, pudo, unpudo, config, training-data.
+- Branch: `boris/parking-moving-buckets-config`.
+- PR: N/A.
+- Change type: Config change.
+- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/configs/parking`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Created branch from `origin/guy/parking-past30-no-standstill-gear-aug`.
+  - Updated `PUDO_BUCKETS_ROOT` to the `2026_05_19_20_07_34` materialization with moving UnPUDO buckets.
+  - Split UnPUDO weight into base and moving child budgets and added six `*_unpudo_moving_*` train buckets.
+  - Verified with `git diff --check` and `bazel build //wayve/ai/si:si`.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-parking-moving-buckets-config|2026-05-24 Parking Moving Buckets Config]]
+
 ## 2026-05-24 - Parking Indicator Memory Validation
 
 - Topic: Keep indicator memory enabled for parking without re-enabling behavioral control.
