@@ -150,11 +150,68 @@ window.REPORT_SECTIONS.push({
       }
       .pcl-alert.error { border-left-color: #b66b64; }
       .pcl-alert.good { border-left-color: #3f7a5f; }
+
+      .pcl-stage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+      .pcl-stage-card {
+        background: #fffdf8;
+        border: 1px solid #c5cec3;
+        border-left: 6px solid #5f8fa7;
+        padding: 12px;
+        min-height: 170px;
+      }
+      .pcl-stage-card.off { opacity: .46; filter: grayscale(.35); }
+      .pcl-stage-card.good { border-left-color: #3f7a5f; }
+      .pcl-stage-card.warn { border-left-color: #b79a54; }
+      .pcl-stage-card.hot { border-left-color: #b66b64; }
+      .pcl-stage-card.purple { border-left-color: #8b86b5; }
+      .pcl-stage-card small {
+        color: #68726b;
+        display: block;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 11px;
+        font-weight: 800;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+      }
+      .pcl-stage-card b { color: #13261e; display: block; font-size: 15px; margin-bottom: 7px; }
+      .pcl-stage-card p { color: #4f5d55; font-size: 13px; margin: 0 0 8px; }
+      .pcl-stage-card ul { margin: 0; padding-left: 18px; }
+      .pcl-stage-card li { font-size: 12px; margin: 4px 0; }
+      .pcl-stage-card code { font-size: 11px; }
+      .pcl-scenario-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 12px; }
+      .pcl-scenario-toolbar button {
+        background: #eef7f1;
+        border: 1px solid #8fa89a;
+        color: #13261e;
+        cursor: pointer;
+        font: 800 12px "IBM Plex Mono", ui-monospace, monospace;
+        padding: 8px 10px;
+      }
+      .pcl-scenario-toolbar button.active { background: #fffdf8; border-color: #a8605a; box-shadow: 0 6px 14px rgba(37,48,41,.08); }
+      .pcl-scenario-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); gap: 14px; align-items: start; }
+      .pcl-chart-wrap { background: #fffdf8; border: 1px solid #c5cec3; padding: 10px; overflow: auto; }
+      .pcl-chart { min-width: 740px; width: 100%; height: auto; display: block; }
+      .pcl-chart .axis { stroke: #8da096; stroke-width: 1; }
+      .pcl-chart .grid { stroke: #d6ded4; stroke-width: 1; }
+      .pcl-chart .speed-original { fill: none; stroke: #6f9db2; stroke-width: 3; }
+      .pcl-chart .speed-modified { fill: none; stroke: #b66b64; stroke-width: 3; }
+      .pcl-chart .gear-original { fill: none; stroke: #3f7a5f; stroke-width: 3; stroke-linejoin: round; }
+      .pcl-chart .gear-modified { fill: none; stroke: #8b86b5; stroke-width: 3; stroke-linejoin: round; }
+      .pcl-chart text { fill: #26362e; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 800; }
+      .pcl-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+      .pcl-legend span { color: #37443d; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 800; }
+      .pcl-swatch { display: inline-block; height: 3px; margin-right: 5px; vertical-align: middle; width: 22px; }
+      .pcl-swatch.orig-speed { background: #6f9db2; }
+      .pcl-swatch.mod-speed { background: #b66b64; }
+      .pcl-swatch.orig-gear { background: #3f7a5f; }
+      .pcl-swatch.mod-gear { background: #8b86b5; }
       @media (max-width: 1200px) {
         .pcl-wrap,
         .pcl-summary-grid,
         .pcl-cols,
-        .pcl-step-row { display: block; }
+        .pcl-step-row,
+        .pcl-stage-grid,
+        .pcl-scenario-layout { display: block; }
         .pcl-controls { position: static; max-height: none; }
         .pcl-kpi,
         .pcl-list,
@@ -188,6 +245,32 @@ window.REPORT_SECTIONS.push({
           <div class="pcl-cols">
             <div class="pcl-list"><b>Emitted data keys</b><div class="pcl-chip-row" id="pcl-keys"></div></div>
             <div class="pcl-list"><b>What changes when this config runs</b><ul id="pcl-effects"></ul></div>
+          </div>
+        </div>
+
+        <div class="pcl-panel" style="margin-top:14px">
+          <span class="mini-title">Detailed pipeline stages</span>
+          <div class="pcl-stage-grid" id="pcl-stage-detail"></div>
+        </div>
+        <div class="pcl-panel" style="margin-top:14px">
+          <span class="mini-title">Worked examples</span>
+          <div class="pcl-scenario-toolbar" id="pcl-scenario-toolbar">
+            <button type="button" data-scenario="unpark_drive">Unpark P -> D</button>
+            <button type="button" data-scenario="multi_maneuver">Drive / reverse maneuvers</button>
+            <button type="button" data-scenario="delayed_park">Delayed shift to P</button>
+            <button type="button" data-scenario="parking_correction">Parking correction</button>
+          </div>
+          <div class="pcl-scenario-layout">
+            <div>
+              <div class="pcl-chart-wrap" id="pcl-scenario-chart"></div>
+              <div class="pcl-legend">
+                <span><i class="pcl-swatch orig-speed"></i>original speed</span>
+                <span><i class="pcl-swatch mod-speed"></i>after speed</span>
+                <span><i class="pcl-swatch orig-gear"></i>original gear</span>
+                <span><i class="pcl-swatch mod-gear"></i>after gear</span>
+              </div>
+            </div>
+            <div class="pcl-list"><b id="pcl-scenario-title"></b><ul id="pcl-scenario-notes"></ul></div>
           </div>
         </div>
         <div class="pcl-cols" style="margin-top:14px">
@@ -354,6 +437,243 @@ function pclList(items) {
   return items.map((x) => `<li>${x}</li>`).join("");
 }
 
+
+const PCL_STAGE_DETAIL = [
+  {
+    cls: "good",
+    active: (_s, d) => d.si,
+    name: "1. Scratch setup",
+    source: "insert_parking_data -> _init_scratch",
+    reads: ["origin index", "(table, data) sample"],
+    writes: ["scratch_table.origin_idx"],
+    detail: "Wraps the normal sample as (table, scratch_table, data). Everything below shares this scratch table until the final drop step.",
+  },
+  {
+    cls: "warn",
+    active: (_s, d) => d.si,
+    name: "2. Resolve parking context",
+    source: "fill_parking_scratch_table",
+    reads: ["vehicle/policy indices", "lookahead indices", "timestamps", "speed", "distance", "raw gear"],
+    writes: ["scratch indices", "speed_kmh", "cumulative_dist", "original_gear"],
+    detail: "Builds the full-resolution arrays used by detection, plus optional future parking poses and curvature when odometry support is available.",
+  },
+  {
+    cls: "warn",
+    active: (s, d) => d.si && (s.reconstruct_gear_from_speed || s.sign_speed_by_gear || s.enable_gear_label_cleanup),
+    name: "3. Clean gear timeline",
+    source: "_reconstruct_gear_from_speed / cleanup helpers",
+    reads: ["signed speed", "raw gear", "P/N segment durations"],
+    writes: ["scratch_table.gear"],
+    detail: "Derives D/R from speed, keeps validated neutral segments, removes short gear glitches, and expands P/N over adjacent standstill.",
+  },
+  {
+    cls: "hot",
+    active: (_s, d) => d.si,
+    name: "4. Detect parking state",
+    source: "_compute_parking_state",
+    reads: ["clean gear", "timestamps", "cumulative distance", "origin"],
+    writes: ["ParkingStateResult"],
+    detail: "Checks origin-inside-neutral first, then future neutral for parking, then past neutral followed by reverse/standstill for unparking.",
+  },
+  {
+    cls: "purple",
+    active: (_s, d) => d.si,
+    name: "5. Emit state and gear keys",
+    source: "add_parking_state",
+    reads: ["ParkingStateResult", "vehicle/policy indices"],
+    writes: ["PARKING_MODE", "PARKING_STATE", "UNPARKING_STATE", "VEHICLE_GEAR_DIRECTION", "POLICY_GEAR_DIRECTION"],
+    detail: "Moves detector output into model-facing data keys and decides route-shortening vs park-mode/blackout behavior for this sample.",
+  },
+  {
+    cls: "purple",
+    active: (_s, d) => d.policyPath,
+    name: "6. Optional path target",
+    source: "compute_policy_path",
+    reads: ["additional_parking_pose", "PATH_POSE fallback", "goal_distance"],
+    writes: ["POLICY_PATH", "PARKING_POSE"],
+    detail: "Samples a fixed-distance pose path. If poses do not cover the requested path length, the sample is dropped.",
+  },
+  {
+    cls: "warn",
+    active: (s, d) => d.si && (s.unparking_gear_augment_prob > 0 || s.enable_strip_leading_standstill || s.enable_augment_standstill_gear),
+    name: "7. Parking-specific target rewrites",
+    source: "augment_unparking_gear / strip_leading_standstill / clamp_policy_at_first_neutral",
+    reads: ["ParkingStateResult", "clean gear", "policy pose/speed/curvature"],
+    writes: ["policy gear", "policy speed", "policy pose", "policy waypoints"],
+    detail: "Creates better parked/unparking examples, removes delayed movement from leading standstill, and freezes future targets after first neutral gear.",
+  },
+  {
+    cls: "good",
+    active: (_s, d) => d.si,
+    name: "8. Drop scratch table",
+    source: "_drop_scratch",
+    reads: ["table", "scratch_table", "data"],
+    writes: ["(table, data)"],
+    detail: "Downstream OTF stages see a normal sample again, but with parking labels and target rewrites already applied.",
+  },
+];
+
+const PCL_SCENARIOS = {
+  unpark_drive: {
+    title: "Unparking from P/N to drive with standstill before speed",
+    origin: 0,
+    times: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    gear: ["P", "P", "D", "D", "D", "D", "D", "D", "D"],
+    speed: [0, 0, 0, 0, 2, 5, 8, 9, 9],
+    notes: [
+      "The detector's real past-neutral unparking logic only catches P/N -> R, so forward P/N -> D is a known gap when detected from history.",
+      "If the origin is treated as parked and _augment_parked_state selects unparking, augment_unparking_gear can make the current model-facing gear D/R instead of P/N.",
+      "With strip_leading_standstill enabled, policy speed is shifted so movement starts shortly after origin instead of waiting through the full standstill.",
+    ],
+    transform: (s, base) => {
+      const out = structuredClone(base);
+      if (s.unparking_gear_augment_prob > 0) out.gear = out.gear.map((g, i) => (i < 2 ? "D" : g));
+      if (s.enable_strip_leading_standstill) out.speed = [0, 1.5, 4, 7, 8.5, 9, 9, 9, 9];
+      return out;
+    },
+  },
+  multi_maneuver: {
+    title: "Unparking with multiple drive / reverse maneuvers",
+    origin: 0,
+    times: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    gear: ["P", "R", "R", "R", "D", "D", "R", "R", "D", "D", "D", "D"],
+    speed: [0, -1, -4, -3, 0, 2, -2, -2, 0, 3, 6, 8],
+    notes: [
+      "Reverse-out unparking is the case the detector handles: a prior/active neutral segment followed by reverse and standstill can become UNPARKING_STATE.",
+      "Gear reconstruction preserves D/R from signed speed, so multi-maneuver direction changes survive when the speed sign is clear.",
+      "Short gear-label cleanup can remove tiny isolated reverse or neutral glitches, but real sustained D/R maneuvers remain.",
+    ],
+    transform: (s, base) => {
+      const out = structuredClone(base);
+      if (s.enable_gear_label_cleanup) {
+        out.gear = out.gear.map((g, i) => (i === 4 && Math.abs(out.speed[i]) < 0.5 ? "R" : g));
+      }
+      if (s.enable_strip_leading_standstill) out.speed = [0, -3, -4, -3, 1, 2, -2, -2, 2, 4, 7, 8];
+      return out;
+    },
+  },
+  delayed_park: {
+    title: "Parking with delayed shift to P after stopping",
+    origin: 0,
+    times: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    gear: ["D", "D", "D", "D", "D", "D", "D", "P", "P", "P", "P"],
+    speed: [8, 7, 5, 3, 1, 0, 0, 0, 0, 0, 0],
+    notes: [
+      "The clean P/N segment is the parking anchor, but drivers often stop before shifting to P/N.",
+      "_expand_neutral_gear_over_standstill extends P/N backward over adjacent stopped frames, so the parking stop starts closer to the physical stop.",
+      "clamp_policy_at_first_neutral freezes future policy pose/waypoints and zeroes speed once policy gear reaches P/N.",
+    ],
+    transform: (_s, base) => {
+      const out = structuredClone(base);
+      out.gear = out.gear.map((g, i) => (i >= 5 ? "P" : g));
+      out.speed = out.speed.map((v, i) => (i >= 5 ? 0 : v));
+      return out;
+    },
+  },
+  parking_correction: {
+    title: "Parking with reverse / forward position correction",
+    origin: 0,
+    times: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    gear: ["D", "D", "D", "R", "R", "R", "D", "D", "D", "P", "P", "P"],
+    speed: [6, 4, 1, 0, -2, -2, 0, 1.5, 1, 0, 0, 0],
+    notes: [
+      "This is parking, not unparking: the future P/N segment is within the time/distance threshold, so PARKING_STATE is true.",
+      "A real reverse correction segment should remain if it spans enough distance; only very short reverse glitches are cleaned away.",
+      "When the final P/N is reached, policy targets after that point are clamped to the stopped pose and zero speed.",
+    ],
+    transform: (s, base) => {
+      const out = structuredClone(base);
+      if (s.enable_gear_label_cleanup) out.gear = out.gear.map((g, i) => (i === 3 && Math.abs(out.speed[i]) < 0.5 ? "D" : g));
+      out.gear = out.gear.map((g, i) => (i >= 9 ? "P" : g));
+      out.speed = out.speed.map((v, i) => (i >= 9 ? 0 : v));
+      return out;
+    },
+  },
+};
+
+let pclScenarioId = "unpark_drive";
+
+function pclGearY(gear, top, height) {
+  const map = { D: 0.16, P: 0.46, N: 0.46, R: 0.78, U: 0.92 };
+  return top + height * (map[gear] ?? map.U);
+}
+
+function pclSpeedY(speed, top, height, maxAbsSpeed) {
+  const mid = top + height / 2;
+  return mid - (speed / maxAbsSpeed) * (height * 0.42);
+}
+
+function pclPath(points) {
+  return points.map(([x, y], i) => `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+}
+
+function pclStepPath(points) {
+  if (!points.length) return "";
+  let d = `M ${points[0][0].toFixed(1)} ${points[0][1].toFixed(1)}`;
+  for (let i = 1; i < points.length; i += 1) {
+    d += ` H ${points[i][0].toFixed(1)} V ${points[i][1].toFixed(1)}`;
+  }
+  return d;
+}
+
+function pclScenarioAfter(s, scenario) {
+  const base = { gear: [...scenario.gear], speed: [...scenario.speed] };
+  if (!pclDerived(s).si) return base;
+  return scenario.transform(s, base);
+}
+
+function pclRenderScenario(s) {
+  const scenario = PCL_SCENARIOS[pclScenarioId] || PCL_SCENARIOS.unpark_drive;
+  const after = pclScenarioAfter(s, scenario);
+  const times = scenario.times;
+  const width = 820;
+  const left = 52;
+  const right = 22;
+  const plotW = width - left - right;
+  const rowH = 150;
+  const row1 = 36;
+  const row2 = 220;
+  const maxAbsSpeed = Math.max(1, ...scenario.speed.map(Math.abs), ...after.speed.map(Math.abs));
+  const xFor = (t) => left + ((t - times[0]) / (times[times.length - 1] - times[0])) * plotW;
+  const speedOrig = times.map((t, i) => [xFor(t), pclSpeedY(scenario.speed[i], row1, rowH, maxAbsSpeed)]);
+  const speedAfter = times.map((t, i) => [xFor(t), pclSpeedY(after.speed[i], row2, rowH, maxAbsSpeed)]);
+  const gearOrig = times.map((t, i) => [xFor(t), pclGearY(scenario.gear[i], row1, rowH)]);
+  const gearAfter = times.map((t, i) => [xFor(t), pclGearY(after.gear[i], row2, rowH)]);
+  const grid = times.map((t) => `<line class="grid" x1="${xFor(t).toFixed(1)}" y1="20" x2="${xFor(t).toFixed(1)}" y2="392"/>`).join("");
+  const labels = [
+    `<text x="8" y="${row1 + 16}">original</text>`,
+    `<text x="8" y="${row2 + 16}">after</text>`,
+    `<text x="8" y="${row1 + 32}">speed</text>`,
+    `<text x="8" y="${row2 + 32}">speed</text>`,
+    `<text x="${left}" y="410">time (s)</text>`,
+    ...times.map((t) => `<text x="${(xFor(t) - 4).toFixed(1)}" y="410">${t}</text>`),
+    `<text x="${left + plotW + 5}" y="${pclGearY("D", row1, rowH).toFixed(1)}">D</text>`,
+    `<text x="${left + plotW + 5}" y="${pclGearY("P", row1, rowH).toFixed(1)}">P/N</text>`,
+    `<text x="${left + plotW + 5}" y="${pclGearY("R", row1, rowH).toFixed(1)}">R</text>`,
+    `<text x="${left + plotW + 5}" y="${pclGearY("D", row2, rowH).toFixed(1)}">D</text>`,
+    `<text x="${left + plotW + 5}" y="${pclGearY("P", row2, rowH).toFixed(1)}">P/N</text>`,
+    `<text x="${left + plotW + 5}" y="${pclGearY("R", row2, rowH).toFixed(1)}">R</text>`,
+  ].join("");
+  document.getElementById("pcl-scenario-chart").innerHTML = `
+    <svg class="pcl-chart" viewBox="0 0 ${width} 430" role="img" aria-label="${scenario.title} gear and speed timeline">
+      ${grid}
+      <line class="axis" x1="${left}" y1="${row1 + rowH / 2}" x2="${left + plotW}" y2="${row1 + rowH / 2}"/>
+      <line class="axis" x1="${left}" y1="${row2 + rowH / 2}" x2="${left + plotW}" y2="${row2 + rowH / 2}"/>
+      <path class="speed-original" d="${pclPath(speedOrig)}"/>
+      <path class="gear-original" d="${pclStepPath(gearOrig)}"/>
+      <path class="speed-modified" d="${pclPath(speedAfter)}"/>
+      <path class="gear-modified" d="${pclStepPath(gearAfter)}"/>
+      ${labels}
+    </svg>`;
+  document.getElementById("pcl-scenario-title").textContent = scenario.title;
+  const configNotes = [];
+  if (!pclDerived(s).si) configNotes.push("Current selection uses the zoo path, so SI-specific gear cleanup and target rewrites are shown as inactive.");
+  if (!s.enable_strip_leading_standstill) configNotes.push("strip_leading_standstill is off, so speed is not shifted earlier in standstill-heavy examples.");
+  if (!s.enable_gear_label_cleanup) configNotes.push("gear label cleanup is off, so short isolated gear glitches remain in the after timeline.");
+  document.getElementById("pcl-scenario-notes").innerHTML = pclList([...scenario.notes, ...configNotes]);
+  document.querySelectorAll("[data-scenario]").forEach((button) => button.classList.toggle("active", button.dataset.scenario === pclScenarioId));
+}
+
 function pclRender() {
   const root = document.getElementById("pcl-root");
   if (!root) return;
@@ -421,6 +741,21 @@ function pclRender() {
   if (!d.si) risks.push("SI-specific filtering risks are skipped because the zoo path is active.");
   document.getElementById("pcl-risks").innerHTML = pclList(risks);
 
+  document.getElementById("pcl-stage-detail").innerHTML = PCL_STAGE_DETAIL.map((stage) => {
+    const active = stage.active(s, d);
+    return `<div class="pcl-stage-card ${stage.cls} ${active ? "" : "off"}">
+      <small>${active ? "active" : "inactive"} - ${stage.source}</small>
+      <b>${stage.name}</b>
+      <p>${stage.detail}</p>
+      <ul>
+        <li><b>Reads:</b> ${stage.reads.map((x) => `<code>${x}</code>`).join(", ")}</li>
+        <li><b>Writes:</b> ${stage.writes.map((x) => `<code>${x}</code>`).join(", ")}</li>
+      </ul>
+    </div>`;
+  }).join("");
+
+  pclRenderScenario(s);
+
   const fields = Object.keys(PCL_DEFAULTS)
     .filter((k) => k !== "datapipe_type_train" && k !== "sign_speed_by_gear")
     .map((k) => `    ${k}=${JSON.stringify(s[k])},`)
@@ -456,6 +791,13 @@ window.REPORT_AFTER_RENDER.parkingconfiglab = () => {
   root.querySelectorAll("[data-preset]").forEach((button) => {
     button.addEventListener("click", () => {
       pclApplyPreset(root, button.dataset.preset);
+      pclRender();
+    });
+  });
+
+  root.querySelectorAll("[data-scenario]").forEach((button) => {
+    button.addEventListener("click", () => {
+      pclScenarioId = button.dataset.scenario;
       pclRender();
     });
   });
