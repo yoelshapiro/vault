@@ -492,6 +492,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "html_summaries/parking-model-comparison/content_parking_config_lab.js",
     "agent_tasks/2026/05/Week-4/2026-05-24-parking-input-adaptor-lr-fix.md",
     "html_summaries/parking-model-comparison/content_parking_datamodule.js",
     "html_summaries/parking-model-comparison/parking-datamodule-deep-dive.html",
@@ -519,7 +520,6 @@
     "llm_wiki/glossary.md",
     "llm_wiki/systems/parking-product-and-taxonomy.md",
     "llm_wiki/systems/latent-actions-and-behavior-control.md",
-    "llm_wiki/systems/multi-task-and-multi-driving-heads.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
