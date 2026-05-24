@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-24 - Parking BC New Driving Training
+
+- Topic: Submit Parking BC training with `parking_bc_new_driving_datamodule` and trimmed moving UnPUDO buckets.
+- Labels: parking, training, surfboard, pudo, unpudo.
+- Branch: `boris/parking-moving-buckets-config`.
+- PR: N/A.
+- Change type: Training run.
+- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/configs/parking`, Surfboard job `168353`.
+- Changes:
+  - Submitted training with `+mode=parking_bc_train_release_2026_5_11` and `+datamodule=parking_bc_new_driving_datamodule`.
+  - Published image `wayvetraining.azurecr.io/scaled-intelligence:6e97857c4e9b3cebadfa432042deeb7a513ee23f`.
+  - Monitored job `168353` until `Running`.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-parking-bc-new-driving-training|2026-05-24 Parking BC New Driving Training]]
+
 ## 2026-05-24 - Parking Moving Buckets Config
 
 - Topic: Update parking BC config to consume moving UnPUDO buckets.
