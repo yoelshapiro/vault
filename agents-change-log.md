@@ -2567,3 +2567,17 @@
     - Updated the wiki home, index, end-to-end stack, parking hub, model-development workflow, BC/RL page, codebase map, glossary, open questions, and log.
     - Captured known gaps: timed-out Notion pages, Slack search timeout, pull-over source gap, stopping-mode enum drift, hazard-only PUDO proxy, and missing canonical evaluation suite IDs.
   - Note: [[agent_tasks/2026/05/Week-4/2026-05-23-llm-wiki-expansion]]
+
+- Topic: LLM wiki index lint and render fix
+  - Labels: llm-wiki, obsidian, lint, navigation
+  - Branch: main
+  - PR: none
+  - Change type: Documentation / Wiki Maintenance
+  - Areas: vault/llm_wiki, vault/agent_tasks
+  - Changes:
+    - Rewrote `llm_wiki/index.md` from Markdown tables to grouped bullet navigation to avoid Obsidian alias pipes breaking table rendering.
+    - Added a `Core Route` section and raw source guide links so every wiki page is reachable from the index.
+    - Removed aliased wiki links from glossary table rows.
+    - Marked raw source guide pages active and updated their dates.
+    - Re-ran wiki lint checks: no unresolved wiki links, no aliased wiki links inside table rows, no unindexed pages, and all files under 500 lines.
+  - Note: [[agent_tasks/2026/05/Week-4/2026-05-24-llm-wiki-index-lint]]
