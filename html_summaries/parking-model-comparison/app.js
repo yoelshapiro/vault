@@ -6,6 +6,7 @@ const SECTION_ORDER = [
   "fullarch",
   "data",
   "parkingdatamodule",
+  "parkingconfiglab",
   "inputs",
   "encoder",
   "outputs",
