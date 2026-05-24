@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-4/2026-05-24-parking-indicator-memory-validation.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-checkout-pudo-unpudo-materialization-notebook.md",
     "llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation.md",
     "llm_wiki/index.md",
@@ -517,7 +518,6 @@
     "agent_tasks/2026/05/Week-4/2026-05-24-wayve-llm-wiki-deep-dive.md",
     "llm_wiki/sources/2026-05-24-notion-parking-newsletters-release.md",
     "llm_wiki/questions/parking-pudo-open-questions.md",
-    "llm_wiki/systems/parking-pudo-event-pipeline.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
