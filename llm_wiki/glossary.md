@@ -26,6 +26,9 @@ Use this as a quick decoder for wiki terms. If a term becomes central to a proje
 | Output adaptor | Module that attaches output heads such as waypoints, indicators, gear direction, and variance. |
 | Head | A task-specific output module or branch. In multi-driving-head discussions, a mode-specific trajectory branch after a shared trunk. |
 | Trajectory | The direct model output describing future ego motion. This is central because Wayve's stack is end-to-end. |
+| DILC | Driver-initiated lane change: lane-change behavior triggered by the driver indicator/stalk request. |
+| SILC | Software-initiated lane change: model-autonomous lane-change behavior controlled by `silc_mode` and `silc_level`; user-facing driving mode currently influences the level. |
+| No-SILC | Evaluation or experiment setting where autonomous/SILC-style lane changes are suppressed or disabled, often to check whether the model avoids following an on-road lane-change intervention. |
 | PUDO | Pick-up/drop-off. A short ride-hail-style stop behavior; it is not the same as parking. See [[llm_wiki/systems/parking-product-and-taxonomy]]. |
 | UnPUDO | Leaving a PUDO stop and merging back into driving. Event pipeline pages use `unpudo` for starts that later have a PUDO in the same run. |
 | Unparking | Leaving a parked or standstill state into driving. In the event pipeline, `unparking` is an UnPUDO-like start that does not later have a PUDO in the same run. |

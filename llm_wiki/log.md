@@ -32,3 +32,7 @@ Important conclusions:
 ## [2026-05-24] maintenance | Newcomer readiness refinement
 
 Refined the wiki for newcomer MLE usability. Added [[llm_wiki/workflows/newcomer-onboarding|Newcomer Onboarding]], [[llm_wiki/maps/mle-role-map|MLE Role Map]], and [[llm_wiki/workflows/first-parking-pudo-change|First Parking PUDO Change]]. Updated [[llm_wiki/README|README]], [[llm_wiki/index|Index]], [[llm_wiki/glossary|Glossary]], and [[llm_wiki/systems/parking-and-pull-over|Parking And Pull-Over]] with clearer reading paths and sourced parking/PUDO definitions.
+
+## [2026-05-24] query | What is SILC?
+
+Answered a glossary question about SILC. Updated [[llm_wiki/glossary|Glossary]] with DILC, SILC, and No-SILC definitions grounded in the driver-interaction docs and NO-SILC evaluation references.
