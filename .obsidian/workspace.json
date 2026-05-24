@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "llm_wiki/index.md",
+                "file": "llm_wiki/systems/space-time-model-architecture.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "index"
+              "title": "space-time-model-architecture"
             }
           }
         ],
@@ -492,10 +492,12 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-4/2026-05-24-parking-moving-buckets-config.md",
+    "llm_wiki/index.md",
+    "llm_wiki/workflows/training-a-driving-model.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-parking-indicator-memory-validation.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-checkout-pudo-unpudo-materialization-notebook.md",
     "llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation.md",
-    "llm_wiki/index.md",
     "llm_wiki/systems/data-and-materialisation.md",
     "llm_wiki/systems/parking-pudo-deployment-and-release.md",
     "llm_wiki/README.md",
@@ -516,8 +518,6 @@
     "llm_wiki/systems/end-to-end-driving-stack.md",
     "llm_wiki/systems/space-time-model-architecture.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-wayve-llm-wiki-deep-dive.md",
-    "llm_wiki/sources/2026-05-24-notion-parking-newsletters-release.md",
-    "llm_wiki/questions/parking-pudo-open-questions.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
