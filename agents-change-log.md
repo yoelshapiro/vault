@@ -147,3 +147,14 @@
     - Added delayed OneCycle LR support for staged training.
     - Configured parking BC modes to hold WFM encoder/input adaptor LR at zero for 5000 steps.
     - Kept fresh gear and parking-mode input adaptors active from step 0.
+
+- Topic: Parking no-behave LR warmup training run
+  - Labels: parking, training, surfboard
+  - Branch: boris/parking-past30-no-standstill-gear-aug/no_behave_lr_fix
+  - PR: n/a
+  - Change type: training run
+  - Areas: Parking training, Notion release tracking
+  - Changes:
+    - Submitted 80k-step parking BC training job 168436 on 4x H100 nodes.
+    - Created Notion release row for green-badger-sophisticated.
+    - Observed job reach Running on AKS.

@@ -30,3 +30,16 @@ The parking mode and gear direction input adaptors are newly introduced relative
 - Passed direct optimizer grouping smoke test showing other_delayed: 5000, gear_direction_input_adaptor: 0, and parking_mode_input_adaptor: 0.
 - Passed scheduler smoke test showing the delayed group remains at LR 0 before step 5000 and becomes non-zero at step 5000.
 - Focused bazel test //wayve/ai/si:py_test is still blocked by the existing analysis failure: missing rule //wayve/ai/si:run_inference from //wayve/ai/si:__py_checks_lib.
+
+
+## Training run: green-badger-sophisticated
+- Surfboard job: 168436
+- State observed: Running, start time 2026-05-24 19:32 UTC
+- Session id: session_2026_05_24_19_28_31_si_parking_bc_train_release_2026_5_11_no_behave_lr_warmup_5k
+- Branch: boris/parking-past30-no-standstill-gear-aug/no_behave_lr_fix
+- Commit: 001cd2666bd0d0cb45383848526d3f328f59445c
+- Command: bazel run //wayve/ai/si/cli:cli -- --project Parking -ex parking_bc -st no_behave_lr_warmup_5k --platform AKS -nn 4 --cluster dgx-h100 --no-verify +mode=parking_bc_train_release_2026_5_11 +datamodule=parking_bc_datamodule num_steps=80000 --priority P1
+- W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_05_24_19_28_31_si_parking_bc_train_release_2026_5_11_no_behave_lr_warmup_5k
+- Datadog: https://app.datadoghq.eu/logs?query=job_name%3Agreen-badger-sophisticated-168436&from_ts=1778441629941&cols=job_name%2Cnode_rank&live=true
+- Notion release row: https://www.notion.so/36a03da5d69a81288845d878d7ec646e
+- Model Catalogue lookup: no row yet by session id or nickname at submission time; likely indexing lag.
