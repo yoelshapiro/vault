@@ -136,3 +136,14 @@
     - Added dedicated optimizer LR groups for gear direction and parking mode input adaptors.
     - Set parking configs to train those fresh input adaptors at `1e-4` while keeping base LR at `1e-5`.
     - Documented validation and the current unrelated Bazel analysis blocker in [[agent_tasks/2026/05/Week-4/2026-05-24-parking-input-adaptor-lr-fix]].
+
+- Topic: Parking WFM warmup freeze
+  - Labels: parking, training, optimizer, warmup
+  - Branch: boris/parking-past30-no-standstill-gear-aug/no_behave_lr_fix
+  - PR: n/a
+  - Change type: follow-up fix
+  - Areas: wayve/ai/si/models/training.py, wayve/ai/si/configs/parking/parking_config.py, wayve/ai/zoo/lr_schedulers/one_cycle_lambda.py
+  - Changes:
+    - Added delayed OneCycle LR support for staged training.
+    - Configured parking BC modes to hold WFM encoder/input adaptor LR at zero for 5000 steps.
+    - Kept fresh gear and parking-mode input adaptors active from step 0.
