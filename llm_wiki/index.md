@@ -70,12 +70,18 @@ This is the content-oriented catalog for the Wayve MLE LLM wiki. If you are new,
 
 ## Raw Source Folders
 
+- [[llm_wiki/sources/README|Sources README]] - source-summary folder conventions.
 - [[llm_wiki/raw/README|Raw Sources README]] - raw-source policy and folder purpose.
 - [[llm_wiki/raw/notion/README|Raw Notion Sources]] - Notion source landing area.
 - [[llm_wiki/raw/github/README|Raw GitHub Sources]] - GitHub/code source landing area.
 - [[llm_wiki/raw/slack/README|Raw Slack Sources]] - Slack source landing area.
 - [[llm_wiki/raw/skills/README|Raw Skills Sources]] - skill source landing area.
 - [[llm_wiki/raw/assets/README|Raw Assets]] - local image/asset source area.
+
+## Operations
+
+- [[llm_wiki/AGENTS|AGENTS]] - wiki maintenance contract for agents.
+- [[llm_wiki/log|Log]] - chronological ingest, query, and maintenance history.
 
 ## Templates
 
