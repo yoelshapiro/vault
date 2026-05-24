@@ -673,75 +673,112 @@ function pclApplyStandstillGearAugment(s, scenario, base) {
   return out;
 }
 
-function pclScenarioOutcome(s, scenarioId, scenario) {
+function pclScenarioOutcomeAt(s, scenarioId, scenario, after, originIndex) {
   let state = "NONE";
-  let stateDetail = "no parking label";
+  const gear = after.gear;
+  const firstNeutral = gear.findIndex((g) => g === "P" || g === "N");
+
   if (scenarioId === "unpark_drive") {
-    if (s.parked_unparking_prob > 0) {
-      state = "UNPARKING_STATE";
-      stateDetail = "synthetic parked unpark";
-    } else {
-      state = "PARKING_STATE";
-      stateDetail = "stay parked target";
-    }
+    if (originIndex <= 1) state = s.parked_unparking_prob > 0 ? "UNPARKING_STATE" : "PARKING_STATE";
+    else state = "NONE";
   } else if (scenarioId === "multi_maneuver") {
-    state = "UNPARKING_STATE";
-    stateDetail = "reverse-out detected";
+    if (originIndex === 0) state = s.parked_unparking_prob > 0 ? "UNPARKING_STATE" : "PARKING_STATE";
+    else if (originIndex >= 1 && originIndex <= 4) state = "UNPARKING_STATE";
+    else state = "NONE";
   } else if (scenarioId === "delayed_park" || scenarioId === "parking_correction") {
-    state = "PARKING_STATE";
-    stateDetail = scenario.parkingStateAtOrigin ? "correction at standstill" : "future P/N stop";
+    if (firstNeutral >= 0 && originIndex < firstNeutral) state = "PARKING_STATE";
+    else if (firstNeutral >= 0) state = "PARKED_STATE";
   }
 
   const canHaveParkMode = state === "PARKING_STATE" || state === "PARKED_STATE";
   let parkMode = "false";
   if (canHaveParkMode && s.park_mode_blackout_probability >= 1) parkMode = "true";
-  else if (canHaveParkMode && s.park_mode_blackout_probability > 0) parkMode = `mixed p=${s.park_mode_blackout_probability}`;
+  else if (canHaveParkMode && s.park_mode_blackout_probability > 0) parkMode = "mixed";
 
-  let route = "unchanged";
-  let routeDetail = "no route edit";
+  let route = "UNCHANGED";
   const trainRoute = s.datapipe_type_train && s.enable_route_shortening_for_parking;
+  const isParkingEntry = state === "PARKING_STATE" || (state === "PARKED_STATE" && originIndex === firstNeutral);
   if (s.park_mode_blackout_probability >= 1) {
-    if (parkMode === "true") {
-      route = "MAP_ROUTE blackout";
-      routeDetail = "route can be zeroed";
-    } else {
-      route = "unchanged";
-      routeDetail = "unpark keeps route";
-    }
+    route = parkMode === "true" ? "BLACKOUT" : "UNCHANGED";
   } else if (s.park_mode_blackout_probability > 0) {
-    route = canHaveParkMode ? "mixed: shorten or blackout" : "mixed: shorten or unchanged";
-    routeDetail = "sampled branch";
-  } else if (trainRoute && state === "PARKING_STATE") {
-    route = "shorten to stop";
-    routeDetail = `stop anchor +/-${s.stop_route_offset_m}m`;
+    if (state === "UNPARKING_STATE") route = "MIX_FROM_UNCHANGED";
+    else if (canHaveParkMode) route = isParkingEntry ? "MIX_TO_BLACKOUT" : "MIX_UNCHANGED_BLACKOUT";
+  } else if (trainRoute && isParkingEntry) {
+    route = "TO_STOP";
   } else if (trainRoute && state === "UNPARKING_STATE") {
-    route = "start from stop";
-    routeDetail = "from stop, no jitter";
+    route = "FROM_STOP";
   }
 
-  return { state, stateDetail, parkMode, route, routeDetail };
+  return { state, parkMode, route };
 }
 
-function pclSvgInfoBox(x, y, title, value, detail, cls = "") {
-  return `
-    <rect class="state-box ${cls}" x="${x}" y="${y}" width="210" height="48" rx="4"/>
-    <text class="state-text" x="${x + 9}" y="${y + 15}">${title}</text>
-    <text class="state-text" x="${x + 9}" y="${y + 29}">${value}</text>
-    <text class="state-text" x="${x + 9}" y="${y + 42}">${detail}</text>`;
+function pclScenarioOutcomeSeries(s, scenarioId, scenario, after) {
+  return after.gear.map((_gear, i) => pclScenarioOutcomeAt(s, scenarioId, scenario, after, i));
 }
+
+function pclScenarioOutcome(s, scenarioId, scenario, after) {
+  const origin = scenario.origin ?? 0;
+  return pclScenarioOutcomeAt(s, scenarioId, scenario, after, origin);
+}
+
+function pclStateDetail(outcome) {
+  if (outcome.state === "PARKING_STATE") return "parking target";
+  if (outcome.state === "UNPARKING_STATE") return "unparking target";
+  if (outcome.state === "PARKED_STATE") return "inside P/N segment";
+  return "no parking label";
+}
+
+function pclRouteDetail(outcome, s) {
+  if (outcome.route === "TO_STOP") return `stop anchor +/-${s.stop_route_offset_m}m`;
+  if (outcome.route === "FROM_STOP") return "from stop, no jitter";
+  if (outcome.route === "BLACKOUT") return "route can be zeroed";
+  if (outcome.route === "MIX_TO_BLACKOUT") return "sampled shorten/blackout";
+  if (outcome.route === "MIX_FROM_UNCHANGED") return "sampled from-stop/unchanged";
+  if (outcome.route === "MIX_UNCHANGED_BLACKOUT") return "sampled unchanged/blackout";
+  return "no route edit";
+}
+
+function pclRouteLabel(route) {
+  return {
+    TO_STOP: "to stop",
+    FROM_STOP: "from stop",
+    BLACKOUT: "blackout",
+    MIX_TO_BLACKOUT: "mix",
+    MIX_FROM_UNCHANGED: "mix",
+    MIX_UNCHANGED_BLACKOUT: "mix",
+    UNCHANGED: "normal",
+  }[route] || route;
+}
+
+function pclTimelineRow(title, values, times, xFor, y, styleMap, labelMap) {
+  const h = 18;
+  const parts = [`<text x="8" y="${y + 13}">${title}</text>`];
+  for (let i = 0; i < values.length; i += 1) {
+    const x0 = i === 0 ? xFor(times[0]) : (xFor(times[i - 1]) + xFor(times[i])) / 2;
+    const x1 = i === values.length - 1 ? xFor(times[times.length - 1]) : (xFor(times[i]) + xFor(times[i + 1])) / 2;
+    const value = values[i];
+    const style = styleMap[value] || styleMap.default;
+    const label = labelMap[value] || value;
+    parts.push(`<rect x="${x0.toFixed(1)}" y="${y}" width="${Math.max(1, x1 - x0).toFixed(1)}" height="${h}" fill="${style.fill}" stroke="${style.stroke}"/>`);
+    if (x1 - x0 > 35) parts.push(`<text class="state-text" x="${(x0 + 4).toFixed(1)}" y="${y + 13}">${label}</text>`);
+  }
+  return parts.join("");
+}
+
 
 function pclRenderScenario(s) {
   const scenario = PCL_SCENARIOS[pclScenarioId] || PCL_SCENARIOS.unpark_drive;
   const after = pclScenarioAfter(s, scenario);
-  const outcome = pclScenarioOutcome(s, pclScenarioId, scenario);
+  const outcome = pclScenarioOutcome(s, pclScenarioId, scenario, after);
+  const outcomeSeries = pclScenarioOutcomeSeries(s, pclScenarioId, scenario, after);
   const times = scenario.times;
   const width = 820;
   const left = 52;
   const right = 22;
   const plotW = width - left - right;
-  const rowH = 150;
-  const row1 = 92;
-  const row2 = 276;
+  const rowH = 130;
+  const row1 = 44;
+  const row2 = 206;
   const maxAbsSpeed = Math.max(1, ...scenario.speed.map(Math.abs), ...after.speed.map(Math.abs));
   const xFor = (t) => left + ((t - times[0]) / (times[times.length - 1] - times[0])) * plotW;
   const originIndex = scenario.origin ?? 0;
@@ -750,11 +787,45 @@ function pclRenderScenario(s) {
   const speedAfter = times.map((t, i) => [xFor(t), pclSpeedY(after.speed[i], row2, rowH, maxAbsSpeed)]);
   const gearOrig = times.map((t, i) => [xFor(t), pclGearY(scenario.gear[i], row1, rowH)]);
   const gearAfter = times.map((t, i) => [xFor(t), pclGearY(after.gear[i], row2, rowH)]);
-  const grid = times.map((t) => `<line class="grid" x1="${xFor(t).toFixed(1)}" y1="78" x2="${xFor(t).toFixed(1)}" y2="448"/>`).join("");
-  const infoBoxes = [
-    pclSvgInfoBox(left, 18, "parking state", outcome.state, outcome.stateDetail, outcome.state === "UNPARKING_STATE" ? "hot" : "warn"),
-    pclSvgInfoBox(left + 224, 18, "PARKING_MODE", outcome.parkMode, outcome.parkMode === "true" ? "blackout branch" : outcome.parkMode.startsWith("mixed") ? "sampled branch" : "false in route mode"),
-    pclSvgInfoBox(left + 448, 18, "route", outcome.route, outcome.routeDetail, outcome.route.includes("blackout") ? "hot" : ""),
+  const grid = times.map((t) => `<line class="grid" x1="${xFor(t).toFixed(1)}" y1="20" x2="${xFor(t).toFixed(1)}" y2="438"/>`).join("");
+  const stateStyle = {
+    PARKING_STATE: { fill: "#f3dfaa", stroke: "#b79a54" },
+    UNPARKING_STATE: { fill: "#efd0cc", stroke: "#b66b64" },
+    PARKED_STATE: { fill: "#dddaf0", stroke: "#8b86b5" },
+    NONE: { fill: "#e9efe7", stroke: "#cbd8cc" },
+    default: { fill: "#e9efe7", stroke: "#cbd8cc" },
+  };
+  const parkModeStyle = {
+    true: { fill: "#efd0cc", stroke: "#b66b64" },
+    false: { fill: "#e9efe7", stroke: "#cbd8cc" },
+    mixed: { fill: "#f3dfaa", stroke: "#b79a54" },
+    default: { fill: "#e9efe7", stroke: "#cbd8cc" },
+  };
+  const routeStyle = {
+    TO_STOP: { fill: "#d9e9df", stroke: "#3f7a5f" },
+    FROM_STOP: { fill: "#d7e6ec", stroke: "#5f8fa7" },
+    BLACKOUT: { fill: "#efd0cc", stroke: "#b66b64" },
+    MIX_TO_BLACKOUT: { fill: "#f3dfaa", stroke: "#b79a54" },
+    MIX_FROM_UNCHANGED: { fill: "#f3dfaa", stroke: "#b79a54" },
+    MIX_UNCHANGED_BLACKOUT: { fill: "#f3dfaa", stroke: "#b79a54" },
+    UNCHANGED: { fill: "#e9efe7", stroke: "#cbd8cc" },
+    default: { fill: "#e9efe7", stroke: "#cbd8cc" },
+  };
+  const stateLabels = { PARKING_STATE: "parking", UNPARKING_STATE: "unpark", PARKED_STATE: "parked", NONE: "none" };
+  const parkLabels = { true: "true", false: "false", mixed: "mixed" };
+  const routeLabels = {
+    TO_STOP: "to stop",
+    FROM_STOP: "from stop",
+    BLACKOUT: "blackout",
+    MIX_TO_BLACKOUT: "mixed",
+    MIX_FROM_UNCHANGED: "mixed",
+    MIX_UNCHANGED_BLACKOUT: "mixed",
+    UNCHANGED: "normal",
+  };
+  const timelineRows = [
+    pclTimelineRow("state", outcomeSeries.map((x) => x.state), times, xFor, 354, stateStyle, stateLabels),
+    pclTimelineRow("park mode", outcomeSeries.map((x) => x.parkMode), times, xFor, 382, parkModeStyle, parkLabels),
+    pclTimelineRow("route", outcomeSeries.map((x) => x.route), times, xFor, 410, routeStyle, routeLabels),
   ].join("");
   const stateBadges = (gears, rowTop) => gears.map((gear, i) => {
     const x = xFor(times[i]) - 9;
@@ -768,8 +839,8 @@ function pclRenderScenario(s) {
     `<text x="${left + 10}" y="${row2 + 18}">speed km/h</text>`,
     `<text x="${left + plotW - 92}" y="${row1 + 18}">gear state</text>`,
     `<text x="${left + plotW - 92}" y="${row2 + 18}">gear state</text>`,
-    `<text x="${left}" y="466">time (s)</text>`,
-    ...times.map((t) => `<text x="${(xFor(t) - 4).toFixed(1)}" y="466">${t}</text>`),
+    `<text x="${left}" y="462">time (s)</text>`,
+    ...times.map((t) => `<text x="${(xFor(t) - 4).toFixed(1)}" y="462">${t}</text>`),
     `<text x="${left + plotW + 5}" y="${pclGearY("D", row1, rowH).toFixed(1)}">D</text>`,
     `<text x="${left + plotW + 5}" y="${pclGearY("P", row1, rowH).toFixed(1)}">P/N</text>`,
     `<text x="${left + plotW + 5}" y="${pclGearY("R", row1, rowH).toFixed(1)}">R</text>`,
@@ -778,11 +849,10 @@ function pclRenderScenario(s) {
     `<text x="${left + plotW + 5}" y="${pclGearY("R", row2, rowH).toFixed(1)}">R</text>`,
   ].join("");
   document.getElementById("pcl-scenario-chart").innerHTML = `
-    <svg class="pcl-chart" viewBox="0 0 ${width} 486" role="img" aria-label="${scenario.title} gear and speed timeline">
-      ${infoBoxes}
+    <svg class="pcl-chart" viewBox="0 0 ${width} 478" role="img" aria-label="${scenario.title} gear speed parking state park mode and route timeline">
       ${grid}
-      <line class="origin-line" x1="${originX.toFixed(1)}" y1="78" x2="${originX.toFixed(1)}" y2="448"/>
-      <text x="${(originX + 5).toFixed(1)}" y="86">origin sample</text>
+      <line class="origin-line" x1="${originX.toFixed(1)}" y1="20" x2="${originX.toFixed(1)}" y2="438"/>
+      <text x="${(originX + 5).toFixed(1)}" y="30">selected origin</text>
       <line class="axis" x1="${left}" y1="${row1 + rowH / 2}" x2="${left + plotW}" y2="${row1 + rowH / 2}"/>
       <line class="axis" x1="${left}" y1="${row2 + rowH / 2}" x2="${left + plotW}" y2="${row2 + rowH / 2}"/>
       <path class="speed-original" d="${pclPath(speedOrig)}"/>
@@ -791,6 +861,7 @@ function pclRenderScenario(s) {
       <path class="gear-modified" d="${pclStepPath(gearAfter)}"/>
       ${stateBadges(scenario.gear, row1)}
       ${stateBadges(after.gear, row2)}
+      ${timelineRows}
       ${labels}
     </svg>`;
   document.getElementById("pcl-scenario-title").textContent = scenario.title;
@@ -802,7 +873,7 @@ function pclRenderScenario(s) {
   if (s.unparking_gear_augment_prob > 0 && s.parked_unparking_prob <= 0) configNotes.push("unparking_gear_augment_prob is non-zero, but parked_unparking_prob is 0, so synthetic parked-origin unparking is disabled and this augment should not fire.");
   if (s.enable_augment_standstill_gear && scenario.parkingStateAtOrigin) configNotes.push("augment standstill gear is on: the graph changes only the origin-sample vehicle gear, matching augment_standstill_gear rather than rewriting the whole timeline.");
   if (s.enable_augment_standstill_gear && !scenario.parkingStateAtOrigin) configNotes.push("augment standstill gear is on, but this scenario's origin is not a standstill parking_state sample, so the timeline correctly does not change for that toggle.");
-  configNotes.push(`Graph annotations: state=${outcome.state}, PARKING_MODE=${outcome.parkMode}, route=${outcome.route}.`);
+  configNotes.push(`Timeline rows show per-time output if that timestamp were sampled as the origin. Selected-origin summary: state=${outcome.state}, PARKING_MODE=${outcome.parkMode}, route=${pclRouteLabel(outcome.route)}.`);
   document.getElementById("pcl-scenario-notes").innerHTML = pclList([...scenario.notes, ...configNotes]);
   document.querySelectorAll("[data-scenario]").forEach((button) => button.classList.toggle("active", button.dataset.scenario === pclScenarioId));
 }
@@ -857,7 +928,8 @@ function pclRender() {
   document.getElementById("pcl-effects").innerHTML = pclList(effects);
 
   const activeScenario = PCL_SCENARIOS[pclScenarioId] || PCL_SCENARIOS.unpark_drive;
-  const activeOutcome = pclScenarioOutcome(s, pclScenarioId, activeScenario);
+  const activeAfter = pclScenarioAfter(s, activeScenario);
+  const activeOutcome = pclScenarioOutcome(s, pclScenarioId, activeScenario, activeAfter);
   const toggleSemantics = [
     "reconstruct_gear_from_speed rebuilds the cleaned scratch gear from signed speed plus validated P/N segments; it should not alter already-consistent D/R movement.",
     "unparking_gear_augment_prob only matters after _augment_parked_state has converted a parked-origin sample into UNPARKING_STATE, so parked_unparking_prob=0 gates it off.",
@@ -873,7 +945,7 @@ function pclRender() {
   }
   scenarioSemantics.push(activeScenario.parkingStateAtOrigin ? "The origin sample is a standstill parking_state point, so standstill vehicle-gear augmentation is visible at the origin marker." : "The origin sample is not a standstill parking_state point, so standstill vehicle-gear augmentation should be visually inert here.");
   scenarioSemantics.push(s.reconstruct_gear_from_speed ? "Reconstruction is enabled: visible changes should come from P/N validation/expansion or signed-speed repair, not from arbitrary gear flipping." : "Reconstruction is disabled: the after trace starts from raw labels before later parking-specific rewrites.");
-  scenarioSemantics.push(`Graph state summary: ${activeOutcome.state}, PARKING_MODE=${activeOutcome.parkMode}, route=${activeOutcome.route}.`);
+  scenarioSemantics.push(`Selected-origin summary: ${activeOutcome.state}, PARKING_MODE=${activeOutcome.parkMode}, route=${pclRouteLabel(activeOutcome.route)}.`);
   document.getElementById("pcl-scenario-semantics").innerHTML = pclList(scenarioSemantics);
 
   const route = [];
