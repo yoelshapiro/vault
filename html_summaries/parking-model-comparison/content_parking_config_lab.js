@@ -675,21 +675,21 @@ function pclApplyStandstillGearAugment(s, scenario, base) {
 
 function pclScenarioOutcome(s, scenarioId, scenario) {
   let state = "NONE";
-  let stateDetail = "No parking label at origin";
+  let stateDetail = "no parking label";
   if (scenarioId === "unpark_drive") {
     if (s.parked_unparking_prob > 0) {
       state = "UNPARKING_STATE";
-      stateDetail = "Synthetic parked-origin unpark";
+      stateDetail = "synthetic parked unpark";
     } else {
       state = "PARKING_STATE";
-      stateDetail = "Stay-parked target from parked origin";
+      stateDetail = "stay parked target";
     }
   } else if (scenarioId === "multi_maneuver") {
     state = "UNPARKING_STATE";
-    stateDetail = "Reverse-out unparking detected";
+    stateDetail = "reverse-out detected";
   } else if (scenarioId === "delayed_park" || scenarioId === "parking_correction") {
     state = "PARKING_STATE";
-    stateDetail = scenario.parkingStateAtOrigin ? "Parking correction at standstill" : "Approaching future P/N stop";
+    stateDetail = scenario.parkingStateAtOrigin ? "correction at standstill" : "future P/N stop";
   }
 
   const canHaveParkMode = state === "PARKING_STATE" || state === "PARKED_STATE";
@@ -698,25 +698,25 @@ function pclScenarioOutcome(s, scenarioId, scenario) {
   else if (canHaveParkMode && s.park_mode_blackout_probability > 0) parkMode = `mixed p=${s.park_mode_blackout_probability}`;
 
   let route = "unchanged";
-  let routeDetail = "No parking-specific route mutation";
+  let routeDetail = "no route edit";
   const trainRoute = s.datapipe_type_train && s.enable_route_shortening_for_parking;
   if (s.park_mode_blackout_probability >= 1) {
     if (parkMode === "true") {
       route = "MAP_ROUTE blackout";
-      routeDetail = "Route shortening disabled; parking-mode route can be zeroed";
+      routeDetail = "route can be zeroed";
     } else {
       route = "unchanged";
-      routeDetail = "Unparking has PARKING_MODE=false, so blackout does not erase route";
+      routeDetail = "unpark keeps route";
     }
   } else if (s.park_mode_blackout_probability > 0) {
     route = canHaveParkMode ? "mixed: shorten or blackout" : "mixed: shorten or unchanged";
-    routeDetail = "Per-sample random branch: route-shortening when not blackout, blackout branch when PARKING_MODE=true";
+    routeDetail = "sampled branch";
   } else if (trainRoute && state === "PARKING_STATE") {
     route = "shorten to stop";
-    routeDetail = `Stores stop anchor; parking stop can jitter by ${s.stop_route_offset_m}m`;
+    routeDetail = `stop anchor +/-${s.stop_route_offset_m}m`;
   } else if (trainRoute && state === "UNPARKING_STATE") {
     route = "start from stop";
-    routeDetail = "Stores origin lookahead entry; unparking route is not jittered";
+    routeDetail = "from stop, no jitter";
   }
 
   return { state, stateDetail, parkMode, route, routeDetail };
@@ -753,7 +753,7 @@ function pclRenderScenario(s) {
   const grid = times.map((t) => `<line class="grid" x1="${xFor(t).toFixed(1)}" y1="78" x2="${xFor(t).toFixed(1)}" y2="448"/>`).join("");
   const infoBoxes = [
     pclSvgInfoBox(left, 18, "parking state", outcome.state, outcome.stateDetail, outcome.state === "UNPARKING_STATE" ? "hot" : "warn"),
-    pclSvgInfoBox(left + 224, 18, "PARKING_MODE", outcome.parkMode, outcome.parkMode === "true" ? "blackout branch active" : "route-shortening branch keeps it false"),
+    pclSvgInfoBox(left + 224, 18, "PARKING_MODE", outcome.parkMode, outcome.parkMode === "true" ? "blackout branch" : outcome.parkMode.startsWith("mixed") ? "sampled branch" : "false in route mode"),
     pclSvgInfoBox(left + 448, 18, "route", outcome.route, outcome.routeDetail, outcome.route.includes("blackout") ? "hot" : ""),
   ].join("");
   const stateBadges = (gears, rowTop) => gears.map((gear, i) => {
