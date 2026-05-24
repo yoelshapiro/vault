@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parking Datamodule Deep Dive</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .page-shell { max-width: 1280px; margin: 0 auto; padding: 30px 34px 70px; }
+    .local-hero {
+      background: linear-gradient(135deg, #33483d 0%, #40584b 100%);
+      border-bottom: 5px solid #79a889;
+      color: #fbfaf4;
+      padding: 30px 36px;
+    }
+    .local-hero h1 { color: #fbfaf4; font-size: 44px; max-width: 1020px; }
+    .local-hero p { color: #e6eee6; font-size: 17px; max-width: 1080px; }
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+    .toc a {
+      background: #fffdf8;
+      border: 1px solid #c5cec3;
+      color: #202823;
+      min-height: 92px;
+      padding: 12px;
+      text-decoration: none;
+    }
+    .toc b { display: block; font-size: 16px; margin-bottom: 5px; }
+    .toc span { color: #68726b; display: block; font-size: 13px; }
+    .architecture {
+      background: #eef3ec;
+      border: 1px dashed #aebbae;
+      margin: 14px 0 24px;
+      padding: 14px;
+    }
+    .pipeline-row {
+      align-items: stretch;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: minmax(150px, 1fr) 24px minmax(160px, 1.1fr) 24px minmax(160px, 1.1fr) 24px minmax(160px, 1.1fr) 24px minmax(160px, 1.1fr);
+    }
+    .pipeline-arrow {
+      align-items: center;
+      color: #a8605a;
+      display: flex;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 22px;
+      font-weight: 800;
+      justify-content: center;
+    }
+    .pipe-card,
+    .detail-card {
+      background: #fffdf8;
+      border: 1px solid #aebbae;
+      border-left: 6px solid #5f8fa7;
+      padding: 12px;
+    }
+    .pipe-card.green,
+    .detail-card.green { border-left-color: #3f7a5f; }
+    .pipe-card.rust,
+    .detail-card.rust { border-left-color: #b66b64; }
+    .pipe-card.yellow,
+    .detail-card.yellow { border-left-color: #b79a54; }
+    .pipe-card.purple,
+    .detail-card.purple { border-left-color: #8b86b5; }
+    .pipe-card b,
+    .detail-card b { color: #13261e; display: block; font-size: 15px; margin-bottom: 6px; }
+    .pipe-card small,
+    .detail-card small {
+      color: #68726b;
+      display: block;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .pipe-card ul,
+    .detail-card ul { margin: 0; padding-left: 17px; }
+    .pipe-card li,
+    .detail-card li { font-size: 13px; margin: 4px 0; }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0 22px;
+    }
+    .detail-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .source-list {
+      background: #fffdf8;
+      border: 1px solid #c5cec3;
+      margin: 14px 0 22px;
+      padding: 14px 16px;
+    }
+    .source-list li { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12px; }
+    .decision-table td:first-child { width: 215px; }
+    .mini-flow {
+      background: #293a32;
+      color: #f2f7ef;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow: auto;
+      padding: 14px;
+      white-space: pre;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag {
+      background: #e9efe7;
+      border: 1px solid #cbd8cc;
+      color: #0d3726;
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 7px;
+    }
+    @media (max-width: 1100px) {
+      .toc,
+      .pipeline-row,
+      .detail-grid,
+      .detail-grid.two { display: block; }
+      .toc a,
+      .pipe-card,
+      .detail-card { display: block; margin-bottom: 10px; }
+      .pipeline-arrow { justify-content: flex-start; transform: rotate(90deg); transform-origin: left center; }
+      .local-hero h1 { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="local-hero">
+    <p class="eyebrow">WayveCode parking investigation</p>
+    <h1>How the SI Parking Datamodule Works</h1>
+    <p>
+      Detailed read-through of <code>wayve/ai/si/datamodules/parking.py</code> on
+      <code>boris/05-21-updated-pudo-config</code>, with the relevant wiring in
+      <code>otf.py</code>, <code>parking_config.py</code>, and route-map code.
+    </p>
+  </header>
+
+  <main class="page-shell">
+    <div class="callout blue book">
+      <p><b>Short version.</b> The parking datamodule is a sample-level augmentation and labelling pipeline. It reconstructs a cleaner parking gear timeline, detects parking / parked / unparking states around neutral gear segments, optionally modifies route-map context, and rewrites several model-facing labels before batching.</p>
+      <p><b>Branch-specific boundary.</b> This Boris branch enables the SI parking dataloader through <code>ParkingDataConfig</code> defaults, but does not produce Wonjoon-style long-horizon <code>POLICY_PATH</code> by default because <code>policy_path_num_points=0</code>.</p>
+    </div>
+
+    <nav class="toc">
+      <a href="#mental-model"><b>Mental Model</b><span>The pipeline as data transforms.</span></a>
+      <a href="#parking-py"><b>parking.py</b><span>Scratch table, detection, augmentation.</span></a>
+      <a href="#otf-wiring"><b>OTF Wiring</b><span>Where parking enters the broader datapipe.</span></a>
+      <a href="#config"><b>Config</b><span>What this branch actually enables.</span></a>
+    </nav>
+
+    <h2 id="mental-model">Mental Model</h2>
+    <p>
+      Think of parking processing as a temporary side pipeline inserted into the OTF datapipe. The incoming sample is still a normal
+      <code>(table, data)</code> pair. <code>parking.py</code> wraps it as <code>(table, scratch_table, data)</code>,
+      fills scratch state with resolved indices and full-resolution time series, writes final model labels into <code>data</code>,
+      then removes the scratch table.
+    </p>
+
+    <div class="architecture">
+      <div class="pipeline-row">
+        <div class="pipe-card green">
+          <small>Input sample</small>
+          <b><code>(table, data)</code></b>
+          <ul>
+            <li>vehicle, policy, path, and odometry data already inserted</li>
+            <li>table still has full frame-level time series</li>
+          </ul>
+        </div>
+        <div class="pipeline-arrow">&gt;</div>
+        <div class="pipe-card yellow">
+          <small>Scratch stage</small>
+          <b><code>fill_parking_scratch_table</code></b>
+          <ul>
+            <li>resolve origin and future lookahead indices</li>
+            <li>read speed, distance, timestamps, gear</li>
+            <li>construct clean parking gear series</li>
+          </ul>
+        </div>
+        <div class="pipeline-arrow">&gt;</div>
+        <div class="pipe-card rust">
+          <small>State detection</small>
+          <b><code>add_parking_state</code></b>
+          <ul>
+            <li>detect parking, parked, unparking</li>
+            <li>write model-facing parking keys</li>
+            <li>store optional route shortening anchor</li>
+          </ul>
+        </div>
+        <div class="pipeline-arrow">&gt;</div>
+        <div class="pipe-card purple">
+          <small>Target rewrites</small>
+          <b>Augment and clean labels</b>
+          <ul>
+            <li>unparking gear augmentation</li>
+            <li>strip leading standstill</li>
+            <li>clamp policy after neutral gear</li>
+          </ul>
+        </div>
+        <div class="pipeline-arrow">&gt;</div>
+        <div class="pipe-card green">
+          <small>Output sample</small>
+          <b><code>(table, data)</code></b>
+          <ul>
+            <li>scratch table dropped</li>
+            <li>downstream map/camera/provenance pipeline continues</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="parking-py">parking.py</h2>
+    <p>
+      The central entrypoint is <code>insert_parking_data()</code>. It has two modes: delegate to the simpler zoo parking dataloader when
+      <code>use_zoo_dataloader=True</code>, or run the SI-specific pipeline when <code>False</code>. This branch uses the SI path.
+    </p>
+
+    <div class="mini-flow">insert_parking_data
+  -> _init_scratch
+  -> fill_parking_scratch_table
+  -> add_parking_state
+  -> optional set_stopping_mode
+  -> optional compute_policy_path
+  -> augment_unparking_gear
+  -> optional strip_leading_standstill
+  -> clamp_policy_at_first_neutral
+  -> optional augment_standstill_gear
+  -> optional apply_parking_goal_dropout
+  -> _drop_scratch</div>
+
+    <h3>1. ParkingDataConfig</h3>
+    <p>
+      <code>ParkingDataConfig</code> groups all parking detection and augmentation knobs. The important separation is between detection
+      thresholds, route-context training behavior, output augmentation, and policy-path generation.
+    </p>
+    <table class="compare dense aligned decision-table">
+      <tr><th>Area</th><th>Fields</th><th>Meaning</th></tr>
+      <tr><td>Backend</td><td><code>use_zoo_dataloader</code>, <code>reconstruct_gear_from_speed</code></td><td>Choose SI vs zoo pipeline, and whether to rebuild gear labels from speed/P/N evidence.</td></tr>
+      <tr><td>Detection</td><td><code>lookahead_sec</code>, <code>past_sec</code>, <code>time_threshold_sec</code>, <code>distance_threshold_m</code>, <code>min_duration_sec</code></td><td>Controls how much context is loaded and when a future or past P/N segment counts as parking/unparking.</td></tr>
+      <tr><td>Gear cleanup</td><td><code>enable_gear_label_cleanup</code>, reverse distance threshold, neutral duration threshold</td><td>Removes tiny isolated gear glitches before state detection.</td></tr>
+      <tr><td>Route context</td><td><code>park_mode_blackout_probability</code>, <code>enable_route_shortening_for_parking</code>, <code>enable_end_of_route_blackout</code>, <code>stop_route_offset_m</code></td><td>Chooses between giving the model explicit parking mode plus route blackout or shortened route context.</td></tr>
+      <tr><td>Target augmentation</td><td><code>parked_unparking_prob</code>, <code>unparking_gear_augment_prob</code>, <code>enable_strip_leading_standstill</code>, <code>enable_augment_standstill_gear</code></td><td>Creates useful parked/unparking examples and removes standstill-heavy artifacts.</td></tr>
+      <tr><td>Policy path</td><td><code>policy_path_num_points</code>, <code>policy_path_sample_step_m</code></td><td>Only used when positive. Defaults to zero in this branch, so no policy path is generated by default.</td></tr>
+    </table>
+
+    <h3>2. Scratch Table Construction</h3>
+    <p>
+      <code>fill_parking_scratch_table()</code> is the data extraction and normalization stage. It resolves table indices, grabs optional
+      future pose/curvature arrays, then builds the gear series used by the detector.
+    </p>
+    <div class="detail-grid">
+      <div class="detail-card green">
+        <small>Inputs</small>
+        <b>Resolved indices</b>
+        <ul>
+          <li>origin index from a literal int or table key</li>
+          <li>vehicle indices for current/past vehicle state</li>
+          <li>policy indices for future policy targets</li>
+          <li>additional lookahead indices for parking detection</li>
+        </ul>
+      </div>
+      <div class="detail-card yellow">
+        <small>Signals</small>
+        <b>Full-resolution arrays</b>
+        <ul>
+          <li>timestamps in seconds</li>
+          <li>cumulative distance</li>
+          <li>speed in km/h</li>
+          <li>raw gear direction</li>
+          <li>optional indicator lights</li>
+        </ul>
+      </div>
+      <div class="detail-card purple">
+        <small>Optional path support</small>
+        <b>Future parking poses</b>
+        <ul>
+          <li>uses odometry to compute relative future poses</li>
+          <li>stores additional parking pose in scratch</li>
+          <li>stores matching curvature if present</li>
+          <li>used by standstill stripping and optional policy path</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>3. Gear Reconstruction</h3>
+    <p>
+      The parking detector relies heavily on P/N segments, so the first hard problem is making gear trustworthy. The code can either use
+      signed speed directly, or reconstruct gear from speed and validated P/N segments. Those modes are mutually exclusive.
+    </p>
+    <table class="compare dense aligned decision-table">
+      <tr><th>Step</th><th>Code behavior</th><th>Reason</th></tr>
+      <tr><td>Speed-derived D/R</td><td>Speed above 0.5 km/h becomes forward; below -0.5 km/h becomes reverse; near-zero remains unknown.</td><td>Moving direction is more reliable than noisy CAN gear for D/R.</td></tr>
+      <tr><td>Validated P/N</td><td>Only original neutral segments lasting at least <code>min_duration_sec</code> are kept.</td><td>Short P/N blips should not create parking events.</td></tr>
+      <tr><td>Merge</td><td>Validated P/N only replaces unknown speed-derived frames.</td><td>Preserve strong motion evidence while recovering parked segments.</td></tr>
+      <tr><td>Backfill</td><td>Unknowns are filled from the next valid gear.</td><td>Creates a complete gear series for downstream indexing.</td></tr>
+      <tr><td>Cleanup</td><td>Short reverse or neutral segments can be replaced by adjacent gear.</td><td>Removes parking-specific gear-label glitches.</td></tr>
+      <tr><td>Standstill expansion</td><td>P/N segments are expanded backward/forward over adjacent stopped frames.</td><td>Human drivers stop before and after shifting to P/N.</td></tr>
+    </table>
+
+    <h3>4. Parking State Detection</h3>
+    <p>
+      <code>_compute_parking_state()</code> treats clean neutral segments as anchors. It returns a <code>ParkingStateResult</code>
+      containing boolean states plus timing, distance, and segment metadata.
+    </p>
+    <div class="detail-grid">
+      <div class="detail-card green">
+        <small>Priority 0</small>
+        <b>Parked state</b>
+        <ul>
+          <li>origin lies inside a neutral segment</li>
+          <li>goal distance is zero</li>
+          <li>segment start/end are stored for later augmentation</li>
+        </ul>
+      </div>
+      <div class="detail-card yellow">
+        <small>Priority 1</small>
+        <b>Parking state</b>
+        <ul>
+          <li>find first future neutral segment</li>
+          <li>accept if within time threshold or distance threshold</li>
+          <li>goal distance is distance to neutral entry</li>
+        </ul>
+      </div>
+      <div class="detail-card rust">
+        <small>Priority 2</small>
+        <b>Unparking state</b>
+        <ul>
+          <li>find closest past neutral segment</li>
+          <li>scan forward after it for reverse gear and standstill</li>
+          <li>origin inside that exit interval becomes unparking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn book">
+      <p><b>Known limitation.</b> The current unparking detector only catches reverse-out unparking. The code comment says forward-unparking from P/N to D is missed, even though it may be safe to support because upstream neutral segments are already validated.</p>
+    </div>
+
+    <h3>5. Writing Model-Facing Keys</h3>
+    <p>
+      <code>add_parking_state()</code> writes both state labels and current/future gear labels into <code>data</code>. It also handles the
+      route-context training mode.
+    </p>
+    <table class="compare dense aligned decision-table">
+      <tr><th>Output key</th><th>Meaning</th><th>Producer</th></tr>
+      <tr><td><code>PARKING_MODE</code></td><td>Boolean model input indicating parking mode, depending on state and blackout/shortening mode.</td><td><code>add_parking_state</code></td></tr>
+      <tr><td><code>PARKING_STATE</code></td><td>Approaching or performing parking.</td><td><code>add_parking_state</code></td></tr>
+      <tr><td><code>PARKED_STATE</code></td><td>Origin originally inside a parked neutral segment, before parked augmentation may flip it.</td><td><code>add_parking_state</code></td></tr>
+      <tr><td><code>UNPARKING_STATE</code></td><td>Detected or augmented unparking example.</td><td><code>add_parking_state</code></td></tr>
+      <tr><td><code>PARKING_*_TIME_DELTA</code></td><td>Time to segment start/end relative to origin.</td><td><code>_compute_parking_state</code></td></tr>
+      <tr><td><code>PARKING_GOAL_DISTANCE</code></td><td>Distance from origin to parking goal when available.</td><td><code>_compute_parking_state</code></td></tr>
+      <tr><td><code>VEHICLE_GEAR_DIRECTION</code></td><td>Vehicle gear values sampled from cleaned gear timeline.</td><td><code>add_parking_state</code></td></tr>
+      <tr><td><code>POLICY_GEAR_DIRECTION</code></td><td>Future policy gear values sampled from cleaned gear timeline.</td><td><code>add_parking_state</code></td></tr>
+    </table>
+
+    <h3>6. Augmentations After Detection</h3>
+    <table class="compare dense aligned decision-table">
+      <tr><th>Function</th><th>When it applies</th><th>Effect</th></tr>
+      <tr><td><code>_augment_parked_state</code></td><td>Origin is inside a parked segment.</td><td>Randomly turns parked samples into stay-parked parking examples or unparking examples, if future path is long enough.</td></tr>
+      <tr><td><code>augment_unparking_gear</code></td><td>Unparking sample still has neutral gear at origin.</td><td>Either assigns D/R for learning gear prediction or keeps P/N to avoid immediate unpark behavior.</td></tr>
+      <tr><td><code>strip_leading_standstill</code></td><td>Parking/unparking sample starts in D/R but speed is near zero.</td><td>Shifts speed profile left and resamples pose/curvature so the model does not learn delayed movement from gear-transition standstill.</td></tr>
+      <tr><td><code>clamp_policy_at_first_neutral</code></td><td>Future policy gear reaches P/N.</td><td>Repeats future pose/waypoints/curvature and zeroes speed after first neutral frame.</td></tr>
+      <tr><td><code>augment_standstill_gear</code></td><td>Optional. Parking state and current speed near zero.</td><td>Randomizes current vehicle gear to reduce causal leakage from standstill gear labels.</td></tr>
+      <tr><td><code>apply_parking_goal_dropout</code></td><td>Optional, if goal dropout probability is positive.</td><td>Copies original parking goal pose, then may replace current parking pose with NaNs.</td></tr>
+    </table>
+
+    <h2 id="otf-wiring">OTF Wiring</h2>
+    <p>
+      In <code>otf.py</code>, parking is inserted after the datapipe has already loaded frame/run data, odometry, vehicle data, policy data,
+      and path data. It happens before intervention augmentation, camera loading, map insertion, route/indicator augmentation, and batching.
+    </p>
+    <div class="mini-flow">make_driving_datapipe
+  -> load_frame_tables
+  -> set_odometry_data
+  -> load_run_tables
+  -> insert_vehicle_data
+  -> insert_policy_data
+  -> optional load_paths + insert_path_data + filter_bad_paths
+  -> insert_parking_data
+  -> optional intervention / safety augmentation
+  -> optional insert_parking_stop_route_position
+  -> insert_map_data
+  -> optional route blackout / navigation cleanup
+  -> camera, radar, lidar, provenance, final transforms</div>
+
+    <div class="detail-grid two">
+      <div class="detail-card blue">
+        <small>Lookahead and past context</small>
+        <b>Parking changes loaded window sizes</b>
+        <ul>
+          <li><code>lookahead_sec</code> can increase lazy future frame loading.</li>
+          <li><code>past_sec</code> can increase additional past context in the timeslicer.</li>
+          <li><code>_make_clipped_lookahead_indices</code> clips future indices near run boundaries instead of dropping the sample.</li>
+        </ul>
+      </div>
+      <div class="detail-card yellow">
+        <small>Validation behavior</small>
+        <b>Route perturbations are train-only</b>
+        <ul>
+          <li>For non-train datapipes, <code>otf.py</code> replaces parking config with route shortening disabled.</li>
+          <li>It also disables end-of-route blackout and navigation cleanup.</li>
+          <li>Parking labels can still be produced, but route-context stochasticity is removed.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="config">Branch Config</h2>
+    <p>
+      <code>parking_config.py</code> defines a parking/PUDO training datamodule and then derives a parking-focused and PUDO-focused mix from it.
+      The base datamodule uses <code>parking_config=builds(ParkingDataConfig)</code>, so the SI parking dataloader is active with default
+      values unless the Hydra mode overrides fields.
+    </p>
+
+    <table class="compare dense aligned decision-table">
+      <tr><th>Config piece</th><th>Value in this branch</th><th>Implication</th></tr>
+      <tr><td>Materialisation</td><td><code>bc/split_alpha2_alpha3/release/0.0.17</code>, binary <code>3.0.58</code></td><td>Uses OTF binaries plus PUDO bucket roots from the branch config.</td></tr>
+      <tr><td>Top-level mix</td><td>Base <code>parking_pudo_bc_datamodule_cfg</code>: driving 50%, PUDO 22%, UNPUDO 17%, unpark 3%, gear shift 8%.</td><td>The base mode trains both normal driving and parking/PUDO behavior.</td></tr>
+      <tr><td><code>parking_bc_datamodule_cfg</code></td><td>driving 75%, unpark 10%, gear shift 15%, PUDO/UNPUDO zeroed.</td><td>A parking/unparking-focused derivative.</td></tr>
+      <tr><td><code>pudo_bc_datamodule_cfg</code></td><td>keeps the base 50/22/17/3/8 mix.</td><td>The PUDO-oriented derivative preserves PUDO/UNPUDO allocation.</td></tr>
+      <tr><td>Parking config</td><td><code>builds(ParkingDataConfig)</code></td><td>Uses defaults: SI dataloader, gear reconstruction, route shortening, standstill stripping.</td></tr>
+      <tr><td>Policy path</td><td><code>policy_path_num_points=0</code> by default.</td><td>No <code>POLICY_PATH</code> is generated in the Boris branch unless explicitly overridden.</td></tr>
+      <tr><td>Model inputs</td><td><code>use_gear_direction=True</code>, <code>use_parking_mode=True</code>, radar enabled.</td><td>The model consumes parking mode and gear direction adaptors.</td></tr>
+    </table>
+
+    <h2 id="routes">Route Shortening and Route Maps</h2>
+    <p>
+      Route-shortening is the bridge between parking detection and the map input. <code>parking.py</code> writes stop-route index/fraction fields,
+      then the route map datapipe consumes them before rendering <code>MAP_ROUTE</code>.
+    </p>
+    <div class="detail-grid">
+      <div class="detail-card green">
+        <small>parking.py</small>
+        <b>Store stop anchor</b>
+        <ul>
+          <li><code>add_parking_state</code> may store lookahead entry index.</li>
+          <li><code>insert_parking_stop_route_position</code> turns it into route index/fraction.</li>
+          <li>Parking can jitter the stop anchor by <code>stop_route_offset_m</code>.</li>
+        </ul>
+      </div>
+      <div class="detail-card yellow">
+        <small>routes pipe</small>
+        <b>Shorten route polyline</b>
+        <ul>
+          <li>Parking uses <code>_shorten_route_polyline_to_stop</code>.</li>
+          <li>Unparking uses <code>_shorten_route_polyline_from_stop</code>.</li>
+          <li>Unparking route shortening is not jittered.</li>
+        </ul>
+      </div>
+      <div class="detail-card purple">
+        <small>route renderer</small>
+        <b>Render final map</b>
+        <ul>
+          <li><code>generate_route_map_from_config</code> receives the shortened polyline.</li>
+          <li>Map image generation itself is generic and parking-agnostic.</li>
+          <li>Parking-specific behavior is upstream in the route pipe.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="gotchas">Important Gotchas</h2>
+    <table class="compare dense aligned decision-table">
+      <tr><th>Gotcha</th><th>Why it matters</th><th>Where to look</th></tr>
+      <tr><td>Forward unparking missed</td><td>The detector only scans P/N -> reverse when detecting unparking from a past neutral segment.</td><td><code>_compute_parking_state</code></td></tr>
+      <tr><td>Policy path off by default</td><td>This branch has policy path machinery in <code>parking.py</code>, but config defaults do not activate it.</td><td><code>ParkingDataConfig.policy_path_num_points</code></td></tr>
+      <tr><td>Gear reconstruction can drop samples</td><td>If speed and P/N evidence cannot produce any valid gear, the sample is filtered out.</td><td><code>fill_parking_scratch_table</code></td></tr>
+      <tr><td>Standstill stripping can drop samples</td><td>It requires policy time deltas and enough path coverage after shifting.</td><td><code>strip_leading_standstill</code></td></tr>
+      <tr><td>Route behavior differs train vs val</td><td>Validation disables route shortening/blackout/navigation cleanup for deterministic evaluation.</td><td><code>OtfDrivingDataModule.make_driving_pipe</code></td></tr>
+      <tr><td>Park mode vs route shortening are mixed</td><td><code>park_mode_blackout_probability</code> chooses per sample whether to use park-mode+blackout or no-park-mode+route-shortening.</td><td><code>add_parking_state</code></td></tr>
+    </table>
+
+    <h2 id="sources">Source Map</h2>
+    <ul class="source-list">
+      <li>/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/datamodules/parking.py</li>
+      <li>/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/datamodules/otf.py</li>
+      <li>/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/configs/parking/parking_config.py</li>
+      <li>/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/lib/routes.py</li>
+      <li>/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/lib/data/pipes/routes.py</li>
+    </ul>
+  </main>
+</body>
+</html>
