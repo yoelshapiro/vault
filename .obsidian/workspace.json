@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "llm_wiki/README.md",
+                "file": "llm_wiki/index.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "index"
             }
           }
         ],
@@ -492,14 +492,18 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-4/2026-05-24-checkout-pudo-unpudo-materialization-notebook.md",
+    "llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation.md",
+    "llm_wiki/index.md",
+    "llm_wiki/systems/data-and-materialisation.md",
+    "llm_wiki/systems/parking-pudo-deployment-and-release.md",
+    "llm_wiki/README.md",
+    "llm_wiki/workflows/model-development-cycle.md",
     "llm_wiki/workflows/newcomer-onboarding.md",
     "llm_wiki/workflows/first-parking-pudo-change.md",
     "llm_wiki/maps/mle-role-map.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-llm-wiki-newcomer-readiness.md",
     "llm_wiki/workflows/parking-development-workflow.md",
-    "llm_wiki/README.md",
-    "llm_wiki/index.md",
-    "llm_wiki/systems/data-and-materialisation.md",
     "llm_wiki/systems/world-model-pretraining.md",
     "llm_wiki/AGENTS.md",
     "llm_wiki/glossary.md",
@@ -511,13 +515,9 @@
     "llm_wiki/systems/end-to-end-driving-stack.md",
     "llm_wiki/systems/space-time-model-architecture.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-wayve-llm-wiki-deep-dive.md",
-    "llm_wiki/systems/parking-pudo-deployment-and-release.md",
     "llm_wiki/sources/2026-05-24-notion-parking-newsletters-release.md",
     "llm_wiki/questions/parking-pudo-open-questions.md",
     "llm_wiki/systems/parking-pudo-event-pipeline.md",
-    "llm_wiki/sources/2026-05-24-notion-parking-product-data-eval.md",
-    "llm_wiki/systems/navigation-conditioning.md",
-    "llm_wiki/sources/2026-05-24-notion-latent-actions-navigation-behavior.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
