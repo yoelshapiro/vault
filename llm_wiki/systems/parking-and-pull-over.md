@@ -3,7 +3,7 @@ title: Parking and Pull-over
 type: system
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-05-24
 status: active
 tags:
   - llm-wiki
@@ -32,6 +32,17 @@ This page is the domain hub for Boris's work on:
 - Unparking.
 - Robotaxi pull-over.
 - Related stopping, route, gear, indicator, and interleave-control behavior.
+
+
+## Newcomer Route
+
+If you are new to this domain, read these in order before editing configs:
+
+1. [[llm_wiki/systems/parking-product-and-taxonomy|Parking Product And Taxonomy]] - product scope and failure families.
+2. [[llm_wiki/systems/parking-pudo-event-pipeline|Parking PUDO Event Pipeline]] - how PUDO/UnPUDO/unparking events become tables and buckets.
+3. [[llm_wiki/systems/parking-model-architecture|Parking Model Architecture]] - model IO, heads, and losses.
+4. [[llm_wiki/systems/parking-pudo-deployment-and-release|Parking PUDO Deployment And Release]] - release tracking, deployment, and interleaving.
+5. [[llm_wiki/workflows/first-parking-pudo-change|First Parking PUDO Change]] - checklist for a first concrete change.
 
 ## Current source-backed anchors
 
@@ -109,7 +120,7 @@ Key current caveats:
 - Current code defines `STOPPING_MODE` as `0=UNAVAILABLE`, `1=PUDO`, `2=PARK`; older notes may use legacy values.
 - Generic materialisation currently uses hazard presence in the parked segment as a PUDO proxy, while notebook/event-table workflows may use richer trip/destination context.
 - Current inspected parking datamodule code detects reverse-out unparking but deliberately does not detect forward unparking in that path.
-- Pull-over remains a source gap until product/SOP docs are ingested.
+- Pull-over/RMF has partial product-design coverage through the parking system-design source, but still needs a dedicated SOP or implementation source before strong claims are made.
 
 ## Existing vault sources to ingest next
 

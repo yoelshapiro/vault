@@ -1,9 +1,11 @@
 # LLM Wiki Index
 
-This is the content-oriented catalog for the Wayve MLE LLM wiki. Read this first, then open the relevant pages and source summaries.
+This is the content-oriented catalog for the Wayve MLE LLM wiki. If you are new, start with [[llm_wiki/workflows/newcomer-onboarding|Newcomer Onboarding]] rather than reading this catalog linearly.
 
 ## Start Here
 
+- [[llm_wiki/workflows/newcomer-onboarding|Newcomer Onboarding]] - ordered first-hour, first-day, first-week path.
+- [[llm_wiki/maps/mle-role-map|MLE Role Map]] - practical role map for a Wayve MLE.
 - [[llm_wiki/README|README]] - overview of the wiki structure and operating model.
 - [[llm_wiki/glossary|Glossary]] - shared terms, acronyms, and Wayve-specific vocabulary.
 - [[llm_wiki/questions/open-questions|Open Questions]] - broad unresolved questions.
@@ -28,10 +30,10 @@ This is the content-oriented catalog for the Wayve MLE LLM wiki. Read this first
 ## Parking And PUDO Systems
 
 - [[llm_wiki/systems/parking-and-pull-over|Parking And Pull-Over]] - parking, PUDO, pull-over, and related feature scope.
-- [[llm_wiki/systems/parking-model-architecture|Parking Model Architecture]] - parking-specific model architecture notes.
-- [[llm_wiki/systems/parking-data-and-labels|Parking Data And Labels]] - parking data, labels, and materialization.
 - [[llm_wiki/systems/parking-product-and-taxonomy|Parking Product And Taxonomy]] - APA/P2P/PUDO/RMF scope, IO, and failure taxonomy.
 - [[llm_wiki/systems/parking-pudo-event-pipeline|Parking PUDO Event Pipeline]] - event detection, materialization, dashboards, and event-time model attribution.
+- [[llm_wiki/systems/parking-model-architecture|Parking Model Architecture]] - parking-specific model architecture notes.
+- [[llm_wiki/systems/parking-data-and-labels|Parking Data And Labels]] - parking data, labels, and materialization.
 - [[llm_wiki/systems/parking-pudo-deployment-and-release|Parking PUDO Deployment And Release]] - release/deployment surfaces, interleaving risks, and model comparison checklist.
 
 ## Data, Evaluation, And Deployment
@@ -42,15 +44,16 @@ This is the content-oriented catalog for the Wayve MLE LLM wiki. Read this first
 
 ## Workflows
 
+- [[llm_wiki/workflows/first-parking-pudo-change|First Parking PUDO Change]] - practical checklist before making a parking/PUDO change.
+- [[llm_wiki/workflows/parking-development-workflow|Parking Development Workflow]] - end-to-end parking/PUDO development loop.
+- [[llm_wiki/workflows/model-development-cycle|Model Development Cycle]] - full idea-to-on-road workflow.
+- [[llm_wiki/workflows/training-a-driving-model|Training A Driving Model]] - training workflow from source docs.
+- [[llm_wiki/workflows/on-road-experiment-workflow|On-Road Experiment Workflow]] - on-road experiment creation and inspection.
+- [[llm_wiki/workflows/agent-skill-map|Agent Skill Map]] - skills and workflows useful for agents.
 - [[llm_wiki/workflows/wiki-ingest-workflow|Wiki Ingest Workflow]] - how to ingest new sources.
 - [[llm_wiki/workflows/wiki-query-workflow|Wiki Query Workflow]] - how to answer questions from the wiki.
 - [[llm_wiki/workflows/wiki-lint-workflow|Wiki Lint Workflow]] - how to health-check the wiki.
 - [[llm_wiki/workflows/wiki-health-review-2026-05-23|Wiki Health Review 2026-05-23]] - previous lint/health pass.
-- [[llm_wiki/workflows/model-development-cycle|Model Development Cycle]] - full model iteration path.
-- [[llm_wiki/workflows/training-a-driving-model|Training A Driving Model]] - training workflow from source docs.
-- [[llm_wiki/workflows/parking-development-workflow|Parking Development Workflow]] - parking/PUDO development workflow.
-- [[llm_wiki/workflows/on-road-experiment-workflow|On-Road Experiment Workflow]] - on-road experiment creation and inspection.
-- [[llm_wiki/workflows/agent-skill-map|Agent Skill Map]] - skills and workflows useful for agents.
 
 ## Source Summaries
 

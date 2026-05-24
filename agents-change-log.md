@@ -15,3 +15,16 @@
   - Created wiki index/log entries for the ingest.
 - Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-wayve-llm-wiki-deep-dive|2026-05-24 Wayve LLM Wiki Deep Dive]]
 
+## 2026-05-24 - LLM Wiki Newcomer Readiness
+
+- Topic: Make the Wayve MLE LLM wiki ready and useful for a newcomer.
+- Labels: llm_wiki, onboarding, parking, pudo, mle.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Documentation / knowledge-base maintenance.
+- Areas: `/home/borisindelman/git/vault/llm_wiki`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Added newcomer onboarding path, MLE role map, and first parking/PUDO change checklist.
+  - Reworked README and index around reading paths.
+  - Expanded glossary and refreshed parking hub caveats.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-llm-wiki-newcomer-readiness|2026-05-24 LLM Wiki Newcomer Readiness]]

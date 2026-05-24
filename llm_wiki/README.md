@@ -3,7 +3,7 @@ title: Wayve MLE LLM Wiki
 type: home
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-05-24
 status: active
 tags:
   - llm-wiki
@@ -13,53 +13,70 @@ tags:
 
 # Wayve MLE LLM Wiki
 
-This is a persistent, LLM-maintained wiki for understanding how Wayve develops end-to-end driving models, with a focus on parking and robotaxi pull-over capabilities.
+This is a persistent, LLM-maintained wiki for understanding how Wayve develops end-to-end driving models, with a focus on parking, PUDO, UnPUDO, unparking, and robotaxi pull-over capabilities.
 
-The wiki is meant to compound across sessions. Raw sources stay immutable. The LLM-maintained pages synthesize them into a code-aware, source-cited map of model architecture, training, evaluation, deployment, on-road testing, and day-to-day development workflows.
+The wiki is meant to help both a human MLE and coding agents get oriented quickly. Raw sources stay immutable. Source summaries capture what a source says. System and workflow pages turn those sources into durable, cross-linked explanations.
 
-## Start here
+## Newcomer Start
 
-- [[llm_wiki/index|Index]] - catalog of maintained pages.
+If you are new, do not start from the full index. Start here:
+
+1. [[llm_wiki/workflows/newcomer-onboarding|Newcomer Onboarding]] - ordered first-hour, first-day, first-week path.
+2. [[llm_wiki/maps/mle-role-map|MLE Role Map]] - what an MLE owns and where the handoffs are.
+3. [[llm_wiki/glossary|Glossary]] - vocabulary for model, data, parking, and evaluation terms.
+4. [[llm_wiki/systems/end-to-end-driving-stack|End-To-End Driving Stack]] - big-picture architecture.
+5. [[llm_wiki/systems/parking-and-pull-over|Parking And Pull-Over]] - parking/PUDO domain hub.
+6. [[llm_wiki/workflows/first-parking-pudo-change|First Parking PUDO Change]] - practical checklist for a first change.
+
+## Main Catalogs
+
+- [[llm_wiki/index|Index]] - full catalog of maintained pages.
 - [[llm_wiki/log|Log]] - chronological record of ingests, queries, and lint passes.
-- [[llm_wiki/AGENTS|Agent operating guide]] - rules future Codex sessions should follow when maintaining this wiki.
-- [[llm_wiki/maps/codebase-map|Codebase map]] - current WayveCode entry points for the model-development stack.
-- [[llm_wiki/systems/end-to-end-driving-stack|End-to-end driving stack]] - high-level architecture narrative.
-- [[llm_wiki/systems/model-vehicle-interface|Model-vehicle interface]] - robot/model input-output contract.
-- [[llm_wiki/systems/space-time-model-architecture|Space-time model architecture]] - adaptors, ST encoder, and output heads.
-- [[llm_wiki/systems/data-and-materialisation|Data and materialisation]] - corpus, buckets, materialised roots, and OTF loading.
-- [[llm_wiki/systems/parking-and-pull-over|Parking and pull-over]] - focused working map for Boris's domain.
-- [[llm_wiki/systems/parking-data-and-labels|Parking data and labels]] - event taxonomy and label semantics.
-- [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]] - evaluation layers and limitations.
-- [[llm_wiki/workflows/model-development-cycle|Model development cycle]] - idea-to-on-road workflow.
-- [[llm_wiki/workflows/parking-development-workflow|Parking development workflow]] - capability loop for parking/PUDO work.
+- [[llm_wiki/AGENTS|Agent Operating Guide]] - rules future Codex sessions should follow when maintaining this wiki.
+- [[llm_wiki/maps/codebase-map|Codebase Map]] - WayveCode entry points for model-development work.
+- [[llm_wiki/maps/knowledge-sources|Knowledge Sources]] - Notion, Drive, Slack, GitHub, skills, and local vault sources.
 
-## Source layers
+## Core Reading Path
+
+For general model development:
+
+- [[llm_wiki/workflows/model-development-cycle|Model Development Cycle]]
+- [[llm_wiki/systems/world-model-pretraining|World Model Pretraining]]
+- [[llm_wiki/systems/bc-rl-training|BC And RL Training]]
+- [[llm_wiki/systems/space-time-model-architecture|Space-Time Model Architecture]]
+- [[llm_wiki/systems/model-vehicle-interface|Model Vehicle Interface]]
+- [[llm_wiki/systems/evaluation-and-model-ci|Evaluation And Model CI]]
+- [[llm_wiki/systems/deployment-and-model-catalogue|Deployment And Model Catalogue]]
+
+For parking/PUDO work:
+
+- [[llm_wiki/systems/parking-product-and-taxonomy|Parking Product And Taxonomy]]
+- [[llm_wiki/systems/parking-pudo-event-pipeline|Parking PUDO Event Pipeline]]
+- [[llm_wiki/systems/parking-data-and-labels|Parking Data And Labels]]
+- [[llm_wiki/systems/parking-model-architecture|Parking Model Architecture]]
+- [[llm_wiki/systems/parking-pudo-deployment-and-release|Parking PUDO Deployment And Release]]
+- [[llm_wiki/workflows/parking-development-workflow|Parking Development Workflow]]
+
+For newer architecture context:
+
+- [[llm_wiki/systems/navigation-conditioning|Navigation Conditioning]]
+- [[llm_wiki/systems/latent-actions-and-behavior-control|Latent Actions And Behavior Control]]
+- [[llm_wiki/systems/multi-task-and-multi-driving-heads|Multi-Task And Multi-Driving Heads]]
+
+## Source Layers
 
 - `raw/` contains immutable source drops or pointers: Notion exports, GitHub diffs, Slack thread captures, skill docs, web clips, and assets.
-- `sources/` contains one source-summary page per ingested source.
+- `sources/` contains one source-summary page per ingested source or source bundle.
 - `systems/`, `workflows/`, `maps/`, and `questions/` contain synthesized wiki pages that can be revised as new evidence arrives.
 
-## Current scope
+## Current Caveats
 
-The current wiki covers:
+- Pull-over/RMF is represented through parking/PUDO product docs and RMF integration notes, but still needs a dedicated pull-over SOP/design source before strong claims are made.
+- Slack has not yet been systematically source-summarized into this wiki.
+- Multi-driving-head pages are proposal/prototype synthesis unless tied to a specific code path, PR, or release.
+- Taxonomy can change. Prefer the latest spreadsheet/source summary over older proposal pages marked outdated.
 
-- End-to-end trajectory-prediction framing.
-- Robot/model interface and mandatory output keys.
-- Space-time model architecture: input adaptors, ST encoder, output adaptor, and heads.
-- Materialisation, bucket mixes, OTF data loading, and parking label insertion.
-- World model pre-training.
-- Behavioural cloning and offline RL in SI.
-- Parking/PUDO/UNPUDO/unparking taxonomy, data, labels, model IO, and deployment checks.
-- Model CI, Eval Studio, on-road experiment, and post-run analysis workflow hooks.
-- How agents should ingest Notion, GitHub, Slack, and skill knowledge into durable wiki pages.
-
-## Current caveats
-
-- Several high-value Notion pages were discovered but timed out during fetch; they are tracked in [[llm_wiki/sources/2026-05-23-notion-discovery-parking-evaluation|Notion discovery - parking, evaluation, and pull-over pointers]].
-- Slack public search also timed out in this pass, so no Slack thread has been source-summarized yet.
-- Pull-over is in scope but remains under-specified until a product/SOP source is ingested. Do not treat PUDO evidence as automatically proving pull-over behavior.
-
-## Maintenance rule
+## Maintenance Rule
 
 Every meaningful ingest or durable query answer should update:
 
@@ -67,4 +84,4 @@ Every meaningful ingest or durable query answer should update:
 2. [[llm_wiki/index|index.md]].
 3. [[llm_wiki/log|log.md]].
 
-If a claim is not source-backed yet, mark it as `working synthesis` or add it to [[llm_wiki/questions/open-questions|Open questions]].
+If a claim is not source-backed yet, mark it as `working synthesis` or add it to [[llm_wiki/questions/open-questions|Open Questions]].

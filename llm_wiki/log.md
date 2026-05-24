@@ -29,3 +29,6 @@ Important conclusions:
 - Current multi-head material is proposal/prototype status and should not be treated as fully adopted without code/release verification.
 - The current taxonomy spreadsheet is more current than the older Notion V10 request page, which is marked Outdated.
 
+## [2026-05-24] maintenance | Newcomer readiness refinement
+
+Refined the wiki for newcomer MLE usability. Added [[llm_wiki/workflows/newcomer-onboarding|Newcomer Onboarding]], [[llm_wiki/maps/mle-role-map|MLE Role Map]], and [[llm_wiki/workflows/first-parking-pudo-change|First Parking PUDO Change]]. Updated [[llm_wiki/README|README]], [[llm_wiki/index|Index]], [[llm_wiki/glossary|Glossary]], and [[llm_wiki/systems/parking-and-pull-over|Parking And Pull-Over]] with clearer reading paths and sourced parking/PUDO definitions.
