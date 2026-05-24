@@ -233,7 +233,6 @@ window.REPORT_SECTIONS.push({
         <div id="pcl-controls"></div>
         <div class="pcl-actions">
           <button type="button" data-preset="defaults">Defaults</button>
-          <button type="button" data-preset="zoo">Zoo Path</button>
           <button type="button" data-preset="blackout">Blackout Mix</button>
           <button type="button" data-preset="policyPath">Policy Path On</button>
           <button type="button" data-preset="val">Validation</button>
@@ -292,7 +291,6 @@ window.REPORT_SECTIONS.push({
 const PCL_DEFAULTS = {
   datapipe_type_train: true,
   sign_speed_by_gear: false,
-  use_zoo_dataloader: false,
   reconstruct_gear_from_speed: true,
   lookahead_sec: 30,
   past_sec: 30,
@@ -323,8 +321,7 @@ const PCL_CONTROLS = [
     ["datapipe_type_train", "bool", "Training datapipe", "Val disables route shortening / blackout / nav cleanup in otf.py."],
     ["sign_speed_by_gear", "bool", "sign_speed_by_gear", "OTF argument. Mutually exclusive with reconstruct_gear_from_speed."],
   ]],
-  ["Backend / Gear", [
-    ["use_zoo_dataloader", "bool", "use_zoo_dataloader", "Delegate to zoo insert_parking_data; SI-specific stages are skipped."],
+  ["Gear", [
     ["reconstruct_gear_from_speed", "bool", "reconstruct_gear_from_speed", "Build D/R from signed speed and keep validated P/N segments."],
     ["min_duration_sec", "number", "min_duration_sec", "Minimum P/N duration for validated parking segments."],
     ["enable_gear_label_cleanup", "bool", "enable_gear_label_cleanup", "Remove short reverse and neutral gear glitches before detection."],
@@ -377,7 +374,6 @@ function pclStateFromControls(root) {
 
 function pclApplyPreset(root, preset) {
   const next = { ...PCL_DEFAULTS };
-  if (preset === "zoo") next.use_zoo_dataloader = true;
   if (preset === "blackout") {
     next.park_mode_blackout_probability = 1;
     next.enable_end_of_route_blackout = true;
@@ -410,14 +406,8 @@ function pclValidate(s) {
   if (s.sign_speed_by_gear && s.min_duration_sec !== 0) {
     warnings.push("ParkingDataConfig docstring says min_duration_sec must be 0 when sign_speed_by_gear is true.");
   }
-  if (s.use_zoo_dataloader && s.park_mode_blackout_probability > 0) {
-    errors.push("park_mode_blackout_probability is only supported by the SI parking dataloader, not the zoo path.");
-  }
   if (!s.datapipe_type_train) {
     warnings.push("Validation replaces the config to disable route shortening, blackout, navigation cleanup, and blackout sampling.");
-  }
-  if (s.use_zoo_dataloader) {
-    warnings.push("Zoo path skips SI-specific PARKED_STATE, UNPARKING_STATE, route-shortening metadata, standstill stripping, and policy-path logic.");
   }
   if (s.policy_path_num_points > 0) {
     const length = Math.max(0, s.policy_path_num_points - 1) * s.policy_path_sample_step_m;
@@ -427,12 +417,12 @@ function pclValidate(s) {
 }
 
 function pclDerived(s) {
-  const si = !s.use_zoo_dataloader;
-  const routeShortening = si && s.datapipe_type_train && s.enable_route_shortening_for_parking && s.park_mode_blackout_probability < 1;
-  const blackout = si && s.datapipe_type_train && (s.enable_end_of_route_blackout || s.park_mode_blackout_probability > 0);
-  const parkModeFromState = si && (s.park_mode_blackout_probability > 0 || s.enable_park_mode_in_parking_state || s.enable_park_mode_in_parked_state);
-  const policyPath = si && s.policy_path_num_points > 0 && s.policy_path_sample_step_m > 0;
-  const effectiveMode = s.use_zoo_dataloader ? "Zoo parking dataloader" : "SI parking dataloader";
+  const si = true;
+  const routeShortening = s.datapipe_type_train && s.enable_route_shortening_for_parking && s.park_mode_blackout_probability < 1;
+  const blackout = s.datapipe_type_train && (s.enable_end_of_route_blackout || s.park_mode_blackout_probability > 0);
+  const parkModeFromState = s.park_mode_blackout_probability > 0 || s.enable_park_mode_in_parking_state || s.enable_park_mode_in_parked_state;
+  const policyPath = s.policy_path_num_points > 0 && s.policy_path_sample_step_m > 0;
+  const effectiveMode = "SI parking dataloader";
   return { si, routeShortening, blackout, parkModeFromState, policyPath, effectiveMode };
 }
 
@@ -568,9 +558,13 @@ const PCL_SCENARIOS = {
       "_expand_neutral_gear_over_standstill extends P/N backward over adjacent stopped frames, so the parking stop starts closer to the physical stop.",
       "clamp_policy_at_first_neutral freezes future policy pose/waypoints and zeroes speed once policy gear reaches P/N.",
     ],
-    transform: (_s, base) => {
+    transform: (s, base) => {
       const out = structuredClone(base);
-      out.gear = out.gear.map((g, i) => (i >= 5 ? "P" : g));
+      if (s.reconstruct_gear_from_speed) {
+        out.gear = out.gear.map((g, i) => (i >= 5 ? "P" : g));
+      } else {
+        out.gear = out.gear.map((g, i) => (i >= 7 ? "P" : g));
+      }
       out.speed = out.speed.map((v, i) => (i >= 5 ? 0 : v));
       return out;
     },
@@ -624,11 +618,11 @@ function pclStepPath(points) {
 
 function pclScenarioAfter(s, scenario) {
   const base = { gear: [...scenario.gear], speed: [...scenario.speed] };
-  if (!pclDerived(s).si) return base;
   if (s.reconstruct_gear_from_speed) {
     base.gear = pclReconstructScenarioGear(s, base);
   }
-  return scenario.transform(s, base);
+  const out = scenario.transform(s, base);
+  return pclApplyStandstillGearAugment(s, out);
 }
 
 function pclReconstructScenarioGear(s, base) {
@@ -653,6 +647,17 @@ function pclReconstructScenarioGear(s, base) {
     if (base.gear[i] === "P" || base.gear[i] === "N") return base.gear[i];
     return "D";
   });
+}
+
+function pclApplyStandstillGearAugment(s, base) {
+  if (!s.enable_augment_standstill_gear) return base;
+  const out = { gear: [...base.gear], speed: [...base.speed] };
+  out.gear = out.gear.map((gear, i) => {
+    if (Math.abs(out.speed[i]) >= 0.5) return gear;
+    if (gear === "P" || gear === "N") return i % 2 === 0 ? "D" : "R";
+    return gear === "D" ? "R" : "D";
+  });
+  return out;
 }
 
 function pclRenderScenario(s) {
@@ -709,11 +714,11 @@ function pclRenderScenario(s) {
     </svg>`;
   document.getElementById("pcl-scenario-title").textContent = scenario.title;
   const configNotes = [];
-  if (!pclDerived(s).si) configNotes.push("Current selection uses the zoo path, so SI-specific gear cleanup and target rewrites are shown as inactive.");
   if (s.reconstruct_gear_from_speed) configNotes.push("reconstruct_gear_from_speed is on: the after gear trace derives D/R from signed speed and preserves only long stopped P/N segments.");
   if (!s.reconstruct_gear_from_speed) configNotes.push("reconstruct_gear_from_speed is off: the after gear trace starts from the raw scenario labels, then only later cleanup/augmentation stages can change it.");
   if (!s.enable_strip_leading_standstill) configNotes.push("strip_leading_standstill is off, so speed is not shifted earlier in standstill-heavy examples.");
   if (!s.enable_gear_label_cleanup) configNotes.push("gear label cleanup is off, so short isolated gear glitches remain in the after timeline.");
+  if (s.enable_augment_standstill_gear) configNotes.push("augment standstill gear is on: stopped points in the after trace are deliberately flipped between D/R to show the randomized standstill vehicle-gear augmentation.");
   document.getElementById("pcl-scenario-notes").innerHTML = pclList([...scenario.notes, ...configNotes]);
   document.querySelectorAll("[data-scenario]").forEach((button) => button.classList.toggle("active", button.dataset.scenario === pclScenarioId));
 }
@@ -732,7 +737,7 @@ function pclRender() {
   ].join("");
 
   document.getElementById("pcl-summary").innerHTML = [
-    ["green", "Backend", d.effectiveMode, d.si ? "Scratch-table SI path runs." : "Delegates to zoo insert_parking_data."],
+    ["green", "Backend", d.effectiveMode, "Scratch-table SI path runs."],
     ["yellow", "Route mode", d.routeShortening ? "Shorten route" : d.blackout ? "Blackout route" : "No route edit", d.routeShortening ? "Stores stop-route index/fraction." : d.blackout ? "MAP_ROUTE can be zeroed." : "Map route is left as normal."],
     ["purple", "Policy path", d.policyPath ? "Enabled" : "Disabled", d.policyPath ? `${s.policy_path_num_points} points every ${s.policy_path_sample_step_m}m.` : "No POLICY_PATH by default in Boris config."],
     ["rust", "Validation", s.datapipe_type_train ? "Train behavior" : "Val behavior", s.datapipe_type_train ? "Stochastic train augmentations can run." : "Route perturbation options are forced off."],
@@ -782,7 +787,6 @@ function pclRender() {
   if (d.policyPath) risks.push("Sample is filtered if neither additional_parking_pose nor PATH_POSE can produce a long enough POLICY_PATH.");
   if (s.enable_strip_leading_standstill && d.si) risks.push("Sample can be filtered if shifted standstill removal lacks POLICY_TIME_DELTA or path coverage.");
   if (s.lookahead_sec < s.time_threshold_sec) risks.push("Short lookahead may prevent seeing the future neutral segment needed for parking_state.");
-  if (!d.si) risks.push("SI-specific filtering risks are skipped because the zoo path is active.");
   document.getElementById("pcl-risks").innerHTML = pclList(risks);
 
   document.getElementById("pcl-stage-detail").innerHTML = PCL_STAGE_DETAIL.map((stage) => {
