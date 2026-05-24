@@ -197,6 +197,9 @@ window.REPORT_SECTIONS.push({
       .pcl-chart .speed-modified { fill: none; stroke: #b66b64; stroke-width: 3; }
       .pcl-chart .gear-original { fill: none; stroke: #3f7a5f; stroke-width: 3; stroke-linejoin: round; }
       .pcl-chart .gear-modified { fill: none; stroke: #8b86b5; stroke-width: 3; stroke-linejoin: round; }
+      .pcl-chart .chart-label { font-size: 12px; }
+      .pcl-chart .gear-state { fill: #fffdf8; stroke: #b8c5ba; stroke-width: 1; }
+      .pcl-chart .gear-state-text { font-size: 10px; }
       .pcl-chart text { fill: #26362e; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 800; }
       .pcl-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
       .pcl-legend span { color: #37443d; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11px; font-weight: 800; }
@@ -619,7 +622,34 @@ function pclStepPath(points) {
 function pclScenarioAfter(s, scenario) {
   const base = { gear: [...scenario.gear], speed: [...scenario.speed] };
   if (!pclDerived(s).si) return base;
+  if (s.reconstruct_gear_from_speed) {
+    base.gear = pclReconstructScenarioGear(s, base);
+  }
   return scenario.transform(s, base);
+}
+
+function pclReconstructScenarioGear(s, base) {
+  const minStoppedRun = Math.max(1, Math.round(s.min_duration_sec));
+  const neutral = new Array(base.gear.length).fill(false);
+  let start = null;
+  for (let i = 0; i <= base.gear.length; i += 1) {
+    const isNeutral = i < base.gear.length && (base.gear[i] === "P" || base.gear[i] === "N") && Math.abs(base.speed[i]) < 0.5;
+    if (isNeutral && start === null) start = i;
+    if ((!isNeutral || i === base.gear.length) && start !== null) {
+      if (i - start >= minStoppedRun) {
+        for (let j = start; j < i; j += 1) neutral[j] = true;
+      }
+      start = null;
+    }
+  }
+  return base.speed.map((v, i) => {
+    if (neutral[i]) return base.gear[i] === "N" ? "N" : "P";
+    if (v < -0.5) return "R";
+    if (v > 0.5) return "D";
+    if (base.gear[i] === "R") return "R";
+    if (base.gear[i] === "P" || base.gear[i] === "N") return base.gear[i];
+    return "D";
+  });
 }
 
 function pclRenderScenario(s) {
@@ -640,11 +670,18 @@ function pclRenderScenario(s) {
   const gearOrig = times.map((t, i) => [xFor(t), pclGearY(scenario.gear[i], row1, rowH)]);
   const gearAfter = times.map((t, i) => [xFor(t), pclGearY(after.gear[i], row2, rowH)]);
   const grid = times.map((t) => `<line class="grid" x1="${xFor(t).toFixed(1)}" y1="20" x2="${xFor(t).toFixed(1)}" y2="392"/>`).join("");
+  const stateBadges = (gears, rowTop) => gears.map((gear, i) => {
+    const x = xFor(times[i]) - 9;
+    const y = pclGearY(gear, rowTop, rowH) - 14;
+    return `<rect class="gear-state" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="18" height="14" rx="2"/><text class="gear-state-text" x="${(x + 5).toFixed(1)}" y="${(y + 10).toFixed(1)}">${gear}</text>`;
+  }).join("");
   const labels = [
-    `<text x="8" y="${row1 + 16}">original</text>`,
-    `<text x="8" y="${row2 + 16}">after</text>`,
-    `<text x="8" y="${row1 + 32}">speed</text>`,
-    `<text x="8" y="${row2 + 32}">speed</text>`,
+    `<text class="chart-label" x="8" y="${row1 + 16}">original</text>`,
+    `<text class="chart-label" x="8" y="${row2 + 16}">after parking.py</text>`,
+    `<text x="${left + 10}" y="${row1 + 18}">speed km/h</text>`,
+    `<text x="${left + 10}" y="${row2 + 18}">speed km/h</text>`,
+    `<text x="${left + plotW - 92}" y="${row1 + 18}">gear state</text>`,
+    `<text x="${left + plotW - 92}" y="${row2 + 18}">gear state</text>`,
     `<text x="${left}" y="410">time (s)</text>`,
     ...times.map((t) => `<text x="${(xFor(t) - 4).toFixed(1)}" y="410">${t}</text>`),
     `<text x="${left + plotW + 5}" y="${pclGearY("D", row1, rowH).toFixed(1)}">D</text>`,
@@ -663,11 +700,15 @@ function pclRenderScenario(s) {
       <path class="gear-original" d="${pclStepPath(gearOrig)}"/>
       <path class="speed-modified" d="${pclPath(speedAfter)}"/>
       <path class="gear-modified" d="${pclStepPath(gearAfter)}"/>
+      ${stateBadges(scenario.gear, row1)}
+      ${stateBadges(after.gear, row2)}
       ${labels}
     </svg>`;
   document.getElementById("pcl-scenario-title").textContent = scenario.title;
   const configNotes = [];
   if (!pclDerived(s).si) configNotes.push("Current selection uses the zoo path, so SI-specific gear cleanup and target rewrites are shown as inactive.");
+  if (s.reconstruct_gear_from_speed) configNotes.push("reconstruct_gear_from_speed is on: the after gear trace derives D/R from signed speed and preserves only long stopped P/N segments.");
+  if (!s.reconstruct_gear_from_speed) configNotes.push("reconstruct_gear_from_speed is off: the after gear trace starts from the raw scenario labels, then only later cleanup/augmentation stages can change it.");
   if (!s.enable_strip_leading_standstill) configNotes.push("strip_leading_standstill is off, so speed is not shifted earlier in standstill-heavy examples.");
   if (!s.enable_gear_label_cleanup) configNotes.push("gear label cleanup is off, so short isolated gear glitches remain in the after timeline.");
   document.getElementById("pcl-scenario-notes").innerHTML = pclList([...scenario.notes, ...configNotes]);
