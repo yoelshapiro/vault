@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-4/2026-05-24-condor-unofficial-interleave-experiment.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-condor-fearless-ivory-pudo-licensing.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-parking-621-pudo-train-failure.md",
     "agent_tasks/2026/05/Week-4/2026-05-24-parking-bc-new-driving-training.md",
@@ -517,7 +518,6 @@
     "llm_wiki/systems/latent-actions-and-behavior-control.md",
     "llm_wiki/systems/multi-task-and-multi-driving-heads.md",
     "llm_wiki/systems/parking-and-pull-over.md",
-    "llm_wiki/systems/bc-rl-training.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
