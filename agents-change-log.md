@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-24 - Checkout PUDO/UNPUDO Materialization Notebook
+
+- Topic: Check out the parking PUDO/UNPUDO materialization notebook from `origin/alon/unpudo_unsafe_fix`.
+- Labels: parking, pudo, unpudo, notebook, git-checkout.
+- Branch: detached `HEAD`; source `origin/alon/unpudo_unsafe_fix`.
+- PR: N/A.
+- Change type: Notebook checkout.
+- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/parking/notebooks`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Checked out `wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb` from `origin/alon/unpudo_unsafe_fix`.
+  - Verified the notebook matches the source branch.
+  - Left the notebook staged as a result of the path checkout.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-24-checkout-pudo-unpudo-materialization-notebook|2026-05-24 Checkout PUDO/UNPUDO Materialization Notebook]]
+
 ## 2026-05-24 - Wayve LLM Wiki Deep Dive
 
 - Topic: Wayve MLE LLM wiki extension for parking/PUDO, navigation, latent actions, and multitask/multi-head model development.
