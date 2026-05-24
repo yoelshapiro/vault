@@ -3,7 +3,7 @@ title: LLM Wiki Log
 type: log
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-05-24
 status: active
 tags:
   - llm-wiki
@@ -12,6 +12,22 @@ tags:
 # LLM Wiki Log
 
 Append-only log for wiki work. Use consistent headings so simple shell tools can parse recent activity.
+
+## [2026-05-24] lint | Index and table rendering
+
+Fixed a rendering bug where `index.md` used Obsidian aliased links inside Markdown tables. The alias separator `|` can be interpreted as a table column separator, so the index now uses grouped bullet navigation instead of tables. Also removed aliased wiki links from glossary table rows.
+
+Changed pages:
+
+- [[llm_wiki/index|Index]]
+- [[llm_wiki/glossary|Glossary]]
+- [[llm_wiki/log|Log]]
+- [[llm_wiki/raw/README|Raw source guide]]
+- [[llm_wiki/raw/notion/README|Raw Notion guide]]
+- [[llm_wiki/raw/github/README|Raw GitHub guide]]
+- [[llm_wiki/raw/slack/README|Raw Slack guide]]
+- [[llm_wiki/raw/skills/README|Raw skills guide]]
+- [[llm_wiki/raw/assets/README|Raw assets guide]]
 
 ## [2026-05-23] ingest | Notion, code, vault, and skills expansion for Wayve MLE wiki
 

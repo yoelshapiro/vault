@@ -3,7 +3,7 @@ title: Glossary
 type: map
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-05-24
 status: active
 tags:
   - llm-wiki
@@ -38,9 +38,9 @@ Seed glossary for terms used in the wiki. Expand each term into a dedicated page
 | DC | Direct-control data bucket family in parking materialisation. |
 | CA | Corrective action bucket family around interventions. |
 | Pre-CA | Frames before a corrective action/intervention, usually still AV-owned. |
-| Model Catalogue | Service that stores and resolves model sessions, nicknames, checkpoints, artifacts, notes, and related metadata. See [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and Model Catalogue]]. |
-| Model CI | Automated evaluation/build pipeline attached to model artifacts. See [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]]. |
-| Eval Studio | Evaluation suite system used for scenario or suite executions. See [[llm_wiki/systems/evaluation-and-model-ci|Evaluation and Model CI]]. |
+| Model Catalogue | Service that stores and resolves model sessions, nicknames, checkpoints, artifacts, notes, and related metadata. See [[llm_wiki/systems/deployment-and-model-catalogue]]. |
+| Model CI | Automated evaluation/build pipeline attached to model artifacts. See [[llm_wiki/systems/evaluation-and-model-ci]]. |
+| Eval Studio | Evaluation suite system used for scenario or suite executions. See [[llm_wiki/systems/evaluation-and-model-ci]]. |
 | Shadow Gym | Open-loop replay/gym evaluation environment referenced in Model CI debugging workflows. It is not sufficient for latency risk by itself. |
 | HiL | Hardware-in-the-loop testing, often important for on-device behavior and latency. |
 | Interleave control | Deployment pattern where a variant model is interleaved with a control or routed by group/capability. |
