@@ -172,3 +172,17 @@
   - Added Coder workspace bring-up, GitHub auth, WayveCode verification, ParkingSkills clone/update, and Codex symlink guidance.
   - Added Phase 5 general WayveCode onboarding and Phase 6 MLE/Parking walkthroughs for model config, data materialisation, OTF loading, deployment wrapper, Eval Studio, Console, Foxglove, and VSO context.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-25-parking-onboarding-skill|2026-05-25 Parking Onboarding Skill]]
+
+## 2026-05-25 - Parking Onboarding Skill Follow-Up
+
+- Topic: Remove `llm_wiki` dependency and copy `parking-onboarding` onto `main`.
+- Labels: parking, onboarding, codex-skill, main-branch.
+- Branch: `main` in `/tmp/ParkingSkills-main`; source checkout remained on `agents_day` due unrelated dirty files.
+- PR: N/A.
+- Change type: Skill maintenance.
+- Areas: `/tmp/ParkingSkills-main/skills/parking-onboarding`, `/home/borisindelman/git/ParkingSkills/skills/parking-onboarding`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Removed all `llm_wiki` references from `parking-onboarding`.
+  - Copied the skill into a clean `main` worktree because the original checkout could not switch branches without overwriting unrelated local edits.
+  - Revalidated the skill in the `main` worktree.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-25-parking-onboarding-skill|2026-05-25 Parking Onboarding Skill]]
