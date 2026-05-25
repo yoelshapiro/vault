@@ -158,3 +158,17 @@
     - Submitted 80k-step parking BC training job 168436 on 4x H100 nodes.
     - Created Notion release row for green-badger-sophisticated.
     - Observed job reach Running on AKS.
+
+## 2026-05-25 - Parking Onboarding Skill
+
+- Topic: Create `parking-onboarding` Codex skill for newcomer setup and Parking education.
+- Labels: parking, onboarding, codex-skill, coder.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Skill / documentation.
+- Areas: `/home/borisindelman/git/ParkingSkills/skills/parking-onboarding`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Added a Mac-to-Coder bootstrap flow that avoids local Mac Git setup.
+  - Added Coder workspace bring-up, GitHub auth, WayveCode verification, ParkingSkills clone/update, and Codex symlink guidance.
+  - Added Phase 5 general WayveCode onboarding and Phase 6 MLE/Parking walkthroughs for model config, data materialisation, OTF loading, deployment wrapper, Eval Studio, Console, Foxglove, and VSO context.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-25-parking-onboarding-skill|2026-05-25 Parking Onboarding Skill]]
