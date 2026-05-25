@@ -32,3 +32,9 @@ Created a new `parking-onboarding` Codex skill under `/home/borisindelman/git/Pa
 - Ran `skills/.system/skill-creator/scripts/quick_validate.py skills/parking-onboarding`.
 - Result: `Skill is valid!`
 - Skill body length: 381 lines.
+
+## Follow-up Update
+
+- Removed all `llm_wiki` references from the skill. The skill now uses Notion as a map and live repo docs/code as the source of truth.
+- Added the skill to a clean `main` worktree at `/tmp/ParkingSkills-main` because the original `/home/borisindelman/git/ParkingSkills` checkout was on `agents_day` and checkout to `main` was blocked by unrelated dirty files.
+- Revalidated the skill in the `main` worktree with `quick_validate.py`: `Skill is valid!`
