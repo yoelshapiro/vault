@@ -12,6 +12,7 @@
   - Added a token-efficient skill for resolving model artefact IDs and fetching Eval Studio suite scores.
   - Added `scripts/get_scores.sh` to resolve executions by suite version or suite UUID and batch score lookups to match Scorecard semantics.
   - Validated the skill and helper against `armadillo-adaptable-maroon`.
+  - Updated the helper to expose the Suite Results `less_wrong_score` category value separately from `scorecard_score`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-eval-studio-suite-scores-skill|2026-05-26 Eval Studio Suite Scores Skill]]
 
 ## 2026-05-24 - Parking BC New Driving Training
