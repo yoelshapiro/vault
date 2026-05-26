@@ -259,3 +259,17 @@
   - Filled `proficient-centipede-indigo` with PUDO/UNPUDO `7.0%` and Alpha3 `72.0%`.
   - Swept remaining blanks against the Pudo-Unpudo and Alpha3 suite UUIDs; no other exact-model executions were found.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
+
+## 2026-05-26 - Parking Model Card Lineage Fill
+
+- Topic: Fill missing lineage values in the Parking/PUDO model cards Notion database.
+- Labels: parking, notion, model-cards, lineage.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Notion content update.
+- Areas: `Parking/PUDO Model Development` Notion page, `Parking/PUDO model cards` database.
+- Changes:
+  - Used direct edges from the Mermaid lineage graph to fill 13 blank `Lineage` cells.
+  - Preserved existing lineage values.
+  - Left roots and rows absent from the graph blank.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]

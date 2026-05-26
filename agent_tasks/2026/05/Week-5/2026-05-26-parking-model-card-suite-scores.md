@@ -29,3 +29,21 @@ Additional row filled:
 - `proficient-centipede-indigo`: PUDO/UNPUDO `7.0%`, Alpha3 `72.0%`.
 
 All other blank rows returned `NO_EXECUTION` for both suite UUIDs using only the `Model ` title column.
+
+## Follow-up: lineage from graph
+Filled missing `Lineage` values in the `Parking/PUDO model cards` Notion database from direct edges in the Mermaid dependency graph. Existing lineage values were preserved; roots and rows absent from the graph were left blank.
+
+Rows filled:
+- `insightful-magenta-porcupine` <- `magenta-turtle-bright`
+- `lime-cooperative-lobster` <- `eel-benevolent-pink; colossal-caribou-indigo`
+- `fierce-aardvark-amaranth` <- `lime-cooperative-lobster; motionless-blush-wrasse`
+- `sea-cucumber-spectacular-orange` <- `lime-cooperative-lobster`
+- `vociferous-chocolate-kangaroo` <- `fierce-aardvark-amaranth; sea-cucumber-spectacular-orange`
+- `prismatic-teal-bird` <- `vociferous-chocolate-kangaroo`
+- `tomato-toucan-gorgeous` <- `exotic-jellyfish-silver`
+- `apricot-mongoose-cognizant` <- `exotic-jellyfish-silver`
+- `osprey-aqua-cautious` <- `apricot-mongoose-cognizant`
+- `sea-cucumber-invaluable-scarlet` <- `tomato-toucan-gorgeous`
+- `prudent-wallaby-pink` <- `sea-cucumber-invaluable-scarlet`
+- `chocolate-narwhal-adaptable` <- `sea-cucumber-invaluable-scarlet`
+- `reassured-red-sea-turtle` <- `chocolate-narwhal-adaptable`
