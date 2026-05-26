@@ -300,3 +300,13 @@
 - Changes:
   - Added a short setup section with `git clone` and symlink commands for `~/.codex/skills` and `~/.claude/skills`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
+
+- [[agent_tasks/2026/05/Week-5/2026-05-26-fold-parking-deploy-skills|Fold Parking Deploy Skills]]
+  - Topic: ParkingSkills lifecycle simplification
+  - Labels: parking, skills, lifecycle
+  - Branch: main
+  - PR: n/a
+  - Change type: docs/skill refactor
+  - Areas: ParkingSkills
+  - Changes:
+    - Folded interleave deployment and Console updates into parking-deploy.
