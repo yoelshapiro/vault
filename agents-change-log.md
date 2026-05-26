@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-26 - Eval Studio Suite Scores Skill
+
+- Topic: Create `eval-studio-suite-scores` ParkingSkills skill.
+- Labels: eval-studio, codex-skill, model-scorecard, parking.
+- Branch: `agents_day`.
+- PR: N/A.
+- Change type: Skill / helper script.
+- Areas: `/home/borisindelman/git/ParkingSkills/skills/eval-studio-suite-scores`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Added a token-efficient skill for resolving model artefact IDs and fetching Eval Studio suite scores.
+  - Added `scripts/get_scores.sh` to resolve executions by suite version or suite UUID and batch score lookups to match Scorecard semantics.
+  - Validated the skill and helper against `armadillo-adaptable-maroon`.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-eval-studio-suite-scores-skill|2026-05-26 Eval Studio Suite Scores Skill]]
+
 ## 2026-05-24 - Parking BC New Driving Training
 
 - Topic: Submit Parking BC training with `parking_bc_new_driving_datamodule` and trimmed moving UnPUDO buckets.
