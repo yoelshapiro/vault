@@ -231,3 +231,17 @@
   - Centralized repeated scalar extraction with `_first_value`.
   - Renamed the end-of-route map blackout helper to a deterministic action name.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-pr102690-open-review-code-fixes|2026-05-26 PR 102690 Open Review Code Fixes]]
+
+## 2026-05-26 - Parking Model Card Suite Scores
+
+- Topic: Fill Eval Studio score columns in the Parking/PUDO model cards Notion database.
+- Labels: parking, eval-studio, notion, model-cards.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Notion content update.
+- Areas: `Parking/PUDO Model Development` Notion page, `Parking/PUDO model cards` database.
+- Changes:
+  - Queried Pudo-Unpudo and Alpha3 LessWrong suite scores using only each row's `Model ` title column.
+  - Filled `PUDO/UNPUDO Suite` and `Alpha3 Intervention Suite` where exact suite-version executions existed.
+  - Left rows blank when Eval Studio had no execution for the exact model and suite version.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
