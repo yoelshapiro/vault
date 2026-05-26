@@ -5,4 +5,4 @@
 	- [ ] investigate performance
 - [ ] parking augmentations
 - [x] lineage html
-- [ ] parking model lifecycle skill tree
+- [x] parking model lifecycle skill tree
