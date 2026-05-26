@@ -57,3 +57,6 @@ Changes:
 - Added `--any-version` for suite-UUID fallback across the same two suites.
 - Removed user-specific `checkpoint_licenses.sh` paths; sibling skills are resolved relative to the installed skills root.
 - Smoke-tested `scripts/get_scores.sh --model armadillo-adaptable-maroon`.
+
+## Follow-up: ParkingSkills README setup
+Added a short setup section to `/home/borisindelman/git/ParkingSkills/README.md` with clone and symlink commands for `~/.codex/skills` or `~/.claude/skills`.

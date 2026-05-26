@@ -288,3 +288,15 @@
   - Removed user-specific fallback script paths by resolving sibling skills relative to the installed skills root.
   - Verified the script with `armadillo-adaptable-maroon`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
+
+## 2026-05-26 - ParkingSkills README Setup
+
+- Topic: Add initial ParkingSkills setup instructions.
+- Labels: parking, docs, codex-skill, claude-skill.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Documentation.
+- Areas: `/home/borisindelman/git/ParkingSkills/README.md`.
+- Changes:
+  - Added a short setup section with `git clone` and symlink commands for `~/.codex/skills` and `~/.claude/skills`.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
