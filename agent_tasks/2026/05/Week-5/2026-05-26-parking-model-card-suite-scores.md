@@ -19,3 +19,13 @@ Updated the Notion database `Parking/PUDO model cards` under `Parking/PUDO Model
 
 ## Notes
 Rows with no execution for the exact suite versions were left blank. Did not use `Lineage` or `Related nicknames` for fallback resolution.
+
+## Follow-up: any-version sweep
+After the initial fixed-version update, rechecked blank rows against the suite UUIDs for any version:
+- Pudo-Unpudo suite UUID `ea663952-b914-47a3-8cc1-729db3683dce`.
+- Alpha3 Intervention LessWrong suite UUID `47e111a7-804c-49ec-b60e-126f904d71fe`.
+
+Additional row filled:
+- `proficient-centipede-indigo`: PUDO/UNPUDO `7.0%`, Alpha3 `72.0%`.
+
+All other blank rows returned `NO_EXECUTION` for both suite UUIDs using only the `Model ` title column.
