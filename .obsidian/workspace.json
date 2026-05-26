@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-5/2026-05-26-eval-studio-suite-scores-skill.md",
     "agent_tasks/2026/05/Week-5/2026-05-26-parking-branch-signing-push-repair.md",
     "llm_wiki/index.md",
     "llm_wiki/systems/multi-task-and-multi-driving-heads.md",
@@ -524,7 +525,6 @@
     "llm_wiki/README.md",
     "llm_wiki/workflows/model-development-cycle.md",
     "llm_wiki/workflows/newcomer-onboarding.md",
-    "llm_wiki/workflows/first-parking-pudo-change.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
