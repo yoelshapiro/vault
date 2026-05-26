@@ -186,3 +186,18 @@
   - Copied the skill into a clean `main` worktree because the original checkout could not switch branches without overwriting unrelated local edits.
   - Revalidated the skill in the `main` worktree.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-25-parking-onboarding-skill|2026-05-25 Parking Onboarding Skill]]
+
+## 2026-05-26 - Parking Branch Signing Push Repair
+
+- Topic: Repair origin tracking and pushes for signed parking branches.
+- Labels: parking, git, signing, branch-tracking, push.
+- Branch: Multiple; see task note.
+- PR: N/A.
+- Change type: Git branch maintenance.
+- Areas: `origin/boris/parking-moving-buckets-config`, `origin/boris/parking-past30-no-standstill-gear-aug/no_behave`, `origin/boris/parking-past30-no-standstill-gear-aug/no_behave_lr_fix`, `origin/boris/parking-past30-no-standstill-gear-aug/no_park_mode_nv_behav`.
+- Changes:
+  - Fixed `boris/parking-moving-buckets-config` upstream to track `origin/boris/parking-moving-buckets-config`.
+  - Created/pushed `origin/boris/parking-moving-buckets-config`.
+  - Verified the three `parking-past30-no-standstill-gear-aug` branches were already current on matching origin refs.
+  - Verified requested branch tips are SSH-signed.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-branch-signing-push-repair|2026-05-26 Parking Branch Signing Push Repair]]
