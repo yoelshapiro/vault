@@ -273,3 +273,18 @@
   - Preserved existing lineage values.
   - Left roots and rows absent from the graph blank.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
+
+## 2026-05-26 - Parking Eval Studio Score Skill Rename
+
+- Topic: Rename and scope Eval Studio score skill for Parking/PUDO suite scores.
+- Labels: parking, codex-skill, eval-studio.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Skill maintenance.
+- Areas: `/home/borisindelman/git/ParkingSkills/skills/parking-eval-studio-suite-scores`.
+- Changes:
+  - Renamed `eval-studio-suite-scores` to `parking-eval-studio-suite-scores`.
+  - Baked in the Pudo-Unpudo and Alpha3 Intervention suite/version IDs.
+  - Removed user-specific fallback script paths by resolving sibling skills relative to the installed skills root.
+  - Verified the script with `armadillo-adaptable-maroon`.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]

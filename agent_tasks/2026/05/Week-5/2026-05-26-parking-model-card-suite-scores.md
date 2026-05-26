@@ -47,3 +47,13 @@ Rows filled:
 - `prudent-wallaby-pink` <- `sea-cucumber-invaluable-scarlet`
 - `chocolate-narwhal-adaptable` <- `sea-cucumber-invaluable-scarlet`
 - `reassured-red-sea-turtle` <- `chocolate-narwhal-adaptable`
+
+## Follow-up: parking score skill rename
+Renamed `skills/eval-studio-suite-scores` to `skills/parking-eval-studio-suite-scores` in ParkingSkills.
+
+Changes:
+- Updated skill metadata to `parking-eval-studio-suite-scores`.
+- Made `scripts/get_scores.sh` default to the two Parking/PUDO suite versions.
+- Added `--any-version` for suite-UUID fallback across the same two suites.
+- Removed user-specific `checkpoint_licenses.sh` paths; sibling skills are resolved relative to the installed skills root.
+- Smoke-tested `scripts/get_scores.sh --model armadillo-adaptable-maroon`.
