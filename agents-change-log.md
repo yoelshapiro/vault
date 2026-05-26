@@ -216,3 +216,18 @@
   - Verified the three `parking-past30-no-standstill-gear-aug` branches were already current on matching origin refs.
   - Verified requested branch tips are SSH-signed.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-branch-signing-push-repair|2026-05-26 Parking Branch Signing Push Repair]]
+
+## 2026-05-26 - PR 102690 Open Review Code Fixes
+
+- Topic: Fix open code-review comments for parking route shortening PR.
+- Labels: parking, pudo, pr-review, route-shortening.
+- Branch: `boris/03-23-park-route-shortening-v2`.
+- PR: `wayveai/WayveCode#102690`.
+- Change type: Review fixes.
+- Areas: `wayve/ai/lib/data/pipes/routes.py`, `wayve/ai/zoo/deployment/deployment_wrapper.py`, `wayve/ai/zoo/data/keys.py`.
+- Changes:
+  - Replaced production `assert` with early `ValueError` validation.
+  - Removed redundant clipping and over-defensive fallback code in parking route shortening.
+  - Centralized repeated scalar extraction with `_first_value`.
+  - Renamed the end-of-route map blackout helper to a deterministic action name.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-pr102690-open-review-code-fixes|2026-05-26 PR 102690 Open Review Code Fixes]]
