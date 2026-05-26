@@ -310,3 +310,13 @@
   - Areas: ParkingSkills
   - Changes:
     - Folded interleave deployment and Console updates into parking-deploy.
+
+- [[agent_tasks/2026/05/Week-5/2026-05-26-parking-deploy-console-pudo-experiments|Parking Deploy Console Auth And PUDO Experiments]]
+  - Topic: ParkingSkills deploy skill update
+  - Labels: parking, skills, console, on-road
+  - Branch: main
+  - PR: n/a
+  - Change type: docs/skill update
+  - Areas: ParkingSkills
+  - Changes:
+    - Added Console auth-cookie fallback instructions and PUDO experiment templates/controller rules.
