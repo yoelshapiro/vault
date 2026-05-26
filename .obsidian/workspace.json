@@ -295,12 +295,24 @@
             "id": "117f440063e12be8",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
+                "file": "todo-list.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "unparking_scenarios.excalidraw"
+              "icon": "lucide-file",
+              "title": "todo-list"
             }
           }
         ],
@@ -480,9 +492,14 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "llm_wiki/index.md",
+    "llm_wiki/systems/multi-task-and-multi-driving-heads.md",
+    "llm_wiki/systems/latent-actions-and-behavior-control.md",
+    "llm_wiki/systems/world-model-pretraining.md",
+    "llm_wiki/systems/end-to-end-driving-stack.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/05/Week-5/2026-05-25-parking-onboarding-skill.md",
     "agent_tasks/2026/05/Week-5",
-    "llm_wiki/index.md",
     "llm_wiki/systems/space-time-model-architecture.md",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
@@ -508,11 +525,6 @@
     "llm_wiki/workflows/newcomer-onboarding.md",
     "llm_wiki/workflows/first-parking-pudo-change.md",
     "llm_wiki/maps/mle-role-map.md",
-    "agent_tasks/2026/05/Week-4/2026-05-24-llm-wiki-newcomer-readiness.md",
-    "llm_wiki/workflows/parking-development-workflow.md",
-    "llm_wiki/systems/world-model-pretraining.md",
-    "llm_wiki/AGENTS.md",
-    "llm_wiki/glossary.md",
     "llm_wiki/raw/slack",
     "llm_wiki/raw/skills",
     "llm_wiki/raw/notion",
