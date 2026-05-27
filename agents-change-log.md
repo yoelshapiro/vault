@@ -351,3 +351,18 @@
   - Follow-up check updated Notion scores for completed latest-version rows: chocolate `46.9%`, reassured `75.2%`, circumspect `74.7%`, noncommittal `76.4%`; five rows remain in progress.
   - Resolved `proficient-centipede-indigo` via model-catalogue gen2 artefact because the licence helper had no rows.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-pudo-unpudo-suite-may-models|2026-05-27 Pudo-Unpudo Suite for May Models]]
+
+## 2026-05-27 - Lime Leopard Interleave V2 Deploy
+
+- Topic: Redeploy `lime-leopard-dreaming` with parking interleave control.
+- Labels: parking, pudo, deploy, model-ci, notion.
+- Branch: `boris/05-21-updated-pudo-config`.
+- PR: N/A.
+- Change type: Model deployment.
+- Areas: Model Catalogue, Buildkite Model CI, Notion model cards.
+- Changes:
+  - Deployed checkpoint 80k with suffix `__lime-leopard-dreaming_interleave_control_v2`.
+  - Produced deployed nickname `lavender-elegant-gerbil` and gen2 artefact `96a5914c-7edf-46e1-b7b4-618f155137ac`.
+  - Added the standard Parking/PUDO Console note and created a Notion model-card row.
+  - Triggered Model CI build `73445`; job-level status could not be read with the local token.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-lime-leopard-interleave-v2-deploy|2026-05-27 Lime Leopard Interleave V2 Deploy]]
