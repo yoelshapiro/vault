@@ -367,3 +367,16 @@
   - Added the standard Parking/PUDO Console note and created a Notion model-card row.
   - Triggered Model CI build `73445`; job-level status could not be read with the local token.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-lime-leopard-interleave-v2-deploy|2026-05-27 Lime Leopard Interleave V2 Deploy]]
+
+
+- Topic: Parking checkpoint interleave upload
+  - Labels: parking, deployment, training
+  - Branch: `boris/05-21-updated-pudo-config`
+  - PR: n/a
+  - Change type: fix/test
+  - Areas: `wayve/ai/si/models/training.py`, `wayve/ai/si/test/models/test_training.py`
+  - Changes:
+    - Set parking `DeploymentConfig.interleave_group` during training checkpoint upload config construction.
+    - Added a regression test for parking vs non-parking interleave group config.
+    - Verification blocked by ACR 401 during Bazel analysis.
+  - Note: [[agent_tasks/2026/05/Week-5/2026-05-27-parking-checkpoint-interleave-upload]]
