@@ -348,5 +348,6 @@
   - Targeted latest Pudo-Unpudo version `adf04489-bc65-492d-92e6-02bfff979c49`.
   - Found `reassured-red-sea-turtle` already completed on the latest version with score `0.7515`.
   - Launched missing latest-version executions for the remaining eight models.
+  - Follow-up check updated Notion scores for completed latest-version rows: chocolate `46.9%`, reassured `75.2%`, circumspect `74.7%`, noncommittal `76.4%`; five rows remain in progress.
   - Resolved `proficient-centipede-indigo` via model-catalogue gen2 artefact because the licence helper had no rows.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-pudo-unpudo-suite-may-models|2026-05-27 Pudo-Unpudo Suite for May Models]]
