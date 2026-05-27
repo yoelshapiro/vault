@@ -39,3 +39,14 @@ Still in progress after repeated polling, so Notion score cells were not overwri
 - `dalmatian-scarlet-musical`: execution `7a43496f-ec8e-43d0-a990-65d17035d789`, `2055/2276` completed, partial overview around `8.5%`.
 - `fuchsia-tiger-masked`: execution `9f2ee2c3-5637-4b5a-abdf-57c5a620c3b1`, `2105/2276` completed, partial overview around `9.5%`.
 - `proficient-centipede-indigo`: execution `b026109a-daf5-4b00-9fa2-f294594309e6`, `2052/2276` completed, partial overview around `7.3%`.
+
+
+## 2026-05-27 Running Executions Completed
+
+Checked the five previously running latest-version executions for suite history `adf04489-bc65-492d-92e6-02bfff979c49`; all are now completed and Notion `PUDO/UNPUDO Suite` cells were updated:
+
+- `armadillo-adaptable-maroon`: `78.3%`, execution `cd13ac6e-3793-48f8-a3e8-a0ab0610ddcf`, completed `2189/2276` with `87` errored.
+- `condor-fearless-ivory`: `77.6%`, execution `421b58c0-6a76-4aa3-9a04-52aeaaeb2e93`, completed `2189/2276` with `87` errored.
+- `dalmatian-scarlet-musical`: `8.6%`, execution `7a43496f-ec8e-43d0-a990-65d17035d789`, completed `2068/2276` with `208` errored.
+- `fuchsia-tiger-masked`: `10.8%`, execution `9f2ee2c3-5637-4b5a-abdf-57c5a620c3b1`, completed `2189/2276` with `87` errored.
+- `proficient-centipede-indigo`: `7.5%`, execution `b026109a-daf5-4b00-9fa2-f294594309e6`, completed `2068/2276` with `208` errored.
