@@ -17,3 +17,16 @@ bazel test //wayve/ai/si:py_test_test_training_core --test_arg=-k --test_arg=tes
 ```
 
 Bazel analysis failed before test execution because `wayve.azurecr.io/azure-storage/azurite` returned `401 Unauthorized`.
+
+
+## Branch worktree update
+
+Applied the same fix in worktree `/tmp/WayveCode-03-20-si-group-interleave-control-support` on branch `03-20-si-group-interleave-control-support`.
+
+Verification in that worktree:
+
+```bash
+bazel test //wayve/ai/si:py_test_test_training_core --test_arg=-k --test_arg=test_get_deployment_config_sets_parking_interleave_group
+```
+
+Bazel analysis again failed before test execution because `wayve.azurecr.io/azure-storage/azurite` returned `401 Unauthorized`.
