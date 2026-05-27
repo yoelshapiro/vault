@@ -6,3 +6,5 @@
 - [ ] parking augmentations
 - [x] lineage html
 - [x] parking model lifecycle skill tree
+- [ ] pre train augmentations request
+- [ ] 
