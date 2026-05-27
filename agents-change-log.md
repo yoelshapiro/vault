@@ -334,3 +334,18 @@
   - Clarified suite id versus version id in `$parking-eval-studio-suite-scores` defaults.
   - Verified `get_scores.sh` already uses the requested IDs.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-parking-lifecycle-pudo-suite-version|2026-05-27 Parking Lifecycle Pudo-Unpudo Suite Version]]
+
+## 2026-05-27 - Pudo-Unpudo Suite for May Models
+
+- Topic: Run/query the requested Pudo-Unpudo Eval Studio suite version for Parking/PUDO model-card rows dated since 2026-05-06.
+- Labels: parking, pudo, eval-studio, notion, model-cards.
+- Branch: N/A.
+- PR: N/A.
+- Change type: Eval Studio execution/query.
+- Areas: `Parking/PUDO Model Development` Notion page, Eval Studio Pudo-Unpudo suite.
+- Changes:
+  - Filtered the Notion model-card database to nine rows with `Date >= 2026-05-06`.
+  - Verified eight rows had completed executions for Pudo-Unpudo version `86b2105d-3f72-4620-b020-0b10e445798d`.
+  - Found `chocolate-narwhal-adaptable` missing that requested version; public create API launched current suite history `adf04489-bc65-492d-92e6-02bfff979c49` as execution `f308a741-56e6-42a4-9ba7-1533e2acbb9f` and rejected the historical version ID directly.
+  - Resolved `proficient-centipede-indigo` via model-catalogue gen2 artefact because the licence helper had no rows.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-pudo-unpudo-suite-may-models|2026-05-27 Pudo-Unpudo Suite for May Models]]
