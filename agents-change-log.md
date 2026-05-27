@@ -320,3 +320,17 @@
   - Areas: ParkingSkills
   - Changes:
     - Added Console auth-cookie fallback instructions and PUDO experiment templates/controller rules.
+
+## 2026-05-27 - Parking Lifecycle Pudo-Unpudo Suite Version
+
+- Topic: Update Parking model lifecycle routing for the fixed Pudo-Unpudo Eval Studio suite/version.
+- Labels: parking, pudo, eval-studio, skill, lifecycle.
+- Branch: `main` in `/home/borisindelman/git/ParkingSkills`.
+- PR: N/A.
+- Change type: Skill documentation / routing update.
+- Areas: `/home/borisindelman/git/ParkingSkills/skills/parking_model_lifecycle`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Added explicit Pudo-Unpudo suite id `ea663952-b914-47a3-8cc1-729db3683dce` and version id `86b2105d-3f72-4620-b020-0b10e445798d` to lifecycle eval routing.
+  - Clarified suite id versus version id in `$parking-eval-studio-suite-scores` defaults.
+  - Verified `get_scores.sh` already uses the requested IDs.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-27-parking-lifecycle-pudo-suite-version|2026-05-27 Parking Lifecycle Pudo-Unpudo Suite Version]]
