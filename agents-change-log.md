@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-27 - Parking PUDO 2026.6.21 Training Restart
+
+- Topic: Push parking 2026.6.21 startup fixes and restart PUDO BC training.
+- Labels: parking, pudo, training, surfboard, config.
+- Branch: `boris/05-21-updated-pudo-config`.
+- PR: N/A.
+- Change type: Code fix / training run.
+- Areas: `/workspace/WayveCode/wayve/ai/si/models`, `/workspace/WayveCode/wayve/ai/si/configs/parking`, Surfboard job `170265`, `/home/borisindelman/git/vault/agent_tasks`.
+- Changes:
+  - Pushed fixes for parking navigation plus indicator memory, deployment driving parameter keys, and 2026.6.21 behavior-control output heads.
+  - Submitted `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule` for 80k steps.
+  - Monitored W&B history until `trainer/global_step=5154` while the run remained `running`.
+- Task note: [[agent_tasks/2026/05/Week-4/2026-05-27-parking-pudo-621-training-restart|2026-05-27 Parking PUDO 2026.6.21 Training Restart]]
+
 ## 2026-05-26 - Eval Studio Suite Scores Skill
 
 - Topic: Create `eval-studio-suite-scores` ParkingSkills skill.
