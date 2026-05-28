@@ -425,3 +425,18 @@
     - Added a regression test for parking vs non-parking interleave group config.
     - Verification blocked by ACR 401 during Bazel analysis.
   - Note: [[agent_tasks/2026/05/Week-5/2026-05-27-parking-checkpoint-interleave-upload]]
+
+## 2026-05-28 - PUDO 2026.6.21 Beige Train Monitor
+
+- Topic: Submit and monitor the PUDO BC 80k retry after disabling behavior-control loss.
+- Labels: parking, pudo, training, notion, wandb.
+- Branch: `boris/05-21-updated-pudo-config`.
+- PR: N/A.
+- Change type: Training run / monitoring.
+- Areas: Surfboard, W&B, Loki, Parking/PUDO Notion model cards.
+- Changes:
+  - Submitted short-tag retry `beige-hornet-striped` / Surfboard job `170708`.
+  - Updated the Notion model-card row to the new nickname.
+  - Monitored W&B until `trainer/train_step=5069` with state `running`.
+  - Confirmed no matching fatal/artifact-name errors in Loki around the 5k crossing.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-pudo-621-beige-train-monitor|2026-05-28 PUDO 2026.6.21 Beige Train Monitor]]
