@@ -21,3 +21,10 @@
 - Passed the requested 5k monitor point.
 - At 2026-05-28 15:24 UTC, W&B showed `trainer/train_step=5069`, `trainer/global_step=5069`, and state `running`.
 - Notion row `beige-hornet-striped (not interleaved)` was updated with the nickname and 5k monitor result.
+
+## Cancellation
+- Canceled Surfboard job `170708` by request on 2026-05-28.
+- Confirmed Surfboard status: `Canceled`; end time `05-28 18:48 (UTC)`.
+- Status reason: `CancelRequested by user: Requested by Boris; retry later`.
+- Updated the Notion model-card row status to `Canceled` and added the cancellation note to the page body.
+- This run cannot be resumed as the same active training job; retry later by restoring/resubmitting, which will create a new job/run.
