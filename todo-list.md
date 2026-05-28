@@ -6,5 +6,6 @@
 - [ ] parking augmentations
 - [x] lineage html
 - [x] parking model lifecycle skill tree
-- [ ] pre train augmentations request
-- [ ] 
+- [ ] pre train updated augmentations request
+- [ ] Zak-Becky
+- [ ] Ulad parking windowing
