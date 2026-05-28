@@ -440,3 +440,18 @@
   - Monitored W&B until `trainer/train_step=5069` with state `running`.
   - Confirmed no matching fatal/artifact-name errors in Loki around the 5k crossing.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-pudo-621-beige-train-monitor|2026-05-28 PUDO 2026.6.21 Beige Train Monitor]]
+
+## 2026-05-28 - Parking Skills Session Tags And Notes
+
+- Topic: Tighten Parking/PUDO lifecycle skill instructions for training session tags and Notion notes.
+- Labels: parking, pudo, skills, notion, training.
+- Branch: `main` in `/home/borisindelman/git/ParkingSkills`.
+- PR: N/A.
+- Change type: Skill documentation update.
+- Areas: ParkingSkills lifecycle skills.
+- Changes:
+  - Required train submissions to use an explicit short session tag under 128 characters, normally under ~45 characters.
+  - Instructed the training skill to override long generated/default CLI tags.
+  - Made the model-card update skill leave any `Notes` table property untouched.
+  - Clarified that detailed notes belong in the model-card page body.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-parking-skills-session-tags-notes|2026-05-28 Parking Skills Session Tags And Notes]]
