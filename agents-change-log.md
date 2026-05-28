@@ -12,6 +12,7 @@
   - Pushed fixes for parking navigation plus indicator memory, deployment driving parameter keys, and 2026.6.21 behavior-control output heads.
   - Submitted `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule` for 80k steps.
   - Monitored W&B history until `trainer/global_step=5154` while the run remained `running`.
+  - Followed up after completion: created the Notion model-card row and recorded Alpha3 `71.1%` plus current-latest PUDO/UNPUDO `7.0%`.
 - Task note: [[agent_tasks/2026/05/Week-4/2026-05-27-parking-pudo-621-training-restart|2026-05-27 Parking PUDO 2026.6.21 Training Restart]]
 
 ## 2026-05-26 - Eval Studio Suite Scores Skill

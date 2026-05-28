@@ -29,3 +29,15 @@ Restarted `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule` for 80k
 - `170229`: failed before training on `AssertionError: driving_parameters_keys must be provided`; fixed by setting parking deployment driving parameter keys.
 - `170244`: failed before optimizer steps on `KeyError: 'behavior_unconditioned_policy_waypoints'`; fixed by enabling behavior-control output heads for the 2026.6.21 parking config.
 - `170265`: submitted from commit `566b47ecbff01485ddfef8382fab9bb494154cb3`; reached 5154 global steps and continued running.
+
+## 2026-05-28 Notion and Eval Follow-up
+
+- Added Notion row: https://www.notion.so/36e03da5d69a81658106d5086cfc6e57
+- Surfboard job `170265` completed at 2026-05-28 06:41 UTC.
+- Model artefact: `cdb6a291-6cad-4b2a-b9d6-b91682ccdef0`, checkpoint `8`, license `gen2_mache_alpha3`.
+- Alpha3 Intervention suite `5601afa8-d13f-4b65-8ceb-ae0a89f56569`: execution `0610794f-b5eb-4f82-a697-30547bebda4e`, Less Wrong score `0.7107` (`71.1%`).
+- PUDO/UNPUDO suite current latest changed to `87e387be-0e66-4f1a-841a-25d531752bbf` at 2026-05-28 06:47 UTC; it superseded `adf04489-bc65-492d-92e6-02bfff979c49`.
+- PUDO/UNPUDO execution `a2034190-5f12-4800-9a56-4a745c63cc45`: score `0.0697` (`7.0%`), stddev `0.2137`, progress `2251/2417`, `166` errored.
+- Prior same-version PUDO execution `abd5a37a-820f-47fd-860c-c97dbec623b4`: score `0.0485` (`4.9%`).
+- Updated local ParkingSkills score helper to use current latest PUDO suite version and select the newest completed execution when multiple executions exist.
+
