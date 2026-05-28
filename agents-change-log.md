@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-28 - Parking Park-Mode Blackout Semantics
+
+- Topic: Fix `park_mode_blackout_probability=0.0` to respect explicit park-mode enable flags.
+- Labels: parking, datamodule, park-mode, tests.
+- Branch: `boris/05-21-updated-pudo-config`.
+- PR: N/A.
+- Change type: Code fix / regression test.
+- Areas: `/workspace/WayveCode/wayve/ai/si/datamodules/parking.py`, `/workspace/WayveCode/wayve/ai/si/datamodules/test/test_parking_unit.py`.
+- Changes:
+  - Preserved explicit parking/parked park-mode flags when blackout probability is 0.
+  - Kept sampled park-mode+blackout versus route-shortening override for probabilities greater than 0.
+  - Updated the unit test and verified the parking unit file plus package ruff lint.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-park-mode-blackout-semantics|2026-05-28 Park Mode Blackout Semantics]]
+
 ## 2026-05-27 - Parking PUDO 2026.6.21 Training Restart
 
 - Topic: Push parking 2026.6.21 startup fixes and restart PUDO BC training.
