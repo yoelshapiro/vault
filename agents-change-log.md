@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-28 - PUDO Buffer0 Parkmode 80k Training
+
+- Topic: Submit PUDO BC 80k training after park-mode and gear-cleanup changes.
+- Labels: parking, pudo, training, surfboard.
+- Branch: `boris/05-21-updated-pudo-config`.
+- PR: N/A.
+- Change type: Training run.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking`, Surfboard job `170655`.
+- Changes:
+  - Submitted `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule` for 80k steps.
+  - Used image `wayvetraining.azurecr.io/scaled-intelligence:3987649fd43c7d0fc47c1ce594c087f883674972`.
+  - Monitored job `170655` / `eagle-feisty-aqua` until `Running` on AKS.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-pudo-buffer0-parkmode-80k-train|2026-05-28 PUDO Buffer0 Parkmode 80k Train]]
+
 ## 2026-05-28 - Parking Park-Mode Blackout Semantics
 
 - Topic: Fix `park_mode_blackout_probability=0.0` to respect explicit park-mode enable flags.
