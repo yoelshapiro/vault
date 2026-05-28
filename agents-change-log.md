@@ -13,6 +13,7 @@
   - Kept sampled park-mode+blackout versus route-shortening override for probabilities greater than 0.
   - Updated the unit test and verified the parking unit file plus package ruff lint.
   - Removed deployment emission of `PARKED_STATE`; deployment now keeps only derived `PARKING_MODE` for end-of-route parking.
+  - Changed parking gear cleanup to release-style neutral shifting with `gear_label_cleanup_stop_buffer_sec=0.0` instead of symmetric standstill expansion.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-park-mode-blackout-semantics|2026-05-28 Park Mode Blackout Semantics]]
 
 ## 2026-05-27 - Parking PUDO 2026.6.21 Training Restart

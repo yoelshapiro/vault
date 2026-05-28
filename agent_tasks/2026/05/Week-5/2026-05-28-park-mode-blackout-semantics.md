@@ -20,3 +20,9 @@
 
 - Removed deployment emission of `DataKeys.PARKED_STATE` from `ParkingDeploymentWrapperImpl._add_driving_controls_inputs`; deployment now only derives `PARKING_MODE` from controls/end-of-route.
 - Verified with `bazel test //wayve/ai/si:test_deployment_wrapper --test_output=errors` and `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff --test_output=errors`.
+
+## Gear Cleanup Buffer
+
+- Replaced the symmetric neutral-over-standstill expansion with release-style neutral shifting after stop.
+- Added `gear_label_cleanup_stop_buffer_sec` with default `0.0` and `gear_label_cleanup_stop_speed_threshold_mps` with default `0.01`.
+- Verified with `bazel test //wayve/ai/si/datamodules:py_test --test_arg=wayve/ai/si/datamodules/test/test_parking_unit.py --test_output=errors` and `bazel test //wayve/ai/si/datamodules:py_lint_ruff --test_output=errors`.
