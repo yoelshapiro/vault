@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-05-30 - Parking Past30 Port
+
+- Topic: Port selected parking PUDO route-shortening and deployment interleave changes onto main.
+- Labels: parking, pudo, datamodule, deployment, route-shortening.
+- Branch: `codex/parking-port-past30`.
+- PR: N/A.
+- Change type: Code port / merge.
+- Areas: `/workspace/default/wayve/ai/si`, `/workspace/default/wayve/ai/zoo`, `/workspace/default/wayve/ai/lib/data/pipes`.
+- Changes:
+  - Copied parking datamodule and config content from `origin/guy/parking-past30-no-standstill-gear-aug` while excluding `allow_short_path` and `enable_early_path_gating`.
+  - Added route-shortening data keys, parking helpers, OTF wiring, and route-map shortening.
+  - Added parking deployment interleave control while preserving main deployment kwargs and checkpoint backfills.
+  - Verified focused parking data, datamodule, deployment wrapper checks; route and parent SI checks blocked by ACR auth.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-30-parking-past30-port|2026-05-30 Parking Past30 Port]]
+
 ## 2026-05-28 - PUDO Buffer0 Parkmode 80k Training
 
 - Topic: Submit PUDO BC 80k training after park-mode and gear-cleanup changes.
