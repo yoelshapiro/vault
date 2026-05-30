@@ -470,3 +470,13 @@
   - Made the model-card update skill leave any `Notes` table property untouched.
   - Clarified that detailed notes belong in the model-card page body.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-28-parking-skills-session-tags-notes|2026-05-28 Parking Skills Session Tags And Notes]]
+
+- Topic: Parking merge test fixes
+  - Labels: parking, merge, tests
+  - Branch: `boris/parking-past30-no-standstill-gear-aug/merge_main`
+  - PR: n/a
+  - Change type: fix
+  - Areas: `wayve/ai/si`, `wayve/ai/zoo`, parking datamodules, deployment wrapper
+  - Changes:
+    - [[agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes|Parking merge test fixes]]
+    - Fixed parking/datamodule and deployment wrapper regressions surfaced by focused Bazel tests.
