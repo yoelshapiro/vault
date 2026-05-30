@@ -492,6 +492,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes.md",
     "agent_tasks/2026/05/Week-5/2026-05-30-parking-past30-port.md",
     "agent_tasks/2026/05/Week-5/2026-05-28-parking-skills-session-tags-notes.md",
     "agent_tasks/2026/05/Week-5/2026-05-28-pudo-621-beige-train-monitor.md",
@@ -522,7 +523,6 @@
     "html_summaries/parking-model-comparison/streamlit_lab/README.md",
     "html_summaries/parking-model-comparison/streamlit_lab",
     "html_summaries/parking-model-comparison/content_parking_config_lab.js",
-    "agent_tasks/2026/05/Week-4/2026-05-24-parking-input-adaptor-lr-fix.md",
     "html_summaries/parking-model-comparison/content_parking_datamodule.js",
     "html_summaries/parking-model-comparison/parking-datamodule-deep-dive.html",
     "llm_wiki/raw/slack",
