@@ -295,12 +295,24 @@
             "id": "117f440063e12be8",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
+                "file": "projects/generic-materialisation-parking-pudo-migration.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "unparking_scenarios.excalidraw"
+              "icon": "lucide-file",
+              "title": "generic-materialisation-parking-pudo-migration"
             }
           }
         ],
@@ -481,6 +493,10 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets.md",
+    "projects.md",
+    "agents-change-log.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon.md",
     "todo-list.md",
     "agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes.md",
@@ -503,10 +519,6 @@
     "llm_wiki/index.md",
     "llm_wiki/systems/multi-task-and-multi-driving-heads.md",
     "llm_wiki/systems/latent-actions-and-behavior-control.md",
-    "llm_wiki/systems/world-model-pretraining.md",
-    "llm_wiki/systems/end-to-end-driving-stack.md",
-    "Excalidraw/unparking_scenarios.excalidraw.md",
-    "agent_tasks/2026/05/Week-5/2026-05-25-parking-onboarding-skill.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
