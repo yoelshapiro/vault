@@ -10,7 +10,9 @@
 ## Changes
 
 - Disabled future-speed filtering and long-UnPUDO event-length filtering in the materialization notebook.
-- Changed UnPUDO CA bucket creation to use moving anchors: speed at CA or around CA+1s must be non-zero.
+- Kept base UnPUDO CA buckets general, without unsafe/moving filters.
+- Added UnPUDO unsafe CA short/long buckets using speed at CA.
+- Added UnPUDO moving CA buckets using speed at CA or around CA+1s.
 - Added DC UnPUDO departure buckets from 1s before movement start to movement start.
 - Added DC UnPUDO move buckets from movement start to 10s after movement start.
 - Changed DC gear-change window to 0s through 0.5s after the gear-change anchor.

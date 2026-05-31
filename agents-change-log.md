@@ -10,7 +10,8 @@
 - Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb`.
 - Changes:
   - Disabled future-speed filtering and long-UnPUDO event-length filtering.
-  - Changed UnPUDO CA buckets to moving anchors based on speed at CA or around CA+1s.
+  - Kept base UnPUDO CA buckets general, without unsafe/moving filters.
+  - Added separate UnPUDO unsafe CA buckets using speed at CA and moving CA buckets using speed at CA or around CA+1s.
   - Added DC UnPUDO departure buckets from -1s to movement start and move buckets from movement start to +10s.
   - Changed DC gear-change bucket window to 0s through +0.5s.
   - Removed materialization-side GPS/10m/acceleration movement-start recomputation in favor of the event timestamp.
