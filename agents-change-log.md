@@ -585,3 +585,18 @@
   - Change type: config
   - Areas: wayve/ai/si/configs/parking
   - Changes: binary_version 3.0.65; added parking_bc_train_release_2026_5_21.
+
+## 2026-05-31 - Parking 2026.5.21 Copy Tele Retry
+
+- Topic: Fix and retry Parking 2026.5.21 30K training after missing tele-camera startup failure.
+- Labels: parking, config, training, notion
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick`
+- PR: N/A
+- Change type: Code fix / training run / monitoring / Notion update
+- Areas: `/workspace/default/wayve/ai/si/configs/parking/parking_config.py`, `/workspace/default/wayve/ai/si/test/configs/test_configs_utils.py`, Parking/PUDO Notion model card
+- Changes:
+  - [[agent_tasks/2026/05/Week-5/2026-05-31-parking-2026-5-21-baseline-config|Parking 2026.5.21 baseline config]]
+  - Pushed commit `99eaa3f4361e` to enable `copy_tele_camera=True` for six-camera parking release training and assert it in config resolution.
+  - Submitted job `172457` / `hedgehog-modest-amaranth`, session `session_2026_05_31_21_12_58_p521tele30k`.
+  - Monitored to `trainer/global_step=5074` with Surfboard and W&B still running.
+  - Created Notion model-card row `hedgehog-modest-amaranth (not interleaved)`.

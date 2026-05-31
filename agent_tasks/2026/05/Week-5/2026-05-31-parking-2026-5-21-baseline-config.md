@@ -28,3 +28,13 @@
 - bazel test //wayve/ai/si:test_config_py_lint_ruff --test_output=errors
 - tools/buildifier --mode=check wayve/ai/si/BUILD
 - git diff --check -- wayve/ai/si/BUILD wayve/ai/si/configs/parking/parking_config.py wayve/ai/si/test/configs/test_configs_utils.py
+
+## Additional Run Ledger
+- quail-maroon-modest / job 172445 / session_2026_05_31_20_51_13_p521fix30k: retry after release.py-style behavior-control adaptor fix. Failed before 5K during dataloader startup: missing camera at position [5] with copy_tele_camera disabled.
+- hedgehog-modest-amaranth / job 172457 / session_2026_05_31_21_12_58_p521tele30k: retry after enabling copy_tele_camera for the 2026.5.21 parking datamodule. Passed 5K trainer-step monitor at trainer/global_step 5074 while Surfboard and W&B were still running. Notion model-card row created: https://www.notion.so/37103da5d69a81708d52e890709b151a
+
+## Additional Fix Validation
+- bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves --test_output=errors
+- bazel test //wayve/ai/si:py_lint_ruff //wayve/ai/si:test_config_py_lint_ruff --test_output=errors
+- tools/buildifier --mode=check wayve/ai/si/BUILD
+- git diff --check
