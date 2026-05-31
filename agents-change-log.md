@@ -12,6 +12,7 @@
   - Disabled future-speed filtering and long-UnPUDO event-length filtering.
   - Kept base UnPUDO CA buckets general, without unsafe/moving filters.
   - Added separate UnPUDO unsafe CA buckets using speed at CA and moving CA buckets using speed at CA or around CA+1s.
+  - Split joined AV bucket dictionaries explicitly and preserved DC future gear annotation while disabling the speed filter.
   - Added DC UnPUDO departure buckets from -1s to movement start and move buckets from movement start to +10s.
   - Changed DC gear-change bucket window to 0s through +0.5s.
   - Removed materialization-side GPS/10m/acceleration movement-start recomputation in favor of the event timestamp.

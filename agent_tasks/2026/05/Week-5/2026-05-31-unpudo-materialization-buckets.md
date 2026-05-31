@@ -16,6 +16,9 @@
 - Added DC UnPUDO departure buckets from 1s before movement start to movement start.
 - Added DC UnPUDO move buckets from movement start to 10s after movement start.
 - Changed DC gear-change window to 0s through 0.5s after the gear-change anchor.
+- Split joined AV outputs so general, unsafe UnPUDO, and moving UnPUDO buckets are explicit in `all_joined_tables`.
+- Preserved future gear annotation for DC directional buckets while disabling future-speed filtering.
+- Fixed unsafe bucket generation to produce only CA short/long buckets, not pre-CA unsafe buckets.
 - Removed the materialization-side GPS/10m/acceleration movement-start recomputation and used the event notebook timestamp as the movement-start anchor.
 
 ## Verification
