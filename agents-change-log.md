@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-05-31 - LR Scheduler Horizon
+
+- Topic: Decouple BC LR scheduler horizon from trainer stop steps.
+- Labels: parking, training, lr-schedule, bc.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/merge_main`.
+- PR: N/A.
+- Change type: Code change / regression test.
+- Areas: `/workspace/WayveCode/wayve/ai/si/config.py`, `/workspace/WayveCode/wayve/ai/si/models/training.py`, `/workspace/WayveCode/wayve/ai/si/test/models/test_training.py`.
+- Changes:
+  - Added `lr_scheduler_num_steps` to configure scheduler `total_steps` independently of training `num_steps`.
+  - Kept fallback behavior unchanged by using `trainer.max_steps` when the override is not set.
+  - Added a focused regression test for the scheduler horizon override.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
+
 ## 2026-05-30 - Parking Past30 Port
 
 - Topic: Port selected parking PUDO route-shortening and deployment interleave changes onto main.
