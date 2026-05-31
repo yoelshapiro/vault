@@ -495,3 +495,19 @@
   - Changes:
     - [[agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes|Parking merge test fixes]]
     - Fixed parking/datamodule and deployment wrapper regressions surfaced by focused Bazel tests.
+
+## 2026-05-31 - Merge Main Parking Retry Export Fix
+
+- Topic: Retry merge-main parking training after fixing parking interleave TorchScript export.
+- Labels: parking, training, deployment, interleave, torchscript.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/merge_main`.
+- PR: N/A.
+- Change type: Code fix / training run / monitoring.
+- Areas: `/workspace/WayveCode/wayve/ai/zoo/deployment/deployment_wrapper.py`, `/workspace/WayveCode/wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`, Parking/PUDO Notion model card.
+- Changes:
+  - Fixed parking interleave wrapper scripting by passing common output tensors field-by-field instead of a model-output NamedTuple.
+  - Corrected parking deployment wrapper return annotation for `DrivingOutputWithGearOutput`.
+  - Pushed commit `097878727cee8db9d5598872ffe194fa95b4192c`.
+  - Submitted training job `172255` / `raven-orange-rejoicing`, session `session_2026_05_31_10_52_33_mmturtle4`.
+  - Monitored to W&B `trainer/global_step=5102` with state `running`; updated Notion page body without touching the `Notes` property.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
