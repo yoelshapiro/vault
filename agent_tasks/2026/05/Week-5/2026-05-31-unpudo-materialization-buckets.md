@@ -19,6 +19,8 @@
 - Split joined AV outputs so general, unsafe UnPUDO, and moving UnPUDO buckets are explicit in `all_joined_tables`.
 - Preserved future gear annotation for DC directional buckets while disabling future-speed filtering.
 - Fixed unsafe bucket generation to produce only CA short/long buckets, not pre-CA unsafe buckets.
+- Split unsafe and moving UnPUDO feature flags so the bucket families are independently controlled.
+- Scoped the CA+1s moving-speed lookup to failed-to-UnPUDO candidate runs instead of all candidate runs.
 - Removed the materialization-side GPS/10m/acceleration movement-start recomputation and used the event notebook timestamp as the movement-start anchor.
 
 ## Verification
