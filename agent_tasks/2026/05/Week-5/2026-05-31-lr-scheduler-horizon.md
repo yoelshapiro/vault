@@ -28,3 +28,11 @@
 - Final observed status: `Running` on `aks-prod-training-2-swe.nd96h100`, started `2026-05-31 07:05 UTC`.
 - W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_05_31_07_02_10_main-merge-to-sea-turtle
 - Datadog logs: https://app.datadoghq.eu/logs?query=job_name%3Ataciturn-gecko-peach-172180&from_ts=1779001538646&cols=job_name%2Cnode_rank&live=true
+
+## 5k Monitor Result
+
+- Notion row created: https://www.notion.so/37103da5d69a8130af5eeb3776196b4d
+- Job `172180` / `taciturn-gecko-peach` failed before training started, so it never reached 5k steps.
+- Root cause from logs: `ImportError: cannot import name split_alpha2_alpha3_partitions from wayve.ai.si.configs.baseline.candidate`.
+- Stack location: `wayve/ai/si/configs/parking/parking_config.py:20` during `register_all_configs`.
+- Updated Notion status to `Canceled` because the table has no `Failed` status option, and appended the failure note to the model-card page body.
