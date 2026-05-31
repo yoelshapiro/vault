@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/05/Week-5/2026-05-31-parking-2026-5-21-baseline-config.md",
     "agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets.md",
     "projects.md",
     "agents-change-log.md",
@@ -518,7 +519,6 @@
     "agent_tasks/2026/05/Week-5/2026-05-26-parking-branch-signing-push-repair.md",
     "llm_wiki/index.md",
     "llm_wiki/systems/multi-task-and-multi-driving-heads.md",
-    "llm_wiki/systems/latent-actions-and-behavior-control.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
