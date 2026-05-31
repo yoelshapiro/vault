@@ -79,3 +79,21 @@
 - Verification: `python -m py_compile wayve/ai/si/models/training.py wayve/ai/si/test/models/test_training.py` passed; `git diff --check` passed.
 - Bazel target `//wayve/ai/si:py_test_test_training` and `//wayve/ai/si:py_test_test_training_core` were blocked during analysis by existing missing target `//wayve/ai/si:run_inference` from `//wayve/ai/si:__py_checks_lib`.
 - Commit pushed: `446463339cb0` (`fix: set parking interleave group on upload config`).
+
+## Parking Deployment X Clamp Fix
+
+- Investigated simulation failure `VIOLATION_AGENT_INPUT_X_VECTOR_IS_NEGATIVE` against reference branch `03-20-si-group-interleave-control-support`.
+- Root causes found in current merge branch:
+  - Generated interleave wrappers always passed input `vehicle_gear_position` into `_wrap_with_interleave_control`; parking wrappers that predicted gear need `_base_output.policy_gear_position` instead.
+  - `_wrap_with_interleave_control` only applied gear-conditioned waypoint clamping for the driving interleave group, not the parking group.
+  - New parking path output `POLICY_PATH_POSITION_FORWARD` bypassed waypoint clamping and could carry X values inconsistent with predicted gear.
+- Changes made in `wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`:
+  - Restored return-annotation field detection and use `_base_output.policy_gear_position` when present.
+- Changes made in `wayve/ai/zoo/deployment/deployment_wrapper.py`:
+  - Clamp interleave `policy_waypoints` with the effective policy gear before parking/driving group control logic.
+  - Added `_enforce_gear_position_on_x_vector` and apply it to `POLICY_PATH_POSITION_FORWARD` in `ParkingDeploymentWrapperImpl`.
+- Regression tests added in deployment wrapper tests for predicted policy gear interleave and path X clamping.
+- Verification passed:
+  - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=-k --test_arg="interleave_control or parking_deployment_wrapper"`
+  - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/zoo/deployment:test_deployment_ty`
+  - `git diff --check`

@@ -543,3 +543,18 @@
   - Pushed commit `446463339cb0`.
   - Bazel verification remained blocked by existing missing target `//wayve/ai/si:run_inference`; syntax and whitespace checks passed.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
+
+## 2026-05-31 - Parking Deployment X Clamp Fix
+
+- Topic: Fix parking deployment wrapper X-vector clamping for interleave and path outputs.
+- Labels: parking, deployment, interleave, simulation.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/merge_main`.
+- PR: N/A.
+- Change type: Code fix / regression tests.
+- Areas: `/workspace/WayveCode/wayve/ai/zoo/deployment/deployment_wrapper.py`, `/workspace/WayveCode/wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`, deployment wrapper tests.
+- Changes:
+  - Restored generated interleave policy-gear source detection from `03-20-si-group-interleave-control-support` while preserving field-by-field output wrapping.
+  - Enforced gear-conditioned waypoint clamping for parking interleave group as well as driving group.
+  - Clamped `POLICY_PATH_POSITION_FORWARD` using predicted gear before returning parking deployment path outputs.
+  - Added regression tests and verified focused deployment tests, ruff, and type checks.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
