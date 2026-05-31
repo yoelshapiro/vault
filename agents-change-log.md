@@ -528,3 +528,18 @@
   - Submitted training job `172255` / `raven-orange-rejoicing`, session `session_2026_05_31_10_52_33_mmturtle4`.
   - Monitored to W&B `trainer/global_step=5102` with state `running`; updated Notion page body without touching the `Notes` property.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
+
+## 2026-05-31 - Parking Upload Interleave Group Fix
+
+- Topic: Restore parking interleave group metadata on checkpoint upload config.
+- Labels: parking, training, deployment, interleave.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/merge_main`.
+- PR: N/A.
+- Change type: Code fix / regression test.
+- Areas: `/workspace/WayveCode/wayve/ai/si/models/training.py`, `/workspace/WayveCode/wayve/ai/si/test/models/test_training.py`.
+- Changes:
+  - Added `interleave_group="parking" if self.use_parking_mode else ""` to `BcTrainingModule.get_deployment_config()` so `CheckpointAndSubmit` upload metadata carries the parking group.
+  - Added a focused regression test for parking and non-parking deployment config interleave groups.
+  - Pushed commit `446463339cb0`.
+  - Bazel verification remained blocked by existing missing target `//wayve/ai/si:run_inference`; syntax and whitespace checks passed.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]

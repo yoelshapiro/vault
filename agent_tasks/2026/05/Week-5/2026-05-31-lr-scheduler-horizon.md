@@ -69,3 +69,13 @@
 - Final monitored status: Surfboard `Running` on `aks-prod-training-2-swe.nd96h100`; W&B state `running`, `_step=8290`, `trainer/global_step=5102`.
 - The run passed the requested 5k trainer-step monitoring gate without reproducing the previous startup/export failures.
 - Updated Notion model-card page: https://www.notion.so/37103da5d69a8130af5eeb3776196b4d
+
+## Parking Upload Interleave Group Fix
+
+- Restored parking upload metadata after the 30k run finished without `interleave_group=parking`.
+- Root cause: `CheckpointAndSubmit` receives `deployment_config=self.get_deployment_config()`, and this branch only set interleave options in `to_deployable_model()`; it did not set `DeploymentConfig.interleave_group`.
+- Change: `wayve/ai/si/models/training.py` now sets `interleave_group="parking" if self.use_parking_mode else ""` in `get_deployment_config()` while keeping `num_path_waypoints`.
+- Added regression test `test_get_deployment_config_sets_parking_interleave_group` in `wayve/ai/si/test/models/test_training.py`.
+- Verification: `python -m py_compile wayve/ai/si/models/training.py wayve/ai/si/test/models/test_training.py` passed; `git diff --check` passed.
+- Bazel target `//wayve/ai/si:py_test_test_training` and `//wayve/ai/si:py_test_test_training_core` were blocked during analysis by existing missing target `//wayve/ai/si:run_inference` from `//wayve/ai/si:__py_checks_lib`.
+- Commit pushed: `446463339cb0` (`fix: set parking interleave group on upload config`).
