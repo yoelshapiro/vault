@@ -558,3 +558,18 @@
   - Clamped `POLICY_PATH_POSITION_FORWARD` using predicted gear before returning parking deployment path outputs.
   - Added regression tests and verified focused deployment tests, ruff, and type checks.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
+
+## 2026-05-31 - Raven 30k X-Clamp Redeploy And 80k Continuation
+
+- Topic: Redeploy promising 30k Parking checkpoint with X-clamp fix, then continue original model to 80k.
+- Labels: parking, deployment, training, interleave.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/merge_main`.
+- PR: N/A.
+- Change type: Model deployment / training continuation.
+- Areas: Model Catalogue, Surfboard, Parking/PUDO lifecycle.
+- Changes:
+  - Redeployed `raven-orange-rejoicing` checkpoint 30k with local deployment-wrapper X clamp fix and interleave group `parking`.
+  - Produced deployed nickname `horse-tomato-magnificent`, session `session_2026_05_31_10_52_33_mmturtle4__raven-orange-rejoicing_interleave_control_xclamp_v1`.
+  - Submitted continuation job `172394` / `distinctive-crocodile-azure` from original checkpoint 30k to 80k using the original training image and 100k LR schedule.
+  - Final observed train status: `Dispatched` on `aks-prod-training-2-swe.nd96h100c`.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]

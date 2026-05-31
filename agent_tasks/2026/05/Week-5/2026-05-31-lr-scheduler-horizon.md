@@ -97,3 +97,20 @@
   - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=-k --test_arg="interleave_control or parking_deployment_wrapper"`
   - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/zoo/deployment:test_deployment_ty`
   - `git diff --check`
+
+## Redeploy 30k With X Clamp Fix And Continue To 80k
+
+- Redeployed source model `raven-orange-rejoicing` / `session_2026_05_31_10_52_33_mmturtle4` at step `30000` with the local deployment wrapper X-clamp fix.
+- Deploy command used interleave control with `--interleave_control_group parking` and suffix `__raven-orange-rejoicing_interleave_control_xclamp_v1`.
+- Deployed session: `session_2026_05_31_10_52_33_mmturtle4__raven-orange-rejoicing_interleave_control_xclamp_v1`.
+- Deployed nickname: `horse-tomato-magnificent`.
+- Console URL: https://console.sso.wayve.ai/model/session_2026_05_31_10_52_33_mmturtle4__raven-orange-rejoicing_interleave_control_xclamp_v1
+- Deploy loaded `model-checkpoint-000030000.ckpt`, scripted successfully, and uploaded successfully. It emitted a non-fatal ONNX artefact validation error because ONNX export was skipped.
+- Gen2 inference config includes `INTERLEAVE_GROUP_PARKING`; deploy log confirmed radar preprocessor features `x_m`, `y_m`, `z_m`, `range_rate_mps`, `snr_db`.
+- Submitted continuation training from the original source session, not the redeployed session.
+- Continuation job: `172394` / `distinctive-crocodile-azure`.
+- Continuation session: `session_2026_05_31_17_27_40_rvn80k`.
+- Continuation command used original image `wayvetraining.azurecr.io/scaled-intelligence:097878727cee8db9d5598872ffe194fa95b4192c`, `restart_session_dir=...session_2026_05_31_10_52_33_mmturtle4`, `restart_step=30000`, `num_steps=80000`, and `model.lr_scheduler_num_steps=100000`.
+- Final observed continuation status: `Dispatched` on `aks-prod-training-2-swe.nd96h100c`.
+- W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_05_31_17_27_40_rvn80k
+- Datadog: https://app.datadoghq.eu/logs?query=job_name%3Adistinctive-crocodile-azure-172394&from_ts=1779039082836&cols=job_name%2Cnode_rank&live=true
