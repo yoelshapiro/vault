@@ -1,6 +1,6 @@
 # Parking 2026.5.21 Baseline Config
 
-- Branch: codex/parking-port-past30
+- Branch: boris/parking-past30-no-standstill-gear-aug/main_cherrypick
 - Change type: config
 - Areas: wayve/ai/si/configs/parking/parking_config.py
 
@@ -13,3 +13,6 @@
 - bazel test //wayve/ai/si:py_lint_ruff --test_output=errors
 - bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration --test_output=errors
 - git diff --check
+
+## Run Ledger
+- taciturn-violet-falcon / job 172426 / session_2026_05_31_20_12_04_p521-30k: 30K run with 100K LR scheduler, binary 3.0.65, 2026.5.21 baseline. Failed before training; config resolution raised `InterpolationKeyError: Interpolation key 'enable_behavior_control' not found`.
