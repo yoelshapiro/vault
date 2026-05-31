@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-05-31 - UnPUDO Materialization Buckets
+
+- Topic: Update parking PUDO/UnPUDO materialization notebook bucket definitions.
+- Labels: parking, pudo, unpudo, materialization, notebook.
+- Branch: `alon/unpudo_unsafe_fix`.
+- PR: N/A.
+- Change type: Notebook code change.
+- Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb`.
+- Changes:
+  - Disabled future-speed filtering and long-UnPUDO event-length filtering.
+  - Changed UnPUDO CA buckets to moving anchors based on speed at CA or around CA+1s.
+  - Added DC UnPUDO departure buckets from -1s to movement start and move buckets from movement start to +10s.
+  - Changed DC gear-change bucket window to 0s through +0.5s.
+  - Removed materialization-side GPS/10m/acceleration movement-start recomputation in favor of the event timestamp.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets|2026-05-31 UnPUDO Materialization Buckets]]
+
 ## 2026-05-31 - LR Scheduler Horizon
 
 - Topic: Decouple BC LR scheduler horizon from trainer stop steps.
