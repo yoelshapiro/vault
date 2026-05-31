@@ -14,6 +14,7 @@
   - Added separate UnPUDO unsafe CA buckets using speed at CA and moving CA buckets using speed at CA or around CA+1s.
   - Split joined AV bucket dictionaries explicitly and preserved DC future gear annotation while disabling the speed filter.
   - Split unsafe/moving feature flags and scoped the moving-speed lookup to failed-to-UnPUDO candidate runs.
+  - Wired future-speed flags together and added runtime guards for duplicate buckets plus unsafe pre-CA buckets.
   - Added DC UnPUDO departure buckets from -1s to movement start and move buckets from movement start to +10s.
   - Changed DC gear-change bucket window to 0s through +0.5s.
   - Removed materialization-side GPS/10m/acceleration movement-start recomputation in favor of the event timestamp.

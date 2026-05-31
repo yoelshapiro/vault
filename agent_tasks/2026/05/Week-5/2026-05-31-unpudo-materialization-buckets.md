@@ -21,6 +21,8 @@
 - Fixed unsafe bucket generation to produce only CA short/long buckets, not pre-CA unsafe buckets.
 - Split unsafe and moving UnPUDO feature flags so the bucket families are independently controlled.
 - Scoped the CA+1s moving-speed lookup to failed-to-UnPUDO candidate runs instead of all candidate runs.
+- Wired the concrete future-speed filter settings to the top-level future-speed flag to avoid drift.
+- Added runtime guards against duplicate bucket overwrites and accidental pre-CA unsafe buckets.
 - Removed the materialization-side GPS/10m/acceleration movement-start recomputation and used the event notebook timestamp as the movement-start anchor.
 
 ## Verification
