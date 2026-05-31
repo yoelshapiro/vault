@@ -35,3 +35,8 @@ Ported selected parking/PUDO changes from `origin/guy/parking-past30-no-standsti
 - Passed: route-map focused pytest via `//wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_generate_route_map.py --test_arg=--no-cov`.
 - Passed: route generation focused pytest via `//wayve/ai/lib:test_lib_py_test --test_arg=wayve/ai/lib/test/test_routes.py --test_arg=--no-cov`.
 - Full `//wayve/ai/lib:test_data_pipes_lib_py_test` still fails for unrelated fixture/auth issues: parquet/image fixtures are LFS pointer text and some ABFSS reads are unauthenticated.
+
+### 2026-05-31 LR schedule override
+- Added BcTrainingModule.lr_scheduler_num_steps so training can stop at 30k while LR scheduler uses 100k total steps.
+- Fixed parking training config import/instantiation blockers: split_alpha2_alpha3_partitions helper, stale parking datamodule kwargs, and missing clean_parking_gear_labels helper.
+- Validation: git diff --check; SI/datamodule/CLI/zoo affected Bazel checks; config full/selective registration targets.

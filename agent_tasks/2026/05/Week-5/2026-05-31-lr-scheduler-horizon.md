@@ -36,3 +36,10 @@
 - Root cause from logs: `ImportError: cannot import name split_alpha2_alpha3_partitions from wayve.ai.si.configs.baseline.candidate`.
 - Stack location: `wayve/ai/si/configs/parking/parking_config.py:20` during `register_all_configs`.
 - Updated Notion status to `Canceled` because the table has no `Failed` status option, and appended the failure note to the model-card page body.
+
+## Startup Fix
+
+- Fixed `parking_config.py` startup compatibility after job `172180` failed.
+- Changed `split_alpha2_alpha3_partitions` import to use `wayve.ai.si.config`, where the helper exists on this branch.
+- Removed obsolete `use_flyte_binaries=True` kwargs from parking datamodule configs; current `OtfDrivingDataModule` no longer accepts that argument and resolves binary paths from `binary_version`/path fields.
+- Validation: `bazel run //wayve/ai/si:train_ipython -- -c ...` composed `+mode=parking_bc_train_release_2026_5_11 +datamodule=parking_bc_datamodule num_steps=30000 model.lr_scheduler_num_steps=100000` and printed `3.0.36` plus `100000`.
