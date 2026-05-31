@@ -577,3 +577,11 @@
   - Submitted continuation job `172394` / `distinctive-crocodile-azure` from original checkpoint 30k to 80k using the original training image and 100k LR schedule.
   - Final observed train status: `Dispatched` on `aks-prod-training-2-swe.nd96h100c`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
+
+- [[agent_tasks/2026/05/Week-5/2026-05-31-parking-2026-5-21-baseline-config|Parking 2026.5.21 baseline config]]
+  - Labels: parking, config, training
+  - Branch: codex/parking-port-past30
+  - PR: none
+  - Change type: config
+  - Areas: wayve/ai/si/configs/parking
+  - Changes: binary_version 3.0.65; added parking_bc_train_release_2026_5_21.
