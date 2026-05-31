@@ -12,6 +12,7 @@
   - Added `lr_scheduler_num_steps` to configure scheduler `total_steps` independently of training `num_steps`.
   - Kept fallback behavior unchanged by using `trainer.max_steps` when the override is not set.
   - Added a focused regression test for the scheduler horizon override.
+  - Pushed commit `7b291aee4b2e` and submitted job `172180` / `taciturn-gecko-peach` for 30k steps with a 100k LR scheduler horizon.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon|2026-05-31 LR Scheduler Horizon]]
 
 ## 2026-05-30 - Parking Past30 Port
