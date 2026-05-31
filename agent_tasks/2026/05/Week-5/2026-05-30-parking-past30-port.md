@@ -40,3 +40,8 @@ Ported selected parking/PUDO changes from `origin/guy/parking-past30-no-standsti
 - Added BcTrainingModule.lr_scheduler_num_steps so training can stop at 30k while LR scheduler uses 100k total steps.
 - Fixed parking training config import/instantiation blockers: split_alpha2_alpha3_partitions helper, stale parking datamodule kwargs, and missing clean_parking_gear_labels helper.
 - Validation: git diff --check; SI/datamodule/CLI/zoo affected Bazel checks; config full/selective registration targets.
+
+### 2026-05-31 split helper cleanup
+- Switched parking_config.py to import split_alpha2_alpha3_partitions from wayve.ai.si.config.
+- Removed duplicate helper from baseline/candidate.py.
+- Validation: git diff --check; config full/selective registration; SI CLI lint/type/pytest.
