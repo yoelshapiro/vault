@@ -98,6 +98,8 @@
   - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/zoo/deployment:test_deployment_ty`
   - `git diff --check`
 
+- Commit pushed: `3ee09c365baf` (`fix: clamp parking deployment x outputs`).
+
 ## Redeploy 30k With X Clamp Fix And Continue To 80k
 
 - Redeployed source model `raven-orange-rejoicing` / `session_2026_05_31_10_52_33_mmturtle4` at step `30000` with the local deployment wrapper X-clamp fix.
