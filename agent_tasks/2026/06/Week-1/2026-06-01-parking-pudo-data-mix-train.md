@@ -58,3 +58,16 @@
 - Kept parking/PUDO/UNPUDO/gear-shift/unparking non-driving mix unchanged.
 - Validation: `git diff --check` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
 - Commit: pending.
+
+## Release Driving 30K Train
+
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
+- Commit: `a4b3772c7895` (`feat: use release driving data for parking`).
+- Command overrides: `+mode=parking_bc_train_release_2026_5_21 +datamodule=parking_bc_datamodule num_steps=30000 model.lr_scheduler_num_steps=100000`.
+- Session tag: `p521reldrv30k`.
+- Job: `172845` / `white-friendly-mastiff`.
+- Session: `session_2026_06_01_16_58_00_p521reldrv30k`.
+- Image: `wayvetraining.azurecr.io/scaled-intelligence:a4b3772c7895956a1ef29d997d3762eaadaf235f`.
+- W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_01_16_58_00_p521reldrv30k
+- Datadog: https://app.datadoghq.eu/logs?query=job_name%3Awhite-friendly-mastiff-172845&from_ts=1779123480748&cols=job_name%2Cnode_rank&live=true
+- Initial submission: queued, `max_restarts=0`.
