@@ -38,7 +38,7 @@
 
 ## Track Tag Loss Groups
 
-- Added `track_tag=True` / `track_tag_group` wiring for PUDO-root train buckets in `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
-- Groups match the training mix: `pudo`, `unpudo_dc_long`, `unpudo_dc_short`, `unpudo_ca`, `unpudo_ca_moving`, `unpudo_ca_unsafe`, `unpudo_departure`, `unparking`, `gear_shift`.
-- Validation: `git diff --check -- wayve/ai/si/configs/parking/parking_config.py` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
+- Added inline `track_tag=True` / `track_tag_group="pudo_unpudo"` to PUDO and UNPUDO train bucket definitions in `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
+- Did not tag driving, unparking, gear-shift, or validation buckets.
+- Validation: `git diff --check -- wayve/ai/si/configs/parking/parking_config.py` passed; focused Bazel config test rerun pending in this thread.
 - Commit: pending.
