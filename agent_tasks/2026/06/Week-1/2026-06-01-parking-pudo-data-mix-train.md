@@ -50,3 +50,11 @@
 - Added `pudo_unpudo` track tags through `PUDOBucketCfg` for PUDO, UNPUDO, and gear-change buckets.
 - Added `park_unpark` track tags through `PARKBucketCfg` for unparking buckets.
 - Validation: `git diff --check` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
+
+## Release Driving Data Import
+
+- Updated `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py` to derive driving train/validation partitions from `wayve.ai.si.configs.baseline.release`.
+- Imported release base train partitions, Alpha2/Alpha3 ratios, and release materialisation version; excluded MRM buckets by rebuilding only driving partitions from `bc_base_train_partitions`.
+- Kept parking/PUDO/UNPUDO/gear-shift/unparking non-driving mix unchanged.
+- Validation: `git diff --check` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
+- Commit: pending.
