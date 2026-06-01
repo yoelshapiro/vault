@@ -80,3 +80,16 @@
 - Verified with `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help`; the CLI exposes the new flags.
 - First smoke command should filter `hive_metastore.parking.pudo_unpudo_unpark_events` with `event_type = 'unpudo' AND speed_kmh < 0.1`, add `--limit 1`, and write one run_clips input parquet.
 - Risk: `--limit` is applied before the nearest corpus join, so a filtered first row can still produce zero output if no corpus row is within `--match-tolerance-seconds`. Increase tolerance or make the source filter/order more specific if that happens.
+
+
+## 2026-06-01 Smoke Clip Run
+- Branch:  at ; local changes are uncommitted and not pushed.
+- Event source: , filtered with .
+- Important finding: these sampled UnPUDO rows match corpus under , not . The smoke row used  and .
+- Generated one-row run_clips input parquet: .
+- Remote Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/ac5pcvl8wsx79fj499f2. Nodes  and  succeeded; Spark node  eventually failed with a  error after showing long driver scheduling latency.
+- Local workflow succeeded at video encoding after compatibility fix in  (removed unsupported  on this old branch).
+- Local workflow wrote 647 frames and found the center timestamp at frame 323. Source window was 32s with , producing a 10.8s H.264 MP4 at 1920x1080.
+- Local qualitymatch upload failed with AzCopy 403 for ; uploaded the encoded MP4 instead to .
+- Local file for inspection: .
+- Code changes made for this smoke path:  filter/limit/platform/runID support, BUILD dep ordering, scoped inference task registry imports, and old-branch calibration compatibility.
