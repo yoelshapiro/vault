@@ -29,3 +29,9 @@
 - Initial status: `Queued`, queue position 1.
 - W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_01_07_08_09_p531mix30k
 - Datadog: https://app.datadoghq.eu/logs?query=job_name%3Apurple-steady-toucan-172591&from_ts=1779088117156&cols=job_name%2Cnode_rank&live=true
+
+## 5K Monitor
+
+- 2026-06-01T07:54:23Z: W&B state `running`, `trainer/global_step=5505`, `trainer/train_step=5505`.
+- Passed requested 5K monitor gate.
+- Notion model-card row created: https://www.notion.so/37203da5d69a816491fcfcb2710ec90c

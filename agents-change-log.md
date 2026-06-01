@@ -13,6 +13,7 @@
   - Rebalanced weights to 50% driving, 20% PUDO, 22% UNPUDO, 8% gear shift, and 0% unparking.
   - Split active UNPUDO as 10% short DC, 6% CA moving, and 6% departure; kept long DC, general CA, unsafe CA, and unparking at 0%.
   - Committed `21bd35f8a9bf` and submitted job `172591` / `purple-steady-toucan` for 30k steps with a 100k LR scheduler horizon.
+  - Monitored W&B to `trainer/global_step=5505` with state `running`; created Notion row `purple-steady-toucan (not interleaved)`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-parking-pudo-data-mix-train|2026-06-01 Parking PUDO Data Mix Train]]
 
 ## 2026-05-31 - UnPUDO Materialization Buckets
