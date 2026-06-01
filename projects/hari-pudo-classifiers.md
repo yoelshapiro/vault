@@ -69,3 +69,13 @@
 - Do not feed the raw event table directly to `run_clips` unless `timestamp_unixus` is already an exact corpus timestamp. `generate_run_clips_input` nearest-joins to `prod_data_pipeline.wayve_corpus.all_data` within tolerance and selects the required camera columns.
 - For the first clip, use a 32s window and 3x playback, matching Tom's concrete examples; the middle timestamp is highlighted in green.
 - Need from user before running: fully qualified event table name, timestamp column name for the standstill center, and confirmation that rows are `partner_uber` / Robotaxi.
+
+
+## 2026-06-01 One-Sample Source Filter Change
+- Modified `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py` to support smoke-testing directly from a source table without materializing a separate one-row table.
+- Added `--source-filter-expr` for Spark SQL filtering, `--limit` for selecting a small number of source rows, and `--vehicle-platform-id` as a fallback when the table lacks `_pipeline__vehicle_platform_id`.
+- Kept the `run_clips` five-camera set local in the generator and switched camera-column selection to lightweight imports so the utility does not import the full Flyte inference task registry on startup.
+- Deferred the Databricks Connect import until `main()` so `--help` works without a live Databricks Connect environment.
+- Verified with `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help`; the CLI exposes the new flags.
+- First smoke command should filter `hive_metastore.parking.pudo_unpudo_unpark_events` with `event_type = 'unpudo' AND speed_kmh < 0.1`, add `--limit 1`, and write one run_clips input parquet.
+- Risk: `--limit` is applied before the nearest corpus join, so a filtered first row can still produce zero output if no corpus row is within `--match-tolerance-seconds`. Increase tolerance or make the source filter/order more specific if that happens.

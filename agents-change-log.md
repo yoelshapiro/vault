@@ -717,3 +717,18 @@
   - Expanded regression coverage to `one-cycle`, `plateau`, and invalid override values.
   - Pushed commit `d908a40c3558`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]
+
+
+## 2026-06-01 - HARI PUDO One-Sample Clip Input
+
+- Topic: Allow one-sample UnPUDO standstill clip input generation directly from the event table.
+- Labels: parking, pudo, unpudo, hari, run-clips.
+- Branch: `tomboehling/hari_pudo`.
+- PR: N/A.
+- Change type: Script change / workflow prep.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`.
+- Changes:
+  - Added `--source-filter-expr`, `--limit`, and `--vehicle-platform-id` to avoid creating a separate one-row source table for smoke tests.
+  - Avoided eager imports of the full inference task registry and Databricks Connect during CLI startup.
+  - Verified the script help via Bazel and recorded the one-sample command pattern.
+- Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
