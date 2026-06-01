@@ -60,3 +60,12 @@
 - Inspect the relevant scripts and BUILD targets under `wayve/ai/datasets/annotation_operations_tools/scripts` and `wayve/ai/datasets/embeddings`.
 - Verify auth prerequisites: HARI env vars, Databricks token, Azure/ACR login, Flyte access.
 - Before running Bazel or workflow jobs, read any ADRs relevant to the exact code path being modified or executed.
+
+
+## 2026-06-01 UnPUDO Standstill Clip Plan
+- Goal: generate a smoke-test video clip for one Robotaxi UnPUDO standstill event before scaling to the full event table.
+- Use `partner_uber` as the vehicle platform for Robotaxi/Uber data unless the event table proves otherwise; `run_clips` is configured for five cameras: `front-forward,left-forward,right-forward,left-backward,right-backward`.
+- Recommended path is event table -> one-row smoke table/parquet -> `generate_run_clips_input` -> Flyte `run_clips` remote workflow.
+- Do not feed the raw event table directly to `run_clips` unless `timestamp_unixus` is already an exact corpus timestamp. `generate_run_clips_input` nearest-joins to `prod_data_pipeline.wayve_corpus.all_data` within tolerance and selects the required camera columns.
+- For the first clip, use a 32s window and 3x playback, matching Tom's concrete examples; the middle timestamp is highlighted in green.
+- Need from user before running: fully qualified event table name, timestamp column name for the standstill center, and confirmation that rows are `partner_uber` / Robotaxi.
