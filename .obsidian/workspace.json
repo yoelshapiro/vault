@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/hari-pudo-classifiers.md",
+                "file": "todo-list.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "hari-pudo-classifiers"
+              "title": "todo-list"
             }
           }
         ],
@@ -493,8 +493,8 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
-    "projects.md",
     "projects/hari-pudo-classifiers.md",
+    "projects.md",
     "todo-list.md",
     "Excalidraw/unparking_scenarios.excalidraw.md",
     "agents-change-log.md",
