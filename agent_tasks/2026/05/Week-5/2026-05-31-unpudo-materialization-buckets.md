@@ -34,6 +34,7 @@
 
 ## 2026-06-01 Update
 
+- Added concise notebook comments for fixed DC UnPUDO, unsafe/moving UnPUDO, and forward/reverse derivation; renamed DC departure output to `dc_unpudo_pre_departure_*`.
 - Added `pre_ca_unpudo_unsafe_*` materialization using the same unsafe raw anchors as unsafe CA short/long.
 - Replaced the separate `dc_unpudo_move_*` materialization path with a `USE_FIXED_UNPUDO_DC_EVENT_WINDOW` flag on the base `dc_unpudo_*` buckets.
 - With the flag enabled, base `dc_unpudo_usa` / `dc_unpudo_uk` use `timestamp_unixus` through `timestamp_unixus + 10s`.

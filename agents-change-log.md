@@ -631,6 +631,7 @@
   - Made base `dc_unpudo_*` buckets use `timestamp_unixus..timestamp_unixus+10s` when the flag is enabled.
   - Removed separate `dc_unpudo_move_*` bucket generation and merge wiring.
   - Added unsafe pre-CA UnPUDO buckets from the same unsafe raw anchors.
+  - Added comments for fixed DC UnPUDO, unsafe/moving UnPUDO, and forward/reverse derivation; renamed departure output to `dc_unpudo_pre_departure_*`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets|2026-05-31 UnPUDO Materialization Buckets]]
 
 ## 2026-06-01 - LR Scheduler Num Steps PR
