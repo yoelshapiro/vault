@@ -646,3 +646,16 @@
   - Used the override as scheduler `total_steps` when set, preserving `trainer.max_steps` fallback.
   - Added focused regression coverage and opened draft PR #115840.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]
+
+## 2026-06-01 - UnPUDO Materialization Deep Review
+
+- Topic: Review UnPUDO materialization notebook changes after fixed DC bucket and unsafe pre-CA updates.
+- Labels: parking, pudo, unpudo, materialization, review.
+- Branch: `boris/materialization_unsafe_moving_buckets`.
+- PR: N/A.
+- Change type: Review / validation.
+- Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb`, `/workspace/materialization/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Confirmed notebook invariants for fixed base DC UnPUDO, removed `dc_unpudo_move_*`, directional forward/reverse, unsafe pre-CA, and final merge groups.
+  - Noted downstream config still consumes `dc_unpudo_*_very_short` for train, not base `dc_unpudo_*`.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets|2026-05-31 UnPUDO Materialization Buckets]]

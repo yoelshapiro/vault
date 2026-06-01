@@ -45,3 +45,12 @@
 - Parsed all notebook code cells with Python `ast`.
 - Ran `git diff --check`.
 - Verified literal `dc_unpudo_move_*` / `joined_dc_move_tables` references are gone.
+
+## 2026-06-01 Deep Review
+
+- Re-traced DC, AV unsafe/moving, directional, gear-change, departure, and final merge paths.
+- Verified base `dc_unpudo_*` now owns the fixed 10s window and `dc_unpudo_move_*` is gone.
+- Verified forward/reverse variants still come from `joined_dc_tables` using `future_gear_direction`.
+- Verified unsafe now includes `pre_ca`, `ca_short`, and `ca_long`, and remains split from general and moving UnPUDO buckets.
+- Residual: current parking training config still references `dc_unpudo_*_very_short` for train, while the notebook fix targets base `dc_unpudo_*`; update config before using this materialization for training consumption.
+- Could not run Spark locally because `pyspark` is not installed in the local environment.
