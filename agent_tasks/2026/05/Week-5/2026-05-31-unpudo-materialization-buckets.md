@@ -23,6 +23,7 @@
 - Scoped the CA+1s moving-speed lookup to failed-to-UnPUDO candidate runs instead of all candidate runs.
 - Wired the concrete future-speed filter settings to the top-level future-speed flag to avoid drift.
 - Added runtime guards against duplicate bucket overwrites and accidental pre-CA unsafe buckets.
+- Updated parking training consumption so `dc_unpudo_move_*` is under `unpudo_dc`, old broad DC is `unpudo_dc_long` at zero weight, unsafe CA consumes `*_unsafe_*`, and general CA remains zero-weight.
 - Removed the materialization-side GPS/10m/acceleration movement-start recomputation and used the event notebook timestamp as the movement-start anchor.
 
 ## Verification
