@@ -20,3 +20,10 @@
 - `git diff --check` passed.
 - `bazel test //wayve/ai/si:py_test_test_training --test_arg=--no-cov --test_arg=-k --test_arg=lr_scheduler_num_steps` passed.
 - The same filtered test without `--no-cov` had selected tests pass but failed the suite coverage gate (`total 19 < fail-under 44`).
+
+## CI Snapshot Fix
+
+- CI failed `test_regression[bc]` because the baseline BC config snapshot did not include the new `lr_scheduler_num_steps: null` default.
+- Updated `/workspace/WayveCode/wayve/ai/si/test/test_config_inputs/reference_bc.yaml`.
+- Verification passed: `bazel test //wayve/ai/si:test_config_py_test_core --test_arg=-k --test_arg=test_regression`.
+- Pushed follow-up commit `8159e1b607d6` (`test: update bc config snapshot for lr scheduler steps`).

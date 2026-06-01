@@ -689,3 +689,17 @@
   - Added inline `track_tag=True` and `track_tag_group="pudo_unpudo"` to PUDO and UNPUDO train bucket definitions.
   - Left driving, unparking, gear-shift, and validation buckets unchanged.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-parking-pudo-data-mix-train|Parking PUDO Data Mix Train]]
+
+## 2026-06-01 - LR Scheduler Num Steps PR CI Fix
+
+- Topic: Fix PR #115840 baseline config snapshot CI failure.
+- Labels: training, lr-schedule, ci, config-snapshot.
+- Branch: `boris/lr-scheduler-num-steps`.
+- PR: https://github.com/wayveai/WayveCode/pull/115840
+- Change type: Test snapshot update.
+- Areas: `/workspace/WayveCode/wayve/ai/si/test/test_config_inputs/reference_bc.yaml`.
+- Changes:
+  - Added `lr_scheduler_num_steps: null` to the BC baseline config reference snapshot.
+  - Verified `test_regression` via `//wayve/ai/si:test_config_py_test_core`.
+  - Pushed follow-up commit `8159e1b607d6`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]
