@@ -630,4 +630,19 @@
   - Added `USE_FIXED_UNPUDO_DC_EVENT_WINDOW` and `UNPUDO_DC_FIXED_WINDOW_AFTER_START_US`.
   - Made base `dc_unpudo_*` buckets use `timestamp_unixus..timestamp_unixus+10s` when the flag is enabled.
   - Removed separate `dc_unpudo_move_*` bucket generation and merge wiring.
+  - Added unsafe pre-CA UnPUDO buckets from the same unsafe raw anchors.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets|2026-05-31 UnPUDO Materialization Buckets]]
+
+## 2026-06-01 - LR Scheduler Num Steps PR
+
+- Topic: Isolate BC LR scheduler horizon override from parking branch onto main.
+- Labels: parking, training, lr-schedule, pull-request.
+- Branch: `boris/lr-scheduler-num-steps`.
+- PR: https://github.com/wayveai/WayveCode/pull/115840
+- Change type: Code change / regression test / draft PR.
+- Areas: `/workspace/WayveCode/wayve/ai/si/config.py`, `/workspace/WayveCode/wayve/ai/si/models/training.py`, `/workspace/WayveCode/wayve/ai/si/test/models/test_training.py`.
+- Changes:
+  - Added `lr_scheduler_num_steps` config and training-module plumbing.
+  - Used the override as scheduler `total_steps` when set, preserving `trainer.max_steps` fallback.
+  - Added focused regression coverage and opened draft PR #115840.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]
