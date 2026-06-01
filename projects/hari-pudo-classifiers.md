@@ -100,3 +100,15 @@
 - Motivation: select all moving UnPUDO events (`event_type = 'unpudo' AND speed_kmh > 0.1`) plus a random 250 standstill UnPUDO events (`event_type = 'unpudo' AND speed_kmh < 0.1`) in one input generation pass.
 - Verified `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help`; CLI now exposes `--source-sql`.
 - Use `ORDER BY rand()` for fresh random samples, or `ORDER BY rand(<seed>)` for deterministic repeatability.
+
+
+## 2026-06-01 Mixed UnPUDO Flyte Batch
+- Batch timestamp: `20260601_204806_UTC`.
+- Source selection: all `event_type = 'unpudo' AND speed_kmh > 0.1` plus 250 random `event_type = 'unpudo' AND speed_kmh < 0.1` rows.
+- Generated run_clips input parquet: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/mixed_20260601_204806_UTC/run_clips_input.parquet`.
+- Matched clip rows generated: 492.
+- Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a9n8glpdgt859n4l5kpz.
+- Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/mixed_20260601_204806_UTC/gen2/`.
+- Parallelization config: `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
+- Video args: `clip_length_sec=32`, `highlight_middle_seconds=1.0`, `video_speed=3`.
+- Initial status at launch: running with nodes `n0` and `n1`; output prefix empty immediately after launch.
