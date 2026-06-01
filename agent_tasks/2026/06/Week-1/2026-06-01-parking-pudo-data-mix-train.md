@@ -42,3 +42,11 @@
 - Did not tag driving, unparking, gear-shift, or validation buckets.
 - Validation: `git diff --check -- wayve/ai/si/configs/parking/parking_config.py` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
 - Commit: pending.
+
+## Nested Track Tag Config
+
+- Converted train buckets to nested groups while preserving effective driving budget at 50%.
+- Preserved previous PUDO leaf ratios inside nested `pudo_dc` / `pudo_ca`: DC total 0.6024, CA/pre-CA boosted total 0.3976.
+- Added `pudo_unpudo` track tags through `PUDOBucketCfg` for PUDO, UNPUDO, and gear-change buckets.
+- Added `park_unpark` track tags through `PARKBucketCfg` for unparking buckets.
+- Validation: `git diff --check` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
