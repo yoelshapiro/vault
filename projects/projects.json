@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "HARI PUDO classifiers",
+      "slug": "hari-pudo-classifiers",
+      "path": "/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md",
+      "status": "active",
+      "phase": "Initial investigation",
+      "last_updated": "2026-06-01"
+    },
+    {
       "name": "Generic Materialisation Parking PUDO Migration",
       "slug": "generic-materialisation-parking-pudo-migration",
       "path": "/home/borisindelman/git/vault/projects/generic-materialisation-parking-pudo-migration.md",

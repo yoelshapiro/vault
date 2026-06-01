@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-01 - HARI PUDO Classifiers
+
+- Topic: Create worktree and initial vault project page for Tom Boehling's HARI PUDO classifier workflow.
+- Labels: parking, pudo, hari, classifiers, video-generation.
+- Branch: `tomboehling/hari_pudo`.
+- PR: N/A.
+- Change type: Worktree setup / investigation note.
+- Areas: `/workspace/classifiers`, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Changes:
+  - Created `/workspace/classifiers` as a git worktree on `tomboehling/hari_pudo`.
+  - Fast-forwarded the local branch to `origin/tomboehling/hari_pudo` at `09109967f05c`.
+  - Read the linked video generation README and summarized the Spark, Flyte, HARI upload, annotation download, sampled-frame, train, and infer workflow.
+  - Recorded Tom's HARI dataset and pipeline links plus initial risks before starting implementation work.
+- Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
 ## 2026-06-01 - Parking PUDO Data Mix Train
 
 - Topic: Rebalance parking PUDO/UNPUDO data mix and submit 30K training.
