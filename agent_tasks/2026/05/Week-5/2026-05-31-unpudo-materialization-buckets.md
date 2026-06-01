@@ -34,6 +34,7 @@
 
 ## 2026-06-01 Update
 
+- Stripped stale notebook execution errors and a temporary test comment before PR creation.
 - Added concise notebook comments for fixed DC UnPUDO, unsafe/moving UnPUDO, and forward/reverse derivation; renamed DC departure output to `dc_unpudo_pre_departure_*`.
 - Added `pre_ca_unpudo_unsafe_*` materialization using the same unsafe raw anchors as unsafe CA short/long.
 - Replaced the separate `dc_unpudo_move_*` materialization path with a `USE_FIXED_UNPUDO_DC_EVENT_WINDOW` flag on the base `dc_unpudo_*` buckets.
