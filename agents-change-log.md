@@ -703,3 +703,17 @@
   - Verified `test_regression` via `//wayve/ai/si:test_config_py_test_core`.
   - Pushed follow-up commit `8159e1b607d6`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]
+
+## 2026-06-01 - LR Scheduler Num Steps PR Review Fixes
+
+- Topic: Address PR #115840 agentic review comments.
+- Labels: training, lr-schedule, ci, pull-request.
+- Branch: `boris/lr-scheduler-num-steps`.
+- PR: https://github.com/wayveai/WayveCode/pull/115840
+- Change type: Code fix / regression tests.
+- Areas: `/workspace/WayveCode/wayve/ai/si/models/training.py`, `/workspace/WayveCode/wayve/ai/si/test/models/test_training.py`.
+- Changes:
+  - Made `lr_scheduler_num_steps` fallback explicit and reject non-positive values.
+  - Expanded regression coverage to `one-cycle`, `plateau`, and invalid override values.
+  - Pushed commit `d908a40c3558`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]

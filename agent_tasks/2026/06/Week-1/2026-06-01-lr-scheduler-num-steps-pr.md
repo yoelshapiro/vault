@@ -27,3 +27,15 @@
 - Updated `/workspace/WayveCode/wayve/ai/si/test/test_config_inputs/reference_bc.yaml`.
 - Verification passed: `bazel test //wayve/ai/si:test_config_py_test_core --test_arg=-k --test_arg=test_regression`.
 - Pushed follow-up commit `8159e1b607d6` (`test: update bc config snapshot for lr scheduler steps`).
+
+## PR Review Comment Fixes
+
+- Addressed agentic PR review comments on PR #115840.
+- Replaced `self.lr_scheduler_num_steps or self.trainer.max_steps` with explicit `None` fallback and non-positive value validation.
+- Expanded scheduler regression coverage to both `one-cycle` and `plateau` branches.
+- Added regression coverage for `0` and negative `lr_scheduler_num_steps` raising `ValueError`.
+- Verification passed:
+  - `git diff --check`
+  - `bazel test //wayve/ai/si:py_test_test_training --test_arg=--no-cov --test_arg=-k --test_arg='lr_scheduler_num_steps or non_positive_lr_scheduler_num_steps'`
+  - `bazel test //wayve/ai/si:py_lint_ruff`
+- Pushed follow-up commit `d908a40c3558` (`fix: validate lr scheduler step override`).
