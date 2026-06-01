@@ -35,3 +35,10 @@
 - 2026-06-01T07:54:23Z: W&B state `running`, `trainer/global_step=5505`, `trainer/train_step=5505`.
 - Passed requested 5K monitor gate.
 - Notion model-card row created: https://www.notion.so/37203da5d69a816491fcfcb2710ec90c
+
+## Track Tag Loss Groups
+
+- Added `track_tag=True` / `track_tag_group` wiring for PUDO-root train buckets in `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
+- Groups match the training mix: `pudo`, `unpudo_dc_long`, `unpudo_dc_short`, `unpudo_ca`, `unpudo_ca_moving`, `unpudo_ca_unsafe`, `unpudo_departure`, `unparking`, `gear_shift`.
+- Validation: `git diff --check -- wayve/ai/si/configs/parking/parking_config.py` passed; `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
+- Commit: pending.

@@ -659,3 +659,17 @@
   - Confirmed notebook invariants for fixed base DC UnPUDO, removed `dc_unpudo_move_*`, directional forward/reverse, unsafe pre-CA, and final merge groups.
   - Noted downstream config still consumes `dc_unpudo_*_very_short` for train, not base `dc_unpudo_*`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets|2026-05-31 UnPUDO Materialization Buckets]]
+
+## 2026-06-01 - Parking PUDO Bucket Loss Tags
+
+- Topic: Add grouped loss tracking metadata to Parking PUDO train buckets.
+- Labels: parking, pudo, unpudo, training, config.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick`.
+- PR: N/A.
+- Change type: Config change.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Added PUDO-root bucket to `track_tag_group` mapping for PUDO, UnPUDO, unparking, and gear-shift train buckets.
+  - Applied `track_tag=True` only to training partitions from `PUDO_BUCKETS_ROOT`; validation and driving buckets stay unchanged.
+  - Validated with `git diff --check` and the parking release config resolution Bazel test.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-parking-pudo-data-mix-train|Parking PUDO Data Mix Train]]
