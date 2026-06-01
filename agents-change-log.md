@@ -617,3 +617,17 @@
   - Submitted job `172457` / `hedgehog-modest-amaranth`, session `session_2026_05_31_21_12_58_p521tele30k`.
   - Monitored to `trainer/global_step=5074` with Surfboard and W&B still running.
   - Created Notion model-card row `hedgehog-modest-amaranth (not interleaved)`.
+
+## 2026-06-01 - UnPUDO DC Fixed Window Buckets
+
+- Topic: Fold DC UnPUDO move-window materialization into the base DC UnPUDO buckets.
+- Labels: parking, pudo, unpudo, materialization, notebook.
+- Branch: `boris/materialization_unsafe_moving_buckets`.
+- PR: N/A.
+- Change type: Notebook code change.
+- Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb`.
+- Changes:
+  - Added `USE_FIXED_UNPUDO_DC_EVENT_WINDOW` and `UNPUDO_DC_FIXED_WINDOW_AFTER_START_US`.
+  - Made base `dc_unpudo_*` buckets use `timestamp_unixus..timestamp_unixus+10s` when the flag is enabled.
+  - Removed separate `dc_unpudo_move_*` bucket generation and merge wiring.
+- Task note: [[agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets|2026-05-31 UnPUDO Materialization Buckets]]

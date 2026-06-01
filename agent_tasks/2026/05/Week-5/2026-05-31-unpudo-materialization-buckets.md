@@ -31,3 +31,16 @@
 - Ran `python -m json.tool` on the notebook.
 - Parsed all notebook code cells with Python `ast`.
 - Ran `git diff --check`.
+
+## 2026-06-01 Update
+
+- Replaced the separate `dc_unpudo_move_*` materialization path with a `USE_FIXED_UNPUDO_DC_EVENT_WINDOW` flag on the base `dc_unpudo_*` buckets.
+- With the flag enabled, base `dc_unpudo_usa` / `dc_unpudo_uk` use `timestamp_unixus` through `timestamp_unixus + 10s`.
+- Removed `joined_dc_move_tables` from final bucket merging, so no `dc_unpudo_move_*` buckets are emitted.
+
+## 2026-06-01 Verification
+
+- Ran `python3 -m json.tool` on the notebook.
+- Parsed all notebook code cells with Python `ast`.
+- Ran `git diff --check`.
+- Verified literal `dc_unpudo_move_*` / `joined_dc_move_tables` references are gone.
