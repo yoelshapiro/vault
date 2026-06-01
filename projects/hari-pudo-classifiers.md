@@ -93,3 +93,10 @@
 - Local qualitymatch upload failed with AzCopy 403 for ; uploaded the encoded MP4 instead to .
 - Local file for inspection: .
 - Code changes made for this smoke path:  filter/limit/platform/runID support, BUILD dep ordering, scoped inference task registry imports, and old-branch calibration compatibility.
+
+
+## 2026-06-01 Mixed UnPUDO Source Query
+- Added `--source-sql` to `generate_run_clips_input.py` so the source rows can be a Spark SQL query rather than only a table/parquet path.
+- Motivation: select all moving UnPUDO events (`event_type = 'unpudo' AND speed_kmh > 0.1`) plus a random 250 standstill UnPUDO events (`event_type = 'unpudo' AND speed_kmh < 0.1`) in one input generation pass.
+- Verified `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help`; CLI now exposes `--source-sql`.
+- Use `ORDER BY rand()` for fresh random samples, or `ORDER BY rand(<seed>)` for deterministic repeatability.
