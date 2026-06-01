@@ -729,6 +729,7 @@
 - Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`.
 - Changes:
   - Added `--source-filter-expr`, `--limit`, and `--vehicle-platform-id` to avoid creating a separate one-row source table for smoke tests.
+  - Parsed `--match-tolerance-seconds` as a float for CLI-specified tolerances.
   - Avoided eager imports of the full inference task registry and Databricks Connect during CLI startup.
   - Verified the script help via Bazel and recorded the one-sample command pattern.
 - Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]

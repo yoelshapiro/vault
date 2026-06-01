@@ -76,6 +76,7 @@
 - Added `--source-filter-expr` for Spark SQL filtering, `--limit` for selecting a small number of source rows, and `--vehicle-platform-id` as a fallback when the table lacks `_pipeline__vehicle_platform_id`.
 - Kept the `run_clips` five-camera set local in the generator and switched camera-column selection to lightweight imports so the utility does not import the full Flyte inference task registry on startup.
 - Deferred the Databricks Connect import until `main()` so `--help` works without a live Databricks Connect environment.
+- Set `--match-tolerance-seconds` to parse as a float so wider tolerances like `0.2` work from the CLI.
 - Verified with `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help`; the CLI exposes the new flags.
 - First smoke command should filter `hive_metastore.parking.pudo_unpudo_unpark_events` with `event_type = 'unpudo' AND speed_kmh < 0.1`, add `--limit 1`, and write one run_clips input parquet.
 - Risk: `--limit` is applied before the nearest corpus join, so a filtered first row can still produce zero output if no corpus row is within `--match-tolerance-seconds`. Increase tolerance or make the source filter/order more specific if that happens.
