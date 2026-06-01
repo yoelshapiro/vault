@@ -71,3 +71,9 @@
 - W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_01_16_58_00_p521reldrv30k
 - Datadog: https://app.datadoghq.eu/logs?query=job_name%3Awhite-friendly-mastiff-172845&from_ts=1779123480748&cols=job_name%2Cnode_rank&live=true
 - Initial submission: queued, `max_restarts=0`.
+
+## Release Driving 5K Monitor
+
+- 2026-06-01: W&B state `running`, `trainer/global_step=15999`, `trainer/train_step=16000`.
+- Passed requested 5K monitor gate.
+- Notion model-card row created: https://www.notion.so/37203da5d69a81abab51e90d1527d757
