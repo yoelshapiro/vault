@@ -733,3 +733,17 @@
   - Avoided eager imports of the full inference task registry and Databricks Connect during CLI startup.
   - Verified the script help via Bazel and recorded the one-sample command pattern.
 - Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
+## 2026-06-01 - HARI UnPUDO Smoke Clip
+
+- Topic: Generate one UnPUDO standstill run_clips smoke video from the parking event table.
+- Labels: parking, pudo, unpudo, hari, run-clips, flyte.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Script change / workflow run / smoke validation.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`, `/workspace/classifiers/wayve/ai/datasets/flyte/inference_tasks/__init__.py`, `/workspace/classifiers/wayve/ai/lib/calibration.py`.
+- Changes:
+  - Generated a one-row `run_clips` input parquet from `hive_metastore.parking.pudo_unpudo_unpark_events` using an exact `gen2` UnPUDO standstill event.
+  - Ran remote Flyte execution `ac5pcvl8wsx79fj499f2`; setup succeeded but Spark node failed with a system error after scheduling latency.
+  - Ran the documented local workflow, fixed an old-branch calibration API mismatch, encoded a 1920x1080 smoke MP4, and uploaded it to `wayveproddataset/databricks-users`.
+- Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]

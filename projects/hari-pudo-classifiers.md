@@ -10,9 +10,9 @@
 - **Status:** active
 - **Last updated:** 2026-06-01
 - **Worktree:** `/workspace/classifiers`
-- **Branch:** `tomboehling/hari_pudo`
+- **Branch:** `boris/hari_pudo`
 - **HEAD:** `09109967f05c` (`Merge branch 'main' into tomboehling/classifier_studio`)
-- **Branch state vs `origin/main`:** 23 commits behind, 91 commits ahead as of 2026-06-01.
+- **Branch state:** local branch `boris/hari_pudo` from Tom branch; not pushed.
 
 ## Source Links
 - Branch: `tomboehling/hari_pudo`
@@ -79,7 +79,7 @@
 - Set `--match-tolerance-seconds` to parse as a float so wider tolerances like `0.2` work from the CLI.
 - Verified with `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help`; the CLI exposes the new flags.
 - First smoke command should filter `hive_metastore.parking.pudo_unpudo_unpark_events` with `event_type = 'unpudo' AND speed_kmh < 0.1`, add `--limit 1`, and write one run_clips input parquet.
-- Risk: `--limit` is applied before the nearest corpus join, so a filtered first row can still produce zero output if no corpus row is within `--match-tolerance-seconds`. Increase tolerance or make the source filter/order more specific if that happens.
+- Updated risk: `--limit` now applies after the nearest corpus join so smoke runs select one matched output row; for predictable debugging, use an exact `runID` and `timestamp_unixus` filter.
 
 
 ## 2026-06-01 Smoke Clip Run
