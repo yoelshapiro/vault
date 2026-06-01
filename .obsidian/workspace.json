@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/generic-materialisation-parking-pudo-migration.md",
+                "file": "todo-list.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "generic-materialisation-parking-pudo-migration"
+              "title": "todo-list"
             }
           }
         ],
@@ -493,15 +493,16 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "Excalidraw/unparking_scenarios.excalidraw.md",
+    "agents-change-log.md",
+    "projects.md",
+    "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr.md",
     "agent_tasks/2026/06/Week-1/2026-06-01-parking-pudo-data-mix-train.md",
     "agent_tasks/2026/06/Week-1",
     "agent_tasks/2026/06",
     "agent_tasks/2026/05/Week-5/2026-05-31-parking-2026-5-21-baseline-config.md",
     "agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets.md",
-    "projects.md",
-    "agents-change-log.md",
-    "Excalidraw/unparking_scenarios.excalidraw.md",
     "agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon.md",
     "todo-list.md",
     "agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores.md",
     "agent_tasks/2026/05/Week-5/2026-05-26-pr102690-open-review-code-fixes.md",
     "agent_tasks/2026/05/Week-5/2026-05-26-eval-studio-suite-scores-skill.md",
-    "agent_tasks/2026/05/Week-5/2026-05-26-parking-branch-signing-push-repair.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
