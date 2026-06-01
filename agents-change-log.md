@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-01 - Parking PUDO Data Mix Train
+
+- Topic: Rebalance parking PUDO/UNPUDO data mix and submit 30K training.
+- Labels: parking, pudo, unpudo, training, data-mix.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick`.
+- PR: N/A.
+- Change type: Config change / training run.
+- Areas: `/workspace/default/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Updated parking config to use the 2026-05-31 PUDO/UNPUDO materialized root.
+  - Rebalanced weights to 50% driving, 20% PUDO, 22% UNPUDO, 8% gear shift, and 0% unparking.
+  - Split active UNPUDO as 10% short DC, 6% CA moving, and 6% departure; kept long DC, general CA, unsafe CA, and unparking at 0%.
+  - Committed `21bd35f8a9bf` and submitted job `172591` / `purple-steady-toucan` for 30k steps with a 100k LR scheduler horizon.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-parking-pudo-data-mix-train|2026-06-01 Parking PUDO Data Mix Train]]
+
 ## 2026-05-31 - UnPUDO Materialization Buckets
 
 - Topic: Update parking PUDO/UnPUDO materialization notebook bucket definitions.
