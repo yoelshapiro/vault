@@ -124,3 +124,15 @@
 - Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/mixed_20260602_082145_UTC/gen2/`.
 - Input parquet reused: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/mixed_20260601_204806_UTC/run_clips_input.parquet` with 492 matched rows.
 - Launcher confirmed local image mapping to the published digest. Initial status: `n0` and `n1` running, no errors yet.
+
+
+## 2026-06-02 Follow-up Filter Dataset Fix
+- Execution `a9lgsnpj2mjz7ctlr6kl` used the corrected 16-input Flyte interface and progressed into `n2`, proving the original `17 > 16` FlyteKit schema mismatch was fixed.
+- It then failed inside `filter_and_chunk` with `TypeError: filter_dataset() missing 1 required positional argument: 'vehicle_platform'`.
+- Cause: this branch's `filter_dataset` helper still accepts `(dataset_parquet, dataset_delta, vehicle_platform, ...)`; the compatibility patch had removed `dataset_delta` from the helper call as well as from the Flyte task interface.
+- Fix: keep `dataset_delta` out of Flyte inputs, but pass `None` internally: `filter_dataset(dataset_parquet, None, vehicle_platform.value, columns_to_select=columns_to_select)`.
+- Validation: `bazel build //wayve/ai/datasets/flyte:workflow_remote_docker` succeeded.
+- Published corrected image digest: `sha256:9cb2f01978f01dee268d092399c40d6a3985c04af69171751cfe775a2af8e9c3`.
+- Relaunched Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a4mxf5wdrsvhgm5dv9st.
+- Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/mixed_20260602_083706_UTC/gen2/`.
+- Initial status: `n0` and `n1` running, no errors yet.
