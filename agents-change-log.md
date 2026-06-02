@@ -832,3 +832,17 @@
   - Verified with Flyte subtree build, Flyte lint, and direct `test_run_clips.py`; documented unrelated embedding-head collection failure in the project note.
   - Published corrected image digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da` and launched execution `a97nqrpw2gb6rd2ljrn9` to `camera_present_drop_missing_20260602_095509_UTC`.
 - Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
+## 2026-06-02 - UnPUDO Run Clips Completion and Blob Viewer
+
+- Topic: Confirm completed UnPUDO clip batch and serve blob-backed video browser.
+- Labels: parking, unpudo, hari, flyte, video-generation.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Workflow status / local viewing setup.
+- Areas: Flyte `run_clips` execution `a97nqrpw2gb6rd2ljrn9`, `/tmp/unpudo_clip_serve/index.html`.
+- Changes:
+  - Confirmed Flyte execution `a97nqrpw2gb6rd2ljrn9` succeeded, with `end-node` complete at 2026-06-02 12:55:24 UTC.
+  - Counted 496 generated MP4 blobs in `camera_present_drop_missing_20260602_095509_UTC/gen2`.
+  - Reused the existing port `3000` server and replaced the served index with a blob-backed viewer using signed Azure Blob URLs, avoiding local MP4 downloads.
+- Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]

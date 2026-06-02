@@ -168,3 +168,7 @@
 - Initial status at 09:56 UTC: `start-node` succeeded, `n0` and `n1` running; new output prefix count was 0 immediately after launch.
 
 - Follow-up status at 09:59 UTC: `n0` and `n1` succeeded; `n2` Spark filter/chunk is running; output prefix still has 0 MP4s before map workers start.
+
+- Final status at 15:36 UTC: execution `a97nqrpw2gb6rd2ljrn9` succeeded end-to-end; `end-node` completed at 2026-06-02 12:55:24 UTC.
+- Output count: 496 MP4s under `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/camera_present_drop_missing_20260602_095509_UTC/gen2/`.
+- Local viewing setup: port `3000` serves `/tmp/unpudo_clip_serve/index.html`, which references signed Azure Blob URLs directly instead of downloading the MP4s locally. The container SAS expires at 2026-06-03 23:59 UTC.
