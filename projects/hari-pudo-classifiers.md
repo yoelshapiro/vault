@@ -136,3 +136,20 @@
 - Relaunched Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a4mxf5wdrsvhgm5dv9st.
 - Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/mixed_20260602_083706_UTC/gen2/`.
 - Initial status: `n0` and `n1` running, no errors yet.
+
+
+## 2026-06-02 Camera-Present Filter and Rerun
+- Execution `a4mxf5wdrsvhgm5dv9st` reached parallel `dn0` workers, proving the Flyte launch/image/interface fixes worked, but workers started failing on missing camera video data. Primary log signal: `Video file is not available ... camera=right_backward, video_path=None`.
+- Root cause classification: data validity, not Flyte parallelization or the SQL union itself. The original input generator selected nearest corpus rows but did not require camera `video_file_name` fields to be present.
+- Added `--require-camera-video-files` to `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`; it filters matched `all_data` rows to require all five run_clips camera `video_file_name` fields at the event timestamp.
+- Also added `--clip-length-sec` and `--require-full-clip-window` plumbing for stricter future validation. A full-window Spark range join was attempted but was too slow for this interactive run, so the active rerun uses the cheap exact-row camera-present guard.
+- Validation: `bazel build //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input` succeeded, and `bazel run //wayve/ai/datasets/annotation_operations_tools/scripts:generate_run_clips_input -- --help` exposed the new flags.
+- New source selection: all `event_type = 'unpudo' AND speed_kmh > 0.1` plus 250 random `event_type = 'unpudo' AND speed_kmh < 0.1` rows.
+- New input parquet: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/camera_present_20260602_092236_UTC/run_clips_input.parquet`.
+- Matched camera-present rows generated: 497.
+- New Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/askdlss5f75w6tszggdr.
+- Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/camera_present_20260602_092236_UTC/gen2/`.
+- Parallelization config: `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
+- Video args: `clip_length_sec=32`, `highlight_middle_seconds=1.0`, `video_speed=3`.
+- Launch image mapping: `datasets_flyte_workflow@sha256:9cb2f01978f01dee268d092399c40d6a3985c04af69171751cfe775a2af8e9c3`.
+- Current status at note update: execution `askdlss5f75w6tszggdr` is running in `n2` Spark filter/chunk; Loki shows active Parquet writes around 09:27 UTC.

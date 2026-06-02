@@ -802,3 +802,18 @@
   - Removed stale `dataset_delta` from the workflow/task interface so the launched workflow matches the remote task input schema.
   - Built `//wayve/ai/datasets/flyte/...`, published a test workflow image, and relaunched execution `a9lgsnpj2mjz7ctlr6kl` with a fresh timestamped output prefix.
 - Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
+## 2026-06-02 - UnPUDO Run Clips Camera-Present Rerun
+
+- Topic: Filter UnPUDO run_clips inputs for five-camera video availability and relaunch the Flyte batch.
+- Labels: parking, unpudo, hari, flyte, video-generation.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Code change / Flyte experiment.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`, `/workspace/classifiers/wayve/ai/datasets/flyte`, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Changes:
+  - Diagnosed latest worker failures as missing camera video data (`right_backward`, `video_path=None`) rather than a Flyte/query parallelization issue.
+  - Added exact-row camera `video_file_name` validation to `generate_run_clips_input.py` via `--require-camera-video-files`; kept stricter full-window validation plumbing for future use.
+  - Generated `camera_present_20260602_092236_UTC/run_clips_input.parquet` with 497 rows from all moving UnPUDO plus 250 random standstill UnPUDO candidates.
+  - Launched Flyte execution `askdlss5f75w6tszggdr` with `chunk_size=1`, `num_concurrent_tasks=50`, 32s clips, 1s highlight, and 3x playback.
+- Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
