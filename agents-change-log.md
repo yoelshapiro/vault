@@ -788,3 +788,17 @@
   - Preserved `wayve/ai/zoo/data/parking.py` and kept the final diff to 17 intended files.
   - Verified config resolution plus focused deployment, training, and behavior-customization tests.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-02-pudo-baseline-pr|2026-06-02 PUDO Baseline PR]]
+
+## 2026-06-02 - HARI UnPUDO Flyte Interface Fix
+
+- Topic: Fix Flyte input-schema mismatch and rerun mixed UnPUDO clip generation.
+- Labels: parking, pudo, unpudo, hari, run-clips, flyte.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Code fix / image publish / workflow run.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/flyte/workflow.py`, `/workspace/classifiers/wayve/ai/datasets/flyte/common/infra/orchestration.py`, Flyte `run_clips` workflow.
+- Changes:
+  - Diagnosed failed execution `a9n8glpdgt859n4l5kpz` as a FlyteKit input decoding mismatch, not a source query problem.
+  - Removed stale `dataset_delta` from the workflow/task interface so the launched workflow matches the remote task input schema.
+  - Built `//wayve/ai/datasets/flyte/...`, published a test workflow image, and relaunched execution `a9lgsnpj2mjz7ctlr6kl` with a fresh timestamped output prefix.
+- Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]

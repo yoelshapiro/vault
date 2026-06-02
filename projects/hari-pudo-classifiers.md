@@ -112,3 +112,15 @@
 - Parallelization config: `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
 - Video args: `clip_length_sec=32`, `highlight_middle_seconds=1.0`, `video_speed=3`.
 - Initial status at launch: running with nodes `n0` and `n1`; output prefix empty immediately after launch.
+
+
+## 2026-06-02 Mixed Flyte Batch Fix and Rerun
+- Root cause for failed execution `a9n8glpdgt859n4l5kpz`: the Spark driver failed before processing data with `ValueError: Received more input values 17 than allowed by the input spec 16`.
+- Cause: Tom's branch added `dataset_delta` to `main_workflow` / `filter_and_chunk`, but the registered remote task image expected the 16-input main interface. This was not caused by the SQL query or by using parquet instead of a table.
+- Fix: removed the stale `dataset_delta` Flyte interface from `/workspace/classifiers/wayve/ai/datasets/flyte/workflow.py` and `/workspace/classifiers/wayve/ai/datasets/flyte/common/infra/orchestration.py`; the run uses `dataset_parquet` only.
+- Validation: `bazel build //wayve/ai/datasets/flyte/...` succeeded.
+- Published test image via `make publish-test -C wayve/ai/datasets/flyte`: `wayveacrprodflyte.azurecr.io/datasets_flyte_workflow:borisindel-tmp-build-d4c00056fe02-boris-hari_pudo-9f693`, digest `sha256:c68e472a45260168c0faba9a2b97c3621999c4bf103f3cc7f252eaf242b1f351`.
+- Relaunched Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a9lgsnpj2mjz7ctlr6kl.
+- Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/mixed_20260602_082145_UTC/gen2/`.
+- Input parquet reused: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/mixed_20260601_204806_UTC/run_clips_input.parquet` with 492 matched rows.
+- Launcher confirmed local image mapping to the published digest. Initial status: `n0` and `n1` running, no errors yet.
