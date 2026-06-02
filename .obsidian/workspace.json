@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-1/2026-06-02-pudo-baseline-pr.md",
     "projects/hari-pudo-classifiers.md",
     "projects.md",
     "todo-list.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/05/Week-5/2026-05-26-parking-deploy-console-pudo-experiments.md",
     "agent_tasks/2026/05/Week-5/2026-05-26-fold-parking-deploy-skills.md",
     "agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores.md",
-    "agent_tasks/2026/05/Week-5/2026-05-26-pr102690-open-review-code-fixes.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
