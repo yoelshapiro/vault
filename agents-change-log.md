@@ -773,3 +773,18 @@
   - Generated 492 matched `run_clips` input rows from all moving UnPUDO events plus 250 random standstill rows.
   - Launched Flyte execution `a9n8glpdgt859n4l5kpz` with timestamped output prefix and `chunk_size=1`, `num_concurrent_tasks=50`.
 - Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
+## 2026-06-02 - Parking PUDO Baseline PR
+
+- Topic: Create clean Parking PUDO baseline PR from current main.
+- Labels: parking, pudo, baseline, pr, config, deployment.
+- Branch: `06-02-pudo-baseline`.
+- PR: https://github.com/wayveai/WayveCode/pull/116069.
+- Change type: Code change / PR.
+- Areas: `/tmp/pudo-baseline-pr/wayve/ai/si`, `/tmp/pudo-baseline-pr/wayve/ai/zoo/deployment`, `/tmp/pudo-baseline-pr/wayve/ai/lib`.
+- Changes:
+  - Added the active Parking PUDO datamodule config for the new root and release `2026_5_21` mode.
+  - Removed the interleave-control wrapper/training plumbing from the PR scope.
+  - Preserved `wayve/ai/zoo/data/parking.py` and kept the final diff to 17 intended files.
+  - Verified config resolution plus focused deployment, training, and behavior-customization tests.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-02-pudo-baseline-pr|2026-06-02 PUDO Baseline PR]]
