@@ -817,3 +817,18 @@
   - Generated `camera_present_20260602_092236_UTC/run_clips_input.parquet` with 497 rows from all moving UnPUDO plus 250 random standstill UnPUDO candidates.
   - Launched Flyte execution `askdlss5f75w6tszggdr` with `chunk_size=1`, `num_concurrent_tasks=50`, 32s clips, 1s highlight, and 3x playback.
 - Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
+## 2026-06-02 - UnPUDO Run Clips Segment Cleanup Rerun
+
+- Topic: Fix full-window missing-camera failures in UnPUDO run_clips and launch corrected Flyte batch.
+- Labels: parking, unpudo, hari, flyte, video-generation, run-clips.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Code change / image publish / workflow run.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/flyte/inference_tasks/run_clips/run_clips.py`, Flyte `run_clips` workflow, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Changes:
+  - Diagnosed remaining failures as full-window missing camera metadata despite valid center-row camera filenames.
+  - Added guarded `drop_rows_with_missing_camera_video_files` support to filter unusable segment rows before dataloader decoding.
+  - Verified with Flyte subtree build, Flyte lint, and direct `test_run_clips.py`; documented unrelated embedding-head collection failure in the project note.
+  - Published corrected image digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da` and launched execution `a97nqrpw2gb6rd2ljrn9` to `camera_present_drop_missing_20260602_095509_UTC`.
+- Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]

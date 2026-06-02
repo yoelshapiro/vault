@@ -153,3 +153,16 @@
 - Video args: `clip_length_sec=32`, `highlight_middle_seconds=1.0`, `video_speed=3`.
 - Launch image mapping: `datasets_flyte_workflow@sha256:9cb2f01978f01dee268d092399c40d6a3985c04af69171751cfe775a2af8e9c3`.
 - Current status at note update: execution `askdlss5f75w6tszggdr` is running in `n2` Spark filter/chunk; Loki shows active Parquet writes around 09:27 UTC.
+
+
+## 2026-06-02 Segment Missing-Camera Cleanup Rerun
+- Execution `askdlss5f75w6tszggdr` proved the exact-row camera-present input filter was insufficient: by 09:47 UTC it had generated 49 MP4s, but Loki still showed repeated full-window failures such as `Video file is not available ... camera=right_backward, video_path=None`.
+- Root cause refinement: `run_clips` decodes a 32s window around each event, so center-row camera metadata can be valid while neighbouring sampled rows in the clip window have missing camera `video_file_name` values.
+- Fix added in `/workspace/classifiers/wayve/ai/datasets/flyte/inference_tasks/run_clips/run_clips.py`: optional `extra_args.drop_rows_with_missing_camera_video_files` filters the loaded segment to rows where all selected camera `video_file_name` columns are present before creating the drive dataloader. It logs dropped/remaining rows and keeps clips with usable five-camera frames instead of failing the whole chunk on sparse missing rows.
+- Verification: `bazel build //wayve/ai/datasets/flyte/...` passed; `bazel test //wayve/ai/datasets/flyte:py_lint` passed; direct run-clips test passed with `bazel test //wayve/ai/datasets/flyte:py_test --test_arg=wayve/ai/datasets/flyte/inference_tasks/test/test_run_clips.py`. The broader `py_test --test_arg=-k --test_arg=run_clips` failed during unrelated embedding-head collection on missing `wayve.ai.datasets.embeddings.configs.siamese`.
+- Publish: first publish retry failed on ACR auth for `wayve.azurecr.io/spark_k8s_base` (`401 Unauthorized`); refreshed `az acr login` for `wayve`, `wayvetraining`, and `wayveacrprodflyte`, then published corrected image digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da`.
+- New Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a97nqrpw2gb6rd2ljrn9.
+- New output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/camera_present_drop_missing_20260602_095509_UTC/gen2/`.
+- Input parquet reused: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/camera_present_20260602_092236_UTC/run_clips_input.parquet` with 497 rows.
+- Launch args: `clip_length_sec=32`, `highlight_middle_seconds=1.0`, `video_speed=3`, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
+- Initial status at 09:56 UTC: `start-node` succeeded, `n0` and `n1` running; new output prefix count was 0 immediately after launch.
