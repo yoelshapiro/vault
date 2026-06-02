@@ -166,3 +166,5 @@
 - Input parquet reused: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/camera_present_20260602_092236_UTC/run_clips_input.parquet` with 497 rows.
 - Launch args: `clip_length_sec=32`, `highlight_middle_seconds=1.0`, `video_speed=3`, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
 - Initial status at 09:56 UTC: `start-node` succeeded, `n0` and `n1` running; new output prefix count was 0 immediately after launch.
+
+- Follow-up status at 09:59 UTC: `n0` and `n1` succeeded; `n2` Spark filter/chunk is running; output prefix still has 0 MP4s before map workers start.
