@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-03 - Zmurez PUDO Data Loading Investigation
+
+- Topic: Inspect Zak Murez's `zmurez/pudo` experimental data loading and compare it with SI parking data modules.
+- Labels: parking, pudo, data-loading, experimental, investigation.
+- Branch: detached `origin/zmurez/pudo` in `/workspace/zak` at `563c88427a65`.
+- PR: N/A.
+- Change type: Worktree setup / investigation note.
+- Areas: `/workspace/zak/wayve/ai/experimental`, `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Created `/workspace/zak` as a detached worktree on the latest fetched `origin/zmurez/pudo`.
+  - Identified `mcv_new_phase2.yml -> mcv_new_base.yml -> mcv_new_base0.yml` as the relevant experimental training config chain.
+  - Traced data loading through ExpAI `DataModule`, `IpaceDataset`, raw run-list splits, JSON/NPZ PUDO annotations, and heuristic sampler bins.
+  - Compared against SI `BcDataModuleCfg` / materialized bucket usage in `parking_config.py`.
+  - Concluded the experimental datamodule is not directly reusable as-is for SI training; the reproducible path is to port the selection predicates into SI-compatible buckets or datapipe filters.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zmurez-pudo-data-loading-investigation|2026-06-03 Zmurez PUDO Data Loading Investigation]]
+
 ## 2026-06-01 - HARI PUDO Classifiers
 
 - Topic: Create worktree and initial vault project page for Tom Boehling's HARI PUDO classifier workflow.
