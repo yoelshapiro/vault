@@ -763,8 +763,7 @@
 - Changes:
   - Accepted explicit scheduler horizons equal to or greater than `trainer.max_steps`.
   - Rejected positive `lr_scheduler_num_steps` values shorter than `trainer.max_steps` to avoid scheduler overrun during training.
-  - Rejected missing or non-positive `trainer.max_steps` when `lr_scheduler_num_steps` is unset, covering Lightning's `-1` default before scheduler construction.
-  - Expanded optimizer scheduler regression coverage for equal, longer, shorter-than-trainer, and missing-trainer-horizon cases.
+  - Expanded optimizer scheduler regression coverage for equal, longer, and shorter-than-trainer cases across `one-cycle` and `plateau`.
   - Verified focused optimizer tests with coverage disabled for the pytest filter, plus package ruff and flake8 lint.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-01-lr-scheduler-num-steps-pr|2026-06-01 LR Scheduler Num Steps PR]]
 
