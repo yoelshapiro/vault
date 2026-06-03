@@ -57,5 +57,6 @@ Created local experiment branch `boris/zak_datamodule` from latest `origin/main`
 ## Notes
 
 - This is intentionally scratch-quality and large; it is aimed at proving training with Zak's data path rather than producing a mainline-ready integration.
-- It should be dispatchable after committing and pushing this branch, including the imported LFS-backed `.npz` assets. The current worktree has not been staged or committed.
-- Current local branch is for experimentation only; no files were staged or committed.
+- The branch was committed and pushed as `ce48bec9325d` (`feat: train parking with Zak datamodule`) to `origin/boris/zak_datamodule`.
+- Dispatch mode for updated release WFM plus Zak data is `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`. The plain `parking_bc_train_release_2026_5_21` uses the normal parking datamodule.
+- LFS-backed prediction `.npz` assets and the large `train_gen2.txt` split were pushed as LFS objects.

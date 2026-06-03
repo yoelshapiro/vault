@@ -966,6 +966,7 @@
 - Change type: Code change, local experiment.
 - Areas: `/workspace/default/wayve/ai/si/datamodules`, `/workspace/default/wayve/ai/si/configs/parking`, `/workspace/zak/wayve/ai/experimental`.
 - Changes:
+  - Pushed experiment commit `ce48bec9325d` to `origin/boris/zak_datamodule`.
   - Added a local SI datamodule adapter that imports Zak's `wayve.ai.experimental` package from `/workspace/zak`, builds `mcv_new_phase2.yml`, and maps post-transform experimental batches into SI `DataKeys`.
   - Registered `parking_bc_train_zak_mcv_new_phase2` as an experiment mode using the June parking model family, with radar, behavior-control auxiliary losses, and checkpoint/export callbacks disabled for local scratch compatibility.
   - Added a focused unit test for the Zak-to-SI batch shape/key mapping.
