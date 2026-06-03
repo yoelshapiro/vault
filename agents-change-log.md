@@ -908,3 +908,34 @@
   - New deployed nickname is `falcon-orange-creative`; Gen2 artefact id is `c28dd87d-d3c5-4131-8d55-4e955949eb24`.
   - Verified Gen2 config has radar X/Y/Z/range-rate/SNR, `points_per_scan: 800`, and `interleave_control`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-vampire-bat-driving-redeploy|2026-06-03 Vampire Bat Driving Redeploy]]
+
+## 2026-06-03 - Vampire Bat No Temporal Override Redeploy
+
+- Topic: Redeploy `vampire-bat-ardent-emerald` without forcing temporal caching.
+- Labels: parking, deployment, interleave-control, driving-models.
+- Branch: `03-20-si-group-interleave-control-support`.
+- PR: N/A.
+- Change type: Revert / deployment run.
+- Areas: `/workspace/WayveCode/wayve/ai/si/deploy.py`, `/workspace/WayveCode/wayve/ai/si/test/test_deploy.py`, `/workspace/parking-deploy-outputs`.
+- Changes:
+  - Reverted local temporal-cache compatibility commits with `8c5c4fb3d23d` and `394436d805a7`; branch is ahead of origin by these commits and not pushed.
+  - Redeployed source session `session_2026_05_22_08_58_12_baseline_rl_rmf` at step `150000` without `--with_temporal_caching True`.
+  - New deployed nickname is `cheeky-amethyst-caribou`; Gen2 artefact id is `e98d65d3-b1a6-4896-a5e0-80e5b50f000f`.
+  - Deploy summary showed temporal caching `Same as trained model`; runtime still enabled cache on radar/video adaptors from the trained config.
+  - Verified Gen2 config has radar X/Y/Z/range-rate/SNR, `points_per_scan: 800`, and `interleave_control`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-vampire-bat-no-temporal-override-redeploy|2026-06-03 Vampire Bat No Temporal Override Redeploy]]
+
+## 2026-06-03 - Event Gear Smoothing
+
+- Topic: Add configurable smoothed-gear transition columns to PUDO / UnPUDO event detection.
+- Labels: parking, pudo, unpudo, materialization, notebook.
+- Branch: `boris/materialization_unsafe_moving_buckets`.
+- PR: `https://github.com/wayveai/WayveCode/pull/115845`.
+- Change type: Notebook code change, uncommitted.
+- Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_event_detection.ipynb`.
+- Changes:
+  - Added `ENABLE_GEAR_SMOOTHING`, `GEAR_SMOOTHING_MIN_SEGMENT_US`, and `SMOOTHED_GEAR_COL` config knobs.
+  - Built `gear_change_to_park` and `gear_change_from_park` from smoothed per-frame gear context.
+  - Switched PUDO and UnPUDO gear transition seeding to use the new booleans while preserving raw gear and output table schema.
+  - Validated notebook JSON, code-cell AST parse, `git diff --check`, and static invariants.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-event-gear-smoothing|2026-06-03 Event Gear Smoothing]]
