@@ -937,5 +937,6 @@
   - Added `ENABLE_GEAR_SMOOTHING`, `GEAR_SMOOTHING_MIN_SEGMENT_US`, and `SMOOTHED_GEAR_COL` config knobs.
   - Built `gear_change_to_park` and `gear_change_from_park` from smoothed per-frame gear context.
   - Switched PUDO and UnPUDO gear transition seeding to use the new booleans while preserving raw gear and output table schema.
+  - Removed a stale trip-table helper join to `prod_analytics.analytics.robotaxi_disengagement` after a runtime failure on unavailable `episode_start_lat` / `episode_start_lon` columns; the join's `event_success` output was not consumed downstream.
   - Validated notebook JSON, code-cell AST parse, `git diff --check`, and static invariants.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-event-gear-smoothing|2026-06-03 Event Gear Smoothing]]

@@ -21,3 +21,9 @@
 - Parsed all notebook code cells with Python AST.
 - `git diff --check`
 - Static invariant checks for config flags, transition columns, and smoothed-gear candidate usage.
+
+## Follow-up Runtime Fix
+
+- Removed the trip-table helper's stale join to `prod_analytics.analytics.robotaxi_disengagement`.
+- The join referenced unavailable `episode_start_lat` / `episode_start_lon` columns and its `event_success` output was not consumed by downstream candidate matching.
+- Pushed commit `65736381549e` with the fix.
