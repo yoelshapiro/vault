@@ -846,3 +846,18 @@
   - Counted 496 generated MP4 blobs in `camera_present_drop_missing_20260602_095509_UTC/gen2`.
   - Reused the existing port `3000` server and replaced the served index with a blob-backed viewer using signed Azure Blob URLs, avoiding local MP4 downloads.
 - Project note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
+## 2026-06-03 - Driving Interleave-Control Deploys
+
+- Topic: Deploy driving models with interleave control and empty interleave group.
+- Labels: parking, deployment, interleave-control, driving-models.
+- Branch: `03-20-si-group-interleave-control-support`.
+- PR: N/A.
+- Change type: Deployment run.
+- Areas: `/workspace/WayveCode`, `/workspace/parking-deploy-outputs`.
+- Changes:
+  - Deployed `wallaby-compact-moccasin` to `zebra-aquamarine-reclusive` with Gen2 artefact `53f815b3-7014-4d3c-9715-bfc69f5d5add`.
+  - Deployed `ibex-lime-meritorious` to `anteater-harlequin-colorful` with Gen2 artefact `5d651f7b-93b0-44f4-93f9-32dab0b8553c`.
+  - Used `--enable_interleave_control` with empty `--interleave_control_group` and local output under `/workspace/parking-deploy-outputs`.
+  - Verified generated Gen2 configs include `interleave_control`, radar X/Y/Z/range-rate/SNR, and `points_per_scan: 800`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-driving-interleave-control-deploys|2026-06-03 Driving Interleave-Control Deploys]]
