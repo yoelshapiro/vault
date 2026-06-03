@@ -45,7 +45,8 @@
 - Addressed Rollin's PR review comment asking for explicit behavior when `lr_scheduler_num_steps` is greater than or less than the trainer's expected step count.
 - Kept the intended long-horizon behavior: explicit `lr_scheduler_num_steps >= trainer.max_steps` is accepted and passed to both scheduler branches.
 - Rejected `lr_scheduler_num_steps < trainer.max_steps` when the trainer has a positive `max_steps`, because both scheduler implementations are step-count bounded and can fail if training continues past scheduler `total_steps`.
-- Expanded regression coverage with explicit equal and longer accepted cases plus shorter-than-trainer rejection for both `one-cycle` and `plateau`.
+- Rejected missing or non-positive `trainer.max_steps` when `lr_scheduler_num_steps` is unset, covering Lightning's `-1` default and `0` values before they reach scheduler construction.
+- Expanded regression coverage with explicit equal and longer accepted cases, shorter-than-trainer rejection for both `one-cycle` and `plateau`, and unset-override fallback rejection for `trainer.max_steps` of `None`, `0`, and `-1`.
 - Verification:
   - `git diff --check`
   - `bazel test //wayve/ai/si:py_test_test_training_core --test_arg="-k=configure_optimizers" --test_arg="--no-cov"`
