@@ -861,3 +861,18 @@
   - Used `--enable_interleave_control` with empty `--interleave_control_group` and local output under `/workspace/parking-deploy-outputs`.
   - Verified generated Gen2 configs include `interleave_control`, radar X/Y/Z/range-rate/SNR, and `points_per_scan: 800`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-driving-interleave-control-deploys|2026-06-03 Driving Interleave-Control Deploys]]
+
+## 2026-06-03 - Interleave-Control Main Merge
+
+- Topic: Merge latest `origin/main` into the interleave-control deployment branch.
+- Labels: parking, deployment, interleave-control, merge.
+- Branch: `03-20-si-group-interleave-control-support`.
+- PR: N/A.
+- Change type: Merge / conflict resolution.
+- Areas: `/workspace/WayveCode/wayve/ai/si`, `/workspace/WayveCode/wayve/ai/zoo/deployment`.
+- Changes:
+  - Resolved conflicts in deploy, deployment preparation, training deployment config, behavior customization, deployment wrapper, deployment tests, and RL reference config.
+  - Kept branch interleave-control behavior while preserving main's `dynamo_export`, kinematic output, shift-by-wire fail-fast guard, mitigation request behavior, and shape-[1] understeer LUT indexing.
+  - Completed merge commit `d7b14ed5a32d`.
+  - Verified `git diff --check`, no conflict markers, and `//wayve/ai/zoo/deployment:test_deployment_py_test`; SI deployment test was blocked by ACR auth for `azure-storage/azurite`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-interleave-control-main-merge|2026-06-03 Interleave Control Main Merge]]
