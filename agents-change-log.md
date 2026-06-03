@@ -951,8 +951,9 @@
 - Areas: `/workspace/default/wayve/ai/si/datamodules`, `/workspace/default/wayve/ai/si/configs/parking`, `/workspace/zak/wayve/ai/experimental`.
 - Changes:
   - Added a local SI datamodule adapter that imports Zak's `wayve.ai.experimental` package from `/workspace/zak`, builds `mcv_new_phase2.yml`, and maps post-transform experimental batches into SI `DataKeys`.
-  - Registered `parking_bc_train_zak_mcv_new_phase2` as an experiment mode using the June parking model family, with radar and behavior-control auxiliary losses disabled for schema compatibility.
+  - Registered `parking_bc_train_zak_mcv_new_phase2` as an experiment mode using the June parking model family, with radar, behavior-control auxiliary losses, and checkpoint/export callbacks disabled for local scratch compatibility.
   - Added a focused unit test for the Zak-to-SI batch shape/key mapping.
-  - Rebasing kept the branch current with latest `origin/main`.
-  - Verified `//wayve/ai/si/datamodules:test_zak_experimental` and `//wayve/ai/si:train`.
+  - Added dev-only Zak parquet fractioning so local `dev=true` smoke runs build 0.1% of the parquet list instead of the full dataset.
+  - Fixed local smoke-run blockers: Zak package namespace import, local `mcap` dependency lookup, `nuscenes-devkit` dependency, Zak Git LFS data pointer, and missing blank `signs_gemini.txt` annotation file.
+  - Verified `//wayve/ai/si/datamodules:test_zak_experimental`, `//wayve/ai/si:train`, and a one-step local train with Zak data/augmentations reaching `max_steps=1`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
