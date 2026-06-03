@@ -971,5 +971,7 @@
   - Added a focused unit test for the Zak-to-SI batch shape/key mapping.
   - Added dev-only Zak parquet fractioning so local `dev=true` smoke runs build 0.1% of the parquet list instead of the full dataset.
   - Fixed local smoke-run blockers: Zak package namespace import, local `mcap` dependency lookup, `nuscenes-devkit` dependency, Zak Git LFS data pointer, and missing blank `signs_gemini.txt` annotation file.
+  - Ported the updated `WFM_v1.4.0.550M(1.5.0)` release model path from `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`, adding `parking_bc_train_release_2026_5_21` and Zak-specific `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`.
   - Verified `//wayve/ai/si/datamodules:test_zak_experimental`, `//wayve/ai/si:train`, and a one-step local train with Zak data/augmentations reaching `max_steps=1`.
+  - Verified the updated release-WFM Zak mode with a one-step local train reaching `max_steps=1`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]

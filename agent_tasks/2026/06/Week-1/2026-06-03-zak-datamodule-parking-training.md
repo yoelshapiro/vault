@@ -29,6 +29,11 @@ Created local experiment branch `boris/zak_datamodule` from latest `origin/main`
   - Disables radar input because Zak's current datamodule does not emit SI radar tensors.
   - Disables behavior-control auxiliary loss because Zak's loader does not provide privileged latent-action labels.
   - Sets `checkpoint_interval=0` because the deployment export callback rejects the scratch parking model combination (`navigation input`, `indicator memory`, and `parking`) before local training starts.
+- Ported the updated release model from branch `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
+  - Added `parking_bc_release_2026_5_21` using `WFMFeb2026EarlyFusionCFG` / `WFM_v1.4.0.550M(1.5.0)`.
+  - Added normal train mode `parking_bc_train_release_2026_5_21`.
+  - Added Zak-specific mode `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21` so the updated WFM can train through Zak's data and augmentations.
+  - Kept the existing June scratch model modes intact; this is an additional release-WFM path, not a replacement.
 
 ## Local fixes while running
 
@@ -44,6 +49,9 @@ Created local experiment branch `boris/zak_datamodule` from latest `origin/main`
 - Short local train:
   - `bazel run //wayve/ai/si:train -- +mode=parking_bc_train_zak_mcv_new_phase2 dev=true num_steps=1 limit_val_batches=0 val_interval=1000 parent_dir=/workspace/default/tmp/zak_train_sessions tag=zak_datamodule_selfcontained_smoke_4 logger=null profiler=null use_callbacks=false enable_flop_computation=false compile_mode=null enable_progress_bar=false`
   - Result: succeeded from `/workspace/default`. Logs show `workspace_path=/workspace/default`, Zak's dev-sliced `mcv_new_phase2` config loaded 264 runs, Lightning completed forward/backward, and stopped with `max_steps=1`.
+- Short local train with the updated release WFM:
+  - `bazel run //wayve/ai/si:train -- +mode=parking_bc_train_zak_mcv_new_phase2_release_2026_5_21 dev=true num_steps=1 limit_val_batches=0 val_interval=1000 parent_dir=/workspace/default/tmp/zak_train_sessions tag=zak_datamodule_521_smoke logger=null profiler=null use_callbacks=false enable_flop_computation=false compile_mode=null enable_progress_bar=false`
+  - Result: succeeded from `/workspace/default`. Logs show release `WFM_v1.4.0.550M(1.5.0)`, cached checkpoint `azure://wayveprodmlexperiments/training-session-store/releases/WFM_v1.4.0.550M(1.5.0).consolidated.ckpt`, Zak's dev-sliced `mcv_new_phase2` config loaded 264 runs, and Lightning stopped with `max_steps=1`.
 - `git diff --check`
 
 ## Notes
