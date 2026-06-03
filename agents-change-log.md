@@ -892,3 +892,19 @@
   - Completed merge commit `d7b14ed5a32d`.
   - Verified `git diff --check`, no conflict markers, and `//wayve/ai/zoo/deployment:test_deployment_py_test`; SI deployment test was blocked by ACR auth for `azure-storage/azurite`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-interleave-control-main-merge|2026-06-03 Interleave Control Main Merge]]
+
+## 2026-06-03 - Vampire Bat Driving Redeploy
+
+- Topic: Redeploy `vampire-bat-ardent-emerald` as a driving model with interleave control.
+- Labels: parking, deployment, interleave-control, driving-models.
+- Branch: `03-20-si-group-interleave-control-support`.
+- PR: N/A.
+- Change type: Code fix / deployment run.
+- Areas: `/workspace/WayveCode/wayve/ai/si/deploy.py`, `/workspace/WayveCode/wayve/ai/si/test/test_deploy.py`, `/workspace/parking-deploy-outputs`.
+- Changes:
+  - Pushed merge branch and two deploy compatibility fixes: `ff51c2e0fab9`, `70dfa77a6f3c`.
+  - Fixed temporal-cache config mutation for old TD3 checkpoint-loader configs and release-loader override configs.
+  - Redeployed source session `session_2026_05_22_08_58_12_baseline_rl_rmf` at step `150000` with empty interleave group.
+  - New deployed nickname is `falcon-orange-creative`; Gen2 artefact id is `c28dd87d-d3c5-4131-8d55-4e955949eb24`.
+  - Verified Gen2 config has radar X/Y/Z/range-rate/SNR, `points_per_scan: 800`, and `interleave_control`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-vampire-bat-driving-redeploy|2026-06-03 Vampire Bat Driving Redeploy]]
