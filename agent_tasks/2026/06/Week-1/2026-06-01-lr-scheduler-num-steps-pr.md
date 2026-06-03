@@ -39,3 +39,16 @@
   - `bazel test //wayve/ai/si:py_test_test_training --test_arg=--no-cov --test_arg=-k --test_arg='lr_scheduler_num_steps or non_positive_lr_scheduler_num_steps'`
   - `bazel test //wayve/ai/si:py_lint_ruff`
 - Pushed follow-up commit `d908a40c3558` (`fix: validate lr scheduler step override`).
+
+## Human Review Comment Fix
+
+- Addressed Rollin's PR review comment asking for explicit behavior when `lr_scheduler_num_steps` is greater than or less than the trainer's expected step count.
+- Kept the intended long-horizon behavior: explicit `lr_scheduler_num_steps >= trainer.max_steps` is accepted and passed to both scheduler branches.
+- Rejected `lr_scheduler_num_steps < trainer.max_steps` when the trainer has a positive `max_steps`, because both scheduler implementations are step-count bounded and can fail if training continues past scheduler `total_steps`.
+- Expanded regression coverage with explicit equal and longer accepted cases plus shorter-than-trainer rejection for both `one-cycle` and `plateau`.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/si:py_test_test_training_core --test_arg="-k=configure_optimizers" --test_arg="--no-cov"`
+  - `bazel test //wayve/ai/si:py_lint_ruff`
+  - `bazel test //wayve/ai/si:py_lint_flake8`
+- Note: the same focused `py_test_test_training_core` run without `--no-cov` selected tests passed but failed the full-suite coverage gate (`total 21 < fail-under 44`) because the pytest `-k` filter deselected most tests.
