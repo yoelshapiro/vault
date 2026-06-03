@@ -4,16 +4,17 @@
 
 - Topic: Run Parking SI training with Zak Murez's experimental PUDO datamodule approach.
 - Labels: parking, pudo, training, datamodule, experimental.
-- Branch: `boris/zak_datamodule`.
+- Branch: `boris/zak_datamodule_parking_cherrypick` from `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`; supersedes scratch branch `boris/zak_datamodule`.
 - PR: N/A.
 - Change type: Scratch code integration / local training smoke.
 - Areas: `/workspace/default/wayve/ai/experimental`, `/workspace/default/wayve/ai/si/datamodules`, `/workspace/default/wayve/ai/si/configs/parking/parking_config.py`.
 - Changes:
   - Imported Zak's selected `mcv_new_phase2` experimental config, dataset, sampler, transform, annotation, prediction, split, and utility files into the branch.
   - Added `ZakExperimentalDataModule` to adapt Zak batches into SI `DataKeys` while preserving Zak's dataloader, sampler, and augmentations.
-  - Added parking mode `parking_bc_train_zak_mcv_new_phase2` for scratch SI training with Zak's data path.
+  - Rebased the integration onto the working parking branch and wired `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21` through the branch's `parking_config.py`.
   - Fixed missing experimental dependencies/assets (`nuscenes-devkit`, LFS `.npz` files, blank `signs_gemini.txt`) and avoided the SI/experimental Bazel dependency cycle.
-  - Verified `bazel test //wayve/ai/si/datamodules:test_zak_experimental`, `git diff --check`, and a one-step local train from `/workspace/default`.
+  - Verified `bazel build //wayve/ai/si:train`, `bazel test //wayve/ai/si/datamodules:test_zak_experimental`, and a one-step local train from `/workspace/default` with release `WFM_v1.4.0.550M(1.5.0)`.
+  - Recorded that the interrupted scratch-branch dispatch did not produce a job id and left no local submit process running.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
 ## 2026-06-03 - Zmurez PUDO Data Loading Investigation
