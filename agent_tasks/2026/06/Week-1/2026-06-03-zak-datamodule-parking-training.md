@@ -89,3 +89,16 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - Dispatch mode for updated release WFM plus Zak data is `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`. The plain `parking_bc_train_release_2026_5_21` uses the normal parking datamodule.
 - LFS-backed prediction `.npz` assets and the large `train_gen2.txt` split were pushed as LFS objects.
 - The earlier attempted dispatch from the scratch branch was interrupted before a job id/session id was printed; no local SI CLI or submit process remained afterward.
+
+## Training Dispatch
+
+- Submitted remote training on 2026-06-03 from branch `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`.
+- Image: `wayvetraining.azurecr.io/scaled-intelligence:83058f1909cb98ad88c97d98e490bb926644707c`.
+- Surfboard job: `174118`.
+- Surfboard nickname: `proactive-mallard-jade`.
+- Session: `session_2026_06_03_20_13_31_zak521`.
+- W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_03_20_13_31_zak521`.
+- Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aproactive-mallard-jade-174118&from_ts=1779308350958&cols=job_name%2Cnode_rank&live=true`.
+- Final observed state: `Running` on AKS target `aks-prod-training-2-swe.nd96h100`, 4 H100 nodes, start time `06-03 20:18 (UTC)`.
+- Submitted with direct `wayvecli job submit` after aborting the SI wrapper before acceptance, because the wrapper expanded `-st zak521` into a long default session tag. Direct submit kept the session tag short as `zak521`.
+- Model Catalogue lookup immediately after start returned no row yet; catalogue indexing had not caught up.

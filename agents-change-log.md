@@ -15,6 +15,7 @@
   - Fixed missing experimental dependencies/assets (`nuscenes-devkit`, LFS `.npz` files, blank `signs_gemini.txt`) and avoided the SI/experimental Bazel dependency cycle.
   - Verified `bazel build //wayve/ai/si:train`, `bazel test //wayve/ai/si/datamodules:test_zak_experimental`, and a one-step local train from `/workspace/default` with release `WFM_v1.4.0.550M(1.5.0)`.
   - Recorded that the interrupted scratch-branch dispatch did not produce a job id and left no local submit process running.
+  - Submitted Surfboard job `174118` / `proactive-mallard-jade` with session `session_2026_06_03_20_13_31_zak521`; final observed state was `Running` on AKS.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
 ## 2026-06-03 - Zmurez PUDO Data Loading Investigation
