@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-1/2026-06-03-vampire-bat-driving-redeploy.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-zmurez-pudo-data-loading-investigation.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-interleave-control-main-merge.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-driving-interleave-control-deploys.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/05/Week-5/2026-05-28-pudo-buffer0-parkmode-80k-train.md",
     "agent_tasks/2026/05/Week-5/2026-05-28-park-mode-blackout-semantics.md",
     "agent_tasks/2026/05/Week-4/2026-05-27-parking-pudo-621-training-restart.md",
-    "agent_tasks/2026/05/Week-5/2026-05-27-parking-checkpoint-interleave-upload.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
