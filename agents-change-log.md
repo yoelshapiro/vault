@@ -940,3 +940,19 @@
   - Removed a stale trip-table helper join to `prod_analytics.analytics.robotaxi_disengagement` after a runtime failure on unavailable `episode_start_lat` / `episode_start_lon` columns; the join's `event_success` output was not consumed downstream.
   - Validated notebook JSON, code-cell AST parse, `git diff --check`, and static invariants.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-event-gear-smoothing|2026-06-03 Event Gear Smoothing]]
+
+## 2026-06-03 - Zak Datamodule Parking Training
+
+- Topic: Wire Zak Murez's experimental PUDO datamodule into SI parking training.
+- Labels: parking, pudo, datamodule, training, experiment.
+- Branch: `boris/zak_datamodule`.
+- PR: N/A.
+- Change type: Code change, local experiment.
+- Areas: `/workspace/default/wayve/ai/si/datamodules`, `/workspace/default/wayve/ai/si/configs/parking`, `/workspace/zak/wayve/ai/experimental`.
+- Changes:
+  - Added a local SI datamodule adapter that imports Zak's `wayve.ai.experimental` package from `/workspace/zak`, builds `mcv_new_phase2.yml`, and maps post-transform experimental batches into SI `DataKeys`.
+  - Registered `parking_bc_train_zak_mcv_new_phase2` as an experiment mode using the June parking model family, with radar and behavior-control auxiliary losses disabled for schema compatibility.
+  - Added a focused unit test for the Zak-to-SI batch shape/key mapping.
+  - Rebasing kept the branch current with latest `origin/main`.
+  - Verified `//wayve/ai/si/datamodules:test_zak_experimental` and `//wayve/ai/si:train`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
