@@ -25,6 +25,21 @@
   - Recommendation before the next dispatch: add pre-forward validation for the Zak-to-SI adapter fields (`camera_extrinsics`, `vehicle_indicator_state`, `vehicle_country`, `vehicle_model`, `vehicle_gear_direction`, `stopping_mode`, `parking_mode`) and rerun bounded no-dev locally with stricter CUDA diagnostics.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
+## 2026-06-04 - PR 115840 LR Scheduler Test Comment
+
+- Topic: Clarify LR scheduler test cases after PR review feedback.
+- Labels: training, tests, pr-review.
+- Branch: `boris/lr-scheduler-num-steps`.
+- PR: `https://github.com/wayveai/WayveCode/pull/115840`.
+- Change type: Test clarification, uncommitted.
+- Areas: `/workspace/pr-115840/wayve/ai/si/test/models/test_training.py`.
+- Changes:
+  - Made `trainer_max_steps` explicit in the `test_configure_optimizers_uses_lr_scheduler_num_steps` parametrization.
+  - Updated the `100 > 30` one-cycle and plateau cases to pass `100` as the override and `30` as trainer max steps.
+  - Kept expected scheduler `total_steps` derived from the override when set, otherwise trainer max steps.
+  - `git diff --check` passed; focused Bazel validation was blocked during analysis by Azure ACR `401 Unauthorized` for `wayve.azurecr.io/azure-storage/azurite`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pr-115840-lr-scheduler-test-comment|2026-06-04 PR 115840 LR Scheduler Test Comment]]
+
 ## 2026-06-03 - Zmurez PUDO Data Loading Investigation
 
 - Topic: Inspect Zak Murez's `zmurez/pudo` experimental data loading and compare it with SI parking data modules.
@@ -942,9 +957,10 @@
 - Change type: Code change, uncommitted.
 - Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
 - Changes:
-  - Added only the missing `max_augmentation_errors=1000` field to the existing `parking_pudo_bc_datamodule_cfg`.
-  - Verified the normalized existing datamodule block matches the source branch BC datamodule, aside from the local variable name.
-  - Kept diffusion config unchanged and did not add `parking_bc_new_driving_datamodule`.
+  - Restored D26_3_6 datamodule aliases/ratio variants on top of the updated `parking_pudo_bc_datamodule_cfg`.
+  - Added `parking_pudo_bc_D26_3_6_datamodule`, `parking_bc_D26_3_6_datamodule`, and `pudo_bc_D26_3_6_datamodule`.
+  - Adapted old aggregate `unpudo`/`unpark` ratio controls to the current granular `unpudo_*`, `unparking`, and `gear_shift` groups.
+  - Kept diffusion config unchanged and did not keep unsupported `max_augmentation_errors=1000`.
   - Verified `git diff --check` and `//wayve/ai/si:py_lint_ruff`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pr116069-driving-data|2026-06-04 PR 116069 Driving Data Update]]
 
