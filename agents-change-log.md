@@ -992,4 +992,9 @@
   - Ported the updated `WFM_v1.4.0.550M(1.5.0)` release model path from `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`, adding `parking_bc_train_release_2026_5_21` and Zak-specific `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`.
   - Verified `//wayve/ai/si/datamodules:test_zak_experimental`, `//wayve/ai/si:train`, and a one-step local train with Zak data/augmentations reaching `max_steps=1`.
   - Verified the updated release-WFM Zak mode with a one-step local train reaching `max_steps=1`.
+- 2026-06-04 update:
+  - Pushed parking-based branch through `9be51ff18772` with remote-train robustness fixes and bounded diagnostics for Zak loader/constructor startup.
+  - Fixed non-finite cumulative-distance handling and frame-to-frame odometry distance computation, with focused regressions in `//wayve/ai/experimental:test_single_run`.
+  - Monitored remote runs through job `174286`; latest run is dispatched but has not started or reached training steps yet.
+  - Notion update remains pending until a run reaches the requested 5K-step threshold.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
