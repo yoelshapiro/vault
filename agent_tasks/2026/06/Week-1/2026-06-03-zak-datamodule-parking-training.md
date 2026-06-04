@@ -291,6 +291,27 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - `trainer/train_step=41`.
   - W&B run: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_14_16_56_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25fix`.
 
+## 2026-06-04 Job 174548 Retry 10K-Sample Monitor
+
+- Resubmitted the same cached-parquet Zak parking train after job `174514` failed later with a CUDA/NCCL peer-GPU/NVLink error.
+- Retry job:
+  - Surfboard job `174548`.
+  - Session `session_2026_06_04_15_55_54_zakzcm25r2`.
+  - Nickname `emerald-cognizant-cassowary`.
+  - Branch/commit `boris/zak_datamodule_parking_cherrypick` / `96a6a0e741c3a760a327cdd2dc4a5d953535ab39`.
+  - Same command shape: 4 H100 nodes, `--max_restarts 0`, `num_steps=80000`, `datamodule.train_parquet_fraction=0.25`, `datamodule.val_parquet_fraction=0.25`.
+- Startup observations:
+  - `Load runs` progressed from about `200/2060` at `16:04 UTC` to `2060/2060` by about `16:18 UTC`.
+  - All downloaded `rank*-errors.log` files stayed empty across snapshots.
+  - Rank 0 logged `train_dataloader_sampler_done` at `16:24:26 UTC`.
+  - First W&B training samples appeared at `16:29:31 UTC` with `trainer/samples_seen=128`, `trainer/global_step=1`.
+- W&B crossed the requested 10K-sample threshold:
+  - `trainer/samples_seen=10368`.
+  - `trainer/global_step=81`.
+  - `trainer/train_step=81`.
+  - Run state still `running` at threshold.
+  - W&B run: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_15_55_54_zakzcm25r2`.
+
 ## 2026-06-04 Remote Stop
 
 - User requested stopping Surfboard job `174358`.
