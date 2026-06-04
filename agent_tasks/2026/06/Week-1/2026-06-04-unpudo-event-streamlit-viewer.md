@@ -42,6 +42,10 @@
 - PR branch verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks` passed.
 - PR branch runtime check: `EVENT_CLIP_VIEWER_PORT=3002 bazel run //wayve/ai/parking/tools/event_clip_viewer:viewer` served HTTP 200; temporary validation server was stopped.
 - Compilation CLI check: `bazel run //wayve/ai/parking/tools/event_clip_viewer:compile_event_videos -- --help` passed. Full video generation was not run.
+- Full compilation attempt at `2026-06-04T15:56:57Z`: `bazel run //wayve/ai/parking/tools/event_clip_viewer:compile_event_videos -- --event-type unpudo --event-type pudo --random-count 100 --seed 0 ... --overwrite` ran for `31:04.44` wall time and failed with exit status 1 on a media-handler HTTP 500 before starting `pudo`.
+
+## Run Ledger
+- `unpudo_pudo_100_seed0`: requested 100 random `unpudo` and 100 random `pudo` clips, `front_forward`, `-15s/+15s`, `10x`, green event marker. Outcome: failed after 68 rendered `unpudo` segments; no output concat MP4 and no `pudo` segments. Key failure: media-handler returned HTTP 500 for `fme20032/2026-05-15--05-41-43--gen2-av-bc82e12d-0554-4dfa-8e78-929db2cf322d` at event timestamp `2026-05-15 06:13:41.183315`.
 
 ## Notes
 - The browser must be able to reach `https://media-handler.azr.internal.wayve.ai` for videos to play.
