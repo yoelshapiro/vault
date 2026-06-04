@@ -232,3 +232,13 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - The full Zak loader is eagerly loading about `8238` runs per rank; refreshed progress lines showed only tens of runs completed per rank after roughly 7 minutes of loading.
   - Current status is therefore "alive and making data-load progress", not yet "proven training".
   - Repeated `datadog.dogstatsd` packet warnings appeared, but they were not fatal and did not populate the error logs.
+
+## 2026-06-04 W&B Step Check
+
+- Polled Surfboard job `174358` again at `2026-06-04 08:15 UTC`.
+- Job state remained `Running`; no termination reason.
+- Downloaded logs under `/tmp/zak174358_logs_wandb_check/session_2026_06_04_07_41_45_z521v/174358`.
+- Downloaded error logs remained empty for rank groups 0-3.
+- No `loading_runs_done`, dataloader sampler completion, first-iteration success, step, or loss marker was present in the fresh logs.
+- The absence of W&B steps is expected: the job has not entered the training loop yet.
+- Latest per-rank `loading_runs_progress` maxima ranged from roughly `1800/8238` to `2600/8238`, so the full Zak eager dataset load is still underway.
