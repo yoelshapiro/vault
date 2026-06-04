@@ -1009,5 +1009,6 @@
   - Recorded repeated tolerated object-store warnings for sampled camera paths ending in `/nan`; they did not stop local training.
   - Committed and pushed `bab774dcb5cd` (`fix: validate Zak parking datamodule batches`) to `origin/boris/zak_datamodule_parking_cherrypick`.
   - Published image `wayvetraining.azurecr.io/scaled-intelligence:bab774dcb5cd1391d30f9af9b7315a048e5b8489` and submitted Surfboard job `174358` / session `session_2026_06_04_07_41_45_z521v` on 4 H100 AKS nodes; final observed state was `Running`.
+  - Re-polled job `174358` at `2026-06-04 07:58 UTC`: still `Running`, no termination reason, empty downloaded error logs, and actively constructing Zak datasets, but not yet at `loading_runs_done` or first training iteration. Full Zak data loading is slow, with progress in the tens of runs out of roughly `8238` per rank after several minutes.
   - Notion update remains pending until a run reaches the requested 5K-step threshold.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]

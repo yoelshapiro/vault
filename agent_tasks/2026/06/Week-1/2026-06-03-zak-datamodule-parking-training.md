@@ -211,3 +211,24 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - Final observed state:
   - `Running`.
   - Start time: `06-04 07:46 (UTC)`.
+
+## 2026-06-04 Remote Monitoring
+
+- Polled Surfboard job `174358` at `2026-06-04 07:58 UTC`.
+- Job state remained `Running` on 4 H100 AKS nodes, with no termination reason and no queue position.
+- Downloaded logs under `/tmp/zak174358_logs_monitor2/session_2026_06_04_07_41_45_z521v/174358`.
+- Error logs were empty for downloaded rank groups:
+  - `rank0-errors.log`: `0` lines.
+  - `rank1-errors.log`: `0` lines.
+  - `rank2-errors.log`: `0` lines.
+  - `rank3-errors.log`: `0` lines.
+- Positive signals:
+  - Distributed setup completed far enough to initialize NCCL and all rank groups.
+  - Zak's adapter loaded `mcv_new_phase2.yml` with `batch_size=4`, `data_workers=6`.
+  - Train dataloader creation started across ranks.
+  - Dataset construction is actively advancing through `parquet_loaded`, `dataframe_loaded`, `dataset_start`, `constructor_done`, and `dataset_done` stages.
+- Caveat:
+  - The run had not reached `loading_runs_done`, dataloader sampler completion, or first training iteration.
+  - The full Zak loader is eagerly loading about `8238` runs per rank; refreshed progress lines showed only tens of runs completed per rank after roughly 7 minutes of loading.
+  - Current status is therefore "alive and making data-load progress", not yet "proven training".
+  - Repeated `datadog.dogstatsd` packet warnings appeared, but they were not fatal and did not populate the error logs.
