@@ -192,6 +192,7 @@
 - Follow-up pending restart: live media-handler cameras are now the default source, and selecting another single event autoplays the new video from the beginning.
 - Follow-up pending restart: random-sample toggle added with a `Resample` button that changes the SQL `rand(seed)` ordering.
 - PR update: promoted the viewer into `wayve/ai/parking/tools/event_clip_viewer` on branch `boris/event_clip_viewer`; draft PR https://github.com/wayveai/WayveCode/pull/116721.
+- PR update: removed the `tools/databricks_queries/lib/BUILD` visibility change from the PR; the final diff only adds the new viewer package.
 - PR branch verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks` passed, and the Bazel-run Streamlit target served HTTP 200 on temporary port `3002`.
 - Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
 - Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.

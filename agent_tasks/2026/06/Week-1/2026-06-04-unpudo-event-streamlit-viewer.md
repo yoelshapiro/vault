@@ -26,7 +26,7 @@
 - Moved the viewer into `wayve/ai/parking/tools/event_clip_viewer` for PR review.
 - Split the implementation into `app.py`, `components.py`, `config.py`, `data.py`, and `video_urls.py` so files remain below the repo line-count guidance.
 - Added `README.md` with the Bazel run command and access requirements.
-- Added narrow visibility from `//tools/databricks_queries/lib` to `//wayve/ai/parking/tools/event_clip_viewer`.
+- Final PR version does not modify `tools/databricks_queries/lib/BUILD`; the viewer calls the existing Databricks SQL connection helper directly.
 
 ## Verification
 - `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed.
