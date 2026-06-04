@@ -1100,5 +1100,6 @@
   - Investigated job `174514` after it later failed; rank logs pointed to CUDA/NCCL peer GPU memory over NVLink or hardware error, not data loading.
   - Resubmitted retry job `174548` / session `session_2026_06_04_15_55_54_zakzcm25r2` with the same config and `--max_restarts 0`; monitored through `trainer/samples_seen=10368`, `trainer/global_step=81`, with run state still `running`.
   - Investigated job `174548` after terminal failure; root cause was non-finite Zak `egopose` mapped to SI `VEHICLE_POSE`, then patched the Zak-to-SI adapter to repair non-finite pose, waypoint, scalar control, and camera-calibration fields with focused regression tests.
+  - Reduced Zak datamodule non-dev per-rank batch size from `4` to `2` for the parking release mode, keeping dev at `1`; config and adapter tests pass.
   - Notion update remains pending unless requested for this experimental branch.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]

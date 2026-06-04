@@ -330,8 +330,11 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Repair invalid policy waypoints from the repaired `POLICY_POSE` translation fallback.
   - Preserve finite Zak values and log the first repair with `zak_experimental_repaired_nonfinite`.
 - Added regression tests for non-finite `egopose`, camera extrinsics, `egoposition`, speed, curvature, intrinsics, and distortion in `test_zak_experimental`.
+- Reduced the Zak experimental datamodule non-dev per-rank batch size from `model.max_batch_size` (`4` for the release mode) to `2`; dev remains `1`.
+  - On 4 H100 nodes / 32 ranks, this changes global samples per optimizer step from `128` to `64`.
 - Verification:
   - `bazel test //wayve/ai/si/datamodules:test_zak_experimental` passed.
+  - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
 
 ## 2026-06-04 Remote Stop
 
