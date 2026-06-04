@@ -336,6 +336,26 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - `bazel test //wayve/ai/si/datamodules:test_zak_experimental` passed.
   - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
 
+## 2026-06-04 Batch-2 Retry Dispatch
+
+- Committed and pushed branch `boris/zak_datamodule_parking_cherrypick`:
+  - Commit: `9c4cee467c46c9b4708ddbe2717fbca5527abc4d` (`fix: repair Zak datamodule non-finite inputs`).
+  - Image: `wayvetraining.azurecr.io/scaled-intelligence:9c4cee467c46c9b4708ddbe2717fbca5527abc4d`.
+- Submitted cached-parquet Zak datamodule training with:
+  - Surfboard job `174665`.
+  - Surfboard nickname `seahorse-scarlet-fierce`.
+  - Session `session_2026_06_04_20_56_25_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25b2`.
+  - Mode `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`.
+  - `num_steps=80000`, `num_gpus=32`, 4 H100 AKS nodes.
+  - `datamodule.train_parquet_fraction=0.25`, `datamodule.val_parquet_fraction=0.25`.
+  - Effective non-dev Zak datamodule batch size is now 2, so global samples per step are expected to be 64.
+  - Priority `P1`, `max_restarts=0`.
+- Initial observed state:
+  - Status `Queued`, queue position `1`.
+  - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_20_56_25_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25b2`.
+  - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aseahorse-scarlet-fierce-174665&from_ts=1779397007365&cols=job_name%2Cnode_rank&live=true`.
+  - Efficiency dashboard: `https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=seahorse-scarlet-fierce-174665%2A&from_ts=1780001807365&to_ts=1780606607365&live=false`.
+
 ## 2026-06-04 Remote Stop
 
 - User requested stopping Surfboard job `174358`.
