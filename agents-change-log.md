@@ -1096,5 +1096,6 @@
   - Stopped job `174358` on user request before first training step; terminal state became `Failed` with status reason `CancelRequested by user`, final logs still had empty downloaded error files and showed eager Zak data loading around `5200-6400` of `8237/8238` runs per rank.
   - Added cache-only parquet wiring for Zak's experimental parquet loader path, committed and pushed `fd04bc5c9ed5` (`fix: use cached Zak parquets for parking training`), then dispatched cached-parquet 0.25-fraction training.
   - Cancelled accidental P3 job `174468` before start and resubmitted as P1 job `174469` / session `session_2026_06_04_12_29_17_zcache25`; final observed state was `Running`.
-  - Notion update remains pending until a run reaches the requested 5K-step threshold.
+  - Monitored job `174514` / session `session_2026_06_04_14_16_56_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25fix` through the requested 5K-sample threshold; W&B reached `trainer/samples_seen=5248`, `trainer/global_step=41`, and Surfboard still reported `Running` with no termination reason.
+  - Notion update remains pending unless requested for this experimental branch.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]

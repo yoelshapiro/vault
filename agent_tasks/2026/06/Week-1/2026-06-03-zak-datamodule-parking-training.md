@@ -268,6 +268,29 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - The absence of W&B steps is expected: the job has not entered the training loop yet.
 - Latest per-rank `loading_runs_progress` maxima ranged from roughly `1800/8238` to `2600/8238`, so the full Zak eager dataset load is still underway.
 
+## 2026-06-04 Job 174514 5K-Sample Monitor
+
+- Monitored Surfboard job `174514` / session `session_2026_06_04_14_16_56_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25fix`.
+- Final observed Surfboard state after the 5K-sample check:
+  - Status: `Running`.
+  - No `reason_for_termination`.
+  - Branch/commit in job metadata: `boris/zak_datamodule_parking_cherrypick` / `96a6a0e741c3a760a327cdd2dc4a5d953535ab39`.
+- Startup progression:
+  - Cached Zak run loading used `train_parquet_fraction=0.25`, yielding about `2059-2060` selected parquet/run entries per rank.
+  - All downloaded `rank*-errors.log` files stayed empty across snapshots.
+  - `Load runs` reached 100% on all sampled ranks by about `14:38 UTC`.
+  - All 32 ranks logged `train_dataloader_sampler_done` by about `14:46 UTC`.
+  - First iteration start succeeded around `14:47 UTC`; first iteration end succeeded around `14:49:41 UTC`.
+- Non-fatal warnings observed:
+  - Some sampled camera paths ended in `/nan` and logged object-store `NotFoundError` warnings through Zak's loader path.
+  - PyTorch emitted inductor/cudagraph and autograd stream-mismatch warnings during early compiled forward/backward.
+  - These warnings did not populate the downloaded error logs and did not stop training.
+- W&B training counter crossed the requested threshold:
+  - `trainer/samples_seen=5248`.
+  - `trainer/global_step=41`.
+  - `trainer/train_step=41`.
+  - W&B run: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_14_16_56_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25fix`.
+
 ## 2026-06-04 Remote Stop
 
 - User requested stopping Surfboard job `174358`.
