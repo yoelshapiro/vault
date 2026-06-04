@@ -123,3 +123,29 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Latest job `174286`, session `session_2026_06_04_03_44_45_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_z521t`, is submitted from `9be51ff18772`.
 - Latest observed state for `174286`: `Dispatched` on AKS target `aks-prod-training-2-swe.nd96h100`, no `start_time` yet as of 2026-06-04 ~03:51 UTC.
 - Notion/model-card update is still pending. Do not update until a run reaches the requested 5K-step monitoring threshold.
+
+## 2026-06-04 No-Dev Local Investigation
+
+- Latest failed remote job `174286` did not expose the underlying constructor issue because the new diagnostic logging crashed first:
+  - Root cause: `WayveLogger.warn()` received duplicate `rows` kwargs from `SingleIpaceDataset` constructor context.
+  - Local fix: renamed debug context fields to `dataframe_rows` / `parquet_rows` in `wayve/ai/experimental/dataset/ipace.py`.
+- Local full no-dev attempt:
+  - Command used mode `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21` without `dev=true`.
+  - First failure was local-only: config requested `num_gpus=8` while the machine has one GPU.
+  - Retried with `num_gpus=1`; this tried to load `263,601` entries on one rank, reached ~13.6 GB RSS quickly, and was stopped as not representative of the sharded remote job.
+- Bounded no-dev local attempt:
+  - Command kept `dev=false` but set `datamodule.train_parquet_fraction=0.001`, `datamodule.val_parquet_fraction=0.001`, `num_gpus=1`, and `num_steps=1`.
+  - Reproduced a real loader bug after constructor instrumentation: `NameError: name 'dist' is not defined` in `SingleRunDataset._post_init()` at the `make_park_masks(..., dist, ...)` call.
+  - Cause: our earlier odometry fix replaced Zak's inline `dist = ...; self.cumdist = np.cumsum(dist)` with `compute_cumdist_from_egopose(...)` but left later code expecting the local `dist` variable.
+  - Local fix: added `compute_dist_from_egopose(...)`, reused it to compute `cumdist`, and added a focused unit assertion.
+  - Verified `bazel test //wayve/ai/experimental:test_single_run`.
+- Bounded no-dev rerun after the `dist` fix:
+  - Zak dataset construction completed: `loading_runs_done rank=0, loaded=264, total=264`.
+  - Sampler construction completed and printed global sampled stats.
+  - First train iteration started, then model forward failed with CUDA `indexSelectSmallIndex: srcIndex < srcSelectDimSize` / device-side assert.
+  - The async stack ended in the pose adaptor, but the likely class of issue is an out-of-range categorical/index tensor or SI batch-shape mismatch from `ZakExperimentalDataModule._to_si_batch`, not Zak's datamodule construction.
+- Recommendation:
+  - Do not dispatch another remote job yet.
+  - Commit the loader fixes only after deciding whether to keep the verbose constructor-stage diagnostics.
+  - Add a pre-forward batch validation/debug path for the adapter fields (`camera_extrinsics`, `vehicle_indicator_state`, `vehicle_country`, `vehicle_model`, `vehicle_gear_direction`, `stopping_mode`, `parking_mode`) and rerun a local bounded no-dev smoke with `CUDA_LAUNCH_BLOCKING=1` if needed.
+  - Once the mapped batch passes one local train step without `dev=true`, push and dispatch a new remote run.
