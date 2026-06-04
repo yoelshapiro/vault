@@ -27,6 +27,8 @@
 - Split the implementation into `app.py`, `components.py`, `config.py`, `data.py`, and `video_urls.py` so files remain below the repo line-count guidance.
 - Added `README.md` with the Bazel run command and access requirements.
 - Final PR version does not modify `tools/databricks_queries/lib/BUILD`; the viewer calls the existing Databricks SQL connection helper directly.
+- Added `//wayve/ai/parking/tools/event_clip_viewer:compile_event_videos`, a CLI for generating one concatenated MP4 per event type.
+- Compilation defaults: 100 random deduped events for each of `pudo`, `unpudo`, and `unparking`; `front_forward`; `-15s/+15s`; `10x`; green event-time border.
 
 ## Verification
 - `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed.
@@ -39,6 +41,7 @@
 - The follow-up toggle/start-from-beginning/green-border/live-default/autoplay/random-sample changes were intentionally not run or restarted.
 - PR branch verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks` passed.
 - PR branch runtime check: `EVENT_CLIP_VIEWER_PORT=3002 bazel run //wayve/ai/parking/tools/event_clip_viewer:viewer` served HTTP 200; temporary validation server was stopped.
+- Compilation CLI check: `bazel run //wayve/ai/parking/tools/event_clip_viewer:compile_event_videos -- --help` passed. Full video generation was not run.
 
 ## Notes
 - The browser must be able to reach `https://media-handler.azr.internal.wayve.ai` for videos to play.

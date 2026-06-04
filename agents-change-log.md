@@ -40,6 +40,7 @@
   - Added pending viewer changes, not restarted yet: dedupe toggle, start playback at beginning, green event-timestamp border, live-source default, autoplay on single-event selection, and random-sample loading.
   - Moved the viewer into `wayve/ai/parking/tools/event_clip_viewer` on clean branch `boris/event_clip_viewer`, split modules below line-count guidance, added a README, and opened draft PR #116721.
   - Removed the `tools/databricks_queries/lib/BUILD` visibility change from the PR; final PR diff only adds the viewer package.
+  - Added `compile_event_videos` CLI for concatenated per-event-type review videos, defaulting to 100 random deduped events per type, `front_forward`, `-15s/+15s`, `10x`, and a green event-time border.
   - Verified the PR branch with `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks` and a temporary Streamlit run on port `3002`.
   - Verified `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and started the app on `http://127.0.0.1:3001/` in tmux session `unpudo-event-viewer`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-unpudo-event-streamlit-viewer|2026-06-04 UnPUDO Event Streamlit Viewer]]
