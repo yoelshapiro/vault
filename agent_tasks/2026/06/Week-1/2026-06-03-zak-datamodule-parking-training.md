@@ -355,6 +355,12 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_20_56_25_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25b2`.
   - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aseahorse-scarlet-fierce-174665&from_ts=1779397007365&cols=job_name%2Cnode_rank&live=true`.
   - Efficiency dashboard: `https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=seahorse-scarlet-fierce-174665%2A&from_ts=1780001807365&to_ts=1780606607365&live=false`.
+- Monitored state:
+  - Surfboard reached `Running` on `aks-prod-training-2-swe.nd96h100`; start time `2026-06-04 21:01 UTC`.
+  - W&B remained live and updating through `2026-06-04 21:22 UTC`, but still reported `trainer/global_step=0` and `trainer/samples_seen=0`.
+  - Logs confirmed Zak cached-parquet load using the expected quarter-fraction denominator: `Load runs: 2060/2060`.
+  - Several ranks emitted `train_dataloader_dataset_done ... Train dataset created, building sampler`; last visible rank in the tail was rank 7 at `2026-06-04 21:19:56 UTC`.
+  - No traceback, `ValueError`, or non-finite adapter failure was observed in the monitored logs.
 
 ## 2026-06-04 Remote Stop
 
