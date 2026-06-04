@@ -23,6 +23,9 @@
   - Reproduced and fixed the real local loader bug in bounded no-dev: `SingleRunDataset._post_init()` still needed per-frame `dist` after the cumulative-distance fix.
   - Verified `bazel test //wayve/ai/experimental:test_single_run`; bounded no-dev now constructs the Zak train dataset and sampler, then fails on the first SI model forward with a CUDA index assert likely caused by adapter categorical/shape mapping, not Zak dataloader construction.
   - Recommendation before the next dispatch: add pre-forward validation for the Zak-to-SI adapter fields (`camera_extrinsics`, `vehicle_indicator_state`, `vehicle_country`, `vehicle_model`, `vehicle_gear_direction`, `stopping_mode`, `parking_mode`) and rerun bounded no-dev locally with stricter CUDA diagnostics.
+  - Confirmed from Zak's latest W&B/Sutrfboard runs that he uses `TRAIN_PARQUET_FRACTION=1` with `mcv_new_phase2x_wta.yml` on 16 H100 nodes; the 4-node SI run had roughly 4x more eager-loaded run parquets per rank.
+  - Added cache-only parquet wiring: `DataModule` now forwards `parquet_fallback_delta_table`, the Zak SI adapter exposes `parquet_cache_only`, and parking's Zak datamodule config sets it true.
+  - Verified the cache-only wiring with `bazel test //wayve/ai/si/datamodules:test_zak_experimental` and `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
 ## 2026-06-04 - PR 115840 LR Scheduler Test Comment

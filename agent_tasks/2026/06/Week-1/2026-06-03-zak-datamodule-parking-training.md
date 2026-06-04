@@ -257,3 +257,20 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - No traceback, first-iteration success marker, step, or loss marker was present in the final logs.
 - Final observed `loading_runs_progress` maxima ranged from roughly `5200/8238` to `6400/8237`, so the job was still in eager Zak dataset loading when stopped.
 - Route parser messages about ferry travel mode appeared as parser errors plus `nav_instructions_parse_failed` warnings, but they did not populate the error logs and were not observed as a Python exception.
+
+## 2026-06-04 Cached-Parquet Wiring
+
+- Investigated Zak's actual recent W&B/Sutrfboard runs in `wayve-ai/zak_temporal1`.
+  - Confirmed latest runs use `DATASET.WAYVE.TRAIN_PARQUET_FRACTION=1`, `DATASET.WAYVE.ODOMETRY_SOURCE=Speed-IMU_v2`, `train_gen2.txt`, `mcv_new_phase2x_wta.yml`, batch size 1, data workers 8, and 16 H100 nodes.
+  - Concluded the 4-node SI run's slow startup came from per-rank eager loading: about `8238` cached run parquets per rank on 4 nodes versus about `2060` per rank on Zak's 16-node setup.
+- Added cache-only parquet wiring for the Zak/SI parking datamodule path:
+  - `wayve/ai/experimental/dataset/datasets.py` now accepts `parquet_fallback_delta_table` and passes it into `ParquetLoader`.
+  - `wayve/ai/si/datamodules/zak_experimental.py` now accepts `parquet_cache_only`; when true, it disables Delta fallback and only uses existing local/Azure cached parquets.
+  - `wayve/ai/si/configs/parking/parking_config.py` sets `parquet_cache_only=True` for `ZakExperimentalDataModuleCfg`.
+- Resulting behavior:
+  - Existing cached parquets still load from local cache or Azure `single-run-parquets`.
+  - Missing cached parquets return `None` and are skipped by Zak's loader instead of being regenerated from Delta tables.
+  - This keeps the branch aligned with "use Zak's latest cached parquets" and prevents accidental expensive parquet creation during training.
+- Verification:
+  - `bazel test //wayve/ai/si/datamodules:test_zak_experimental` passed.
+  - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
