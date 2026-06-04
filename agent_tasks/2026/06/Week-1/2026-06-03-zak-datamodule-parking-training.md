@@ -242,3 +242,18 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - No `loading_runs_done`, dataloader sampler completion, first-iteration success, step, or loss marker was present in the fresh logs.
 - The absence of W&B steps is expected: the job has not entered the training loop yet.
 - Latest per-rank `loading_runs_progress` maxima ranged from roughly `1800/8238` to `2600/8238`, so the full Zak eager dataset load is still underway.
+
+## 2026-06-04 Remote Stop
+
+- User requested stopping Surfboard job `174358`.
+- Issued:
+  - `echo "y" | bazel run //tools/wayvecli:wayvecli -- job cancel 174358 --reason "Stopping Zak datamodule run before first training step"`
+- Surfboard terminal state after the stop request:
+  - Status: `Failed`.
+  - End time: `06-04 08:47 (UTC)`.
+  - Status reason: `CancelRequested by user: Stopping Zak datamodule run before first training step`.
+- Downloaded final logs under `/tmp/zak174358_logs_after_failed_stop/session_2026_06_04_07_41_45_z521v/174358`.
+- Downloaded `rank0-errors.log` through `rank3-errors.log` were all empty.
+- No traceback, first-iteration success marker, step, or loss marker was present in the final logs.
+- Final observed `loading_runs_progress` maxima ranged from roughly `5200/8238` to `6400/8237`, so the job was still in eager Zak dataset loading when stopped.
+- Route parser messages about ferry travel mode appeared as parser errors plus `nav_instructions_parse_failed` warnings, but they did not populate the error logs and were not observed as a Python exception.
