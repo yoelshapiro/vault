@@ -186,5 +186,6 @@
 - Live media-handler camera mode remains available for arbitrary rows that do not have a generated MP4 in blob storage.
 - Added playlist mode: the app can autoplay the currently loaded events sequentially, loop until stopped, and provides Play/Pause/Stop/Prev/Next controls.
 - Live playlist mode defaults to `front_forward` and uses the first selected camera.
+- Added playback-speed control, defaulting to `3x`.
 - Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
 - Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.

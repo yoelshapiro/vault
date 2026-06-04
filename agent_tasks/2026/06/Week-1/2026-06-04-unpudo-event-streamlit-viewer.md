@@ -16,6 +16,7 @@
 - Live media-handler mode remains available for arbitrary timestamps that do not have a generated blob MP4.
 - Added playlist mode for the currently loaded events. It can autoplay sequentially, loop until stopped, and exposes Play/Pause/Stop/Prev/Next controls.
 - Changed the default live camera selection to `front_forward`; playlist mode uses the first selected camera for live media-handler playback.
+- Added a sidebar playback-speed control, defaulting to `3x`.
 
 ## Verification
 - `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed.
@@ -23,6 +24,7 @@
 - `curl -sI http://127.0.0.1:3001/` returned HTTP 200.
 - Azure blob listing for the generated MP4 prefix works from the current environment.
 - Playlist update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
+- Playback-speed update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
 
 ## Notes
 - The browser must be able to reach `https://media-handler.azr.internal.wayve.ai` for videos to play.
