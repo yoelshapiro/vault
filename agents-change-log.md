@@ -933,6 +933,20 @@
   - Verified `git diff --check`, no conflict markers, and `//wayve/ai/zoo/deployment:test_deployment_py_test`; SI deployment test was blocked by ACR auth for `azure-storage/azurite`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-interleave-control-main-merge|2026-06-03 Interleave Control Main Merge]]
 
+## 2026-06-04 - PR 116069 Driving Data Update
+
+- Topic: Port updated driving data config into PR 116069.
+- Labels: parking, pudo, config, pr-116069.
+- Branch: `codex/pr-116069-driving-data`.
+- PR: `https://github.com/wayveai/WayveCode/pull/116069`.
+- Change type: Code change, uncommitted.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Ported the updated driving train/validation partition aliases and `parking_bc_new_driving_datamodule` wiring from `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
+  - Updated the diffusion datamodule to use the release driving materialisation and the new driving/PUDO parking mix.
+  - Verified `git diff --check` and `//wayve/ai/si:py_lint_ruff`; noted unrelated baseline config snapshot drift in `test_regression[bc]`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pr116069-driving-data|2026-06-04 PR 116069 Driving Data Update]]
+
 ## 2026-06-03 - Vampire Bat Driving Redeploy
 
 - Topic: Redeploy `vampire-bat-ardent-emerald` as a driving model with interleave control.
