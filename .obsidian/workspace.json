@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-1/2026-06-04-pr116069-driving-data.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-vampire-bat-no-temporal-override-redeploy.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-event-gear-smoothing.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes.md",
     "agent_tasks/2026/05/Week-5/2026-05-30-parking-past30-port.md",
     "agent_tasks/2026/05/Week-5/2026-05-28-parking-skills-session-tags-notes.md",
-    "agent_tasks/2026/05/Week-5/2026-05-28-pudo-621-beige-train-monitor.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
