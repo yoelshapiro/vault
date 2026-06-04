@@ -102,3 +102,24 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - Final observed state: `Running` on AKS target `aks-prod-training-2-swe.nd96h100`, 4 H100 nodes, start time `06-03 20:18 (UTC)`.
 - Submitted with direct `wayvecli job submit` after aborting the SI wrapper before acceptance, because the wrapper expanded `-st zak521` into a long default session tag. Direct submit kept the session tag short as `zak521`.
 - Model Catalogue lookup immediately after start returned no row yet; catalogue indexing had not caught up.
+
+## 2026-06-04 Remote Debugging
+
+- Current branch: `boris/zak_datamodule_parking_cherrypick`.
+- Latest pushed commit: `9be51ff18772` (`chore: log Zak constructor stages`).
+- Validated:
+  - `bazel test //wayve/ai/experimental:test_single_run`
+  - `bazel build //wayve/ai/si:train_docker.binary`
+- Fixes added while monitoring:
+  - `0ffd430727a`: handle non-finite Zak odometry distances in `SingleRunDataset` cumulative-distance setup.
+  - `2a7fdcf3b`: compute cumulative distance from frame-to-frame motion rather than first-frame offset from origin, with a guard against absurd final distances.
+  - `e2e1c684b`: bounded loader-stage logging for the first shard entries per rank.
+  - `9be51ff18772`: bounded inner `SingleIpaceDataset` constructor-stage logging.
+- Remote runs:
+  - `174241` failed before step 1 on `ValueError: arange: cannot compute length` from non-finite `cumdist[-1]`; fixed by `0ffd430727a`.
+  - `174252` and `174263` stalled before first loaded run (`Load runs: 0/2060`) and were canceled.
+  - `174273` showed parquet and dataframe loading succeeded but no `dataset_done`; canceled to patch cumulative distance from initial offset.
+  - `174280` still showed no `dataset_done`; canceled to add inner constructor-stage instrumentation.
+  - Latest job `174286`, session `session_2026_06_04_03_44_45_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_z521t`, is submitted from `9be51ff18772`.
+- Latest observed state for `174286`: `Dispatched` on AKS target `aks-prod-training-2-swe.nd96h100`, no `start_time` yet as of 2026-06-04 ~03:51 UTC.
+- Notion/model-card update is still pending. Do not update until a run reaches the requested 5K-step monitoring threshold.
