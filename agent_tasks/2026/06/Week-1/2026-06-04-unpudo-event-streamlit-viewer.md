@@ -4,6 +4,8 @@
 - Built a local Streamlit viewer for `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`.
 - The viewer runs from `/workspace/classifiers` on branch `boris/hari_pudo`.
 - Local URL: `http://127.0.0.1:3001/`.
+- Promoted the viewer into `/workspace/event_clip_viewer` on branch `boris/event_clip_viewer`.
+- Draft PR: https://github.com/wayveai/WayveCode/pull/116721.
 
 ## What Changed
 - Added Bazel target `//tools/databricks_queries/unpudo_event_viewer:viewer`.
@@ -21,6 +23,10 @@
 - Follow-up change, not restarted yet: made dedupe a sidebar toggle, changed videos/playlists to start from the beginning, and added a green border while playback is within 0.5s of the event timestamp.
 - Follow-up change, not restarted yet: made live media-handler cameras the default video source and enabled autoplay for single-event video renders.
 - Follow-up change, not restarted yet: added a random-sample toggle plus `Resample` button that changes the SQL `rand(seed)` ordering.
+- Moved the viewer into `wayve/ai/parking/tools/event_clip_viewer` for PR review.
+- Split the implementation into `app.py`, `components.py`, `config.py`, `data.py`, and `video_urls.py` so files remain below the repo line-count guidance.
+- Added `README.md` with the Bazel run command and access requirements.
+- Added narrow visibility from `//tools/databricks_queries/lib` to `//wayve/ai/parking/tools/event_clip_viewer`.
 
 ## Verification
 - `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed.
@@ -31,6 +37,8 @@
 - Playback-speed update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
 - Dedupe-query update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
 - The follow-up toggle/start-from-beginning/green-border/live-default/autoplay/random-sample changes were intentionally not run or restarted.
+- PR branch verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks` passed.
+- PR branch runtime check: `EVENT_CLIP_VIEWER_PORT=3002 bazel run //wayve/ai/parking/tools/event_clip_viewer:viewer` served HTTP 200; temporary validation server was stopped.
 
 ## Notes
 - The browser must be able to reach `https://media-handler.azr.internal.wayve.ai` for videos to play.
