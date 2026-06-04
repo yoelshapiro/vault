@@ -187,5 +187,6 @@
 - Added playlist mode: the app can autoplay the currently loaded events sequentially, loop until stopped, and provides Play/Pause/Stop/Prev/Next controls.
 - Live playlist mode defaults to `front_forward` and uses the first selected camera.
 - Added playback-speed control, defaulting to `3x`.
+- Event query now dedupes source rows by `(runID, timestamp_unixus)` after sidebar filters to hide repeated source-table rows in the viewer.
 - Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
 - Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.
