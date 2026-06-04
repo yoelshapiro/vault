@@ -16,6 +16,13 @@
   - Verified `bazel build //wayve/ai/si:train`, `bazel test //wayve/ai/si/datamodules:test_zak_experimental`, and a one-step local train from `/workspace/default` with release `WFM_v1.4.0.550M(1.5.0)`.
   - Recorded that the interrupted scratch-branch dispatch did not produce a job id and left no local submit process running.
   - Submitted Surfboard job `174118` / `proactive-mallard-jade` with session `session_2026_06_03_20_13_31_zak521`; final observed state was `Running` on AKS.
+- 2026-06-04 update:
+  - Investigated the failed follow-up batch without starting another remote run.
+  - Identified job `174286` as failing on agent-added diagnostic logging (`WayveLogger.warn()` received duplicate `rows` kwargs), so it did not prove the underlying Zak loader state.
+  - Tested local no-dev behavior: full no-dev on one local GPU attempts to construct all `263,601` train entries and is not representative of the 64-rank remote shard; bounded no-dev via parquet fractions is the practical local smoke path.
+  - Reproduced and fixed the real local loader bug in bounded no-dev: `SingleRunDataset._post_init()` still needed per-frame `dist` after the cumulative-distance fix.
+  - Verified `bazel test //wayve/ai/experimental:test_single_run`; bounded no-dev now constructs the Zak train dataset and sampler, then fails on the first SI model forward with a CUDA index assert likely caused by adapter categorical/shape mapping, not Zak dataloader construction.
+  - Recommendation before the next dispatch: add pre-forward validation for the Zak-to-SI adapter fields (`camera_extrinsics`, `vehicle_indicator_state`, `vehicle_country`, `vehicle_model`, `vehicle_gear_direction`, `stopping_mode`, `parking_mode`) and rerun bounded no-dev locally with stricter CUDA diagnostics.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
 ## 2026-06-03 - Zmurez PUDO Data Loading Investigation
@@ -995,6 +1002,6 @@
 - 2026-06-04 update:
   - Pushed parking-based branch through `9be51ff18772` with remote-train robustness fixes and bounded diagnostics for Zak loader/constructor startup.
   - Fixed non-finite cumulative-distance handling and frame-to-frame odometry distance computation, with focused regressions in `//wayve/ai/experimental:test_single_run`.
-  - Monitored remote runs through job `174286`; latest run is dispatched but has not started or reached training steps yet.
+  - Monitored remote runs through job `174286`; it failed on agent-added diagnostic logging before proving the underlying constructor behavior.
   - Notion update remains pending until a run reaches the requested 5K-step threshold.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
