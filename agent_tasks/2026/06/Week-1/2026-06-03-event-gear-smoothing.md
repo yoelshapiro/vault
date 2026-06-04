@@ -27,3 +27,10 @@
 - Removed the trip-table helper's stale join to `prod_analytics.analytics.robotaxi_disengagement`.
 - The join referenced unavailable `episode_start_lat` / `episode_start_lon` columns and its `event_success` output was not consumed by downstream candidate matching.
 - Pushed commit `65736381549e` with the fix.
+
+## Isolated PR
+
+- Created branch `boris/event_creation_gear_fix` from latest `origin/main`.
+- Cherry-picked only the event notebook gear-smoothing and stale-trip-join commits.
+- Resolved the notebook conflict by keeping the isolated behavior that removes the unused disengagement proximity join.
+- Opened draft PR: `https://github.com/wayveai/WayveCode/pull/116673`.

@@ -1004,7 +1004,7 @@
 - Topic: Add configurable smoothed-gear transition columns to PUDO / UnPUDO event detection.
 - Labels: parking, pudo, unpudo, materialization, notebook.
 - Branch: `boris/materialization_unsafe_moving_buckets`.
-- PR: `https://github.com/wayveai/WayveCode/pull/115845`.
+- PR: `https://github.com/wayveai/WayveCode/pull/115845`; isolated event PR `https://github.com/wayveai/WayveCode/pull/116673`.
 - Change type: Notebook code change, uncommitted.
 - Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_event_detection.ipynb`.
 - Changes:
@@ -1012,6 +1012,7 @@
   - Built `gear_change_to_park` and `gear_change_from_park` from smoothed per-frame gear context.
   - Switched PUDO and UnPUDO gear transition seeding to use the new booleans while preserving raw gear and output table schema.
   - Removed a stale trip-table helper join to `prod_analytics.analytics.robotaxi_disengagement` after a runtime failure on unavailable `episode_start_lat` / `episode_start_lon` columns; the join's `event_success` output was not consumed downstream.
+  - Isolated the event notebook changes onto `boris/event_creation_gear_fix` from latest `main` and opened draft PR #116673.
   - Validated notebook JSON, code-cell AST parse, `git diff --check`, and static invariants.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-event-gear-smoothing|2026-06-03 Event Gear Smoothing]]
 
