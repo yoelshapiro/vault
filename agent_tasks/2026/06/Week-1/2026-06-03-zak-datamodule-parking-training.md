@@ -192,3 +192,22 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Repeated object-store `NotFoundError` warnings for camera video paths ending in `/nan`, for example `.../mcap_logger_camera_right_backward/nan`.
   - Zak's loader converted those to warnings at `wayve/ai/experimental/dataset/ipace.py:866`; they did not stop the local 1000-step run.
   - Final NCCL warning about `destroy_process_group()` not being called appeared on exit; process still exited with code 0.
+
+## 2026-06-04 Remote Dispatch After Local Validation
+
+- Committed and pushed branch `boris/zak_datamodule_parking_cherrypick`:
+  - Commit: `bab774dcb5cd1391d30f9af9b7315a048e5b8489` (`fix: validate Zak parking datamodule batches`).
+  - Image published by SI submit wrapper: `wayvetraining.azurecr.io/scaled-intelligence:bab774dcb5cd1391d30f9af9b7315a048e5b8489`.
+- Submitted remote training:
+  - Surfboard job: `174358`.
+  - Surfboard nickname: `jade-musical-condor`.
+  - Session: `session_2026_06_04_07_41_45_z521v`.
+  - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_07_41_45_z521v`.
+  - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Ajade-musical-condor-174358&from_ts=1779349630958&cols=job_name%2Cnode_rank&live=true`.
+  - Image: `wayvetraining.azurecr.io/scaled-intelligence:bab774dcb5cd1391d30f9af9b7315a048e5b8489`.
+  - Command mode: `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`, `num_steps=100000`, `num_gpus=32`.
+  - Cluster: AKS `aks-prod-training-2-swe.nd96h100`, 4 H100 nodes, priority `P1`.
+  - Max restarts: `0`, because this is still an experimental Zak datamodule run.
+- Final observed state:
+  - `Running`.
+  - Start time: `06-04 07:46 (UTC)`.

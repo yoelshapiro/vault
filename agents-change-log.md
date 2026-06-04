@@ -1007,5 +1007,7 @@
   - Verified bounded local `dev=false` training reaches `max_steps=1` with Zak data/augmentations and the release WFM path at batch size 1; batch size 4 reaches first iteration but OOMs locally.
   - Ran bounded local `dev=false` training for 1000 steps at batch size 1; Zak dataset loaded 264/264 runs, sampler built, first iteration completed, and Lightning stopped at `max_steps=1000` with exit code 0.
   - Recorded repeated tolerated object-store warnings for sampled camera paths ending in `/nan`; they did not stop local training.
+  - Committed and pushed `bab774dcb5cd` (`fix: validate Zak parking datamodule batches`) to `origin/boris/zak_datamodule_parking_cherrypick`.
+  - Published image `wayvetraining.azurecr.io/scaled-intelligence:bab774dcb5cd1391d30f9af9b7315a048e5b8489` and submitted Surfboard job `174358` / session `session_2026_06_04_07_41_45_z521v` on 4 H100 AKS nodes; final observed state was `Running`.
   - Notion update remains pending until a run reaches the requested 5K-step threshold.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
