@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-04 - PUDO Gear-Fix Root Training
+
+- Topic: Update parking PUDO config to the gear-fixed materialized root and submit training.
+- Labels: parking, pudo, unpudo, training, data-root.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
+- PR: N/A.
+- Change type: Config change / training run.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`, Parking/PUDO model-card Notion table.
+- Changes:
+  - Updated `PUDO_BUCKETS_ROOT` to `parking/dev/2026_06_04_11_13_51_root_parking_pudo_unpudo_unparking_gear_fix`.
+  - Committed and pushed `fae5fe152e52`.
+  - Submitted corrected training job `174503` / `immense-peach-jackal` with `parking_bc_train_release_2026_5_21` after the initial 5.11 attempt failed on the tele-camera mode mismatch.
+  - Monitored the corrected job; it failed before 1K at `trainer/global_step=0` because the new root is missing expected UNPUDO bucket parquet lists such as `dc_unpudo_move_uk` and `dc_unpudo_departure_uk`.
+  - Created Notion model-card row `immense-peach-jackal (not interleaved)` with the failure diagnosis in the page body.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pudo-gear-fix-root-training|2026-06-04 PUDO Gear-Fix Root Training]]
+
 ## 2026-06-04 - UnPUDO Event Streamlit Viewer
 
 - Topic: Build a local viewer for UnPUDO gear-fix table events and camera clips.
