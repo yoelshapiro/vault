@@ -361,6 +361,11 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Logs confirmed Zak cached-parquet load using the expected quarter-fraction denominator: `Load runs: 2060/2060`.
   - Several ranks emitted `train_dataloader_dataset_done ... Train dataset created, building sampler`; last visible rank in the tail was rank 7 at `2026-06-04 21:19:56 UTC`.
   - No traceback, `ValueError`, or non-finite adapter failure was observed in the monitored logs.
+- Final state:
+  - User requested stopping job `174665` because throughput was too slow compared with Zak's native runs.
+  - Issued `wayvecli job cancel 174665 --reason "Stopping slow Zak datamodule parking run"`.
+  - Surfboard terminal state: `Canceled`, end time `2026-06-04 22:36 UTC`, status reason `CancelRequested by user: Stopping slow Zak datamodule parking run`.
+  - Final W&B summary after cancellation: `trainer/global_step=496`, `trainer/samples_seen=31744`, `throughput/train_samples_per_sec_world=5.92`.
 
 ## 2026-06-04 Remote Stop
 

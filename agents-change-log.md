@@ -1103,5 +1103,6 @@
   - Reduced Zak datamodule non-dev per-rank batch size from `4` to `2` for the parking release mode, keeping dev at `1`; config and adapter tests pass.
   - Committed and pushed `9c4cee467c46`, published the matching scaled-intelligence image, and dispatched batch-2 cached-parquet retry job `174665` / session `session_2026_06_04_20_56_25_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25b2` at priority `P1`.
   - Monitored job `174665` to `Running`; logs showed cached-parquet `Load runs` completed at `2060/2060` and sampler construction started, while W&B still reported `trainer/global_step=0` / `trainer/samples_seen=0` at last check.
+  - Cancelled job `174665` after confirming it trained too slowly versus Zak's latest native W&B runs; terminal Surfboard state `Canceled`, final W&B summary `trainer/global_step=496`, `trainer/samples_seen=31744`, throughput `5.92` samples/sec world.
   - Notion update remains pending unless requested for this experimental branch.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
