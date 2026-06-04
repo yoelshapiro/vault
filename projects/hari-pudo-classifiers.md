@@ -8,7 +8,7 @@
 ## Status
 - **Phase:** Initial investigation
 - **Status:** active
-- **Last updated:** 2026-06-01
+- **Last updated:** 2026-06-04
 - **Worktree:** `/workspace/classifiers`
 - **Branch:** `boris/hari_pudo`
 - **HEAD:** `09109967f05c` (`Merge branch 'main' into tomboehling/classifier_studio`)
@@ -172,3 +172,14 @@
 - Final status at 15:36 UTC: execution `a97nqrpw2gb6rd2ljrn9` succeeded end-to-end; `end-node` completed at 2026-06-02 12:55:24 UTC.
 - Output count: 496 MP4s under `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/camera_present_drop_missing_20260602_095509_UTC/gen2/`.
 - Local viewing setup: port `3000` serves `/tmp/unpudo_clip_serve/index.html`, which references signed Azure Blob URLs directly instead of downloading the MP4s locally. The container SAS expires at 2026-06-03 23:59 UTC.
+
+
+## 2026-06-04 UnPUDO Event Streamlit Viewer
+- Added a local Streamlit event viewer under `/workspace/classifiers/tools/databricks_queries/unpudo_event_viewer`.
+- Source table: `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`.
+- The app filters by `event_type`, optional run ID substring, and row limit, then lets the user choose one event.
+- It shows event metadata including `runID`, `timestamp_unixus`, formatted event time, `event_type`, speed, gear-change timing, event duration, country, lat/lon, and source URL.
+- It constructs media-handler URLs centered on the selected `timestamp_unixus`, with configurable seconds before/after the event.
+- It displays all five cameras by default (`front_forward`, `left_forward`, `right_forward`, `left_backward`, `right_backward`) and includes a single control to jump all videos back to the event timestamp.
+- Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
+- Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.

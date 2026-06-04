@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-04 - UnPUDO Event Streamlit Viewer
+
+- Topic: Build a local viewer for UnPUDO gear-fix table events and camera clips.
+- Labels: parking, pudo, unpudo, streamlit, databricks, video.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Local tool / viewer.
+- Areas: `/workspace/classifiers/tools/databricks_queries/unpudo_event_viewer`, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Changes:
+  - Added a Bazel-run Streamlit app for `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`.
+  - Added event-type filtering, run ID substring filtering, row limits, event selection, and metadata display.
+  - Built media-handler URLs centered on the selected event timestamp with configurable before/after seconds.
+  - Rendered the five camera videos by default with a shared jump-to-event-timestamp control.
+  - Verified `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and started the app on `http://127.0.0.1:3001/` in tmux session `unpudo-event-viewer`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-unpudo-event-streamlit-viewer|2026-06-04 UnPUDO Event Streamlit Viewer]]
+
 ## 2026-06-03 - Zak Datamodule Parking Training
 
 - Topic: Run Parking SI training with Zak Murez's experimental PUDO datamodule approach.
