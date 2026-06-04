@@ -942,8 +942,9 @@
 - Change type: Code change, uncommitted.
 - Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
 - Changes:
-  - Added only `parking_bc_new_driving_datamodule` wiring from `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
-  - Kept diffusion config unchanged and avoided `BucketCfg(...)` reformatting.
+  - Added only the missing `max_augmentation_errors=1000` field to the existing `parking_pudo_bc_datamodule_cfg`.
+  - Verified the normalized existing datamodule block matches the source branch BC datamodule, aside from the local variable name.
+  - Kept diffusion config unchanged and did not add `parking_bc_new_driving_datamodule`.
   - Verified `git diff --check` and `//wayve/ai/si:py_lint_ruff`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pr116069-driving-data|2026-06-04 PR 116069 Driving Data Update]]
 
