@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-1/2026-06-04-unpudo-event-streamlit-viewer.md",
     "agent_tasks/2026/06/Week-1/2026-06-04-pr-115840-lr-scheduler-test-comment.md",
     "agent_tasks/2026/06/Week-1/2026-06-04-pr116069-driving-data.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/05/Week-5/2026-05-31-unpudo-materialization-buckets.md",
     "agent_tasks/2026/05/Week-5/2026-05-31-lr-scheduler-horizon.md",
     "agent_tasks/2026/05/Week-5/2026-05-30-parking-merge-test-fixes.md",
-    "agent_tasks/2026/05/Week-5/2026-05-30-parking-past30-port.md",
     "agent_tasks/2026/05/Week-5",
     "html_summaries/parking-model-comparison/streamlit_lab/requirements.txt",
     "html_summaries/parking-model-comparison/streamlit_lab/app.py",
