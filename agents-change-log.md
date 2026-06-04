@@ -1013,6 +1013,7 @@
   - Switched PUDO and UnPUDO gear transition seeding to use the new booleans while preserving raw gear and output table schema.
   - Removed a stale trip-table helper join to `prod_analytics.analytics.robotaxi_disengagement` after a runtime failure on unavailable `episode_start_lat` / `episode_start_lon` columns; the join's `event_success` output was not consumed downstream.
   - Isolated the event notebook changes onto `boris/event_creation_gear_fix` from latest `main` and opened draft PR #116673.
+  - Removed unused `prev2_gear_direction` and `next_gear_direction` context columns from the isolated PR branch.
   - Validated notebook JSON, code-cell AST parse, `git diff --check`, and static invariants.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-event-gear-smoothing|2026-06-03 Event Gear Smoothing]]
 

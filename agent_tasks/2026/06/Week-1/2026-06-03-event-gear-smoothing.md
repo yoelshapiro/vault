@@ -34,3 +34,4 @@
 - Cherry-picked only the event notebook gear-smoothing and stale-trip-join commits.
 - Resolved the notebook conflict by keeping the isolated behavior that removes the unused disengagement proximity join.
 - Opened draft PR: `https://github.com/wayveai/WayveCode/pull/116673`.
+- Removed unused `prev2_gear_direction` and `next_gear_direction` columns from the PR branch in commit `1f11d77ece53`.
