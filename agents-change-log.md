@@ -67,6 +67,8 @@
   - Confirmed from Zak's latest W&B/Surfboard runs that he uses `TRAIN_PARQUET_FRACTION=1` with `mcv_new_phase2x_wta.yml` on 16 H100 nodes; the 4-node SI run had roughly 4x more eager-loaded run parquets per rank.
   - Added cache-only parquet wiring: `DataModule` now forwards `parquet_fallback_delta_table`, the Zak SI adapter exposes `parquet_cache_only`, and parking's Zak datamodule config sets it true.
   - Verified the cache-only wiring with `bazel test //wayve/ai/si/datamodules:test_zak_experimental` and `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
+  - Disabled optional parking visualization metrics only for the Zak datamodule mode after job `174492` failed on singleton Zak `POLICY_TIME_DELTA` shape `[1, 11]`.
+  - Locally validated bounded non-dev Zak training for 2 steps after the metric bypass, then pushed `96a6a0e741c3` and dispatched 4-node P1 job `174514` / `perpetual-anteater-crimson` with cached parquets and `train_parquet_fraction=0.25`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
 ## 2026-06-04 - PR 115840 LR Scheduler Test Comment

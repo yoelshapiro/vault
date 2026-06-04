@@ -238,6 +238,31 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - Polled Surfboard job `174358` again at `2026-06-04 08:15 UTC`.
 - Job state remained `Running`; no termination reason.
 - Downloaded logs under `/tmp/zak174358_logs_wandb_check/session_2026_06_04_07_41_45_z521v/174358`.
+
+## 2026-06-04 Parking Metrics Bypass and Redispatch
+
+- Remote job `174492` reached first train batch after cached Zak parquet loading but failed in optional parking visualization metrics:
+  - `ParkingBehaviorMetrics._update_standstill()` indexed singleton Zak `POLICY_TIME_DELTA` shape `[1, 11]` with a batch mask shape `[4]`.
+  - Classified as SI parking metric incompatibility, not a Zak dataloader or augmentation failure.
+- Added a scoped config flag:
+  - `BcTrainingModule.enable_parking_metrics`, default `True`.
+  - Parking metrics construction and train/val metric updates now require `use_parking_mode and enable_parking_metrics`.
+  - `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21` sets `enable_parking_metrics=False` while leaving `use_parking_mode=True`.
+- Local validation:
+  - Ran bounded non-dev local train with cached Zak data, `num_gpus=1`, `datamodule.batch_size=1`, `train_parquet_fraction=0.001`, `val_parquet_fraction=0.001`, and `num_steps=2`.
+  - Loaded `264/264` cached Zak parquets, built the sampler, reached first iteration start/end, and exited cleanly at `max_steps=2`.
+- Commit and image:
+  - Commit: `96a6a0e741c3a760a327cdd2dc4a5d953535ab39` (`fix: disable optional parking metrics for Zak datamodule`).
+  - Image: `wayvetraining.azurecr.io/scaled-intelligence:96a6a0e741c3a760a327cdd2dc4a5d953535ab39`.
+- Redispatched remote training:
+  - Surfboard job: `174514`.
+  - Surfboard nickname: `perpetual-anteater-crimson`.
+  - Session: `session_2026_06_04_14_16_56_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25fix`.
+  - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_14_16_56_si_parking_bc_train_zak_mcv_new_phase2_release_2026_5_21_zcm25fix`.
+  - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aperpetual-anteater-crimson-174514&from_ts=1779373039022&cols=job_name%2Cnode_rank&live=true`.
+  - Command mode: `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`, `num_steps=80000`, `datamodule.train_parquet_fraction=0.25`, `datamodule.val_parquet_fraction=0.25`.
+  - Cluster: 4 H100 nodes, priority `P1`, max restarts `0`.
+  - Initial observed state: `Queued`, queue position `1`.
 - Downloaded error logs remained empty for rank groups 0-3.
 - No `loading_runs_done`, dataloader sampler completion, first-iteration success, step, or loss marker was present in the fresh logs.
 - The absence of W&B steps is expected: the job has not entered the training loop yet.
