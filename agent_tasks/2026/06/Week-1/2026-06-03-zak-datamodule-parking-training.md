@@ -312,6 +312,27 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Run state still `running` at threshold.
   - W&B run: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_15_55_54_zakzcm25r2`.
 
+## 2026-06-04 Job 174548 Post-Failure Fix
+
+- Rechecked job `174548` after it later entered terminal `Failed`.
+- Root cause was not the cached parquet path or the initial `Load runs` phase.
+- First actionable traceback was rank 0 raising from the Zak-to-SI adapter:
+  - `ValueError: Zak SI adapter produced non-finite vehicle_pose: shape=(4, 1, 4, 4), dtype=torch.float32, min=nan, max=nan`.
+  - Stack: `_MappedLoader.__iter__ -> _to_si_batch -> _validate_si_batch -> _validate_pose(VEHICLE_POSE)`.
+  - Later NCCL / peer-GPU / NVLink messages were downstream distributed teardown after the Python error.
+- Inspected Zak's experimental path:
+  - `SingleRunDataset` builds `egopose` from localization/odometry and sanitizes some derived parking fields, but does not globally guarantee every returned `egopose`, `egoposition`, scalar control, or camera calibration tensor is finite.
+  - Zak model/input code tolerates NaNs in some conditioning paths; SI mandatory keys such as `VEHICLE_POSE`, `POLICY_POSE`, camera calibration, speed, curvature, and waypoints must be finite.
+- Added Zak-to-SI boundary repairs in `/workspace/default/wayve/ai/si/datamodules/zak_experimental.py`:
+  - Repair invalid temporal pose frames from neighboring finite frames when available, otherwise identity.
+  - Repair invalid camera extrinsics to identity.
+  - Repair invalid intrinsics, distortion, speed, and curvature to zero.
+  - Repair invalid policy waypoints from the repaired `POLICY_POSE` translation fallback.
+  - Preserve finite Zak values and log the first repair with `zak_experimental_repaired_nonfinite`.
+- Added regression tests for non-finite `egopose`, camera extrinsics, `egoposition`, speed, curvature, intrinsics, and distortion in `test_zak_experimental`.
+- Verification:
+  - `bazel test //wayve/ai/si/datamodules:test_zak_experimental` passed.
+
 ## 2026-06-04 Remote Stop
 
 - User requested stopping Surfboard job `174358`.
