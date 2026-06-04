@@ -274,3 +274,21 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 - Verification:
   - `bazel test //wayve/ai/si/datamodules:test_zak_experimental` passed.
   - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
+
+## 2026-06-04 Cached-Parquet 0.25 Remote Dispatch
+
+- Committed and pushed branch `boris/zak_datamodule_parking_cherrypick`:
+  - Commit: `fd04bc5c9ed5035f9cc30d7b395d432c68fcf92a` (`fix: use cached Zak parquets for parking training`).
+  - Image: `wayvetraining.azurecr.io/scaled-intelligence:fd04bc5c9ed5035f9cc30d7b395d432c68fcf92a`.
+- Submitted cached-parquet Zak datamodule training with:
+  - Mode: `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`.
+  - `num_steps=80000`, `num_gpus=32`, 4 H100 AKS nodes.
+  - `datamodule.train_parquet_fraction=0.25`, `datamodule.val_parquet_fraction=0.25`.
+  - `ZakExperimentalDataModuleCfg.parquet_cache_only=True`.
+- Run ledger:
+  - Job `174468` / session `session_2026_06_04_12_25_26_zcache25`: first submission accidentally omitted explicit priority, landed as `P3` at queue position 76, and was cancelled before start with reason `Incorrect configuration`.
+  - Job `174469` / session `session_2026_06_04_12_29_17_zcache25`: resubmitted with explicit `--priority P1`, nickname `omnivorous-firefly-plum`, final observed state `Running`.
+- Links:
+  - W&B: `https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_04_12_29_17_zcache25`.
+  - Datadog logs: `https://app.datadoghq.eu/logs?query=job_name%3Aomnivorous-firefly-plum-174469&from_ts=1779366785871&cols=job_name%2Cnode_rank&live=true`.
+  - Efficiency dashboard: `https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=omnivorous-firefly-plum-174469%2A&from_ts=1779971585871&to_ts=1780576385871&live=false`.
