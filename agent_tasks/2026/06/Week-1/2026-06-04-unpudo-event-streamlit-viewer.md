@@ -14,12 +14,15 @@
 - Added a generated-blob playback mode for precomputed MP4 collages under `flyte_remote/videos/borisindelman/unpudo_standstill/camera_present_drop_missing_20260602_095509_UTC/gen2`.
 - Blob mode signs MP4 URLs with a one-day user-delegation SAS and matches clips by exact `runID + timestamp_unixus`.
 - Live media-handler mode remains available for arbitrary timestamps that do not have a generated blob MP4.
+- Added playlist mode for the currently loaded events. It can autoplay sequentially, loop until stopped, and exposes Play/Pause/Stop/Prev/Next controls.
+- Changed the default live camera selection to `front_forward`; playlist mode uses the first selected camera for live media-handler playback.
 
 ## Verification
 - `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed.
 - Streamlit server started in tmux session `unpudo-event-viewer`.
 - `curl -sI http://127.0.0.1:3001/` returned HTTP 200.
 - Azure blob listing for the generated MP4 prefix works from the current environment.
+- Playlist update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
 
 ## Notes
 - The browser must be able to reach `https://media-handler.azr.internal.wayve.ai` for videos to play.
