@@ -189,5 +189,6 @@
 - Added playback-speed control, defaulting to `3x`.
 - Event query now dedupes source rows by `(runID, timestamp_unixus)` after sidebar filters to hide repeated source-table rows in the viewer.
 - Follow-up pending restart: dedupe is now a sidebar toggle, videos start from the beginning, and a green border marks playback when it reaches the event timestamp.
+- Follow-up pending restart: live media-handler cameras are now the default source, and selecting another single event autoplays the new video from the beginning.
 - Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
 - Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.

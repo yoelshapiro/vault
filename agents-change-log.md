@@ -37,7 +37,7 @@
   - Changed the default live-camera selection to `front_forward`.
   - Added a playback-speed sidebar control, defaulting to `3x`.
   - Updated the event-loading query to dedupe source rows by `(runID, timestamp_unixus)`.
-  - Added pending viewer changes, not restarted yet: dedupe toggle, start playback at beginning, and green event-timestamp border.
+  - Added pending viewer changes, not restarted yet: dedupe toggle, start playback at beginning, green event-timestamp border, live-source default, and autoplay on single-event selection.
   - Verified `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and started the app on `http://127.0.0.1:3001/` in tmux session `unpudo-event-viewer`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-unpudo-event-streamlit-viewer|2026-06-04 UnPUDO Event Streamlit Viewer]]
 

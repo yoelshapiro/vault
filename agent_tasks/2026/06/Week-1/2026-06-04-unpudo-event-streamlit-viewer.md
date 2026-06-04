@@ -19,6 +19,7 @@
 - Added a sidebar playback-speed control, defaulting to `3x`.
 - Updated the event-loading query to dedupe source rows by `(runID, timestamp_unixus)` after applying sidebar filters.
 - Follow-up change, not restarted yet: made dedupe a sidebar toggle, changed videos/playlists to start from the beginning, and added a green border while playback is within 0.5s of the event timestamp.
+- Follow-up change, not restarted yet: made live media-handler cameras the default video source and enabled autoplay for single-event video renders.
 
 ## Verification
 - `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed.
@@ -28,7 +29,7 @@
 - Playlist update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
 - Playback-speed update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
 - Dedupe-query update verified with `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and Streamlit restart on port `3001`.
-- The follow-up toggle/start-from-beginning/green-border change was intentionally not run or restarted.
+- The follow-up toggle/start-from-beginning/green-border/live-default/autoplay changes were intentionally not run or restarted.
 
 ## Notes
 - The browser must be able to reach `https://media-handler.azr.internal.wayve.ai` for videos to play.
