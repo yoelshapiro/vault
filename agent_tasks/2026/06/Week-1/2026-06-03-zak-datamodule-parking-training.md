@@ -173,3 +173,22 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Do not count the earlier remote failures as evidence that Zak's loader cannot train parking. The latest remote failure was self-inflicted diagnostic logging, and the next local bounded no-dev issue was an adapter categorical mapping bug that is now fixed.
   - The branch now has a real local no-dev smoke passing through Zak loader, Zak augmentations, SI adapter, release parking model forward/backward, and trainer stop at one step.
   - A remote dispatch still needs a fresh push first; no new remote train was started during this investigation.
+
+## 2026-06-04 Local 1000-Step Run
+
+- Ran a local 1000-step train from branch `boris/zak_datamodule_parking_cherrypick`.
+- Command shape:
+  - Mode: `parking_bc_train_zak_mcv_new_phase2_release_2026_5_21`.
+  - `dev=false`, `num_gpus=1`, `num_steps=1000`, `limit_val_batches=0`.
+  - Kept bounded local Zak data with `datamodule.train_parquet_fraction=0.001` and `datamodule.val_parquet_fraction=0.001`.
+  - Used `datamodule.batch_size=1` and `model.max_batch_size=1` because the same local A100 OOMed at batch size 4.
+  - Disabled logger/profiler/callback extras as in the previous smoke runs.
+- Result: success.
+  - Zak bounded train dataset loaded fully: `loading_runs_done rank=0, loaded=264, total=264`.
+  - Train sampler built successfully and sampled `150,100` total / `132,611` unique examples.
+  - First iteration started and ended successfully.
+  - Lightning exited cleanly with ``Trainer.fit` stopped: `max_steps=1000` reached.`
+- Observed warnings:
+  - Repeated object-store `NotFoundError` warnings for camera video paths ending in `/nan`, for example `.../mcap_logger_camera_right_backward/nan`.
+  - Zak's loader converted those to warnings at `wayve/ai/experimental/dataset/ipace.py:866`; they did not stop the local 1000-step run.
+  - Final NCCL warning about `destroy_process_group()` not being called appeared on exit; process still exited with code 0.
