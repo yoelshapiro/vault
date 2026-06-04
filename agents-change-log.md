@@ -14,6 +14,8 @@
   - Submitted corrected training job `174503` / `immense-peach-jackal` with `parking_bc_train_release_2026_5_21` after the initial 5.11 attempt failed on the tele-camera mode mismatch.
   - Monitored the corrected job; it failed before 1K at `trainer/global_step=0` because the new root is missing expected UNPUDO bucket parquet lists such as `dc_unpudo_move_uk` and `dc_unpudo_departure_uk`.
   - Created Notion model-card row `immense-peach-jackal (not interleaved)` with the failure diagnosis in the page body.
+  - Updated config bucket names to match the actual gear-fixed root: `dc_unpudo_move_*` -> `dc_unpudo_*`, and departure -> pre-departure.
+  - Verified `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pudo-gear-fix-root-training|2026-06-04 PUDO Gear-Fix Root Training]]
 
 ## 2026-06-04 - UnPUDO Event Streamlit Viewer

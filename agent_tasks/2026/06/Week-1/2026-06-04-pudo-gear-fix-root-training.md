@@ -27,3 +27,11 @@ Representative error:
 ```text
 ValueError: No parquet files found in .../2026_06_04_11_13_51_root_parking_pudo_unpudo_unparking_gear_fix/dataset_split=train/dataset_bucket=dc_unpudo_move_uk
 ```
+
+## 2026-06-04 Bucket Name Update
+
+Adjusted the config to match the actual bucket names in the gear-fixed root:
+
+- Replaced short DC `dc_unpudo_move_usa` / `dc_unpudo_move_uk` with `dc_unpudo_usa` / `dc_unpudo_uk`.
+- Renamed the departure group and buckets to pre-departure: `unpudo_pre_departure`, `dc_unpudo_pre_departure_usa`, and `dc_unpudo_pre_departure_uk`.
+- Verified `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
