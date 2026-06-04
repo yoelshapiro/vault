@@ -1003,5 +1003,7 @@
   - Pushed parking-based branch through `9be51ff18772` with remote-train robustness fixes and bounded diagnostics for Zak loader/constructor startup.
   - Fixed non-finite cumulative-distance handling and frame-to-frame odometry distance computation, with focused regressions in `//wayve/ai/experimental:test_single_run`.
   - Monitored remote runs through job `174286`; it failed on agent-added diagnostic logging before proving the underlying constructor behavior.
+  - Continued without starting a new remote run: fixed the diagnostic logger crash, added Zak-to-SI adapter validation, mapped Zak unknown indicator `-1` to SI unknown `4`, and preserved Zak's `indicator_stick` augmentation for vehicle conditioning.
+  - Verified bounded local `dev=false` training reaches `max_steps=1` with Zak data/augmentations and the release WFM path at batch size 1; batch size 4 reaches first iteration but OOMs locally.
   - Notion update remains pending until a run reaches the requested 5K-step threshold.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]

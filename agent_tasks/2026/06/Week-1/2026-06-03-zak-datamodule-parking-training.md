@@ -149,3 +149,27 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
   - Commit the loader fixes only after deciding whether to keep the verbose constructor-stage diagnostics.
   - Add a pre-forward batch validation/debug path for the adapter fields (`camera_extrinsics`, `vehicle_indicator_state`, `vehicle_country`, `vehicle_model`, `vehicle_gear_direction`, `stopping_mode`, `parking_mode`) and rerun a local bounded no-dev smoke with `CUDA_LAUNCH_BLOCKING=1` if needed.
   - Once the mapped batch passes one local train step without `dev=true`, push and dispatch a new remote run.
+
+## 2026-06-04 Adapter Validation and No-Dev Smoke
+
+- Added explicit SI batch validation in `ZakExperimentalDataModule._to_si_batch` before the model sees the batch:
+  - Checks finite pose/intrinsics/distortion/trajectory/speed/curvature tensors.
+  - Checks categorical ranges for indicator, country, vehicle model, gear direction, stopping mode, parking mode, and unparking mode.
+  - Keeps validation always-on while this branch is an experiment so failures are CPU-side and readable rather than CUDA embedding/index asserts.
+- Bounded `dev=false` local smoke with `datamodule.train_parquet_fraction=0.001`, `datamodule.val_parquet_fraction=0.001`, `num_gpus=1`, `num_steps=1`, and batch size 4:
+  - Loaded Zak dataset successfully: `loading_runs_done rank=0, loaded=264, total=264`.
+  - Validation caught the actual adapter bug before forward: `vehicle_indicator_state` contained Zak value `-1`, while SI expects indicator categories `0..4`.
+  - Fixed by mapping Zak unknown indicator `-1` to SI unknown indicator `4`, and by using Zak's `indicator_stick` for `vehicle_indicator_state` when present. This preserves Zak's indicator-stick dropout augmentation instead of silently using the unaugmented policy indicator everywhere.
+- Bounded `dev=false` local smoke after indicator fix, batch size 4:
+  - Passed dataset load, sampler creation, adapter validation, and reached first iteration.
+  - Failed with local CUDA OOM during video encoder forward (`Tried to allocate 788.00 MiB`; ~77 GiB already allocated by PyTorch). Treated as local memory pressure, not a data-loader or adapter-value failure.
+- Bounded `dev=false` local smoke after indicator fix, batch size 1:
+  - Command kept Zak data/augmentations and release WFM mode, with `datamodule.batch_size=1` and `model.max_batch_size=1`.
+  - Result: succeeded. Logs show train sampler creation, first iteration start/end, backward pass, and Lightning stopped at `max_steps=1`.
+- Verification:
+  - `bazel test //wayve/ai/experimental:test_single_run`
+  - `bazel test //wayve/ai/si/datamodules:test_zak_experimental`
+- Current conclusion:
+  - Do not count the earlier remote failures as evidence that Zak's loader cannot train parking. The latest remote failure was self-inflicted diagnostic logging, and the next local bounded no-dev issue was an adapter categorical mapping bug that is now fixed.
+  - The branch now has a real local no-dev smoke passing through Zak loader, Zak augmentations, SI adapter, release parking model forward/backward, and trainer stop at one step.
+  - A remote dispatch still needs a fresh push first; no new remote train was started during this investigation.
