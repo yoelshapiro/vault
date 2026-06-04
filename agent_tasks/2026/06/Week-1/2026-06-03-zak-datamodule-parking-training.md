@@ -260,7 +260,7 @@ The current path is `boris/zak_datamodule_parking_cherrypick` at `83058f1909cb`,
 
 ## 2026-06-04 Cached-Parquet Wiring
 
-- Investigated Zak's actual recent W&B/Sutrfboard runs in `wayve-ai/zak_temporal1`.
+- Investigated Zak's actual recent W&B/Surfboard runs in `wayve-ai/zak_temporal1`.
   - Confirmed latest runs use `DATASET.WAYVE.TRAIN_PARQUET_FRACTION=1`, `DATASET.WAYVE.ODOMETRY_SOURCE=Speed-IMU_v2`, `train_gen2.txt`, `mcv_new_phase2x_wta.yml`, batch size 1, data workers 8, and 16 H100 nodes.
   - Concluded the 4-node SI run's slow startup came from per-rank eager loading: about `8238` cached run parquets per rank on 4 nodes versus about `2060` per rank on Zak's 16-node setup.
 - Added cache-only parquet wiring for the Zak/SI parking datamodule path:
