@@ -181,5 +181,8 @@
 - It shows event metadata including `runID`, `timestamp_unixus`, formatted event time, `event_type`, speed, gear-change timing, event duration, country, lat/lon, and source URL.
 - It constructs media-handler URLs centered on the selected `timestamp_unixus`, with configurable seconds before/after the event.
 - It displays all five cameras by default (`front_forward`, `left_forward`, `right_forward`, `left_backward`, `right_backward`) and includes a single control to jump all videos back to the event timestamp.
+- Added a faster generated-blob mode for precomputed MP4 collages under `flyte_remote/videos/borisindelman/unpudo_standstill/camera_present_drop_missing_20260602_095509_UTC/gen2`.
+- Blob mode exact-matches `runID + timestamp_unixus`, signs the MP4 with a one-day SAS, and jumps to `5.33s` because these MP4s came from 32-second clips encoded at 3x speed.
+- Live media-handler camera mode remains available for arbitrary rows that do not have a generated MP4 in blob storage.
 - Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
 - Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.

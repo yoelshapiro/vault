@@ -13,6 +13,8 @@
   - Added event-type filtering, run ID substring filtering, row limits, event selection, and metadata display.
   - Built media-handler URLs centered on the selected event timestamp with configurable before/after seconds.
   - Rendered the five camera videos by default with a shared jump-to-event-timestamp control.
+  - Added generated-blob MP4 playback for exact event matches in the Flyte output prefix, signed with a one-day SAS.
+  - Kept live media-handler playback as fallback for rows without precomputed blob clips.
   - Verified `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` and started the app on `http://127.0.0.1:3001/` in tmux session `unpudo-event-viewer`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-unpudo-event-streamlit-viewer|2026-06-04 UnPUDO Event Streamlit Viewer]]
 
