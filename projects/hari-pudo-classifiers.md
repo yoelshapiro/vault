@@ -227,3 +227,7 @@
 - Follow-up update: replaced fixed filter controls with a SQL text area as the source of loaded rows; `event_type` filtering is derived from the returned query table, while random/dedupe/custom filters can live in SQL.
 - Follow-up update: autoplay now uses all selected cameras per event and renders current event metadata plus the source URL inside the autoplay component, so these update as clips advance.
 - Verification after follow-up: Ruff, Flake8, and type checks passed again; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
+- Follow-up performance update: inspected Tom Boehling's classifier-studio `warmer.py` and `video.py`; his warmer primes Streamlit's model-catalogue URL cache ahead of the cursor, not the browser's video bytes.
+- Added `warmer.py` to the event viewer with a background `VideoUrlWarmer` for model-catalogue URL resolution over a lookahead window.
+- Added sidebar controls for `Warm model-catalogue URLs` and `Preload next autoplay clips`; the latter creates hidden muted browser video elements for upcoming playlist items so blob range fetches begin before the item is displayed.
+- Verification after warmer update: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
