@@ -212,3 +212,14 @@
 - Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/gen2/`.
 - Launch args: `clip_length_sec=20`, `highlight_middle_seconds=1.0`, `video_speed=3`, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
 - Initial status: Flyte dispatch succeeded and mapped the local build tag to digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da`. Local `flytectl` is not installed in this shell, so status polling was deferred to the Flyte console.
+
+
+## 2026-06-05 Event Viewer Model-Catalogue Video Source
+- Worktree/branch: `/workspace/event_clip_viewer` on `boris/event_clip_viewer`.
+- Added a model-catalogue-backed video source to `wayve/ai/parking/tools/event_clip_viewer`, based on Tom Boehling's `get_camera_video` helper from classifier studio.
+- New helper calls `http://model-catalogue-api.azr.internal.wayve.ai/v2/run/real/{run_id}/video`, maps viewer camera names like `front_forward` to catalogue names like `front-forward`, and computes the event seek offset from `video_start_us`.
+- Cached catalogue payloads per run for one hour in Streamlit, so multiple events/cameras from the same run reuse one API response.
+- Updated the HTML video players to support `start_seconds` / `end_seconds`, allowing catalogue playback to start at `event - before_seconds`, keep the green event-time marker at the actual event offset, and stop/advance at `event + after_seconds`.
+- Existing media-handler and generated-blob playback modes remain available; the previous default radio option remains `Live media-handler cameras`.
+- Restarted local Streamlit session `unpudo-event-viewer` from the PR worktree on `http://127.0.0.1:3001/`.
+- Verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_lint_ruff //wayve/ai/parking/tools/event_clip_viewer:py_lint_flake8 //wayve/ai/parking/tools/event_clip_viewer:ty` passed; Streamlit health endpoint returned `ok`; direct catalogue API probe returned `front-forward` status `success` and `video_start_us`.

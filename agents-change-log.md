@@ -75,6 +75,22 @@
   - Locally validated bounded non-dev Zak training for 2 steps after the metric bypass, then pushed `96a6a0e741c3` and dispatched 4-node P1 job `174514` / `perpetual-anteater-crimson` with cached parquets and `train_parquet_fraction=0.25`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
+## 2026-06-05 - Event Viewer Model-Catalogue Video Source
+
+- Topic: Improve parking event Streamlit video loading with model-catalogue camera URLs.
+- Labels: parking, pudo, unpudo, streamlit, model-catalogue.
+- Branch: `boris/event_clip_viewer`.
+- PR: `https://github.com/wayveai/WayveCode/pull/116721`.
+- Change type: Code change, local.
+- Areas: `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added model-catalogue API resolution for camera MP4 URLs and event seek offsets, with run-level Streamlit caching.
+  - Added a `Model catalogue camera videos` source alongside existing media-handler and generated blob modes.
+  - Updated video components to start catalogue playback at `event - before_seconds`, mark the event with the existing green border, and stop/advance at `event + after_seconds`.
+  - Restarted the local viewer on `http://127.0.0.1:3001/`.
+  - Verified Ruff, Flake8, type checks, Streamlit health, and a direct catalogue API sample.
+- Task note: [[projects/hari-pudo-classifiers#2026-06-05 Event Viewer Model-Catalogue Video Source|Hari PUDO classifiers project note]]
+
 ## 2026-06-05 - Anchor-Expanded UnPUDO Flyte Clips
 
 - Topic: Dispatch anchor-expanded UnPUDO run clips with Flyte.
