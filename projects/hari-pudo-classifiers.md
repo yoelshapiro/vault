@@ -234,3 +234,5 @@
 - Follow-up UI consolidation: autoplay mode now hides the static Streamlit-side Event Info panel and uses the live-updating playlist Event Info block as the single source of event metadata/source URL.
 - Added a highlighted read-only SQL preview below the editable SQL text area; editable syntax highlighting would require adding a Streamlit editor component dependency.
 - Verification after UI consolidation: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
+- Follow-up autoplay layout fix: compacted the autoplay Event Info block into a bounded scroll area, forced playlist videos to 16:9 object-fit containment, and increased the Streamlit component iframe height based on selected video count so multi-camera autoplay is not cut off.
+- Verification after layout fix: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
