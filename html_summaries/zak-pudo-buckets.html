@@ -1,0 +1,1106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zak PUDO Bucket Reimplementation Notes</title>
+  <style>
+    :root {
+      --ink: #18211f;
+      --muted: #61716d;
+      --line: #d7dfdc;
+      --paper: #fbfaf6;
+      --panel: #ffffff;
+      --accent: #0f766e;
+      --accent-dark: #124d46;
+      --code-bg: #17211f;
+      --code-ink: #eaf4ef;
+      --warn: #a45b13;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(15, 118, 110, .10), transparent 28rem),
+        linear-gradient(180deg, #f5f1e7 0, var(--paper) 18rem);
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      line-height: 1.62;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(220px, 320px) minmax(0, 980px);
+      gap: 2rem;
+      width: min(1400px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 42px 0 72px;
+    }
+    aside {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .78);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 12px 40px rgba(32, 45, 41, .08);
+    }
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    aside h2 {
+      margin: 0 0 14px;
+      font: 700 22px/1.15 Georgia, serif;
+    }
+    nav a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      padding: 5px 0 5px 10px;
+      font-size: 14px;
+    }
+    nav a:hover {
+      color: var(--accent-dark);
+      border-left-color: var(--accent);
+      background: rgba(15, 118, 110, .06);
+    }
+    nav .level-3 {
+      padding-left: 24px;
+      font-size: 13px;
+    }
+    main {
+      min-width: 0;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: clamp(24px, 4vw, 56px);
+      box-shadow: 0 24px 70px rgba(32, 45, 41, .10);
+    }
+    h1 {
+      margin: 0 0 10px;
+      color: #111c19;
+      font: 800 clamp(34px, 5vw, 58px)/1.02 Georgia, serif;
+      max-width: 11ch;
+    }
+    h2 {
+      margin: 44px 0 16px;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+      color: #142420;
+      font: 760 30px/1.15 Georgia, serif;
+    }
+    h3 {
+      margin: 34px 0 12px;
+      color: var(--accent-dark);
+      font-size: 21px;
+      line-height: 1.25;
+    }
+    h4, h5, h6 { margin: 24px 0 8px; }
+    p, li { font-size: 16px; }
+    p { margin: 0 0 15px; }
+    ul, ol { padding-left: 1.35rem; margin: 0 0 18px; }
+    li + li { margin-top: 4px; }
+    a { color: var(--accent-dark); }
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: .92em;
+      background: #edf3ef;
+      color: #173c35;
+      padding: .12rem .32rem;
+      border-radius: 6px;
+    }
+    pre {
+      position: relative;
+      overflow: auto;
+      margin: 18px 0 24px;
+      padding: 20px;
+      background: var(--code-bg);
+      color: var(--code-ink);
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    pre code {
+      display: block;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre;
+    }
+    .copy {
+      position: sticky;
+      left: calc(100% - 58px);
+      top: 0;
+      float: right;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color: #d9eee8;
+      border-radius: 8px;
+      padding: 5px 9px;
+      cursor: pointer;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      margin: 18px 0 28px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 640px;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #e9f1ed;
+      color: #18342f;
+      text-align: left;
+      font-weight: 800;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px 12px;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #fbfcfa; }
+    tr:hover td { background: #eef7f3; }
+    main > p:first-of-type, main > p:nth-of-type(2) {
+      color: var(--muted);
+      font-size: 17px;
+    }
+    @media (max-width: 980px) {
+      .shell {
+        display: block;
+        width: min(100% - 24px, 980px);
+        padding-top: 16px;
+      }
+      aside {
+        position: static;
+        max-height: none;
+        margin-bottom: 16px;
+      }
+      main { padding: 24px 18px; }
+      h1 { max-width: none; }
+    }
+    @media print {
+      body { background: white; }
+      .shell { display: block; width: auto; padding: 0; }
+      aside { display: none; }
+      main { border: 0; box-shadow: none; }
+      pre, .table-wrap { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside>
+      <p class="eyebrow">Parking / PUDO</p>
+      <h2>Zak Buckets</h2>
+      <nav><a class="level-2" href="#executive-summary">Executive summary</a>
+<a class="level-2" href="#core-sampler-algorithm">Core sampler algorithm</a>
+<a class="level-2" href="#shared-validity-masks">Shared validity masks</a>
+<a class="level-2" href="#active-mcv-new-phase2-bucket-weights">Active <code>mcv_new_phase2</code> bucket weights</a>
+<a class="level-2" href="#bucket-generation-recipes">Bucket generation recipes</a>
+<a class="level-3" href="#dc-not-stopped-stopped">DC not-stopped / stopped</a>
+<a class="level-3" href="#large-error-slow">Large-error slow</a>
+<a class="level-3" href="#start">Start</a>
+<a class="level-3" href="#start-near-gear-change">Start near gear change</a>
+<a class="level-3" href="#indicator-and-indicator-change">Indicator and indicator-change</a>
+<a class="level-3" href="#gear-change">Gear change</a>
+<a class="level-3" href="#interventions-corrective-actions">Interventions / corrective actions</a>
+<a class="level-3" href="#interventions-near-gear-change">Interventions near gear change</a>
+<a class="level-3" href="#parking">Parking</a>
+<a class="level-3" href="#pudo">PUDO</a>
+<a class="level-3" href="#unparking">Unparking</a>
+<a class="level-2" href="#global-training-augmentations-and-label-transformations">Global training augmentations and label transformations</a>
+<a class="level-3" href="#image-augmentation">Image augmentation</a>
+<a class="level-3" href="#route-navigation-augmentation">Route / navigation augmentation</a>
+<a class="level-3" href="#indicator-state-augmentation">Indicator state augmentation</a>
+<a class="level-3" href="#gear-state-augmentation">Gear state augmentation</a>
+<a class="level-3" href="#ego-pose-interpolation-pre-corrective-action-pseudo-labeling">Ego-pose interpolation / pre-corrective action pseudo-labeling</a>
+<a class="level-2" href="#per-bucket-augmentation-summary">Per-bucket &quot;augmentation&quot; summary</a>
+<a class="level-2" href="#otf-config-comparison">OTF config comparison</a>
+<a class="level-2" href="#reimplementation-checklist">Reimplementation checklist</a></nav>
+    </aside>
+    <main><h1 id="zak-pudo-bucket-reimplementation-notes">Zak PUDO Bucket Reimplementation Notes</h1>
+<p>Date: 2026-06-05</p>
+<p>Branch inspected: <code>origin/zmurez/pudo</code> at <code>22a4ac634eb3e88112059946f98e7c2ef7d3876f</code>.</p>
+<p>Primary source files:</p>
+<ul>
+<li><code>/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2.yml</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2x.yml</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2_otf.yml</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/samplers/sampler.py</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/dataset/datasets.py</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/dataset/ipace.py</code></li>
+<li><code>/workspace/materialization/wayve/ai/experimental/transforms.py</code></li>
+</ul>
+<h2 id="executive-summary">Executive summary</h2>
+<p>Zak has two different &quot;bucket&quot; mechanisms on <code>zmurez/pudo</code>.</p>
+<ol>
+<li><code>mcv_new_phase2.yml</code> / <code>mcv_new_phase2x_wta.yml</code>: training-time heuristic buckets. These do not write materialized tables. The sampler calculates frame indices per run using predicates over the single-run dataset arrays, then samples from named buckets by configured weights.</li>
+<li><code>mcv_new_phase2_otf.yml</code>: OTF materialized partition consumption. This reads existing materialized partitions with weights. It contains DC, CA, pre-CA, DILC partitions, but not Zak&#x27;s heuristic parking/PUDO/unparking buckets.</li>
+</ol>
+<p>For reimplementation of parking/PUDO/unPUDO, the useful logic is in the heuristic sampler path.</p>
+<p><code>mcv_new_phase2.yml</code> active weights sum exactly to <code>1.0</code>. The active weight split is:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Bucket family</th><th>Weight</th><th>Percent</th></tr></thead>
+<tbody>
+<tr><td>DC/start</td><td>0.1735</td><td>17.35%</td></tr>
+<tr><td>Large error</td><td>0.0500</td><td>5.00%</td></tr>
+<tr><td>Start near gear change</td><td>0.0465</td><td>4.65%</td></tr>
+<tr><td>Indicator / indicator change</td><td>0.0600</td><td>6.00%</td></tr>
+<tr><td>Gear change</td><td>0.0370</td><td>3.70%</td></tr>
+<tr><td>Interventions / CA</td><td>0.3350</td><td>33.50%</td></tr>
+<tr><td>Interventions near gear change</td><td>0.1000</td><td>10.00%</td></tr>
+<tr><td>Parking</td><td>0.0630</td><td>6.30%</td></tr>
+<tr><td>PUDO</td><td>0.0800</td><td>8.00%</td></tr>
+<tr><td>Unparking</td><td>0.0550</td><td>5.50%</td></tr>
+</tbody></table></div>
+<p><code>mcv_new_phase2x_wta.yml</code> is the more current inherited config. It keeps the same total weight and keeps parking/PUDO/unparking unchanged, but changes the mix:</p>
+<ul>
+<li><code>LARGE_ERROR_1_{LDN,USA,JPN,DEU}_SLOW</code> becomes <code>0.0</code>, removing 5%.</li>
+<li><code>INTERVENTIONS_GEN2_ALPHA30</code> changes <code>0.05 -&amp;gt; 0.075</code>.</li>
+<li><code>INTERVENTIONS_GEN2_ALPHA31</code> changes <code>0.04 -&amp;gt; 0.065</code>.</li>
+<li>Net effect: the 5% large-error weight moves to alpha3 intervention windows.</li>
+</ul>
+<h2 id="core-sampler-algorithm">Core sampler algorithm</h2>
+<p>Zak&#x27;s heuristic sampler is equivalent to:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">weights = {bucket_name: configured_weight for bucket_name in config if configured_weight &gt; 0}
+
+for run in dataset.runs:
+    valid_masks = get_valid_masks(run)
+
+    for bucket_name in weights:
+        func, mask_names, args = BUCKET_FUNCTIONS[bucket_name]
+
+        indices = func(run, *args)
+        indices = unique(indices)
+        indices = indices[(indices &gt;= index_present) &amp; (indices &lt; index_present + len(run))]
+
+        # Each bucket has bucket-specific mask_names. &quot;segments&quot; is always added.
+        valid = logical_and([valid_masks[name] for name in [&quot;segments&quot;] + mask_names])
+        indices = indices[valid[indices]]
+
+        global_indices[bucket_name].append(indices + run_global_offset - index_present)
+
+sample_counts = round(total_train_samples * weights / sum(weights))
+for bucket_name:
+    shuffle(bucket_indices)
+    repeat_if_needed_to_hit_count()
+concat_all_bucket_samples()
+shuffle_final_epoch_indices()</code></pre>
+<p>There is no one-to-one materialized output table. A bucket is a set of sampled frame indices inside the dataloader.</p>
+<h2 id="shared-validity-masks">Shared validity masks</h2>
+<p>The most important shared masks:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">ALL_VALID_MASKS = [
+    &quot;autonomous&quot;,
+    &quot;autonomous_engage&quot;,
+    &quot;geofence&quot;,
+    &quot;reverse&quot;,
+    &quot;uturn&quot;,
+    &quot;high_speed&quot;,
+    &quot;bad_park&quot;,
+    &quot;bad_park1&quot;,
+    &quot;bad_stop&quot;,
+    &quot;not_ends&quot;,
+    &quot;has_video&quot;,
+    &quot;dropped_frames&quot;,
+    &quot;perturbed&quot;,
+]
+
+ALL_VALID_MASKS1 = [
+    &quot;autonomous_engage&quot;,
+    &quot;geofence&quot;,
+    &quot;reverse&quot;,
+    &quot;uturn&quot;,
+    &quot;bad_park&quot;,
+    &quot;bad_park1&quot;,
+    &quot;bad_stop&quot;,
+    &quot;not_ends&quot;,
+    &quot;has_video&quot;,
+    &quot;dropped_frames&quot;,
+]
+
+ALL_VALID_MASKS2 = [
+    &quot;autonomous&quot;,
+    &quot;autonomous_engage&quot;,
+    &quot;bad_park&quot;,
+    &quot;bad_park1&quot;,
+    &quot;bad_stop&quot;,
+    &quot;has_video&quot;,
+    &quot;dropped_frames&quot;,
+]</code></pre>
+<p>Important: parking, PUDO, unparking, and start-gear-change use <code>ALL_VALID_MASKS2</code>. That means they do <strong>not</strong> filter geofence, reverse, u-turn, high-speed, or run ends through the shared mask set. They do still apply the autonomous/future-autonomous, bad-park/stop, video, and dropped-frame masks.</p>
+<p>Mask meanings:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">autonomous:
+    keep non-autonomous frames, but allow the immediate intervention moment
+
+autonomous_engage:
+    remove frames before an autonomous re-engagement, because future labels would be autonomous
+
+geofence:
+    remove configured excluded boxes
+
+reverse:
+    remove distance-padded reverse-gear frames and time-padded negative-speed frames
+
+uturn:
+    remove distance-padded route-command u-turn frames
+
+high_speed:
+    speed &lt; 80 mph
+
+bad_park:
+    remove distance-padded frames around predicted bad parking
+
+bad_stop:
+    remove distance-padded frames around predicted park/bad stop not near gear park/unpark
+
+not_ends:
+    cumdist &gt; 1m and cumdist &lt; final_cumdist - 200m, plus last 200 frames removed
+
+has_video:
+    for gen2 / partner MB, require non-null front-forward video file
+
+dropped_frames:
+    remove frames around timestamp gaps &gt; 5 * 1e6 / frame_rate</code></pre>
+<h2 id="active-mcv-new-phase2-bucket-weights">Active <code>mcv_new_phase2</code> bucket weights</h2>
+<p>These weights already sum to 1.0, so raw weight equals sampling percent.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Bucket</th><th>Weight</th><th>Percent</th></tr></thead>
+<tbody>
+<tr><td><code>NOT_STOPPED_DC_GEN2_MACHE_LDN</code></td><td>0.0205</td><td>2.05%</td></tr>
+<tr><td><code>NOT_STOPPED_DC_GEN2_MACHE_USA</code></td><td>0.0205</td><td>2.05%</td></tr>
+<tr><td><code>NOT_STOPPED_DC_GEN2_MACHE_JPN</code></td><td>0.0150</td><td>1.50%</td></tr>
+<tr><td><code>NOT_STOPPED_DC_GEN2_MACHE_DEU</code></td><td>0.0150</td><td>1.50%</td></tr>
+<tr><td><code>NOT_STOPPED_DC_GEN2_MSC</code></td><td>0.0150</td><td>1.50%</td></tr>
+<tr><td><code>NOT_STOPPED_DC_GEN2_NAR</code></td><td>0.0150</td><td>1.50%</td></tr>
+<tr><td><code>NOT_STOPPED_DC_GEN2_ALPHA3</code></td><td>0.0505</td><td>5.05%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_MACHE_LDN</code></td><td>0.0020</td><td>0.20%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_MACHE_USA</code></td><td>0.0020</td><td>0.20%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_MACHE_JPN</code></td><td>0.0010</td><td>0.10%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_MACHE_DEU</code></td><td>0.0010</td><td>0.10%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_MSC</code></td><td>0.0020</td><td>0.20%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_NAR</code></td><td>0.0020</td><td>0.20%</td></tr>
+<tr><td><code>STOPPED_DC_GEN2_ALPHA3</code></td><td>0.0020</td><td>0.20%</td></tr>
+<tr><td><code>LARGE_ERROR_1_LDN_SLOW</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>LARGE_ERROR_1_USA_SLOW</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>LARGE_ERROR_1_JPN_SLOW</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>LARGE_ERROR_1_DEU_SLOW</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>START</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>START_GEAR_CHANGE_LDN_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>START_GEAR_CHANGE_LDN_OTHER</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>START_GEAR_CHANGE_USA_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>START_GEAR_CHANGE_USA_OTHER</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>START_GEAR_CHANGE_MSC_OTHER</code></td><td>0.0015</td><td>0.15%</td></tr>
+<tr><td><code>INDICATOR_LDN</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INDICATOR_USA</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INDICATOR_JPN</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>INDICATOR_DEU</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>INDICATOR_CHANGE_LDN</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INDICATOR_CHANGE_USA</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INDICATOR_CHANGE_JPN</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>INDICATOR_CHANGE_DEU</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>GEAR_CHANGE_GEN2_MACHE_LDN</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>GEAR_CHANGE_GEN2_MACHE_USA</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>GEAR_CHANGE_GEN2_MACHE_DEU</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>GEAR_CHANGE_GEN2_MACHE_JPN</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>GEAR_CHANGE_GEN2_ALPHA3</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>GEAR_CHANGE_GEN2_MSC</code></td><td>0.0020</td><td>0.20%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_LDN0</code></td><td>0.0500</td><td>5.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_USA0</code></td><td>0.0500</td><td>5.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_JPN0</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_DEU0</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_MSC0</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_NAR0</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_ALPHA30</code></td><td>0.0500</td><td>5.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_LDN0_TORQUE</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_USA0_TORQUE</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_LDN0_TORQUE_CURVATURE</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_USA0_TORQUE_CURVATURE</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_LDN1</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_USA1</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_JPN1</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_DEU1</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_MSC1</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_NAR1</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>INTERVENTIONS_GEN2_ALPHA31</code></td><td>0.0400</td><td>4.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEAR_CHANGE0</code></td><td>0.0500</td><td>5.00%</td></tr>
+<tr><td><code>INTERVENTIONS_GEAR_CHANGE1</code></td><td>0.0500</td><td>5.00%</td></tr>
+<tr><td><code>PARKING_LDN_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>PARKING_LDN_NOSE</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_LDN_TAIL</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_LDN_SIDE</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_LDN_PARALLEL</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_USA_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>PARKING_USA_NOSE</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_USA_TAIL</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_USA_SIDE</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_USA_PARALLEL</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_ALPHA3_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>PARKING_ALPHA3_OTHER</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_MSC_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>PARKING_MSC_OTHER</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>PARKING_MRM</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>PARKING_MRM_TRACK</code></td><td>0.0005</td><td>0.05%</td></tr>
+<tr><td><code>PUDO_LDN_NEAR</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>PUDO_LDN_FAR</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>PUDO_USA_NEAR</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>PUDO_USA_FAR</code></td><td>0.0200</td><td>2.00%</td></tr>
+<tr><td><code>UNPARKING_LDN_OTHER</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>UNPARKING_USA_OTHER</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>UNPARKING_ALPHA3_OTHER</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>UNPARKING_MSC_OTHER</code></td><td>0.0100</td><td>1.00%</td></tr>
+<tr><td><code>UNPARKING_LDN_OFFICE</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>UNPARKING_USA_OFFICE</code></td><td>0.0050</td><td>0.50%</td></tr>
+<tr><td><code>UNPARKING_ALPHA3_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+<tr><td><code>UNPARKING_MSC_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
+</tbody></table></div>
+<h2 id="bucket-generation-recipes">Bucket generation recipes</h2>
+<h3 id="dc-not-stopped-stopped">DC not-stopped / stopped</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>NOT_STOPPED_DC_GEN2_MACHE_{LDN,USA,JPN,DEU}</code></li>
+<li><code>NOT_STOPPED_DC_GEN2_{MSC,NAR,ALPHA3}</code></li>
+<li><code>STOPPED_DC_GEN2_MACHE_{LDN,USA,JPN,DEU}</code></li>
+<li><code>STOPPED_DC_GEN2_{MSC,NAR,ALPHA3}</code></li>
+</ul>
+<p>Function: <code>get_not_stopped_indices</code>.</p>
+<p>Not-stopped:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = abs(speed) &gt; 0.01
+mask = country_or_platform_filter(mask)
+mask = dilate(mask, before=2s, after=2s)   # phase2 regional/platform DC buckets
+mask = remove_near_auto_transitions(mask, margin=5s)
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Stopped:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = abs(speed) &lt;= 0.01
+mask = country_or_platform_filter(mask)
+mask = dilate(mask, before=0s, after=0s)
+mask = remove_near_auto_transitions(mask, margin=5s)
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>SQL-ish version:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH base AS (
+  SELECT *,
+         ABS(speed) &gt; 0.01 AS is_not_stopped,
+         ABS(speed) &lt;= 0.01 AS is_stopped
+  FROM run_frames
+),
+auto_transitions AS (
+  SELECT run_id, timestamp_unixus
+  FROM base
+  WHERE auto != LAG(auto) OVER (PARTITION BY run_id ORDER BY timestamp_unixus)
+),
+not_stopped AS (
+  SELECT b.*
+  FROM base b
+  WHERE b.is_not_stopped
+    AND b.country = &#x27;USA&#x27;
+    AND NOT EXISTS (
+      SELECT 1 FROM auto_transitions t
+      WHERE t.run_id = b.run_id
+        AND ABS(t.timestamp_unixus - b.timestamp_unixus) &lt;= 5 * 1000000
+    )
+)
+SELECT * FROM dilate_by_time(not_stopped, before_s =&gt; 2, after_s =&gt; 2);</code></pre>
+<p>Bucket-local augmentation/windowing:</p>
+<ul>
+<li>Not-stopped DC gets a 2s before/after dilation around moving frames.</li>
+<li>Stopped DC has no dilation.</li>
+<li>Both remove frames within 5s of automation transitions.</li>
+</ul>
+<h3 id="large-error-slow">Large-error slow</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>LARGE_ERROR_1_{LDN,USA,JPN,DEU}_SLOW</code></li>
+</ul>
+<p>Function: <code>get_annotations_indices</code>.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = annotations[&quot;large_error_1_slow&quot;] == True
+mask &amp;= country_filter
+mask = dilate(mask, before=2_frames, after=2_frames)
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>In <code>mcv_new_phase2x_wta</code>, these are disabled and their 5% goes into alpha3 CA buckets.</p>
+<h3 id="start">Start</h3>
+<p>Bucket:</p>
+<ul>
+<li><code>START</code></li>
+</ul>
+<p>Function: <code>get_start_stop_indices</code>.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = annotations[&quot;start_offset&quot;] &gt;= -0.2s
+mask &amp;= annotations[&quot;start_offset&quot;] &lt;= 0s
+mask &amp;= ALL_VALID_MASKS with autonomous, geofence, reverse, uturn, high_speed, bad stop/park, not_ends, video, dropped frames</code></pre>
+<p>This is a generic start bucket, not specifically parking/unparking.</p>
+<h3 id="start-near-gear-change">Start near gear change</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>START_GEAR_CHANGE_LDN_OFFICE</code></li>
+<li><code>START_GEAR_CHANGE_LDN_OTHER</code></li>
+<li><code>START_GEAR_CHANGE_USA_OFFICE</code></li>
+<li><code>START_GEAR_CHANGE_USA_OTHER</code></li>
+<li><code>START_GEAR_CHANGE_MSC_OTHER</code></li>
+</ul>
+<p>Function: <code>get_start_gear_change_indices</code>.</p>
+<p>This is the closest heuristic to a pre-departure bucket.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle not in configured_vehicle_group:
+    return []
+
+gear_change = pad(gear[:-1] != gear[1:], right=1)
+
+if locations:
+    gear_change &amp;= parking_location in locations
+
+near_gear_change = dilate(gear_change, before=30s, after=30s)
+
+start_moment = pad((speed[:-1] == 0) &amp; (speed[1:] != 0), right=1)
+
+mask = near_gear_change &amp; start_moment
+mask = dilate(mask, before=0.9s, after=0s)
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Location coding:</p>
+<ul>
+<li>LDN office: <code>[0]</code></li>
+<li>LDN other: <code>[-1]</code></li>
+<li>USA office: <code>[1, 2]</code></li>
+<li>USA other: <code>[-1]</code></li>
+<li>MSC other: <code>[-1]</code></li>
+</ul>
+<p>SQL-ish:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH transitions AS (
+  SELECT *,
+         gear != LAG(gear) OVER w AS gear_changed,
+         LAG(speed) OVER w = 0 AND speed != 0 AS started_moving
+  FROM frames
+  WINDOW w AS (PARTITION BY run_id ORDER BY timestamp_unixus)
+),
+gear_windows AS (
+  SELECT f.*
+  FROM transitions f
+  WHERE EXISTS (
+    SELECT 1 FROM transitions g
+    WHERE g.run_id = f.run_id
+      AND g.gear_changed
+      AND ABS(g.timestamp_unixus - f.timestamp_unixus) &lt;= 30 * 1000000
+  )
+)
+SELECT *
+FROM dilate_by_time(
+  (SELECT * FROM gear_windows WHERE started_moving),
+  before_s =&gt; 0.9,
+  after_s =&gt; 0.0
+);</code></pre>
+<p>Bucket-local augmentation/windowing:</p>
+<ul>
+<li>Detects a movement-start frame.</li>
+<li>Keeps the 0.9s before that movement-start frame.</li>
+<li>Requires the movement-start frame to be within 30s of a gear transition.</li>
+</ul>
+<h3 id="indicator-and-indicator-change">Indicator and indicator-change</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>INDICATOR_{LDN,USA,JPN,DEU}</code></li>
+<li><code>INDICATOR_CHANGE_{LDN,USA,JPN,DEU}</code></li>
+</ul>
+<p>Functions:</p>
+<ul>
+<li><code>get_indicator_indices</code></li>
+<li><code>get_indicator_change_indices</code></li>
+</ul>
+<p>Indicator-on:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = indicator in (1, 2)   # left/right only; hazard=3 excluded
+mask &amp;= country_filter
+mask = dilate(mask, before=8s, after=2s)
+mask &amp;= speed &gt; 0
+mask &amp;= ~post_handover_indicator_invalid
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Indicator-change:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = indicator[:-1] != indicator[1:]
+mask &amp;= both old and new indicator are known
+mask &amp;= neither old nor new indicator is hazard
+mask &amp;= country_filter
+mask = dilate(mask, before=1s, after=1s)
+mask &amp;= ~post_handover_indicator_invalid
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Bucket-local augmentation/windowing:</p>
+<ul>
+<li>Indicator-on gets a wide <code>-8s..+2s</code> window.</li>
+<li>Indicator-change gets a narrow <code>-1s..+1s</code> window.</li>
+<li>Hazard is deliberately excluded from these buckets; hazard is treated elsewhere.</li>
+</ul>
+<h3 id="gear-change">Gear change</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>GEAR_CHANGE_GEN2_MACHE_LDN</code></li>
+<li><code>GEAR_CHANGE_GEN2_MACHE_USA</code></li>
+<li><code>GEAR_CHANGE_GEN2_MACHE_DEU</code></li>
+<li><code>GEAR_CHANGE_GEN2_MACHE_JPN</code></li>
+<li><code>GEAR_CHANGE_GEN2_ALPHA3</code></li>
+<li><code>GEAR_CHANGE_GEN2_MSC</code></li>
+</ul>
+<p>Function: <code>get_gear_change_indices</code>.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle_model is configured and run platform/model does not match:
+    return []
+
+mask = gear[:-1] != gear[1:]
+mask &amp;= country_filter_if_configured
+mask = dilate(mask, before=1s, after=1s)
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Note: <code>config.py</code> default has <code>GEAR_CHANGE_AFTER=0.5</code>, but the <code>mcv_new_phase2</code> inheritance path sets <code>GEAR_CHANGE_BEFORE=1.0</code> and <code>GEAR_CHANGE_AFTER=1.0</code> in <code>mcv_new_base0.yml</code>.</p>
+<p>Bucket-local augmentation/windowing:</p>
+<ul>
+<li>Dilation around any raw gear transition.</li>
+<li>No smoothing in this sampler.</li>
+<li>No park-only restriction; any gear value change is included.</li>
+</ul>
+<h3 id="interventions-corrective-actions">Interventions / corrective actions</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}0</code></li>
+<li><code>INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}1</code></li>
+<li>torque and torque-curvature variants</li>
+<li>acceleration slow/fast variants are defined but weight <code>0.0</code> in phase2</li>
+</ul>
+<p>Function: <code>get_intervention_indices</code>.</p>
+<p>The intervention anchor is an autonomous disengagement:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">intervention_indices = where((auto[:-1] == 1) &amp; (auto[1:] == 0)) + 1</code></pre>
+<p>General filtering:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">if torque_thresh &gt; 0:
+    keep abs(steering_torque[anchor]) &gt; torque_thresh
+    keep speed[anchor] &gt; torque_speed_thresh
+
+if acceleration_thresh != 0:
+    acceleration = (speed[t + 2s] - speed[t]) / 2s
+    keep acceleration sign / threshold
+
+if curvature_thresh &gt; 0:
+    keep abs(curvature[anchor]) &gt; curvature_thresh
+
+if gear_window &gt; 0:
+    keep anchors within gear_window seconds of any gear change
+
+if remove_remain_stopped:
+    remove anchors where speed[anchor] == 0 and speed[anchor + 1s] == 0
+
+remove abort-lane-change interventions by default
+
+filter annotation labels:
+    interventions_label != 0 and != 255
+filter corrections if corrections list is non-empty
+filter country/platform</code></pre>
+<p>Window creation:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">if start_offset &lt; 0:
+    # pre-intervention frames
+    mask[anchor + start_offset : anchor + min(0, end_offset)] = True
+
+if end_offset &gt; 0:
+    # post-intervention DC-only frames
+    mask[anchor + max(0, start_offset) : anchor + end_offset] = auto == 0</code></pre>
+<p>Important offsets from <code>mcv_new_base0.yml</code>:</p>
+<ul>
+<li><code>INTERVENTIONS_BEFORE = 1.2</code></li>
+<li><code>INTERVENTIONS_AFTER1 = 1.0</code></li>
+<li><code>INTERVENTIONS_AFTER2 = 5.0</code></li>
+</ul>
+<p>So:</p>
+<ul>
+<li>suffix <code>0</code> buckets use <code>-1.2s..0s</code> before intervention.</li>
+<li>suffix <code>1</code> buckets use <code>0s..+1.0s</code> after intervention, only while expert/DC (<code>auto == 0</code>).</li>
+<li>suffix <code>2</code> buckets are defined as <code>+1.0s..+5.0s</code>, but all phase2 weights are <code>0.0</code>.</li>
+</ul>
+<p>Torque variants:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">INTERVENTIONS_GEN2_LDN0_TORQUE:
+    same as LDN0
+    plus abs(steering_torque) &gt; 1.6
+    plus speed &gt; 5 mph
+
+INTERVENTIONS_GEN2_LDN0_TORQUE_CURVATURE:
+    same torque filter
+    plus abs(curvature) &gt; 0.01</code></pre>
+<p><code>mcv_new_phase2x_wta</code> changes:</p>
+<ul>
+<li><code>INTERVENTIONS_GEN2_ALPHA30 = 0.075</code></li>
+<li><code>INTERVENTIONS_GEN2_ALPHA31 = 0.065</code></li>
+</ul>
+<h3 id="interventions-near-gear-change">Interventions near gear change</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>INTERVENTIONS_GEAR_CHANGE0</code></li>
+<li><code>INTERVENTIONS_GEAR_CHANGE1</code></li>
+</ul>
+<p>Function: <code>get_intervention_indices</code> with <code>gear_window=30.0</code>.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">anchor = autonomous disengagement
+keep anchor if within 30s of any gear change
+remove remain-stopped anchors where speed at anchor and speed at anchor + 1s are both 0
+require intervention label != 0 and != 255
+
+bucket 0:
+    window = -1.2s..0s
+    masks = [&quot;autonomous_engage&quot;, &quot;not_ends&quot;, &quot;has_video&quot;, &quot;dropped_frames&quot;]
+
+bucket 1:
+    window = 0s..+1.0s
+    keep only auto == 0 after intervention
+    masks = [&quot;autonomous&quot;, &quot;autonomous_engage&quot;, &quot;not_ends&quot;, &quot;has_video&quot;, &quot;dropped_frames&quot;]</code></pre>
+<p>This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions.</p>
+<h3 id="parking">Parking</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>PARKING_LDN_OFFICE</code></li>
+<li><code>PARKING_LDN_{NOSE,TAIL,SIDE,PARALLEL}</code></li>
+<li><code>PARKING_USA_OFFICE</code></li>
+<li><code>PARKING_USA_{NOSE,TAIL,SIDE,PARALLEL}</code></li>
+<li><code>PARKING_ALPHA3_OFFICE</code></li>
+<li><code>PARKING_ALPHA3_OTHER</code></li>
+<li><code>PARKING_MSC_OFFICE</code></li>
+<li><code>PARKING_MSC_OTHER</code></li>
+<li><code>PARKING_MRM</code></li>
+<li><code>PARKING_MRM_TRACK</code></li>
+</ul>
+<p>Function: <code>get_parking_indices(stop_type=&amp;quot;park&amp;quot;)</code>.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle / vehicle_model filter does not match:
+    return []
+
+mask = dataset.parking
+
+if locations is configured:
+    mask &amp;= parking_location in locations
+
+# remove long stops; keep only frames with non-zero speed within a +/-40-frame window
+mask &amp;= dilate_mask(speed != 0, before=40_frames, after=40_frames)
+
+if park_type is configured:
+    mask &amp;= parking_type in requested types
+
+mask &amp;= stopping_type == 1
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Location / type mapping used by active buckets:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Bucket pattern</th><th>Vehicle / platform</th><th>Location filter</th><th>Park type filter</th></tr></thead>
+<tbody>
+<tr><td><code>PARKING_LDN_OFFICE</code></td><td>Mache Euro</td><td><code>[0]</code></td><td>nose/tail/side/parallel</td></tr>
+<tr><td><code>PARKING_LDN_NOSE</code></td><td>Mache Euro</td><td><code>[-1]</code></td><td>nose</td></tr>
+<tr><td><code>PARKING_LDN_TAIL</code></td><td>Mache Euro</td><td><code>[-1]</code></td><td>tail</td></tr>
+<tr><td><code>PARKING_LDN_SIDE</code></td><td>Mache Euro</td><td><code>[-1]</code></td><td>side</td></tr>
+<tr><td><code>PARKING_LDN_PARALLEL</code></td><td>Mache Euro</td><td><code>[-1]</code></td><td>parallel</td></tr>
+<tr><td><code>PARKING_USA_OFFICE</code></td><td>Mache USA</td><td><code>[1, 2]</code></td><td>nose/tail/side/parallel</td></tr>
+<tr><td><code>PARKING_USA_NOSE</code></td><td>Mache USA</td><td><code>[-1]</code></td><td>nose</td></tr>
+<tr><td><code>PARKING_USA_TAIL</code></td><td>Mache USA</td><td><code>[-1]</code></td><td>tail</td></tr>
+<tr><td><code>PARKING_USA_SIDE</code></td><td>Mache USA</td><td><code>[-1]</code></td><td>side</td></tr>
+<tr><td><code>PARKING_USA_PARALLEL</code></td><td>Mache USA</td><td><code>[-1]</code></td><td>parallel</td></tr>
+<tr><td><code>PARKING_ALPHA3_OFFICE</code></td><td>alpha3</td><td><code>[0, 1, 2]</code></td><td>none</td></tr>
+<tr><td><code>PARKING_ALPHA3_OTHER</code></td><td>alpha3</td><td><code>[-1]</code></td><td>none</td></tr>
+<tr><td><code>PARKING_MSC_OFFICE</code></td><td>msc</td><td><code>[0, 1, 2]</code></td><td>none</td></tr>
+<tr><td><code>PARKING_MSC_OTHER</code></td><td>msc</td><td><code>[-1]</code></td><td>none</td></tr>
+<tr><td><code>PARKING_MRM</code></td><td>any</td><td><code>[-1]</code></td><td>mrm</td></tr>
+<tr><td><code>PARKING_MRM_TRACK</code></td><td>any</td><td><code>[3]</code></td><td>mrm</td></tr>
+</tbody></table></div>
+<p>SQL-ish:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH non_long_stop AS (
+  SELECT *,
+         EXISTS (
+           SELECT 1
+           FROM frames n
+           WHERE n.run_id = f.run_id
+             AND ABS(n.frame_idx - f.frame_idx) &lt;= 40
+             AND n.speed != 0
+         ) AS has_nearby_motion
+  FROM frames f
+)
+SELECT *
+FROM non_long_stop
+WHERE parking
+  AND has_nearby_motion
+  AND stopping_type = 1
+  AND parking_location IN (-1)
+  AND parking_type = &#x27;nose&#x27;
+  AND all_valid_masks2;</code></pre>
+<p>Bucket-local augmentation/windowing:</p>
+<ul>
+<li>No explicit time dilation after the final mask.</li>
+<li>The long-stop removal uses a motion dilation around <code>speed != 0</code>.</li>
+</ul>
+<h3 id="pudo">PUDO</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>PUDO_LDN_NEAR</code></li>
+<li><code>PUDO_LDN_FAR</code></li>
+<li><code>PUDO_USA_NEAR</code></li>
+<li><code>PUDO_USA_FAR</code></li>
+</ul>
+<p>Function: <code>get_parking_indices(stop_type=&amp;quot;pudo&amp;quot;)</code>.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">mask = dataset.parking
+mask &amp;= parking_location == -1
+mask &amp;= stopping_type == 2
+mask &amp;= dilate_mask(speed != 0, before=40_frames, after=40_frames)
+
+before = dataset.pudo_pin_valid_before[indices]
+after = dataset.pudo_pin_valid_after[indices]
+is_near = (before &lt;= 2) &amp; (after &lt;= 1)
+
+if near bucket:
+    keep is_near
+else:
+    keep ~is_near
+
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Notes:</p>
+<ul>
+<li>PUDO here is a stopping bucket, not an unPUDO/departure bucket.</li>
+<li>Near/far is based on predicted/propagated PUDO-pin-valid fields at the sampled frames.</li>
+<li>It does not use a movement-start anchor.</li>
+</ul>
+<h3 id="unparking">Unparking</h3>
+<p>Buckets:</p>
+<ul>
+<li><code>UNPARKING_LDN_OFFICE</code></li>
+<li><code>UNPARKING_LDN_OTHER</code></li>
+<li><code>UNPARKING_USA_OFFICE</code></li>
+<li><code>UNPARKING_USA_OTHER</code></li>
+<li><code>UNPARKING_ALPHA3_OFFICE</code></li>
+<li><code>UNPARKING_ALPHA3_OTHER</code></li>
+<li><code>UNPARKING_MSC_OFFICE</code></li>
+<li><code>UNPARKING_MSC_OTHER</code></li>
+</ul>
+<p>Function: <code>get_unparking_indices</code>.</p>
+<p>This is the closest Zak bucket to unPUDO movement-start sampling.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle / vehicle_model filter does not match:
+    return []
+
+moving_indices = flatnonzero(abs(speed) &gt; 0)
+gear_out_of_park_indices = flatnonzero((gear[:-1] == 0) &amp; (gear[1:] != 0))
+
+# For each gear-out-of-park transition, take first future moving frame.
+pos = searchsorted(moving_indices, gear_out_of_park_indices, side=&quot;left&quot;)
+valid = pos &lt; len(moving_indices)
+anchors = moving_indices[pos[valid]]
+
+mask = zeros_like(speed)
+mask[anchors] = True
+
+if locations:
+    mask &amp;= parking_location_raw in locations
+
+mask = dilate(mask, before=0s, after=10s)
+mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>SQL-ish:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH gear_out AS (
+  SELECT run_id, frame_idx, timestamp_unixus
+  FROM frames
+  WHERE LAG(gear) OVER (PARTITION BY run_id ORDER BY frame_idx) = 0
+    AND gear != 0
+),
+moving AS (
+  SELECT run_id, frame_idx, timestamp_unixus
+  FROM frames
+  WHERE ABS(speed) &gt; 0
+),
+anchors AS (
+  SELECT g.run_id, MIN(m.frame_idx) AS anchor_frame_idx
+  FROM gear_out g
+  JOIN moving m
+    ON m.run_id = g.run_id
+   AND m.frame_idx &gt;= g.frame_idx
+  GROUP BY g.run_id, g.frame_idx
+)
+SELECT f.*
+FROM frames f
+JOIN anchors a
+  ON f.run_id = a.run_id
+ AND f.frame_idx BETWEEN a.anchor_frame_idx AND a.anchor_frame_idx + 10 * frame_rate
+WHERE f.parking_location_raw IN (-1)
+  AND all_valid_masks2;</code></pre>
+<p>Bucket-local augmentation/windowing:</p>
+<ul>
+<li>Anchor is first future non-zero-speed frame after gear leaves park.</li>
+<li>Window is <code>0s..+10s</code>.</li>
+<li>No pre-departure frames are included in these buckets.</li>
+</ul>
+<h2 id="global-training-augmentations-and-label-transformations">Global training augmentations and label transformations</h2>
+<p>The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.</p>
+<p>For <code>mcv_new_phase2</code> inherited from <code>mcv_new_base0.yml</code>:</p>
+<h3 id="image-augmentation">Image augmentation</h3>
+<p>Applies to all sampled buckets during training.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Config</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>IMAGE.AUGMENTATION.CONSISTENT_ACROSS_TIME</code></td><td><code>True</code></td></tr>
+<tr><td><code>IMAGE.AUGMENTATION.BLUR_PROB</code></td><td><code>0.2</code></td></tr>
+<tr><td><code>IMAGE.AUGMENTATION.SHARPEN_PROB</code></td><td><code>0.2</code></td></tr>
+<tr><td><code>IMAGE.AUGMENTATION.COLOR_PROB</code></td><td><code>0.2</code></td></tr>
+<tr><td><code>IMAGE.AUGMENTATION.INTRINSICS_PROB</code></td><td><code>0.0</code> in <code>mcv_new_phase2</code>; base value was <code>0.2</code></td></tr>
+<tr><td><code>IMAGE.AUGMENTATION.ROTATION_PROB</code></td><td><code>0.0</code></td></tr>
+<tr><td><code>IMAGE.TEMPORAL_DROPOUT</code></td><td><code>0.1</code></td></tr>
+<tr><td><code>IMAGE.DECODE_JPEG_HALF_RES_PROB</code></td><td><code>0.9</code></td></tr>
+</tbody></table></div>
+<p>Interpretation:</p>
+<ul>
+<li>Blur/sharpen/color are random image augmentations.</li>
+<li>Intrinsics augmentation is explicitly disabled in <code>mcv_new_phase2</code>.</li>
+<li>Temporal dropout randomly drops past/context frames.</li>
+<li>Half-res JPEG decode is mostly an efficiency/robustness choice, applied probabilistically.</li>
+</ul>
+<h3 id="route-navigation-augmentation">Route / navigation augmentation</h3>
+<p>Applies to all sampled buckets where route context is loaded, with behavior depending on whether the sampled frame is considered parking.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Config</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>ROUTE.AUGMENTATION_PROB</code></td><td><code>0.0</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_DROPOUT</code></td><td><code>0.25</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_DROPOUT_BLACK</code></td><td><code>0.9</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_PARKING_REQUEST_PROB</code></td><td><code>0.025</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_END_JITTER</code></td><td><code>rand</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_END_JITTER_BETA_SCALE</code></td><td><code>1.0</code></td></tr>
+<tr><td><code>INDICATOR_STICK.AUGMENTATION_DROPOUT</code></td><td><code>0.7</code></td></tr>
+</tbody></table></div>
+<p>Behavior:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">route_end_jitter:
+    randomly jitter route endpoint using run segment jitter bounds
+
+route_dropout:
+    with p=0.25, drop route conditioning
+    with p=0.9 inside that dropout, black route map completely
+    otherwise zero route while keeping lane network visible
+
+indicator_stick_dropout:
+    when route is not dropped, with p=0.7 zero indicator stick
+
+parking_request:
+    if sample is parking and rand &lt; 0.025:
+        parking_request = True
+        route_map = black</code></pre>
+<h3 id="indicator-state-augmentation">Indicator state augmentation</h3>
+<p>Configured but disabled:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">INDICATOR_STATE.CHANGE_AUGMENTATION_PROB = 0.0
+INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.0</code></pre>
+<p>No active indicator-state corruption is applied in this config.</p>
+<h3 id="gear-state-augmentation">Gear state augmentation</h3>
+<p><code>GEAR_STATE.ENABLED = True</code>, but there is no bucket-specific gear-state augmentation in this path. Gear state is a model input/loss target. Gear-change upsampling is done by the sampler buckets, not by mutating gear labels.</p>
+<h3 id="ego-pose-interpolation-pre-corrective-action-pseudo-labeling">Ego-pose interpolation / pre-corrective action pseudo-labeling</h3>
+<p><code>EGO_POSE_INTERPOLATION.ENABLED = True</code>.</p>
+<p>For <code>mcv_new_phase2</code>, <code>LEGACY=True</code>, so <code>TrajectoryInterpolation</code> is used. For <code>mcv_new_phase2x_wta</code>, <code>LEGACY=False</code>, so <code>TrajectoryInterpolationV2</code> is used.</p>
+<p>This transformation is not selected by bucket name directly, but it matters for intervention/pre-intervention samples because it rewrites future speed/path labels before an intervention.</p>
+<p>Legacy interpolation core:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">start2 = round((-time_till_int + offset + -time_till_int) / tick_time)
+
+if current_speed &gt; 0 and any future speed until start2 is zero:
+    start1 = first zero-speed index
+    start2 = start1
+    new_acceleration = -current_speed / start1 / tick_time
+else:
+    start1 = round((-time_till_int + offset) / tick_time)
+    new_acceleration = (speed[start2] - speed[0]) / start1 / tick_time
+
+new_speed[0:start1] = speed[0] + new_acceleration * arange(start1) * tick_time
+new_speed[start1:] = original_speed[start2 : start2 + future + 1 - start1]
+
+if do_path:
+    if path_speed_factor:
+        target_distance = 2 * -dist_till_int + path_base_offset + speed_term
+    else:
+        target_distance = 2 * -dist_till_int + path_base_offset
+
+    fit clothoid from current pose to target path point
+    if steering torque is large and speed is high:
+        laterally offset start point by torque_offset * sign(torque)
+
+unroll new_speed over path to produce future egoposition, yaw, curvature</code></pre>
+<p>Important config values:</p>
+<ul>
+<li><code>INTERVENTIONS_BEFORE = 1.2s</code></li>
+<li><code>SPEED_TIME_OFFSET = 1.0</code> in <code>mcv_new_base0.yml</code></li>
+<li><code>PATH_BASE_OFFSET = 4.0</code></li>
+<li><code>PATH_SPEED_FACTOR = True</code></li>
+<li><code>TORQUE_OFFSET = 0.2</code></li>
+<li><code>TORQUE_THRESH = 1.6</code></li>
+<li><code>TORQUE_SPEED_THRESH = 2.23 m/s</code> (5 mph)</li>
+</ul>
+<p><code>EGO_POSE_AUGMENTATION.ENABLED = False</code> in <code>mcv_new_base0.yml</code>, so the separate trajectory augmentation object is disabled.</p>
+<h2 id="per-bucket-augmentation-summary">Per-bucket &quot;augmentation&quot; summary</h2>
+<p>This table separates bucket-local time/window augmentation from global training augmentation.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Bucket family</th><th>Bucket-local augmentation/window</th><th>Global augmentations</th></tr></thead>
+<tbody>
+<tr><td>Not-stopped DC</td><td>Dilation around moving frames, usually <code>-2s..+2s</code>; remove frames near auto transitions</td><td>image, route, temporal dropout, ego-pose interpolation if applicable</td></tr>
+<tr><td>Stopped DC</td><td>No dilation; stopped predicate only; remove frames near auto transitions</td><td>same global transforms</td></tr>
+<tr><td>Large-error slow</td><td>Annotation mask dilated by 2 frames each side</td><td>same global transforms</td></tr>
+<tr><td>Start</td><td>Annotation start offset <code>-0.2s..0s</code></td><td>same global transforms</td></tr>
+<tr><td>Start gear change</td><td>movement-start frame within 30s of gear change, dilated <code>-0.9s..0s</code></td><td>same global transforms</td></tr>
+<tr><td>Indicator</td><td>indicator-on mask, excluding hazard, dilated <code>-8s..+2s</code></td><td>same global transforms</td></tr>
+<tr><td>Indicator change</td><td>non-hazard indicator transition, dilated <code>-1s..+1s</code></td><td>same global transforms</td></tr>
+<tr><td>Gear change</td><td>any gear transition, dilated <code>-1s..+1s</code></td><td>same global transforms</td></tr>
+<tr><td>Intervention suffix <code>0</code></td><td>pre-intervention <code>-1.2s..0s</code></td><td>same global transforms; ego-pose interpolation most relevant here</td></tr>
+<tr><td>Intervention suffix <code>1</code></td><td>post-intervention <code>0s..+1s</code>, expert/DC only</td><td>same global transforms</td></tr>
+<tr><td>Intervention gear-change <code>0/1</code></td><td>same as intervention <code>0/1</code>, plus CA anchor within 30s of gear change</td><td>same global transforms</td></tr>
+<tr><td>Parking</td><td>no final dilation; uses nearby-motion requirement to remove long stops</td><td>same global transforms; parking request may activate with p=0.025</td></tr>
+<tr><td>PUDO</td><td>no final dilation; stopping_type=2 and near/far pin split</td><td>same global transforms; parking request can apply if sample is marked parking</td></tr>
+<tr><td>Unparking</td><td>first moving frame after gear leaves park, dilated <code>0s..+10s</code></td><td>same global transforms</td></tr>
+</tbody></table></div>
+<h2 id="otf-config-comparison">OTF config comparison</h2>
+<p><code>mcv_new_phase2_otf.yml</code> is not the same mechanism. It reads materialized partitions:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-yaml">DATASET:
+  NAME: OTF
+  OTF:
+    PATH: sampling_materialised/bc/split_alpha2_alpha3/release/0.0.17/dataset
+    PRE_CORRECTIVE_ACTION_INTERPOLATION: True
+    USE_PATHS: True
+    TRAIN_PARTITIONS: [...]</code></pre>
+<p>Train partition group weights in the config sum to <code>1.01264</code> before any runtime normalization:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>OTF family</th><th>Raw weight</th><th>Approx normalized percent</th></tr></thead>
+<tbody>
+<tr><td>DC</td><td>0.379818</td><td>37.51%</td></tr>
+<tr><td>CA</td><td>0.199940</td><td>19.74%</td></tr>
+<tr><td>CA diversion</td><td>0.010000</td><td>0.99%</td></tr>
+<tr><td>Pre-CA</td><td>0.399900</td><td>39.49%</td></tr>
+<tr><td>Pre-CA diversion</td><td>0.003000</td><td>0.30%</td></tr>
+<tr><td>DILC</td><td>0.019982</td><td>1.97%</td></tr>
+</tbody></table></div>
+<p>The OTF path includes <code>PRE_CORRECTIVE_ACTION_INTERPOLATION=True</code>; the lower-level OTF dataset receives this flag and emits <code>is_pre_intervention_corrected</code>. This is comparable in spirit to the heuristic pre-intervention interpolation, but it applies in the OTF materialized data reader rather than through the heuristic sampler bucket functions.</p>
+<p>There are no explicit parking/PUDO/unparking partitions in <code>mcv_new_phase2_otf.yml</code>.</p>
+<h2 id="reimplementation-checklist">Reimplementation checklist</h2>
+<p>For a Spark/materialization-style implementation:</p>
+<ol>
+<li>Decide whether to reproduce heuristic buckets or OTF partitions. For PUDO/unPUDO behavior, reproduce heuristic buckets.</li>
+<li>Build a common frame table with <code>run_id</code>, frame index, timestamp, speed, gear, country, vehicle/platform, auto, parking labels, PUDO pin labels, intervention labels, indicator, video availability, dropped-frame markers.</li>
+<li>Implement shared valid masks first. Be careful that PUDO/unparking use <code>ALL_VALID_MASKS2</code>, not the stricter mask set.</li>
+<li>Implement each bucket as <code>(anchors -&amp;gt; optional dilation -&amp;gt; valid masks -&amp;gt; output bucket name)</code>.</li>
+<li>Keep bucket weights separate from bucket creation. Zak creates all candidate indices, then samples by weight at train time.</li>
+<li>For materialized output, choose whether to store all candidate frames per bucket or to downsample to the target mix. Zak does the latter lazily every epoch.</li>
+<li>For unPUDO:</li>
+</ol>
+<p>- <code>unparking_*</code> is first non-zero-speed frame after gear leaves park, window <code>0..10s</code>. - <code>start_gear_change_*</code> is first <code>0 -&amp;gt; nonzero</code> speed start within 30s of gear change, window <code>-0.9..0s</code>.</p>
+<ol>
+<li>For CA near gear:</li>
+</ol>
+<p>- <code>INTERVENTIONS_GEAR_CHANGE0/1</code> anchors at autonomous disengagement and requires gear change within 30s. - It removes interventions where speed is zero at intervention and still zero 1s later.</p>
+<ol>
+<li>Apply global augmentation/label transforms in the dataloader/training adapter, not in bucket materialization, unless your framework materializes corrected labels.</li>
+</ol></main>
+  </div>
+  <script>
+    document.querySelectorAll('.copy').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const code = button.parentElement.querySelector('code').innerText;
+        await navigator.clipboard.writeText(code);
+        const original = button.innerText;
+        button.innerText = 'Copied';
+        setTimeout(() => button.innerText = original, 900);
+      });
+    });
+  </script>
+</body>
+</html>
