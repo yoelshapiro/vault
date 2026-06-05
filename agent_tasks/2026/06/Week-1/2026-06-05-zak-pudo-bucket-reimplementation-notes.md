@@ -13,6 +13,14 @@ Primary source files:
 - `/workspace/materialization/wayve/ai/experimental/dataset/datasets.py`
 - `/workspace/materialization/wayve/ai/experimental/dataset/ipace.py`
 - `/workspace/materialization/wayve/ai/experimental/transforms.py`
+- `/workspace/materialization/wayve/ai/si/materialisation/README.md`
+- `/workspace/materialization/wayve/ai/si/materialisation/materialise.py`
+- `/workspace/materialization/wayve/ai/zoo/sampling/bucket.py`
+- `/workspace/materialization/wayve/ai/zoo/sampling/buckets.py`
+- `/workspace/materialization/wayve/ai/zoo/sampling/constants.py`
+- `/workspace/materialization/wayve/ai/zoo/sampling/filters.py`
+- `/workspace/materialization/wayve/ai/zoo/sampling/masks.py`
+- `/workspace/materialization/wayve/ai/drive/bc/configs/defaults/data/buckets.py`
 
 ## Executive summary
 
@@ -22,6 +30,8 @@ Zak has two different "bucket" mechanisms on `zmurez/pudo`.
 2. `mcv_new_phase2_otf.yml`: OTF materialized partition consumption. This reads existing materialized partitions with weights. It contains DC, CA, pre-CA, DILC partitions, but not Zak's heuristic parking/PUDO/unparking buckets.
 
 For reimplementation of parking/PUDO/unPUDO, the useful logic is in the heuristic sampler path.
+
+The generic driving materializer is a third mechanism. It creates persisted parquet partitions named by `dataset_split` and `dataset_bucket`. That path is not Zak's heuristic sampler, but it is the production pattern to copy when the framework needs materialized buckets instead of training-time in-memory buckets.
 
 `mcv_new_phase2.yml` active weights sum exactly to `1.0`. The active weight split is:
 
@@ -43,6 +53,248 @@ For reimplementation of parking/PUDO/unPUDO, the useful logic is in the heuristi
 - `INTERVENTIONS_GEN2_ALPHA30` changes `0.05 -> 0.075`.
 - `INTERVENTIONS_GEN2_ALPHA31` changes `0.04 -> 0.065`.
 - Net effect: the 5% large-error weight moves to alpha3 intervention windows.
+
+## Direct answer: does DC include CA?
+
+Short answer: DC and CA are not guaranteed disjoint in generic materialization.
+
+The reason is mechanical:
+
+- Generic DC buckets such as `dc_mache_usa` use `func=get_all_indices` plus `masks=DC_MASKS`.
+- `DC_MASKS` excludes autonomous frames via the `autonomous` mask. It also excludes stopped segments, reverse/neutral, geofence, high speed, bad run windows, etc.
+- `DC_MASKS` does not include a broad "exclude all corrective action windows" mask.
+- CA buckets such as `ca_short_usa` and `ca_long_usa` use intervention-anchored functions and also use `masks=DC_MASKS`.
+
+So a corrective-action frame is DC in the physical/control sense: after the intervention the human is driving, and `AUTOMATION_ACTIVE` is off. Because the broad DC buckets do not explicitly subtract CA windows, a CA timestamp can also land in a normal DC bucket if it passes the generic DC masks.
+
+What this means for training:
+
+- CA is intentionally represented through separate `ca_short_*` and `ca_long_*` partitions, with explicit training weights.
+- DC buckets may contain some CA overlap, but that overlap is incidental and uncontrolled.
+- The materializer writes buckets independently. It does not globally deduplicate `(run_id, timestamp_unixus)` across bucket names.
+- If a framework needs strict separation, add an explicit anti-CA mask to the broad DC buckets or subtract the CA windows when writing DC.
+
+Pseudo-code for the current behavior:
+
+```python
+dc_mache_usa = all_indices(run) - DC_MASKS
+
+ca_short_usa = intervention_window(
+    start=intervention_t,
+    end=intervention_t + 1.48s,
+) - DC_MASKS
+
+# These are separate outputs. The same timestamp can appear in both.
+write("dataset_bucket=dc_mache_usa", dc_mache_usa)
+write("dataset_bucket=ca_short_usa", ca_short_usa)
+```
+
+## Generic driving materialization
+
+The generic driving materializer is the production path for turning corpus runs into persisted training partitions.
+
+High-level flow:
+
+```python
+run_ids = load_run_list()
+dfs = load_dataframes(run_ids)
+
+for run_id, df in zip(run_ids, dfs):
+    df = add_annotations(df, start=run_id.start, end=run_id.end)
+
+    bucket_to_indices = get_bucket_indices(
+        df,
+        names=requested_bucket_names,
+        ignore_distance_start=1.0,
+        ignore_distance_end=50.0,
+    )
+
+    for bucket_name, indices in bucket_to_indices.items():
+        rows = [(run_id.short_run_id, df.timestamp_unixus[i]) for i in indices]
+        append(rows, key=f"dataset_split={split}/dataset_bucket={bucket_name}")
+
+write_parquet_partitions()
+```
+
+The written parquet rows contain the sample identity, not the full sensor row:
+
+```sql
+SELECT
+  run_id,
+  timestamp_unixus
+FROM bucket_indices
+```
+
+The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.
+
+### Bucket definition model
+
+Each bucket is a `Bucket` object:
+
+```python
+Bucket(
+    name="dc_mache_usa",
+    func=get_all_indices,
+    masks=DC_MASKS,
+    country_filter=("USA",),
+    platform_filter=GEN2_MACHE_PLATFORM_FILTER,
+)
+```
+
+The fields matter as follows:
+
+| Field | Meaning |
+|---|---|
+| `name` | Partition name under `dataset_bucket=...` |
+| `func` | Candidate-index generator |
+| `masks` | Names of invalid masks to subtract from candidate indices |
+| `country_filter` | Country include/exclude gate |
+| `platform_filter` | Vehicle/platform gate |
+| `include_autonomous_runs` | Whether the bucket is allowed to process runs with autonomy active |
+| `extra_tables` | Extra delta tables needed for bucket predicates or balancing |
+| `balancer` | Optional balancing metadata added before final sampling |
+
+Inside `get_bucket_indices`, every requested bucket is evaluated independently:
+
+```python
+valid_masks = get_masks(df, ...)
+
+for bucket in ALL_BUCKETS:
+    if bucket.name not in requested_names:
+        continue
+
+    if is_autonomous_run(df) and not bucket.include_autonomous_runs:
+        continue
+
+    if not country_and_platform_match(bucket, df):
+        continue
+
+    candidates = bucket.func(df)
+    invalid = logical_or([valid_masks[name] for name in bucket.masks])
+    bucket_indices[bucket.name] = candidates[~invalid[candidates]]
+```
+
+This independence is the key conceptual difference from a mutually exclusive taxonomy. A frame can be in `dc_mache_usa`, `dc_indicator_on_usa`, and `ca_short_usa` at the same time if it satisfies all three recipes.
+
+### Generic driving bucket families
+
+The generic driving buckets are broad driving coverage plus targeted oversampling.
+
+| Family | Example buckets | Candidate function | Masks |
+|---|---|---|---|
+| Broad DC | `dc_mache_uk`, `dc_mache_usa`, `dc_mache_deu`, `dc_mache_jpn`, `dc_mache_global` | `get_all_indices` | `DC_MASKS` |
+| Valid DC legacy | `dc_valid_uk`, `dc_valid_usa` | `get_all_indices` | `DC_MASKS` |
+| Night DC | `dc_night_uk`, `dc_night_usa` | `get_night_indices` | `DC_MASKS` |
+| Curvature DC | `dc_high_curvature_*` | curvature threshold with time dilation | `DC_MASKS` |
+| Lateral acceleration DC | `dc_high_lateral_acceleration_*` | lateral acceleration threshold | `DC_MASKS` |
+| Jerk DC | `dc_high_jerk_*` | jerk threshold | `DC_MASKS` |
+| Pre-start DC | `dc_pre_start_*` | start-stop window near start | `DC_MASKS` |
+| High-speed DC | `dc_mache_high_speed_*` | speed range | `DC_MASKS` |
+| Indicator DC | `dc_indicator_on_*`, `dc_indicator_on_highway_*` | indicator state plus movement/highway filters | `DC_MASKS` |
+| Highway DC | `dc_cruising_highway_*`, `dc_speed_change_highway_*`, `dc_on_off_highway_*` | highway, acceleration, speed-limit predicates | `DC_MASKS` |
+| Speed-limit DC | `dc_reduce_speed_to_speed_limit_*` | over-limit plus deceleration predicate | `DC_MASKS` |
+| Pre-CA | `pre_ca_*`, `pre_ca_highway_*`, `pre_ca_night_*` | intervention window before disengagement | `AV_MASKS` |
+| CA short | `ca_short_*`, `ca_highway_*`, `ca_night_*` | intervention window immediately after disengagement | `DC_MASKS` |
+| CA long | `ca_long_*` | later intervention window after short CA | `DC_MASKS` |
+| DILC / route-specific | DILC buckets from driving configs | route/lane instruction predicates | bucket-specific AV/DC masks |
+| Diversion CA | diversion pre-CA / CA buckets in training configs | intervention-label predicates | bucket-specific AV/DC masks |
+
+The default time windows for generic intervention buckets are:
+
+```python
+PRE_INTERVENTION_WINDOW = -1.2
+CA_SHORT_WINDOW = 1.48
+CA_LONG_WINDOW = 5.0
+
+pre_ca  = [intervention_t - 1.2s, intervention_t - 0.04s]
+ca_short = [intervention_t, intervention_t + 1.48s]
+ca_long  = [intervention_t + 1.52s, intervention_t + 5.0s]
+```
+
+Important nuance:
+
+- `get_filtered_intervention_indices` anchors on the intervention frame and broadcasts the intervention label/validity to neighboring frames.
+- For pre-CA (`after_intervention_sec < 0`), the function additionally intersects with `AUTOMATION_ACTIVE == True`.
+- For CA short/long, there is no equivalent autonomy-on requirement. The downstream `DC_MASKS` then excludes frames where autonomy is still active.
+
+### Generic masks
+
+The core mask groups are:
+
+```python
+_DEFAULT_MASKS = (
+    "known_bad_runs_and_timestamps",
+    "quarantined_runs_and_timestamps",
+    "geofence",
+    "reverse_or_neutral",
+    "high_speed",
+    "long_stationary",
+    "start_end_frames",
+    "none_contiguous",
+    "invalid_video_file_name",
+    "constant_speed",
+)
+
+AV_MASKS = ("out_of_scope_interventions",) + _DEFAULT_MASKS
+
+DC_MASKS = (
+    "autonomous",
+    "stopped_segment",
+    "diversion_and_lens_obscured_interventions",
+) + _DEFAULT_MASKS
+```
+
+Read this as:
+
+- AV/pre-CA buckets remove out-of-scope intervention windows and the shared data-quality masks.
+- DC/CA buckets remove autonomy-active frames and the shared data-quality masks.
+- DC/CA buckets also remove long boring stopped segments and diversion/lens-obscured interventions.
+- Neither `AV_MASKS` nor `DC_MASKS` enforces mutual exclusivity between bucket families.
+
+### Generic driving training weights
+
+The generic materializer creates partitions. Training decides what to consume and how much to sample from each partition.
+
+The default driving data bucket configs in `/workspace/materialization/wayve/ai/drive/bc/configs/defaults/data/buckets.py` contain the training-time mix for materialized driving partitions. The families match the materialized names:
+
+- Broad DC by country/platform.
+- Targeted DC buckets for night, indicator, highway, speed-change, high curvature, high lateral acceleration, high jerk, and speed-limit behavior.
+- CA short/long by country.
+- Pre-CA by country and highway-specific intervention labels.
+- DILC and diversion-related buckets where enabled by the selected config.
+
+Conceptually:
+
+```yaml
+train_data:
+  - dataset_bucket: dc_mache_usa
+    weight: <dc_weight>
+  - dataset_bucket: ca_short_usa
+    weight: <ca_short_weight>
+  - dataset_bucket: ca_long_usa
+    weight: <ca_long_weight>
+  - dataset_bucket: pre_ca_usa
+    weight: <pre_ca_weight>
+```
+
+Those weights are consumption weights. They do not change how the materializer assigns a timestamp to bucket partitions.
+
+### Reimplementation guidance from generic materialization
+
+For a parking/PUDO/unPUDO materialized framework, copy these principles:
+
+1. Treat event detection as anchor creation.
+2. Treat bucket generation as deterministic window expansion from anchors plus masks.
+3. Write independent partitions by bucket name.
+4. Keep training consumption weights in config, separate from materialization.
+5. Decide explicitly whether bucket families may overlap.
+
+For our unPUDO work, the overlap decision matters:
+
+- General `ca_short_*` / `ca_long_*` should stay broad and unfiltered by moving/safety criteria.
+- `unpudo_unsafe_ca_*` should be a separate CA subset where speed is already non-zero at CA.
+- `unpudo_moving_ca_*` should be a separate CA subset where the vehicle is moving at CA or starts moving within the configured lookahead.
+- If broad DC should not contain CA, subtract CA windows explicitly. Generic driving does not do that by default.
 
 ## Core sampler algorithm
 
@@ -979,4 +1231,3 @@ For a Spark/materialization-style implementation:
    - `INTERVENTIONS_GEAR_CHANGE0/1` anchors at autonomous disengagement and requires gear change within 30s.
    - It removes interventions where speed is zero at intervention and still zero 1s later.
 9. Apply global augmentation/label transforms in the dataloader/training adapter, not in bucket materialization, unless your framework materializes corrected labels.
-
