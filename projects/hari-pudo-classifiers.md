@@ -197,3 +197,18 @@
 - PR branch verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks` passed, and the Bazel-run Streamlit target served HTTP 200 on temporary port `3002`.
 - Local server: `http://127.0.0.1:3001/`, tmux session `unpudo-event-viewer`.
 - Verification: `bazel test //tools/databricks_queries/unpudo_event_viewer:py_checks` passed; `curl -sI http://127.0.0.1:3001/` returned HTTP 200.
+
+
+## 2026-06-05 Anchor-Expanded UnPUDO Flyte Batch
+- Goal: generate multiple 20s clips per UnPUDO event between exact `gearchange_timestamp` and exact `timestamp_unixus`, with anchors every 5s plus the exact final event timestamp.
+- Source table: `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`.
+- Source selection: all `event_type = 'unpudo' AND speed_kmh > 0.1`, plus 250 random `event_type = 'unpudo' AND speed_kmh < 0.1`, plus 250 random rows where `timestamp_unixus - gearchange_timestamp > 10000000`.
+- Generator change: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py` now preserves the exact source anchor as output `timestamp_unixus` after nearest-corpus matching, while still using the matched corpus row for selected metadata/camera columns.
+- Generator args: `--vehicle-platform-id gen2`, `--match-tolerance-seconds 0.2`, `--require-camera-video-files`, `--clip-length-sec 20`.
+- Generated run_clips input parquet: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/run_clips_input.parquet`.
+- Matched anchor rows generated: 2030.
+- Image publish: reused/published `wayveacrprodflyte.azurecr.io/datasets_flyte_workflow:borisindel-tmp-build-d4c00056fe02-boris-hari_pudo-9f693`, digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da`.
+- Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/anfr26csqwll76rf9m54.
+- Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/gen2/`.
+- Launch args: `clip_length_sec=20`, `highlight_middle_seconds=1.0`, `video_speed=3`, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
+- Initial status: Flyte dispatch succeeded and mapped the local build tag to digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da`. Local `flytectl` is not installed in this shell, so status polling was deferred to the Flyte console.

@@ -75,6 +75,23 @@
   - Locally validated bounded non-dev Zak training for 2 steps after the metric bypass, then pushed `96a6a0e741c3` and dispatched 4-node P1 job `174514` / `perpetual-anteater-crimson` with cached parquets and `train_parquet_fraction=0.25`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
 
+## 2026-06-05 - Anchor-Expanded UnPUDO Flyte Clips
+
+- Topic: Dispatch anchor-expanded UnPUDO run clips with Flyte.
+- Labels: parking, pudo, unpudo, flyte, video-generation.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Local code change and Flyte execution.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`, `/workspace/classifiers/wayve/ai/datasets/flyte`.
+- Changes:
+  - Preserved exact source anchor timestamps as output `timestamp_unixus` after nearest corpus matching in `generate_run_clips_input.py`.
+  - Generated `2030` run-clips input rows from `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`, expanding each selected UnPUDO event from `gearchange_timestamp` to `timestamp_unixus` every 5s plus exact end.
+  - Input parquet: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/run_clips_input.parquet`.
+  - Published/reused `datasets_flyte_workflow` image digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da`.
+  - Dispatched Flyte execution `anfr26csqwll76rf9m54` with 20s clips, 3x speed, green event marker, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, and `num_concurrent_tasks=50`.
+  - Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/gen2/`.
+- Task note: [[projects/hari-pudo-classifiers|HARI PUDO Classifiers]]
+
 ## 2026-06-04 - PR 115840 LR Scheduler Test Comment
 
 - Topic: Clarify LR scheduler test cases after PR review feedback.
