@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-05 - Zak PUDO Bucket Reimplementation Notes
+
+- Topic: Document Zak Murez's `zmurez/pudo` bucket generation and augmentation behavior for reimplementation.
+- Labels: parking, pudo, unpudo, data-mix, sampler, documentation.
+- Branch: `boris/event_creation_gear_fix` local worktree; inspected `origin/zmurez/pudo`.
+- PR: N/A.
+- Change type: Vault documentation.
+- Areas: `/home/borisindelman/git/vault/agent_tasks/2026/06/Week-1/2026-06-05-zak-pudo-bucket-reimplementation-notes.md`, `wayve/ai/experimental/configs`, `wayve/ai/experimental/samplers/sampler.py`.
+- Changes:
+  - Summarized heuristic bucket generation for DC, large-error, start, indicator, gear-change, CA, parking, PUDO, and unparking buckets.
+  - Recorded active `mcv_new_phase2` weights and the `mcv_new_phase2x_wta` override that moves large-error weight into alpha3 CA buckets.
+  - Documented shared validity masks, per-bucket temporal windows, pseudocode/SQL-style recipes, and global image/route/state/ego-pose augmentations.
+  - Compared the heuristic bucket path with `mcv_new_phase2_otf.yml` materialized partitions.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-05-zak-pudo-bucket-reimplementation-notes|2026-06-05 Zak PUDO Bucket Reimplementation Notes]]
+
 ## 2026-06-04 - PUDO Gear-Fix Root Training
 
 - Topic: Update parking PUDO config to the gear-fixed materialized root and submit training.
