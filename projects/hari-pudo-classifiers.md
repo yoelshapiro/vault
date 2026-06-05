@@ -223,3 +223,7 @@
 - Existing media-handler and generated-blob playback modes remain available; the previous default radio option remains `Live media-handler cameras`.
 - Restarted local Streamlit session `unpudo-event-viewer` from the PR worktree on `http://127.0.0.1:3001/`.
 - Verification: `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_lint_ruff //wayve/ai/parking/tools/event_clip_viewer:py_lint_flake8 //wayve/ai/parking/tools/event_clip_viewer:ty` passed; Streamlit health endpoint returned `ok`; direct catalogue API probe returned `front-forward` status `success` and `video_start_us`.
+- Follow-up update: added `back_backward` camera support mapped to catalogue `back-backward`.
+- Follow-up update: replaced fixed filter controls with a SQL text area as the source of loaded rows; `event_type` filtering is derived from the returned query table, while random/dedupe/custom filters can live in SQL.
+- Follow-up update: autoplay now uses all selected cameras per event and renders current event metadata plus the source URL inside the autoplay component, so these update as clips advance.
+- Verification after follow-up: Ruff, Flake8, and type checks passed again; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.

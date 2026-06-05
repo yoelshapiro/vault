@@ -87,6 +87,7 @@
   - Added model-catalogue API resolution for camera MP4 URLs and event seek offsets, with run-level Streamlit caching.
   - Added a `Model catalogue camera videos` source alongside existing media-handler and generated blob modes.
   - Updated video components to start catalogue playback at `event - before_seconds`, mark the event with the existing green border, and stop/advance at `event + after_seconds`.
+  - Added `back_backward` camera support, a SQL text area as the source of loaded rows, event-type filtering derived from the query result, and multi-camera autoplay with current event metadata/source URL inside the player.
   - Restarted the local viewer on `http://127.0.0.1:3001/`.
   - Verified Ruff, Flake8, type checks, Streamlit health, and a direct catalogue API sample.
 - Task note: [[projects/hari-pudo-classifiers#2026-06-05 Event Viewer Model-Catalogue Video Source|Hari PUDO classifiers project note]]
