@@ -231,3 +231,6 @@
 - Added `warmer.py` to the event viewer with a background `VideoUrlWarmer` for model-catalogue URL resolution over a lookahead window.
 - Added sidebar controls for `Warm model-catalogue URLs` and `Preload next autoplay clips`; the latter creates hidden muted browser video elements for upcoming playlist items so blob range fetches begin before the item is displayed.
 - Verification after warmer update: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
+- Follow-up UI consolidation: autoplay mode now hides the static Streamlit-side Event Info panel and uses the live-updating playlist Event Info block as the single source of event metadata/source URL.
+- Added a highlighted read-only SQL preview below the editable SQL text area; editable syntax highlighting would require adding a Streamlit editor component dependency.
+- Verification after UI consolidation: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
