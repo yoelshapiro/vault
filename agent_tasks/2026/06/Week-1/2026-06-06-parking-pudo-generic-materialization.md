@@ -113,3 +113,19 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 ```
 
 - Local status query note: `flytectl` is not installed in the current shell, so status should be checked from the Flyte console or another Flyte CLI environment.
+
+## 2026-06-06 Flyte Rerun With 700 Run-Id Partitions
+
+- Changed local generic sampling partition constant for an experiment:
+  - `MAX_NUM_RUN_IDS_PER_PARTITION = 1000 -> 700`
+  - File: `/workspace/WayveCode/wayve/ai/services/sampling/common/spark_tasks.py`
+  - This keeps full run IDs intact; it only reduces the number of run IDs grouped into each Ray task.
+- Published a fresh sampling image from the local branch after the constant change.
+- Image tag: `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.123-boris-pudo_generic_materialization-59584`.
+- Image digest: `sha256:f310b139ef3223662ecd5938e0bc5e24130d139612da1e577b79f26cc1f6dba9`.
+- Explicit `--image` submission was rejected because the branch image tag exceeded the Kubernetes label value length limit.
+- Started the normal remote run without `--image`; the runner resolved the branch tag to the fresh digest above.
+- Job name: `parking_pudo_generic_materialization_700`.
+- Flyte execution: `a2pr4q8qqvwr45f65mmj`.
+- Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a2pr4q8qqvwr45f65mmj
+- Initial status query immediately after creation showed the execution exists but had not reported a phase yet.
