@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-06 - Guy Recipe PUDO Root Train
+
+- Topic: Fork Guy's parking/PUDO recipe, update only the PUDO materialized root, and submit training.
+- Labels: parking, pudo, training, data-root.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/guy_recipe_gear_root`.
+- PR: N/A.
+- Change type: Config change / training run.
+- Areas: `/workspace/guy_recipe_gear_root/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Forked from `origin/guy/parking-past30-no-standstill-gear-aug`.
+  - Changed only `PUDO_BUCKETS_ROOT` to `parking/dev/2026_06_04_11_13_51_root_parking_pudo_unpudo_unparking_gear_fix`.
+  - Preserved the existing Guy recipe, including its existing `unpudo_moving` group, without adding unsafe/pre-departure bucket groups from the newer branch.
+  - Committed and pushed `1b18c018e301`.
+  - Submitted job `175628` / `mercurial-sapphire-jellyfish` with session `session_2026_06_06_22_07_21_guyroot`; final observed state was `Dispatched`.
+  - Freed `/workspace` disk space by removing an inactive Bazel output root and the shared Bazel disk cache after local config validation hit `No space left on device`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-guy-recipe-pudo-root-train|2026-06-06 Guy Recipe PUDO Root Train]]
+
 ## 2026-06-06 - Parking PUDO Generic Materialization
 
 - Topic: Add Parking/PUDO/Unpark/UnPUDO buckets using the official generic materialisation framework.
