@@ -5,7 +5,7 @@
 - Topic: Add Parking/PUDO/Unpark/UnPUDO buckets using the official generic materialisation framework.
 - Labels: parking, pudo, unpudo, unpark, materialization, generic-materialisation, buckets.
 - Branch: `boris/pudo_generic_materialization`.
-- PR: N/A.
+- PR: `#117075`.
 - Change type: Code implementation.
 - Areas: `/workspace/materialization/wayve/ai/services/sampling/datasets/parking_pudo`, `/workspace/materialization/wayve/ai/services/sampling/datasets/store.py`, `/workspace/materialization/wayve/ai/services/sampling/BUILD`.
 - Changes:
@@ -15,6 +15,7 @@
   - Added programmable gear smoothing, hazard cleanup, hazard-based PUDO/UnPUDO splitting over the parked/pre-movement departure interval, movement anchors after gear leaves park, and near-gear-change CA filters with the remain-stopped speed filter.
   - Kept the inherited parking/driving `exclude_geofenced` filter in every bucket and removed the incorrect explicit office-geofence bucket suffixes.
   - Added explanatory selector/helper docstrings and split the internal signal derivation helpers into `parking_pudo/signals.py`.
+  - Aligned park/PUDO and unpark/UnPUDO context classification to Zak's `index_of_park - 1` convention and matched `make_park_masks` first-assignment behavior for overlapping approach windows.
   - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
 

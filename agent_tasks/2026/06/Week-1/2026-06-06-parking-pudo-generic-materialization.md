@@ -3,7 +3,7 @@
 - Topic: Add Parking/PUDO/Unpark/UnPUDO buckets using the official generic materialisation framework.
 - Labels: parking, pudo, unpudo, unpark, materialization, generic-materialisation, buckets.
 - Branch: `boris/pudo_generic_materialization`.
-- PR: N/A.
+- PR: `#117075`.
 - Change type: Code implementation.
 - Areas:
   - `/workspace/materialization/wayve/ai/services/sampling/datasets/parking_pudo`
@@ -43,6 +43,12 @@
 - Removed the generic `event_type="all"` gear-change/CA path; selectors now explicitly use parking or PUDO context, with PUDO context using cleaned hazards dilated by 30s.
 - Registered the dataset in the services/sampling store and BUILD target.
 - Added explanatory docstrings for the Parking/PUDO selectors and signal helpers, and split internal signal derivation helpers into `signals.py` so `filters.py` stays focused on public masks.
+- Reviewed `_signals` and `_parking_segments` against Zak's loader/sampler path:
+  - Kept the shared signal path aligned on cleaned gear before hazard cleanup, hazard cleanup before PUDO splitting, and office/proving-ground hazard exclusion before dilation.
+  - Added a `park_start - 1` context helper so park/PUDO and unpark/UnPUDO classification matches Zak's `pred_stop_type[index_of_park - 1]` convention.
+  - Made overlapping park/PUDO approach windows assign frames to the first park event before applying the park/PUDO split, matching Zak's `make_park_masks` first-assignment behavior.
+  - Left the configurable 2s "short gear segment -> previous gear" rule as an intentional difference from Zak's older gear cleanup, because it matches the requested smoothing behavior for this migration.
+- Added regression coverage for the frame-before-park context and overlapping parking-window assignment.
 
 ## Verification
 
@@ -50,3 +56,4 @@
 - Verified the new dataset code has no leftover `zak`, `start_gear_change`, or old `unparking_*` bucket naming.
 - Ran `git diff --check`.
 - Ran `bazel test //wayve/ai/services/sampling:test_datasets`.
+- Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo`; all selected parking_pudo tests passed, but the filtered run fails the target-level coverage threshold because most tests are intentionally deselected.
