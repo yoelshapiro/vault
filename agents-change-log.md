@@ -1,19 +1,19 @@
 # Agents Change Log
 
-## 2026-06-06 - PUDO Generic Zak Materialization
+## 2026-06-06 - Parking PUDO Generic Materialization
 
-- Topic: Port corpus-derivable Zak PUDO/parking sampler buckets into the parking materialization notebook.
-- Labels: parking, pudo, zak, materialization, spark, buckets.
+- Topic: Add Parking/PUDO/Unpark/UnPUDO buckets using the official generic materialisation framework.
+- Labels: parking, pudo, unpudo, unpark, materialization, generic-materialisation, buckets.
 - Branch: `boris/pudo_generic_materialization`.
 - PR: N/A.
-- Change type: Notebook implementation.
-- Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb`.
+- Change type: Code implementation.
+- Areas: `/workspace/materialization/wayve/ai/services/sampling/datasets/parking_pudo`, `/workspace/materialization/wayve/ai/services/sampling/datasets/store.py`, `/workspace/materialization/wayve/ai/services/sampling/BUILD`.
 - Changes:
-  - Added generic `zak_*` bucket generation over `wayve_corpus.all_data`, split by country.
-  - Added Zak-style gear cleanup, hazard cleanup, PUDO/parking mask generation, unparking movement anchors, start-near-gear-change, gear-change, and near-gear-change CA buckets.
-  - Defaulted output to generic Zak-style buckets only, with `INCLUDE_EXISTING_EVENT_DERIVED_BUCKETS` available for comparison.
-  - Documented that annotation-only Zak splits (`pred_pudo_pin_valid_*`, `pred_park_type`) are not materialized from corpus data.
-- Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-pudo-generic-zak-materialization|2026-06-06 PUDO Generic Zak Materialization]]
+  - Added the `parking_pudo/default` dataset and registered it in the services/sampling dataset store.
+  - Implemented corpus-derived `park`, `pudo`, `unpark`, `unpudo`, `pre_unpark`, `pre_unpudo`, `gear_change`, `pre_ca`, and `ca` buckets split by country.
+  - Added programmable gear smoothing, hazard cleanup, hazard-based PUDO/UnPUDO splitting, movement anchors after gear leaves park, and near-gear-change CA filters with the remain-stopped speed filter.
+  - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
 
 ## 2026-06-05 - Zak PUDO Bucket Reimplementation Notes
 
