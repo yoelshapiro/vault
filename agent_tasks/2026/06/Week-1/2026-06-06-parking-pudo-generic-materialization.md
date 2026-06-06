@@ -35,11 +35,34 @@
   - `parking_ca_long_*`
   - `pudo_ca_short_*`
   - `pudo_ca_long_*`
+  - `unpark_pre_ca_*`
+  - `unpudo_pre_ca_*`
+  - `unpark_ca_short_*`
+  - `unpark_ca_long_*`
+  - `unpudo_ca_short_*`
+  - `unpudo_ca_long_*`
+  - `failed_to_park_pre_ca_*`
+  - `failed_to_pudo_pre_ca_*`
+  - `failed_to_unpark_pre_ca_*`
+  - `failed_to_unpudo_pre_ca_*`
+  - `failed_to_park_ca_short/long_*`
+  - `failed_to_pudo_ca_short/long_*`
+  - `failed_to_unpark_ca_short/long_*`
+  - `failed_to_unpudo_ca_short/long_*`
 - Kept the inherited parking/driving `exclude_geofenced` filter in every bucket, instead of creating explicit office-geofence buckets.
 - Removed the incorrect office-geofence suffix buckets for `london_office`, `millbrook`, `mountain_view_office`, `sunnyvale_office`, `tokyo_trc_office`, and `yokohama_office`.
 - Split `unpark` from `unpudo` using hazard evidence on the preceding parked segment and stopped departure tail up to the movement anchor.
 - Implemented `pre_unpark` / `pre_unpudo` as the 0.9s pre-start window equivalent to Zak's `start_gear_change_*` bucket, but using the requested names.
 - Implemented parking and PUDO CA filters as separate AV-to-DC intervention buckets near a smoothed gear change, including short/long post-CA windows and the speed filter that removes interventions where the vehicle is stopped at handover and still stopped 1s later.
+- Added separate unpark and UnPUDO CA buckets around first-movement departure anchors:
+  - `unpark_*` CA uses non-hazard departure context.
+  - `unpudo_*` CA uses the same parked/pre-departure hazard scan as the `unpudo` event bucket, so hazard can be minutes before the intervention and still classify the departure correctly.
+  - Both retain the same remain-stopped 1s speed filter.
+- Added failed-to CA buckets for `failed_to_park`, `failed_to_pudo`, `failed_to_unpark`, and `failed_to_unpudo`:
+  - These select AV-to-DC interventions by `inferred__intervention__what`.
+  - They intentionally do not require a nearby gear change.
+  - They still apply the remain-stopped 1s speed filter.
+- Split intervention selector logic into `parking_pudo/intervention_filters.py` so `filters.py` stays under the line-count guideline and remains focused on event/gear masks.
 - Removed the generic `event_type="all"` gear-change/CA path; selectors now explicitly use parking or PUDO context, with PUDO context using cleaned hazards dilated by 30s.
 - Registered the dataset in the services/sampling store and BUILD target.
 - Added explanatory docstrings for the Parking/PUDO selectors and signal helpers, and split internal signal derivation helpers into `signals.py` so `filters.py` stays focused on public masks.
@@ -48,7 +71,7 @@
   - Added a `park_start - 1` context helper so park/PUDO and unpark/UnPUDO classification matches Zak's `pred_stop_type[index_of_park - 1]` convention.
   - Made overlapping park/PUDO approach windows assign frames to the first park event before applying the park/PUDO split, matching Zak's `make_park_masks` first-assignment behavior.
   - Left the configurable 2s "short gear segment -> previous gear" rule as an intentional difference from Zak's older gear cleanup, because it matches the requested smoothing behavior for this migration.
-- Added regression coverage for the frame-before-park context and overlapping parking-window assignment.
+- Added regression coverage for the frame-before-park context, overlapping parking-window assignment, departure-context unpark/UnPUDO CA, failed-to label CA selection without nearby gear changes, and remain-stopped rejection for failed-to CA.
 
 ## Verification
 
@@ -56,4 +79,7 @@
 - Verified the new dataset code has no leftover `zak`, `start_gear_change`, or old `unparking_*` bucket naming.
 - Ran `git diff --check`.
 - Ran `bazel test //wayve/ai/services/sampling:test_datasets`.
-- Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo`; all selected parking_pudo tests passed, but the filtered run fails the target-level coverage threshold because most tests are intentionally deselected.
+- Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo`; all 21 selected parking_pudo tests passed, but the filtered run fails the target-level coverage threshold because most tests are intentionally deselected.
+- Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty`.
+- Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_test`.
+- Re-ran `bazel test //wayve/ai/services/sampling:test_datasets`; aggregate target passed from cache after the full pytest run.
