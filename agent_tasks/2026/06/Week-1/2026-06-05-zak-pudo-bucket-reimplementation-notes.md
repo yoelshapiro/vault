@@ -864,7 +864,7 @@ mask = dilate(mask, before=1s, after=1s)
 mask &= ALL_VALID_MASKS2
 ```
 
-Note: `config.py` default has `GEAR_CHANGE_AFTER=0.5`, but the `mcv_new_phase2` inheritance path sets `GEAR_CHANGE_BEFORE=1.0` and `GEAR_CHANGE_AFTER=1.0` in `mcv_new_base0.yml`.
+Note: `config.py` default has `GEAR_CHANGE_AFTER=0.5`, but the `mcv_new_phase2` inheritance path sets `GEAR_CHANGE_BEFORE=1.0` and `GEAR_CHANGE_AFTER=1.0` in `mcv_new_base.yml`.
 
 Bucket-local augmentation/windowing:
 - Dilation around any raw gear transition.
@@ -945,7 +945,7 @@ if end_offset > 0:
     mask[anchor + max(0, start_offset) : anchor + end_offset] = auto == 0
 ```
 
-Important offsets from `mcv_new_base0.yml`:
+Important offsets from `mcv_new_base.yml`:
 - `INTERVENTIONS_BEFORE = 1.2`
 - `INTERVENTIONS_AFTER1 = 1.0`
 - `INTERVENTIONS_AFTER2 = 5.0`
@@ -1211,6 +1211,8 @@ Notes:
 
 ### ZAK: Unparking
 
+Zak does **not** have a separate bucket named unPUDO. The closest thing is `UNPARKING_*`: it samples the first movement after a smoothed/cleaned gear transition out of park.
+
 Buckets:
 - `UNPARKING_LDN_OFFICE`
 - `UNPARKING_LDN_OTHER`
@@ -1223,13 +1225,13 @@ Buckets:
 
 Function: `get_unparking_indices`.
 
-This is the closest Zak bucket to unPUDO movement-start sampling.
+This is post-departure movement sampling, not pre-departure sampling.
 
 ```python
 if vehicle / vehicle_model filter does not match:
     return []
 
-moving_indices = flatnonzero(abs(speed) > 0)
+moving_indices = flatnonzero(abs(speed) > 0)  # any non-zero speed
 gear_out_of_park_indices = flatnonzero((gear[:-1] == 0) & (gear[1:] != 0))
 
 # For each gear-out-of-park transition, take first future moving frame.
@@ -1241,16 +1243,34 @@ mask = zeros_like(speed)
 mask[anchors] = True
 
 if locations:
+    # office/other split is evaluated at the selected movement anchor frame
     mask &= parking_location_raw in locations
 
 mask = dilate(mask, before=0s, after=10s)
 mask &= ALL_VALID_MASKS2
 ```
 
+Step-by-step:
+1. Use `dataset.gear`, which has already gone through Zak's gear cleanup path when scalar cleanup is enabled.
+2. Find every transition where cleaned gear changes from park (`0`) to non-park.
+3. Find the first future frame whose absolute speed is non-zero.
+4. Mark that movement frame as the anchor.
+5. Optionally split by office/other using `parking_location_raw` at that anchor.
+6. Dilate the anchor forward by 10 seconds.
+7. Apply `ALL_VALID_MASKS2`.
+
 Bucket-local augmentation/windowing:
 - Anchor is first future non-zero-speed frame after gear leaves park.
 - Window is `0s..+10s`.
 - No pre-departure frames are included in these buckets.
+- There is no 10m traveled-distance search in this bucket; movement is simply `abs(speed) > 0`.
+- There is no explicit acceleration threshold.
+
+Comparison to similar buckets:
+- `UNPARKING_*` is after movement begins. It is the bucket we should compare to our `dc_unpudo` movement-start sampling.
+- `START_GEAR_CHANGE_*` is closer to a pre-departure upsample: it finds a start/movement frame within a gear-change window and takes frames before the anchor (`-0.9s..0s`).
+- Generic driving `START` is also pre-start-ish, but it is not parking-specific and is not keyed to a park-to-drive gear transition.
+- PUDO buckets are stopping buckets, not departure/unparking buckets.
 
 ## ZAK: Global training augmentations and label transformations
 
@@ -1301,9 +1321,9 @@ Behavior:
 
 - Route map rasterization uses `inferred__state__navigation__latitude_deg`, longitude, heading, route polyline, and route index.
 - With probability `0.2`, the dataset perturbs the GPS latitude/longitude and heading before rasterizing the route map. Heading gets small Gaussian noise most of the time; otherwise it gets a large random heading perturbation.
-- With probability `0.25`, route conditioning is dropped when the indicator stick is active. Inside that route-dropout case, `0.9` of the drops become a fully black route map; otherwise the route polyline is zeroed while the lane network remains visible.
+- With probability `0.25`, route conditioning is dropped when indicator-stick data is available. Inside that route-dropout case, `0.9` of the drops become a fully black route map; otherwise the route polyline is zeroed while the lane network remains visible.
 - When the route is not dropped, the indicator stick can be zeroed with probability `0.7`; this makes the model sometimes rely on the route map without extra indicator-stick hints.
-- `route_command` is also loaded from `inferred__scenario__tactical_behaviour__navigation` and mapped through `ROUTE_COMMANDS`. It is a navigation/tactical behavior signal, not a parking bucket label.
+- `route_command` is also loaded from `inferred__scenario__tactical_behaviour__navigation` and mapped through `ROUTE_COMMANDS` on the dataset object. It is used by sampler masks such as U-turn masks; it is a navigation/tactical behavior signal, not a parking bucket label.
 
 Parking-specific route masking:
 - In the active `cnn` route encoder path, `RouteCNNEncoder.forward()` zeroes the route tensor whenever `batch["parking"]` is true: `route = torch.where(batch["parking"], 0 * route, route)`.
@@ -1405,14 +1425,14 @@ unroll new_speed over path to produce future egoposition, yaw, curvature
 
 Important config values:
 - `INTERVENTIONS_BEFORE = 1.2s`
-- `SPEED_TIME_OFFSET = 1.0` in `mcv_new_base0.yml`
+- `SPEED_TIME_OFFSET = 1.0` in `mcv_new_base.yml`
 - `PATH_BASE_OFFSET = 4.0`
 - `PATH_SPEED_FACTOR = True`
 - `TORQUE_OFFSET = 0.2`
 - `TORQUE_THRESH = 1.6`
 - `TORQUE_SPEED_THRESH = 2.23 m/s` (5 mph)
 
-`EGO_POSE_AUGMENTATION.ENABLED = False` in `mcv_new_base0.yml`, so the separate trajectory augmentation object is disabled.
+`EGO_POSE_AUGMENTATION.ENABLED = False` in `mcv_new_base.yml`, so the separate trajectory augmentation object is disabled.
 
 ## ZAK: Per-bucket "augmentation" summary
 

@@ -283,7 +283,8 @@
 <a class="level-3" href="#zak-unparking"><span class="badge badge-zak">ZAK</span>Unparking</a>
 <a class="level-2" href="#zak-global-training-augmentations-and-label-transformations"><span class="badge badge-zak">ZAK</span>Global training augmentations and label transformations</a>
 <a class="level-3" href="#zak-image-augmentation"><span class="badge badge-zak">ZAK</span>Image augmentation</a>
-<a class="level-3" href="#zak-route-navigation-augmentation"><span class="badge badge-zak">ZAK</span>Route / navigation augmentation</a>
+<a class="level-3" href="#zak-route-navigation-route-masking-and-route-shortening"><span class="badge badge-zak">ZAK</span>Route / navigation, route masking, and route shortening</a>
+<a class="level-3" href="#zak-parking-mode-parking-conditioning"><span class="badge badge-zak">ZAK</span>Parking mode / parking conditioning</a>
 <a class="level-3" href="#zak-indicator-state-augmentation"><span class="badge badge-zak">ZAK</span>Indicator state augmentation</a>
 <a class="level-3" href="#zak-gear-state-augmentation"><span class="badge badge-zak">ZAK</span>Gear state augmentation</a>
 <a class="level-3" href="#zak-ego-pose-interpolation-pre-corrective-action-pseudo-labeling"><span class="badge badge-zak">ZAK</span>Ego-pose interpolation / pre-corrective action pseudo-labeling</a>
@@ -1016,7 +1017,7 @@ mask = gear[:-1] != gear[1:]
 mask &amp;= country_filter_if_configured
 mask = dilate(mask, before=1s, after=1s)
 mask &amp;= ALL_VALID_MASKS2</code></pre>
-<p>Note: <code>config.py</code> default has <code>GEAR_CHANGE_AFTER=0.5</code>, but the <code>mcv_new_phase2</code> inheritance path sets <code>GEAR_CHANGE_BEFORE=1.0</code> and <code>GEAR_CHANGE_AFTER=1.0</code> in <code>mcv_new_base0.yml</code>.</p>
+<p>Note: <code>config.py</code> default has <code>GEAR_CHANGE_AFTER=0.5</code>, but the <code>mcv_new_phase2</code> inheritance path sets <code>GEAR_CHANGE_BEFORE=1.0</code> and <code>GEAR_CHANGE_AFTER=1.0</code> in <code>mcv_new_base.yml</code>.</p>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>Dilation around any raw gear transition.</li>
@@ -1078,7 +1079,7 @@ apply bucket masks</code></pre>
 if end_offset &gt; 0:
     # post-intervention DC-only frames
     mask[anchor + max(0, start_offset) : anchor + end_offset] = auto == 0</code></pre>
-<p>Important offsets from <code>mcv_new_base0.yml</code>:</p>
+<p>Important offsets from <code>mcv_new_base.yml</code>:</p>
 <ul>
 <li><code>INTERVENTIONS_BEFORE = 1.2</code></li>
 <li><code>INTERVENTIONS_AFTER1 = 1.0</code></li>
@@ -1307,6 +1308,7 @@ is_near = (pudo_pin_valid_before &lt;= 2) &amp; (pudo_pin_valid_after &lt;= 1)</
 <li>Speed is used to remove long stopped stretches, but the actual PUDO-vs-park distinction is from the computed hazard/location heuristic.</li>
 </ul>
 <h3 id="zak-unparking"><span class="badge badge-zak">ZAK</span>Unparking</h3>
+<p>Zak does <strong>not</strong> have a separate bucket named unPUDO. The closest thing is <code>UNPARKING_*</code>: it samples the first movement after a smoothed/cleaned gear transition out of park.</p>
 <p>Buckets:</p>
 <ul>
 <li><code>UNPARKING_LDN_OFFICE</code></li>
@@ -1319,11 +1321,11 @@ is_near = (pudo_pin_valid_before &lt;= 2) &amp; (pudo_pin_valid_after &lt;= 1)</
 <li><code>UNPARKING_MSC_OTHER</code></li>
 </ul>
 <p>Function: <code>get_unparking_indices</code>.</p>
-<p>This is the closest Zak bucket to unPUDO movement-start sampling.</p>
+<p>This is post-departure movement sampling, not pre-departure sampling.</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle / vehicle_model filter does not match:
     return []
 
-moving_indices = flatnonzero(abs(speed) &gt; 0)
+moving_indices = flatnonzero(abs(speed) &gt; 0)  # any non-zero speed
 gear_out_of_park_indices = flatnonzero((gear[:-1] == 0) &amp; (gear[1:] != 0))
 
 # For each gear-out-of-park transition, take first future moving frame.
@@ -1335,19 +1337,39 @@ mask = zeros_like(speed)
 mask[anchors] = True
 
 if locations:
+    # office/other split is evaluated at the selected movement anchor frame
     mask &amp;= parking_location_raw in locations
 
 mask = dilate(mask, before=0s, after=10s)
 mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>Step-by-step:</p>
+<ol>
+<li>Use <code>dataset.gear</code>, which has already gone through Zak&#x27;s gear cleanup path when scalar cleanup is enabled.</li>
+<li>Find every transition where cleaned gear changes from park (<code>0</code>) to non-park.</li>
+<li>Find the first future frame whose absolute speed is non-zero.</li>
+<li>Mark that movement frame as the anchor.</li>
+<li>Optionally split by office/other using <code>parking_location_raw</code> at that anchor.</li>
+<li>Dilate the anchor forward by 10 seconds.</li>
+<li>Apply <code>ALL_VALID_MASKS2</code>.</li>
+</ol>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>Anchor is first future non-zero-speed frame after gear leaves park.</li>
 <li>Window is <code>0s..+10s</code>.</li>
 <li>No pre-departure frames are included in these buckets.</li>
+<li>There is no 10m traveled-distance search in this bucket; movement is simply <code>abs(speed) &amp;gt; 0</code>.</li>
+<li>There is no explicit acceleration threshold.</li>
+</ul>
+<p>Comparison to similar buckets:</p>
+<ul>
+<li><code>UNPARKING_*</code> is after movement begins. It is the bucket we should compare to our <code>dc_unpudo</code> movement-start sampling.</li>
+<li><code>START_GEAR_CHANGE_*</code> is closer to a pre-departure upsample: it finds a start/movement frame within a gear-change window and takes frames before the anchor (<code>-0.9s..0s</code>).</li>
+<li>Generic driving <code>START</code> is also pre-start-ish, but it is not parking-specific and is not keyed to a park-to-drive gear transition.</li>
+<li>PUDO buckets are stopping buckets, not departure/unparking buckets.</li>
 </ul>
 <h2 id="zak-global-training-augmentations-and-label-transformations"><span class="badge badge-zak">ZAK</span>Global training augmentations and label transformations</h2>
 <p>The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.</p>
-<p>For <code>mcv_new_phase2</code> inherited from <code>mcv_new_base0.yml</code>:</p>
+<p>For <code>mcv_new_phase2</code> inherited from <code>mcv_new_base.yml</code>:</p>
 <h3 id="zak-image-augmentation"><span class="badge badge-zak">ZAK</span>Image augmentation</h3>
 <p>Applies to all sampled buckets during training.</p>
 <div class="table-wrap"><table>
@@ -1369,40 +1391,91 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li>Temporal dropout randomly drops past/context frames.</li>
 <li>Half-res JPEG decode is mostly an efficiency/robustness choice, applied probabilistically.</li>
 </ul>
-<h3 id="zak-route-navigation-augmentation"><span class="badge badge-zak">ZAK</span>Route / navigation augmentation</h3>
-<p>Applies to all sampled buckets where route context is loaded, with behavior depending on whether the sampled frame is considered parking.</p>
+<h3 id="zak-route-navigation-route-masking-and-route-shortening"><span class="badge badge-zak">ZAK</span>Route / navigation, route masking, and route shortening</h3>
+<p>Applies to all sampled buckets where route context is loaded. This is <strong>not</strong> a bucket selector; it happens after the sampler has already picked a frame.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Config</th><th>Value</th></tr></thead>
 <tbody>
-<tr><td><code>ROUTE.AUGMENTATION_PROB</code></td><td><code>0.0</code></td></tr>
-<tr><td><code>ROUTE.AUGMENTATION_DROPOUT</code></td><td><code>0.25</code></td></tr>
-<tr><td><code>ROUTE.AUGMENTATION_DROPOUT_BLACK</code></td><td><code>0.9</code></td></tr>
-<tr><td><code>ROUTE.AUGMENTATION_PARKING_REQUEST_PROB</code></td><td><code>0.025</code></td></tr>
-<tr><td><code>ROUTE.AUGMENTATION_END_JITTER</code></td><td><code>rand</code></td></tr>
-<tr><td><code>ROUTE.AUGMENTATION_END_JITTER_BETA_SCALE</code></td><td><code>1.0</code></td></tr>
+<tr><td><code>ROUTE.ENABLED</code></td><td><code>True</code></td></tr>
+<tr><td><code>ROUTE.CONFIG</code></td><td><code>si_medium</code></td></tr>
+<tr><td><code>ROUTE.ENCODER_NAME</code></td><td><code>cnn</code></td></tr>
+<tr><td><code>ROUTE.PATCH_SIZE</code></td><td><code>256</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_PROB</code></td><td><code>0.2</code> inherited from defaults</td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_LATLON_STD</code></td><td><code>0.0001</code> inherited from defaults</td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_HEAD_SMALL_PROB</code></td><td><code>0.85</code> inherited from defaults</td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_HEAD_SMALL_STD</code></td><td><code>8.0</code> inherited from defaults</td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_DROPOUT</code></td><td><code>0.25</code> from <code>mcv_new_base.yml</code></td></tr>
+<tr><td><code>ROUTE.AUGMENTATION_DROPOUT_BLACK</code></td><td><code>0.9</code> from <code>mcv_new_base.yml</code></td></tr>
 <tr><td><code>INDICATOR_STICK.AUGMENTATION_DROPOUT</code></td><td><code>0.7</code></td></tr>
 </tbody></table></div>
 <p>Behavior:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">route_end_jitter:
-    randomly jitter route endpoint using run segment jitter bounds
-
-route_dropout:
-    with p=0.25, drop route conditioning
-    with p=0.9 inside that dropout, black route map completely
-    otherwise zero route while keeping lane network visible
-
-indicator_stick_dropout:
-    when route is not dropped, with p=0.7 zero indicator stick
-
-parking_request:
-    if sample is parking and rand &lt; 0.025:
-        parking_request = True
-        route_map = black</code></pre>
+<ul>
+<li>Route map rasterization uses <code>inferred__state__navigation__latitude_deg</code>, longitude, heading, route polyline, and route index.</li>
+<li>With probability <code>0.2</code>, the dataset perturbs the GPS latitude/longitude and heading before rasterizing the route map. Heading gets small Gaussian noise most of the time; otherwise it gets a large random heading perturbation.</li>
+<li>With probability <code>0.25</code>, route conditioning is dropped when indicator-stick data is available. Inside that route-dropout case, <code>0.9</code> of the drops become a fully black route map; otherwise the route polyline is zeroed while the lane network remains visible.</li>
+<li>When the route is not dropped, the indicator stick can be zeroed with probability <code>0.7</code>; this makes the model sometimes rely on the route map without extra indicator-stick hints.</li>
+<li><code>route_command</code> is also loaded from <code>inferred__scenario__tactical_behaviour__navigation</code> and mapped through <code>ROUTE_COMMANDS</code> on the dataset object. It is used by sampler masks such as U-turn masks; it is a navigation/tactical behavior signal, not a parking bucket label.</li>
+</ul>
+<p>Parking-specific route masking:</p>
+<ul>
+<li>In the active <code>cnn</code> route encoder path, <code>RouteCNNEncoder.forward()</code> zeroes the route tensor whenever <code>batch[&amp;quot;parking&amp;quot;]</code> is true: <code>route = torch.where(batch[&amp;quot;parking&amp;quot;], 0 * route, route)</code>.</li>
+<li>So parking/PUDO samples still have route data loaded and augmented by the dataset, but the model route adaptor masks route-map tokens for parking samples before encoding.</li>
+<li>This is the main &quot;park mode affects navigation&quot; behavior I found in Zak&#x27;s PUDO path.</li>
+</ul>
+<p>Route shortening:</p>
+<ul>
+<li>I do <strong>not</strong> see active route-shortening logic in Zak&#x27;s <code>mcv_new_phase2</code> PUDO path.</li>
+<li>The base config has old <code>ROUTE.AUGMENTATION_END_OF_ROUTE = 0.0</code> defaults marked TODO, and GaiaDrive/world-model configs set <code>AUGMENTATION_END_OF_ROUTE = 0.025</code>, but I did not find PUDO dataset code consuming that option.</li>
+<li>Therefore, for reimplementation of Zak&#x27;s PUDO buckets, route shortening should not be treated as an active parking augmentation unless we intentionally add it.</li>
+</ul>
+<h3 id="zak-parking-mode-parking-conditioning"><span class="badge badge-zak">ZAK</span>Parking mode / parking conditioning</h3>
+<p>This is separate from bucket generation. The sampler decides which frame to train on; the dataset/model then marks whether that sample is a parking/PUDO-style example and adds parking conditioning.</p>
+<p>Active config:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Config</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td><code>PARKING.ENABLED</code></td><td><code>True</code></td></tr>
+<tr><td><code>PARKING.PUDO_ENABLED</code></td><td><code>True</code></td></tr>
+<tr><td><code>PARKING_REGRESSION.ENABLED</code></td><td><code>True</code></td></tr>
+<tr><td><code>LOSS_WEIGHTS.PARKING_REGRESSION</code></td><td><code>4.0</code></td></tr>
+</tbody></table></div>
+<p>How the parking signal is built:</p>
+<ul>
+<li><code>data[&amp;quot;parking&amp;quot;]</code> comes from the dataset&#x27;s precomputed <code>self.parking</code> mask at the sampled present frame.</li>
+<li><code>data[&amp;quot;parking_type&amp;quot;]</code> is the label-derived parking type for that frame.</li>
+<li>If the sample is parking, the dataset computes <code>parking_position</code> and <code>parking_yaw</code> by transforming from the current ego pose to the final parking pose.</li>
+<li><code>stopping_type</code> is set from <code>self.stopping_type - 1</code>, where <code>0</code> means park and <code>1</code> means PUDO for the model-side type embedding.</li>
+<li>Gate-type parking labels are explicitly turned off as parking examples.</li>
+</ul>
+<p>Parking conditioning augmentations:</p>
+<ul>
+<li>Parking position UI conditioning is sometimes jittered for normal parking: with probability <code>0.05</code>, the conditioning point is shifted along the final parking forward/lateral axes.</li>
+<li>PUDO ignores noisy parking-position conditioning.</li>
+<li>Parking direction conditioning is used for nose/tail parking when that label exists; PUDO ignores the direction preference and samples a random direction token.</li>
+<li>MRM candidates can be treated as parking with probability <code>0.1</code>, setting <code>data[&amp;quot;parking&amp;quot;] = True</code>.</li>
+</ul>
+<p>Model usage:</p>
+<ul>
+<li><code>ParkingEncoder</code> embeds <code>parking</code>, <code>parking_direction</code>, <code>parking_position_ui</code>, and, because <code>PUDO_ENABLED=True</code>, the <code>stopping_type</code>.</li>
+<li>This is closest to &quot;park mode&quot; in Zak&#x27;s experimental MCV path.</li>
+<li>There is also a generic Zoo/ST <code>parking_mode</code> adaptor (<code>DataKeys.PARKING_MODE</code>), but that is a separate ST input-adaptor path, not the main experimental PUDO sampler path summarized here.</li>
+</ul>
 <h3 id="zak-indicator-state-augmentation"><span class="badge badge-zak">ZAK</span>Indicator state augmentation</h3>
-<p>Configured but disabled:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">INDICATOR_STATE.CHANGE_AUGMENTATION_PROB = 0.0
-INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.0</code></pre>
-<p>No active indicator-state corruption is applied in this config.</p>
+<p>Active in <code>mcv_new_base.yml</code>:</p>
+<ul>
+<li><code>INDICATOR_STATE.ENABLED = True</code></li>
+<li><code>INDICATOR_STATE.PAST = True</code></li>
+<li><code>INDICATOR_STATE.CHANGE_AUGMENTATION_PROB = 0.8</code></li>
+<li><code>INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.01</code></li>
+</ul>
+<p>Behavior:</p>
+<ul>
+<li>If the route map is dropped, the code uses the raw indicator signal without the route lead-time behavior.</li>
+<li>If the route map is not dropped, indicator state includes the configured lead time.</li>
+<li>With probability <code>0.8</code>, the past indicator state up to present is reset to its earlier value when there was a recent change; this forces the model to predict/react to an indicator change.</li>
+<li>With probability <code>0.01</code>, the past/current indicator state is made wrong: off becomes a random left/right signal, and left/right becomes off.</li>
+<li>This is global training-time state augmentation, not bucket-local upsampling.</li>
+</ul>
 <h3 id="zak-gear-state-augmentation"><span class="badge badge-zak">ZAK</span>Gear state augmentation</h3>
 <p><code>GEAR_STATE.ENABLED = True</code>, but there is no bucket-specific gear-state augmentation in this path. Gear state is a model input/loss target. Gear-change upsampling is done by the sampler buckets, not by mutating gear labels.</p>
 <h3 id="zak-ego-pose-interpolation-pre-corrective-action-pseudo-labeling"><span class="badge badge-zak">ZAK</span>Ego-pose interpolation / pre-corrective action pseudo-labeling</h3>
@@ -1437,14 +1510,14 @@ unroll new_speed over path to produce future egoposition, yaw, curvature</code><
 <p>Important config values:</p>
 <ul>
 <li><code>INTERVENTIONS_BEFORE = 1.2s</code></li>
-<li><code>SPEED_TIME_OFFSET = 1.0</code> in <code>mcv_new_base0.yml</code></li>
+<li><code>SPEED_TIME_OFFSET = 1.0</code> in <code>mcv_new_base.yml</code></li>
 <li><code>PATH_BASE_OFFSET = 4.0</code></li>
 <li><code>PATH_SPEED_FACTOR = True</code></li>
 <li><code>TORQUE_OFFSET = 0.2</code></li>
 <li><code>TORQUE_THRESH = 1.6</code></li>
 <li><code>TORQUE_SPEED_THRESH = 2.23 m/s</code> (5 mph)</li>
 </ul>
-<p><code>EGO_POSE_AUGMENTATION.ENABLED = False</code> in <code>mcv_new_base0.yml</code>, so the separate trajectory augmentation object is disabled.</p>
+<p><code>EGO_POSE_AUGMENTATION.ENABLED = False</code> in <code>mcv_new_base.yml</code>, so the separate trajectory augmentation object is disabled.</p>
 <h2 id="zak-per-bucket-augmentation-summary"><span class="badge badge-zak">ZAK</span>Per-bucket &quot;augmentation&quot; summary</h2>
 <p>This table separates bucket-local time/window augmentation from global training augmentation.</p>
 <div class="table-wrap"><table>
@@ -1461,8 +1534,8 @@ unroll new_speed over path to produce future egoposition, yaw, curvature</code><
 <tr><td>Intervention suffix <code>0</code></td><td>pre-intervention <code>-1.2s..0s</code></td><td>same global transforms; ego-pose interpolation most relevant here</td></tr>
 <tr><td>Intervention suffix <code>1</code></td><td>post-intervention <code>0s..+1s</code>, expert/DC only</td><td>same global transforms</td></tr>
 <tr><td>Intervention gear-change <code>0/1</code></td><td>same as intervention <code>0/1</code>, plus CA anchor within 30s of gear change</td><td>same global transforms</td></tr>
-<tr><td>Parking</td><td>no final dilation; uses nearby-motion requirement to remove long stops</td><td>same global transforms; parking request may activate with p=0.025</td></tr>
-<tr><td>PUDO</td><td>no final dilation; stopping_type=2 and near/far pin split</td><td>same global transforms; parking request can apply if sample is marked parking</td></tr>
+<tr><td>Parking</td><td>no final dilation; uses nearby-motion requirement to remove long stops</td><td>same global transforms; route-map tokens are masked for parking; parking encoder consumes parking position/type/direction</td></tr>
+<tr><td>PUDO</td><td>no final dilation; stopping_type=2 and near/far pin split</td><td>same global transforms; PUDO uses parking encoder stopping type but ignores parking-position jitter/direction preference</td></tr>
 <tr><td>Unparking</td><td>first moving frame after gear leaves park, dilated <code>0s..+10s</code></td><td>same global transforms</td></tr>
 </tbody></table></div>
 <h2 id="zak-otf-config-comparison"><span class="badge badge-zak">ZAK</span>OTF config comparison</h2>
