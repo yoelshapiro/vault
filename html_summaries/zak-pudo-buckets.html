@@ -1019,7 +1019,8 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>Dilation around any raw gear transition.</li>
-<li>No smoothing in this sampler.</li>
+<li>No additional smoothing inside <code>get_gear_change_indices</code>, but the sampler uses <code>dataset.gear</code>, and <code>dataset.gear</code> is cleaned first when <code>DATASET.WAYVE.CLEAN_UP_SCALARS=True</code>.</li>
+<li>In the normal <code>zmurez/pudo</code> config path, this means <code>GEAR_CHANGE_*</code> is based on cleaned gear, not raw gear.</li>
 <li>No park-only restriction; any gear value change is included.</li>
 </ul>
 <h3 id="zak-interventions-corrective-actions"><span class="badge badge-zak">ZAK</span>Interventions / corrective actions</h3>
@@ -1031,6 +1032,19 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li>acceleration slow/fast variants are defined but weight <code>0.0</code> in phase2</li>
 </ul>
 <p>Function: <code>get_intervention_indices</code>.</p>
+<p>These are Zak&#x27;s general driving intervention / CA buckets, not the parking/PUDO-specific buckets.</p>
+<p>The bucket definitions pass empty label and correction filters:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">get_intervention_indices(
+    labels=[],
+    corrections=[],
+    ...
+)</code></pre>
+<p>That means they accept any annotated valid intervention label, then apply the generic invalid-label rules and masks. They are not filtered to <code>failed_to_park</code>, <code>failed_to_pudo</code>, <code>failed_to_unpudo</code>, etc. Parking and PUDO are handled by separate sampler functions later in this page:</p>
+<ul>
+<li><code>PARKING_*</code> -&gt; <code>get_parking_indices(..., stop_type=&amp;quot;park&amp;quot;, ...)</code></li>
+<li><code>PUDO_*</code> -&gt; <code>get_parking_indices(..., stop_type=&amp;quot;pudo&amp;quot;, ...)</code></li>
+<li><code>UNPARKING_*</code> -&gt; <code>get_unparking_indices(...)</code></li>
+</ul>
 <p>The intervention anchor is an autonomous disengagement:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">intervention_indices = where((auto[:-1] == 1) &amp; (auto[1:] == 0)) + 1</code></pre>
 <p>General filtering:</p>

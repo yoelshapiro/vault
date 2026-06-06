@@ -866,7 +866,8 @@ Note: `config.py` default has `GEAR_CHANGE_AFTER=0.5`, but the `mcv_new_phase2` 
 
 Bucket-local augmentation/windowing:
 - Dilation around any raw gear transition.
-- No smoothing in this sampler.
+- No additional smoothing inside `get_gear_change_indices`, but the sampler uses `dataset.gear`, and `dataset.gear` is cleaned first when `DATASET.WAYVE.CLEAN_UP_SCALARS=True`.
+- In the normal `zmurez/pudo` config path, this means `GEAR_CHANGE_*` is based on cleaned gear, not raw gear.
 - No park-only restriction; any gear value change is included.
 
 ### ZAK: Interventions / corrective actions
@@ -878,6 +879,24 @@ Buckets:
 - acceleration slow/fast variants are defined but weight `0.0` in phase2
 
 Function: `get_intervention_indices`.
+
+These are Zak's general driving intervention / CA buckets, not the parking/PUDO-specific buckets.
+
+The bucket definitions pass empty label and correction filters:
+
+```python
+get_intervention_indices(
+    labels=[],
+    corrections=[],
+    ...
+)
+```
+
+That means they accept any annotated valid intervention label, then apply the generic invalid-label rules and masks. They are not filtered to `failed_to_park`, `failed_to_pudo`, `failed_to_unpudo`, etc. Parking and PUDO are handled by separate sampler functions later in this page:
+
+- `PARKING_*` -> `get_parking_indices(..., stop_type="park", ...)`
+- `PUDO_*` -> `get_parking_indices(..., stop_type="pudo", ...)`
+- `UNPARKING_*` -> `get_unparking_indices(...)`
 
 The intervention anchor is an autonomous disengagement:
 
