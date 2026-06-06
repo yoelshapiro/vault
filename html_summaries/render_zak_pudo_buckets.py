@@ -147,14 +147,25 @@ def render_code_block(code_lines: list[str], code_lang: str) -> str:
     code = "\n".join(code_lines)
     language = code_lang.strip().lower()
     language_class = f" language-{html.escape(language)}" if language else ""
+    line_count = len(code_lines)
     if language == "sql":
         rendered_code = highlight_sql(code)
     else:
         rendered_code = html.escape(code)
-    return (
+    code_html = (
         f'<pre><button class="copy" type="button">Copy</button><code class="{language_class.strip()}">'
         + rendered_code
         + "</code></pre>"
+    )
+    if line_count < 18:
+        return code_html
+
+    label = "SQL" if language == "sql" else (language.upper() if language else "Code")
+    return (
+        '<details class="code-details">'
+        f'<summary><span>{label} block</span><small>{line_count} lines</small></summary>'
+        + code_html
+        + "</details>"
     )
 
 
@@ -474,6 +485,48 @@ def render() -> str:
       font-size: 13px;
       line-height: 1.55;
       white-space: pre;
+    }}
+    .code-details {{
+      margin: 18px 0 24px;
+      border: 1px solid #bfd3cc;
+      border-radius: 14px;
+      background: #f3f8f5;
+      overflow: hidden;
+    }}
+    .code-details summary {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      padding: 12px 16px;
+      color: #123b35;
+      font-weight: 850;
+      list-style: none;
+    }}
+    .code-details summary::-webkit-details-marker {{
+      display: none;
+    }}
+    .code-details summary::before {{
+      content: "▶";
+      color: var(--accent);
+      font-size: 12px;
+      margin-right: 2px;
+    }}
+    .code-details[open] summary::before {{
+      content: "▼";
+    }}
+    .code-details summary span {{
+      flex: 1;
+    }}
+    .code-details summary small {{
+      color: var(--muted);
+      font-weight: 700;
+    }}
+    .code-details pre {{
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
     }}
     .language-sql .sql-keyword {{
       color: #7dd3fc;
