@@ -11,7 +11,7 @@
 - Changes:
   - Added the `parking_pudo/default` dataset and registered it in the services/sampling dataset store.
   - Implemented corpus-derived `park`, `pudo`, `unpark`, `unpudo`, `pre_unpark`, `pre_unpudo`, `gear_change`, `pre_ca`, and `ca` buckets split by country.
-  - Added programmable gear smoothing, hazard cleanup, hazard-based PUDO/UnPUDO splitting, movement anchors after gear leaves park, and near-gear-change CA filters with the remain-stopped speed filter.
+  - Added programmable gear smoothing, hazard cleanup, hazard-based PUDO/UnPUDO splitting over the parked/pre-movement departure interval, movement anchors after gear leaves park, and near-gear-change CA filters with the remain-stopped speed filter.
   - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
 

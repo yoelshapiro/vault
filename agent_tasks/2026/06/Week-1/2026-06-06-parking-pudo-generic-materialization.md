@@ -30,7 +30,7 @@
   - `gear_change_*`
   - `pre_ca_*`
   - `ca_*`
-- Split `unpark` from `unpudo` using hazard evidence on the preceding parked segment.
+- Split `unpark` from `unpudo` using hazard evidence on the preceding parked segment and stopped departure tail up to the movement anchor.
 - Implemented `pre_unpark` / `pre_unpudo` as the 0.9s pre-start window equivalent to Zak's `start_gear_change_*` bucket, but using the requested names.
 - Implemented parking CA filters as general AV-to-DC interventions near a smoothed gear change, including the speed filter that removes interventions where the vehicle is stopped at handover and still stopped 1s later.
 - Registered the dataset in the services/sampling store and BUILD target.
