@@ -188,7 +188,7 @@ The generic driving buckets are broad driving coverage plus targeted oversamplin
 | Curvature DC | `dc_high_curvature_*` | curvature threshold with time dilation | `DC_MASKS` |
 | Lateral acceleration DC | `dc_high_lateral_acceleration_*` | lateral acceleration threshold | `DC_MASKS` |
 | Jerk DC | `dc_high_jerk_*` | jerk threshold | `DC_MASKS` |
-| Pre-start DC | `dc_pre_start_*` | start-stop window near start | `DC_MASKS` |
+| Pre-start DC | `dc_pre_start_*` | last 0.2s before a detected start-from-stop | `DC_MASKS` |
 | High-speed DC | `dc_mache_high_speed_*` | speed range | `DC_MASKS` |
 | Indicator DC | `dc_indicator_on_*`, `dc_indicator_on_highway_*` | indicator state plus movement/highway filters | `DC_MASKS` |
 | Highway DC | `dc_cruising_highway_*`, `dc_speed_change_highway_*`, `dc_on_off_highway_*` | highway, acceleration, speed-limit predicates | `DC_MASKS` |
@@ -216,6 +216,158 @@ Important nuance:
 - `get_filtered_intervention_indices` anchors on the intervention frame and broadcasts the intervention label/validity to neighboring frames.
 - For pre-CA (`after_intervention_sec < 0`), the function additionally intersects with `AUTOMATION_ACTIVE == True`.
 - For CA short/long, there is no equivalent autonomy-on requirement. The downstream `DC_MASKS` then excludes frames where autonomy is still active.
+
+### Driving pre-start DC
+
+`dc_pre_start_*` is not an intervention bucket. It is a regular DC driving bucket that oversamples the moment just before the vehicle starts moving from a stop.
+
+The actual generic Gen2 Mach-E buckets are:
+
+```python
+Bucket(
+    name="dc_pre_start_uk",
+    func=partial(get_start_stop_indices, which="start", before_sec=-0.2, after_sec=0.0),
+    masks=DC_MASKS,
+    country_filter=("GBR",),
+    platform_filter=GEN2_MACHE_PLATFORM_FILTER,
+)
+
+Bucket(
+    name="dc_pre_start_usa",
+    func=partial(get_start_stop_indices, which="start", before_sec=-0.2, after_sec=0.0),
+    masks=DC_MASKS,
+    country_filter=("USA",),
+    platform_filter=GEN2_MACHE_PLATFORM_FILTER,
+)
+```
+
+`add_annotations()` creates the required start/stop columns before bucket generation:
+
+```python
+speed_mps = df.inferred__state__odometry__speed_kmh / 3.6
+
+stopped_mask = speed_mps == 0
+stop_offset, stop_index = offset_to_event(stopped_mask)
+start_offset, start_index = offset_to_event(~stopped_mask)
+
+df["stop_offset"] = stop_offset
+df["start_offset"] = start_offset
+df["stop_label"] = stop_label
+df["start_label"] = start_label
+```
+
+Then `get_start_stop_indices(..., which="start")` selects frames by `start_offset`:
+
+```python
+offset = df["start_offset"]
+mask = (offset >= seconds_to_frames(-0.2)) & (offset <= seconds_to_frames(0.0))
+indices = np.nonzero(mask)[0]
+```
+
+So this bucket means: "frames from about 0.2 seconds before start-from-stop through the start frame." It does not use the generic `START_BEFORE_WINDOW=-1.0` / `START_AFTER_WINDOW=6.0` helper; these bucket definitions use the tighter `[-0.2s, 0.0s]` window.
+
+After candidate selection, `DC_MASKS` are applied. That makes this a human-driving/DC sample bucket: autonomy-active frames, reverse/neutral, geofence, high speed, long stationary, invalid video, non-contiguous data, bad windows, etc. are removed.
+
+### Driving pre-CA / CA calculation
+
+For standard driving `pre_ca_*`, `ca_short_*`, and `ca_long_*`, the base anchor is the AV-to-DC transition:
+
+```python
+def get_intervention_mask(df):
+    auto = df.ground_truth__state__vehicle__automation_active.to_numpy(dtype=int)
+    return np.pad((auto[:-1] == 1) & (auto[1:] == 0), (0, 1))
+```
+
+In other words, the event is the disengagement frame where `AUTOMATION_ACTIVE` changes from `1` to `0`. The base anchor is not the disengagement type.
+
+The standard driving functions are:
+
+```python
+get_pre_intervention_indices = partial(
+    get_filtered_intervention_indices,
+    before_intervention_sec=-1.2,
+    after_intervention_sec=-0.04,
+    additional_invalid_int_what=("early_turn",) + PARKING_INVALID_INT_WHATS,
+)
+
+get_corrective_action_indices_short = partial(
+    get_filtered_intervention_indices,
+    before_intervention_sec=0.0,
+    after_intervention_sec=1.48,
+    additional_invalid_int_what=PARKING_INVALID_INT_WHATS,
+)
+
+get_corrective_action_indices_long = partial(
+    get_filtered_intervention_indices,
+    before_intervention_sec=1.52,
+    after_intervention_sec=5.0,
+    additional_invalid_int_what=PARKING_INVALID_INT_WHATS,
+)
+```
+
+The resulting windows are:
+
+| Bucket | Window relative to AV -> DC transition | Extra autonomy condition |
+|---|---:|---|
+| `pre_ca_*` | `[-1.2s, -0.04s]` | frame must still be AV |
+| `ca_short_*` | `[0.0s, +1.48s]` | no AV requirement; `DC_MASKS` later removes autonomy-active frames |
+| `ca_long_*` | `[+1.52s, +5.0s]` | no AV requirement; `DC_MASKS` later removes autonomy-active frames |
+
+Internally, `get_filtered_intervention_indices()` first builds a mask for valid intervention anchors, then broadcasts that anchor validity to neighboring frames:
+
+```python
+anchor_mask = (
+    get_intervention_mask(df)
+    & get_intervention_taxonomy_mask(df, taxonomy)
+    & get_intervention_label_mask(df, int_type=(), int_reason=(), int_what=(), int_why=())
+    & ~get_intervention_invalid_mask(df, additional_invalid_int_what=...)
+)
+
+offset, anchor_index = compute_offset_to_intervention(get_intervention_mask(df))
+
+# Use the label/validity of the associated intervention anchor for each window frame.
+valid_for_anchor = anchor_mask[anchor_index]
+in_window = (offset >= before_frames) & (offset <= after_frames)
+indices = np.nonzero(valid_for_anchor & in_window)[0]
+
+if after_frames < 0:
+    indices = intersect(indices, frames_where_AUTOMATION_ACTIVE_is_true)
+```
+
+The standard driving buckets pass empty label filters (`int_type`, `int_reason`, `int_detail`, `int_what`, `int_why`). In `get_intervention_label_mask`, empty filters mean "accept any intervention label." Therefore, standard driving `pre_ca`, `ca_short`, and `ca_long` are not filtered to one specific disengagement type.
+
+What is filtered:
+
+1. The anchor must be an AV-to-DC transition.
+2. The intervention taxonomy version must be valid.
+3. Empty label filters accept any label.
+4. Invalid interventions are removed.
+5. Parking/PUDO intervention `what` labels are removed for the generic driving variants.
+6. Bucket-level masks are applied after candidate generation.
+
+Specialized driving buckets can add label filters. For example, highway pre-CA variants can request labels such as `failed_to_follow_lane_position` or `failed_to_slow`. Those are narrower buckets layered on top of the same AV-to-DC intervention anchor logic.
+
+### Parking invalid intervention whats
+
+`PARKING_INVALID_INT_WHATS` is the list of parking/PUDO intervention labels excluded from generic driving intervention buckets:
+
+```python
+PARKING_INVALID_INT_WHATS = (
+    "failed_to_park",
+    "failed_to_unpark",
+    "parking",
+    "failed_to_pudo",
+    "failed_to_unpudo",
+)
+```
+
+For standard driving `pre_ca`, `ca_short`, and `ca_long`, these are passed into `additional_invalid_int_what`, so they are removed by `get_intervention_invalid_mask()`.
+
+That means:
+
+- Generic driving CA/pre-CA buckets are "all valid non-parking interventions around AV disengagement."
+- They are not "all intervention types including parking."
+- Parking-specific variants intentionally do not apply `PARKING_INVALID_INT_WHATS`, so parking/PUDO buckets can retain `failed_to_park`, `parking`, `failed_to_pudo`, etc.
 
 ### Generic masks
 
