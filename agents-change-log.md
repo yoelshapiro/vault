@@ -19,6 +19,8 @@
   - Added separate `unpark` and `unpudo` pre/short/long CA buckets around first-movement departure anchors, with UnPUDO classification using the same parked/pre-departure hazard scan as the event buckets.
   - Added failed-to pre/short/long CA buckets for `failed_to_park`, `failed_to_pudo`, `failed_to_unpark`, and `failed_to_unpudo`; these skip nearby-gear filtering but keep the 1s remain-stopped speed filter.
   - Split parking/PUDO intervention selectors into `parking_pudo/intervention_filters.py` and added focused tests for departure CA and failed-to CA behavior.
+  - Added `parking_pudo/anchors`, an anchor-only companion dataset that mirrors every default bucket name/country split and collapses each bucket to its detected anchor frame using the same filtering logic.
+  - Guarded anchor-only selectors so they emit an anchor only when the corresponding expanded bucket window would contain frames.
   - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
 

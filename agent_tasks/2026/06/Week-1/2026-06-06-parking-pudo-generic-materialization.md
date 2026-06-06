@@ -72,6 +72,16 @@
   - Made overlapping park/PUDO approach windows assign frames to the first park event before applying the park/PUDO split, matching Zak's `make_park_masks` first-assignment behavior.
   - Left the configurable 2s "short gear segment -> previous gear" rule as an intentional difference from Zak's older gear cleanup, because it matches the requested smoothing behavior for this migration.
 - Added regression coverage for the frame-before-park context, overlapping parking-window assignment, departure-context unpark/UnPUDO CA, failed-to label CA selection without nearby gear changes, and remain-stopped rejection for failed-to CA.
+- Added `parking_pudo/anchors`, an anchor-only companion dataset for event analysis:
+  - It mirrors every `parking_pudo/default` bucket name and country split.
+  - It reuses the same detection, hazard cleanup, geofence exclusion, context split, failed-to label filtering, and remain-stopped speed filtering as the window buckets.
+  - It selects only the bucket anchor frame:
+    - park/PUDO at the smoothed gear-to-park frame,
+    - unpark/UnPUDO and pre-departure at the first movement frame after leaving park,
+    - gear-change buckets at the smoothed gear-change frame,
+    - pre-CA, short-CA, long-CA, and failed-to CA buckets at the AV-to-DC intervention frame.
+  - Anchor-only filters now require that the corresponding expanded bucket window would contain at least one frame, so the table is not a looser raw-event list.
+  - Registered the dataset as `parking_pudo/anchors` and documented the `filter_and_bucket_stage` command in the README.
 
 ## Verification
 
@@ -83,3 +93,4 @@
 - Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty`.
 - Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_test`.
 - Re-ran `bazel test //wayve/ai/services/sampling:test_datasets`; aggregate target passed from cache after the full pytest run.
+- For the anchor-only update, re-ran `git diff --check` and `bazel test //wayve/ai/services/sampling:test_datasets`; all four lint/type/pytest targets passed.
