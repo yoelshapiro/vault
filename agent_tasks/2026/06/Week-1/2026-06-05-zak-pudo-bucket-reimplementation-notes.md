@@ -1272,6 +1272,385 @@ Comparison to similar buckets:
 - Generic driving `START` is also pre-start-ish, but it is not parking-specific and is not keyed to a park-to-drive gear transition.
 - PUDO buckets are stopping buckets, not departure/unparking buckets.
 
+## COMPARISON: Databricks SQL sketches for Zak-like event mining
+
+These are SQL sketches for reimplementing the Zak logic over `prod_data_pipeline.wayve_corpus.all_data`. They are intended for investigation/materialization design, not as exact byte-for-byte ports of the Python sampler.
+
+Shared caveats:
+- Zak uses in-memory arrays at roughly 20 Hz and frame-index dilation. The SQL below uses timestamp windows.
+- Zak uses cleaned gear (`clean_up_gear`, `clean_up_gear_stopped`). The SQL includes a simple short-segment smoothing CTE; replace it with the same smoothed gear column from your event notebook if available.
+- Zak also applies valid masks such as video availability, dropped frames, not-ends, and autonomous/future-autonomous masks. Add those joins/filters if you want production bucket parity.
+- Parking office/other location split depends on `PARKING_GEOFENCES`. The SQL marks where to join/apply your existing geofence mapping.
+
+### COMPARISON: SQL 1 - Unparking movement anchor
+
+Purpose: mimic `UNPARKING_*`. For each cleaned gear transition from park to non-park, find the first future frame with non-zero speed, then produce a `0s..+10s` bucket window.
+
+```sql
+WITH params AS (
+  SELECT
+    2000000L AS min_gear_segment_us,
+    10000000L AS bucket_after_us
+),
+base AS (
+  SELECT
+    run_id,
+    run_date_iso,
+    timestamp_unixus,
+    CAST(ground_truth__state__vehicle__gear_direction AS INT) AS raw_gear,
+    ABS(COALESCE(inferred__state__odometry__speed_kmh, 0.0)) AS abs_speed_kmh
+  FROM prod_data_pipeline.wayve_corpus.all_data
+  WHERE run_date_iso >= '${run_date_from}'
+    AND run_date_iso <= '${run_date_to}'
+    -- AND run_id IN (...)
+),
+ordered AS (
+  SELECT
+    *,
+    LAG(raw_gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_raw_gear
+  FROM base
+),
+gear_segments AS (
+  SELECT
+    *,
+    SUM(CASE WHEN prev_raw_gear IS NULL OR raw_gear <> prev_raw_gear THEN 1 ELSE 0 END)
+      OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS gear_segment_id
+  FROM ordered
+),
+segments AS (
+  SELECT
+    run_id,
+    gear_segment_id,
+    MIN(timestamp_unixus) AS segment_start_ts,
+    MAX(timestamp_unixus) AS segment_end_ts,
+    MIN_BY(raw_gear, timestamp_unixus) AS segment_gear
+  FROM gear_segments
+  GROUP BY run_id, gear_segment_id
+),
+segments_with_prev AS (
+  SELECT
+    *,
+    LAG(segment_gear) OVER (PARTITION BY run_id ORDER BY gear_segment_id) AS prev_segment_gear
+  FROM segments
+),
+smoothed AS (
+  SELECT
+    g.*,
+    s.segment_start_ts,
+    s.segment_end_ts,
+    CASE
+      WHEN s.segment_end_ts - s.segment_start_ts < (SELECT min_gear_segment_us FROM params)
+        AND s.prev_segment_gear IS NOT NULL
+      THEN s.prev_segment_gear
+      ELSE s.segment_gear
+    END AS gear
+  FROM gear_segments g
+  JOIN segments_with_prev s
+    ON s.run_id = g.run_id
+   AND s.gear_segment_id = g.gear_segment_id
+),
+gear_context AS (
+  SELECT
+    *,
+    LAG(gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_gear
+  FROM smoothed
+),
+gear_from_park AS (
+  SELECT
+    run_id,
+    timestamp_unixus AS gear_from_park_ts
+  FROM gear_context
+  WHERE prev_gear = 0 AND gear <> 0
+),
+moving_frames AS (
+  SELECT
+    run_id,
+    timestamp_unixus AS moving_ts
+  FROM smoothed
+  WHERE abs_speed_kmh > 0
+),
+anchors AS (
+  SELECT
+    g.run_id,
+    g.gear_from_park_ts,
+    MIN(m.moving_ts) AS movement_anchor_ts
+  FROM gear_from_park g
+  JOIN moving_frames m
+    ON m.run_id = g.run_id
+   AND m.moving_ts >= g.gear_from_park_ts
+  GROUP BY g.run_id, g.gear_from_park_ts
+)
+SELECT
+  run_id,
+  gear_from_park_ts,
+  movement_anchor_ts,
+  movement_anchor_ts AS bucket_start_ts,
+  movement_anchor_ts + (SELECT bucket_after_us FROM params) AS bucket_end_ts,
+  'unparking' AS zak_like_event_type
+FROM anchors;
+```
+
+### COMPARISON: SQL 2 - PUDO stopping anchor
+
+Purpose: mimic the PUDO event detection behind `get_parking_indices(stop_type="pudo")`. Zak first detects park moments, classifies park moments as PUDO when a hazard signal is nearby, then the parking bucket samples the approach frames associated with that final park moment.
+
+This SQL emits the event anchor: gear changes into park and hazard was active within `+-10s`. To mimic the full bucket, join these anchors back to frames from the associated parking approach and apply the long-stop removal.
+
+```sql
+WITH params AS (
+  SELECT
+    2000000L AS min_gear_segment_us,
+    10000000L AS hazard_window_us
+),
+base AS (
+  SELECT
+    run_id,
+    run_date_iso,
+    timestamp_unixus,
+    CAST(ground_truth__state__vehicle__gear_direction AS INT) AS raw_gear,
+    ground_truth__state__vehicle__indicator_light AS indicator_light,
+    ABS(COALESCE(inferred__state__odometry__speed_kmh, 0.0)) AS abs_speed_kmh,
+    inferred__state__navigation__latitude_deg AS lat,
+    inferred__state__navigation__longitude_deg AS lon
+  FROM prod_data_pipeline.wayve_corpus.all_data
+  WHERE run_date_iso >= '${run_date_from}'
+    AND run_date_iso <= '${run_date_to}'
+    -- AND run_id IN (...)
+),
+ordered AS (
+  SELECT
+    *,
+    LAG(raw_gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_raw_gear
+  FROM base
+),
+gear_segments AS (
+  SELECT
+    *,
+    SUM(CASE WHEN prev_raw_gear IS NULL OR raw_gear <> prev_raw_gear THEN 1 ELSE 0 END)
+      OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS gear_segment_id
+  FROM ordered
+),
+segments AS (
+  SELECT
+    run_id,
+    gear_segment_id,
+    MIN(timestamp_unixus) AS segment_start_ts,
+    MAX(timestamp_unixus) AS segment_end_ts,
+    MIN_BY(raw_gear, timestamp_unixus) AS segment_gear
+  FROM gear_segments
+  GROUP BY run_id, gear_segment_id
+),
+segments_with_prev AS (
+  SELECT
+    *,
+    LAG(segment_gear) OVER (PARTITION BY run_id ORDER BY gear_segment_id) AS prev_segment_gear
+  FROM segments
+),
+smoothed AS (
+  SELECT
+    g.*,
+    s.segment_start_ts,
+    s.segment_end_ts,
+    CASE
+      WHEN s.segment_end_ts - s.segment_start_ts < (SELECT min_gear_segment_us FROM params)
+        AND s.prev_segment_gear IS NOT NULL
+      THEN s.prev_segment_gear
+      ELSE s.segment_gear
+    END AS gear
+  FROM gear_segments g
+  JOIN segments_with_prev s
+    ON s.run_id = g.run_id
+   AND s.gear_segment_id = g.gear_segment_id
+),
+gear_context AS (
+  SELECT
+    *,
+    LAG(gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_gear
+  FROM smoothed
+),
+park_moments AS (
+  SELECT
+    run_id,
+    timestamp_unixus AS park_ts,
+    lat,
+    lon
+  FROM gear_context
+  WHERE prev_gear <> 0 AND gear = 0
+),
+hazard_frames AS (
+  SELECT
+    run_id,
+    timestamp_unixus AS hazard_ts
+  FROM smoothed
+  WHERE indicator_light = 'hazard'
+    -- Zak excludes office geofences from hazard PUDO detection:
+    -- AND NOT in_parking_office_geofence(lat, lon)
+),
+pudo_anchors AS (
+  SELECT
+    p.run_id,
+    p.park_ts,
+    COUNT(h.hazard_ts) > 0 AS has_hazard_near_park
+  FROM park_moments p
+  LEFT JOIN hazard_frames h
+    ON h.run_id = p.run_id
+   AND h.hazard_ts BETWEEN p.park_ts - (SELECT hazard_window_us FROM params)
+                       AND p.park_ts + (SELECT hazard_window_us FROM params)
+  GROUP BY p.run_id, p.park_ts
+)
+SELECT
+  run_id,
+  park_ts AS pudo_anchor_ts,
+  'pudo' AS zak_like_event_type
+FROM pudo_anchors
+WHERE has_hazard_near_park;
+```
+
+### COMPARISON: SQL 3 - Parking-like corrective actions near gear change
+
+Purpose: mimic Zak's `INTERVENTIONS_GEAR_CHANGE0` and `INTERVENTIONS_GEAR_CHANGE1` buckets. These are **general interventions near a gear change**, not intervention-label taxonomy buckets for parking. They are parking-like because the gear-change proximity makes them relevant to parking/PUDO/unparking behavior.
+
+```sql
+WITH params AS (
+  SELECT
+    2000000L AS min_gear_segment_us,
+    30000000L AS gear_window_us,
+    1200000L AS bucket0_before_us,
+    1000000L AS bucket1_after_us,
+    1000000L AS remain_stopped_check_us
+),
+base AS (
+  SELECT
+    run_id,
+    run_date_iso,
+    timestamp_unixus,
+    CAST(ground_truth__state__vehicle__gear_direction AS INT) AS raw_gear,
+    CAST(ground_truth__state__vehicle__automation_active AS BOOLEAN) AS auto_active,
+    ABS(COALESCE(inferred__state__odometry__speed_kmh, 0.0)) AS abs_speed_kmh
+  FROM prod_data_pipeline.wayve_corpus.all_data
+  WHERE run_date_iso >= '${run_date_from}'
+    AND run_date_iso <= '${run_date_to}'
+    -- AND run_id IN (...)
+),
+ordered AS (
+  SELECT
+    *,
+    LAG(raw_gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_raw_gear,
+    LAG(auto_active) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_auto_active
+  FROM base
+),
+gear_segments AS (
+  SELECT
+    *,
+    SUM(CASE WHEN prev_raw_gear IS NULL OR raw_gear <> prev_raw_gear THEN 1 ELSE 0 END)
+      OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS gear_segment_id
+  FROM ordered
+),
+segments AS (
+  SELECT
+    run_id,
+    gear_segment_id,
+    MIN(timestamp_unixus) AS segment_start_ts,
+    MAX(timestamp_unixus) AS segment_end_ts,
+    MIN_BY(raw_gear, timestamp_unixus) AS segment_gear
+  FROM gear_segments
+  GROUP BY run_id, gear_segment_id
+),
+segments_with_prev AS (
+  SELECT
+    *,
+    LAG(segment_gear) OVER (PARTITION BY run_id ORDER BY gear_segment_id) AS prev_segment_gear
+  FROM segments
+),
+smoothed AS (
+  SELECT
+    g.*,
+    s.segment_start_ts,
+    s.segment_end_ts,
+    CASE
+      WHEN s.segment_end_ts - s.segment_start_ts < (SELECT min_gear_segment_us FROM params)
+        AND s.prev_segment_gear IS NOT NULL
+      THEN s.prev_segment_gear
+      ELSE s.segment_gear
+    END AS gear
+  FROM gear_segments g
+  JOIN segments_with_prev s
+    ON s.run_id = g.run_id
+   AND s.gear_segment_id = g.gear_segment_id
+),
+gear_context AS (
+  SELECT
+    *,
+    LAG(gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_gear
+  FROM smoothed
+),
+gear_changes AS (
+  SELECT
+    run_id,
+    timestamp_unixus AS gear_change_ts
+  FROM gear_context
+  WHERE prev_gear IS NOT NULL AND gear <> prev_gear
+),
+ca_anchors_raw AS (
+  SELECT
+    run_id,
+    timestamp_unixus AS intervention_ts,
+    abs_speed_kmh AS speed_at_intervention
+  FROM ordered
+  WHERE prev_auto_active = TRUE
+    AND auto_active = FALSE
+),
+ca_with_future_speed AS (
+  SELECT
+    c.*,
+    MIN_BY(f.abs_speed_kmh, f.timestamp_unixus) AS speed_1s_after
+  FROM ca_anchors_raw c
+  LEFT JOIN base f
+    ON f.run_id = c.run_id
+   AND f.timestamp_unixus >= c.intervention_ts + (SELECT remain_stopped_check_us FROM params)
+  GROUP BY c.run_id, c.intervention_ts, c.speed_at_intervention
+),
+ca_after_remain_stopped_filter AS (
+  SELECT *
+  FROM ca_with_future_speed
+  WHERE NOT (
+    speed_at_intervention = 0
+    AND COALESCE(speed_1s_after, 0) = 0
+  )
+),
+parking_like_ca AS (
+  SELECT DISTINCT
+    c.run_id,
+    c.intervention_ts
+  FROM ca_after_remain_stopped_filter c
+  JOIN gear_changes g
+    ON g.run_id = c.run_id
+   AND g.gear_change_ts BETWEEN c.intervention_ts - (SELECT gear_window_us FROM params)
+                            AND c.intervention_ts + (SELECT gear_window_us FROM params)
+),
+bucket0 AS (
+  SELECT
+    run_id,
+    intervention_ts,
+    intervention_ts - (SELECT bucket0_before_us FROM params) AS bucket_start_ts,
+    intervention_ts AS bucket_end_ts,
+    'interventions_gear_change0' AS zak_like_bucket
+  FROM parking_like_ca
+),
+bucket1 AS (
+  SELECT
+    run_id,
+    intervention_ts,
+    intervention_ts AS bucket_start_ts,
+    intervention_ts + (SELECT bucket1_after_us FROM params) AS bucket_end_ts,
+    'interventions_gear_change1' AS zak_like_bucket
+  FROM parking_like_ca
+)
+SELECT * FROM bucket0
+UNION ALL
+SELECT * FROM bucket1;
+```
+
 ## ZAK: Global training augmentations and label transformations
 
 The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.
