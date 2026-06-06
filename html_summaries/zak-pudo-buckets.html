@@ -182,6 +182,48 @@
       line-height: 1.55;
       white-space: pre;
     }
+    .code-details {
+      margin: 18px 0 24px;
+      border: 1px solid #bfd3cc;
+      border-radius: 14px;
+      background: #f3f8f5;
+      overflow: hidden;
+    }
+    .code-details summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      padding: 12px 16px;
+      color: #123b35;
+      font-weight: 850;
+      list-style: none;
+    }
+    .code-details summary::-webkit-details-marker {
+      display: none;
+    }
+    .code-details summary::before {
+      content: "▶";
+      color: var(--accent);
+      font-size: 12px;
+      margin-right: 2px;
+    }
+    .code-details[open] summary::before {
+      content: "▼";
+    }
+    .code-details summary span {
+      flex: 1;
+    }
+    .code-details summary small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .code-details pre {
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
     .language-sql .sql-keyword {
       color: #7dd3fc;
       font-weight: 800;
@@ -411,7 +453,7 @@ write(&quot;dataset_bucket=ca_short_usa&quot;, ca_short_usa)</code></pre>
 <h2 id="driving-generic-materialization"><span class="badge badge-driving">DRIVING</span>Generic materialization</h2>
 <p>The generic driving materializer is the production path for turning corpus runs into persisted training partitions.</p>
 <p>High-level flow:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">run_ids = load_run_list()
+<details class="code-details"><summary><span>PYTHON block</span><small>18 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">run_ids = load_run_list()
 dfs = load_dataframes(run_ids)
 
 for run_id, df in zip(run_ids, dfs):
@@ -428,7 +470,7 @@ for run_id, df in zip(run_ids, dfs):
         rows = [(run_id.short_run_id, df.timestamp_unixus[i]) for i in indices]
         append(rows, key=f&quot;dataset_split={split}/dataset_bucket={bucket_name}&quot;)
 
-write_parquet_partitions()</code></pre>
+write_parquet_partitions()</code></pre></details>
 <p>The written parquet rows contain only the sample identity: <code>run_id</code> and <code>timestamp_unixus</code>. The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.</p>
 <h3 id="driving-bucket-definition-model"><span class="badge badge-driving">DRIVING</span>Bucket definition model</h3>
 <p>Each bucket is a <code>Bucket</code> object:</p>
@@ -547,7 +589,7 @@ indices = np.nonzero(mask)[0]</code></pre>
     return np.pad((auto[:-1] == 1) &amp; (auto[1:] == 0), (0, 1))</code></pre>
 <p>In other words, the event is the disengagement frame where <code>AUTOMATION_ACTIVE</code> changes from <code>1</code> to <code>0</code>. The base anchor is not the disengagement type.</p>
 <p>The standard driving functions are:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">get_pre_intervention_indices = partial(
+<details class="code-details"><summary><span>PYTHON block</span><small>20 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">get_pre_intervention_indices = partial(
     get_filtered_intervention_indices,
     before_intervention_sec=-1.2,
     after_intervention_sec=-0.04,
@@ -566,7 +608,7 @@ get_corrective_action_indices_long = partial(
     before_intervention_sec=1.52,
     after_intervention_sec=5.0,
     additional_invalid_int_what=PARKING_INVALID_INT_WHATS,
-)</code></pre>
+)</code></pre></details>
 <p>The resulting windows are:</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Bucket</th><th>Window relative to AV -&gt; DC transition</th><th>Extra autonomy condition</th></tr></thead>
@@ -622,7 +664,7 @@ if after_frames &lt; 0:
 </ul>
 <h3 id="driving-masks"><span class="badge badge-driving">DRIVING</span>Masks</h3>
 <p>The core mask groups are:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">_DEFAULT_MASKS = (
+<details class="code-details"><summary><span>PYTHON block</span><small>20 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">_DEFAULT_MASKS = (
     &quot;known_bad_runs_and_timestamps&quot;,
     &quot;quarantined_runs_and_timestamps&quot;,
     &quot;geofence&quot;,
@@ -641,7 +683,7 @@ DC_MASKS = (
     &quot;autonomous&quot;,
     &quot;stopped_segment&quot;,
     &quot;diversion_and_lens_obscured_interventions&quot;,
-) + _DEFAULT_MASKS</code></pre>
+) + _DEFAULT_MASKS</code></pre></details>
 <p>Read this as:</p>
 <ul>
 <li>AV/pre-CA buckets remove out-of-scope intervention windows and the shared data-quality masks.</li>
@@ -688,7 +730,7 @@ DC_MASKS = (
 </ul>
 <h2 id="zak-core-sampler-algorithm"><span class="badge badge-zak">ZAK</span>Core sampler algorithm</h2>
 <p>Zak&#x27;s heuristic sampler is equivalent to:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">weights = {bucket_name: configured_weight for bucket_name in config if configured_weight &gt; 0}
+<details class="code-details"><summary><span>PYTHON block</span><small>24 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">weights = {bucket_name: configured_weight for bucket_name in config if configured_weight &gt; 0}
 
 for run in dataset.runs:
     valid_masks = get_valid_masks(run)
@@ -711,11 +753,11 @@ for bucket_name:
     shuffle(bucket_indices)
     repeat_if_needed_to_hit_count()
 concat_all_bucket_samples()
-shuffle_final_epoch_indices()</code></pre>
+shuffle_final_epoch_indices()</code></pre></details>
 <p>There is no one-to-one materialized output table. A bucket is a set of sampled frame indices inside the dataloader.</p>
 <h2 id="zak-shared-validity-masks"><span class="badge badge-zak">ZAK</span>Shared validity masks</h2>
 <p>The most important shared masks:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">ALL_VALID_MASKS = [
+<details class="code-details"><summary><span>PYTHON block</span><small>38 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">ALL_VALID_MASKS = [
     &quot;autonomous&quot;,
     &quot;autonomous_engage&quot;,
     &quot;geofence&quot;,
@@ -752,10 +794,10 @@ ALL_VALID_MASKS2 = [
     &quot;bad_stop&quot;,
     &quot;has_video&quot;,
     &quot;dropped_frames&quot;,
-]</code></pre>
+]</code></pre></details>
 <p>Important: parking, PUDO, unparking, and start-gear-change use <code>ALL_VALID_MASKS2</code>. That means they do <strong>not</strong> filter geofence, reverse, u-turn, high-speed, or run ends through the shared mask set. They do still apply the autonomous/future-autonomous, bad-park/stop, video, and dropped-frame masks.</p>
 <p>Mask meanings:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">autonomous:
+<details class="code-details"><summary><span>PYTHON block</span><small>32 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">autonomous:
     keep non-autonomous frames, but allow the immediate intervention moment
 
 autonomous_engage:
@@ -786,7 +828,7 @@ has_video:
     for gen2 / partner MB, require non-null front-forward video file
 
 dropped_frames:
-    remove frames around timestamp gaps &gt; 5 * 1e6 / frame_rate</code></pre>
+    remove frames around timestamp gaps &gt; 5 * 1e6 / frame_rate</code></pre></details>
 <h2 id="zak-active-mcv-new-phase2-bucket-weights"><span class="badge badge-zak">ZAK</span>Active <code>mcv_new_phase2</code> bucket weights</h2>
 <p>These weights already sum to 1.0, so raw weight equals sampling percent.</p>
 <div class="table-wrap"><table>
@@ -1344,7 +1386,7 @@ is_near = (pudo_pin_valid_before &lt;= 2) &amp; (pudo_pin_valid_after &lt;= 1)</
 </ul>
 <p>Function: <code>get_unparking_indices</code>.</p>
 <p>This is post-departure movement sampling, not pre-departure sampling.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle / vehicle_model filter does not match:
+<details class="code-details"><summary><span>PYTHON block</span><small>20 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">if vehicle / vehicle_model filter does not match:
     return []
 
 moving_indices = flatnonzero(abs(speed) &gt; 0)  # any non-zero speed
@@ -1363,7 +1405,7 @@ if locations:
     mask &amp;= parking_location_raw in locations
 
 mask = dilate(mask, before=0s, after=10s)
-mask &amp;= ALL_VALID_MASKS2</code></pre>
+mask &amp;= ALL_VALID_MASKS2</code></pre></details>
 <p>Step-by-step:</p>
 <ol>
 <li>Use <code>dataset.gear</code>, which has already gone through Zak&#x27;s gear cleanup path when scalar cleanup is enabled.</li>
@@ -1400,7 +1442,7 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 </ul>
 <h3 id="comparison-sql-1-unparking-movement-anchor"><span class="badge badge-comparison">COMPARISON</span>SQL 1 - Unparking movement anchor</h3>
 <p>Purpose: mimic <code>UNPARKING_*</code>. For each cleaned gear transition from park to non-park, find the first future frame with non-zero speed, then produce a <code>0s..+10s</code> bucket window.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+<details class="code-details"><summary><span>SQL block</span><small>101 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
   <span class="sql-keyword">SELECT</span>
     <span class="sql-number">2000000L</span> <span class="sql-keyword">AS</span> min_gear_segment_us<span class="sql-punct">,</span>
     <span class="sql-number">10000000L</span> <span class="sql-keyword">AS</span> bucket_after_us
@@ -1500,11 +1542,11 @@ anchors <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
   movement_anchor_ts <span class="sql-keyword">AS</span> bucket_start_ts<span class="sql-punct">,</span>
   movement_anchor_ts <span class="sql-punct">+</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> bucket_after_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> bucket_end_ts<span class="sql-punct">,</span>
   <span class="sql-string">&#x27;unparking&#x27;</span> <span class="sql-keyword">AS</span> zak_like_event_type
-<span class="sql-keyword">FROM</span> anchors;</code></pre>
+<span class="sql-keyword">FROM</span> anchors;</code></pre></details>
 <h3 id="comparison-sql-2-pudo-stopping-anchor"><span class="badge badge-comparison">COMPARISON</span>SQL 2 - PUDO stopping anchor</h3>
 <p>Purpose: mimic the PUDO event detection behind <code>get_parking_indices(stop_type=&amp;quot;pudo&amp;quot;)</code>. Zak first detects park moments, classifies park moments as PUDO when a hazard signal is nearby, then the parking bucket samples the approach frames associated with that final park moment.</p>
 <p>This SQL emits the event anchor: gear changes into park and hazard was active within <code>+-10s</code>. To mimic the full bucket, join these anchors back to frames from the associated parking approach and apply the long-stop removal.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+<details class="code-details"><summary><span>SQL block</span><small>107 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
   <span class="sql-keyword">SELECT</span>
     <span class="sql-number">2000000L</span> <span class="sql-keyword">AS</span> min_gear_segment_us<span class="sql-punct">,</span>
     <span class="sql-number">10000000L</span> <span class="sql-keyword">AS</span> hazard_window_us
@@ -1610,10 +1652,10 @@ pudo_anchors <span class="sql-keyword">AS</span> <span class="sql-punct">(</span
   park_ts <span class="sql-keyword">AS</span> pudo_anchor_ts<span class="sql-punct">,</span>
   <span class="sql-string">&#x27;pudo&#x27;</span> <span class="sql-keyword">AS</span> zak_like_event_type
 <span class="sql-keyword">FROM</span> pudo_anchors
-<span class="sql-keyword">WHERE</span> has_hazard_near_park;</code></pre>
+<span class="sql-keyword">WHERE</span> has_hazard_near_park;</code></pre></details>
 <h3 id="comparison-sql-3-parking-like-corrective-actions-near-gear-change"><span class="badge badge-comparison">COMPARISON</span>SQL 3 - Parking-like corrective actions near gear change</h3>
 <p>Purpose: mimic Zak&#x27;s <code>INTERVENTIONS_GEAR_CHANGE0</code> and <code>INTERVENTIONS_GEAR_CHANGE1</code> buckets. These are <strong>general interventions near a gear change</strong>, not intervention-label taxonomy buckets for parking. They are parking-like because the gear-change proximity makes them relevant to parking/PUDO/unparking behavior.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+<details class="code-details"><summary><span>SQL block</span><small>138 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
   <span class="sql-keyword">SELECT</span>
     <span class="sql-number">2000000L</span> <span class="sql-keyword">AS</span> min_gear_segment_us<span class="sql-punct">,</span>
     <span class="sql-number">30000000L</span> <span class="sql-keyword">AS</span> gear_window_us<span class="sql-punct">,</span>
@@ -1750,7 +1792,7 @@ bucket1 <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
 <span class="sql-punct">)</span>
 <span class="sql-keyword">SELECT</span> <span class="sql-punct">*</span> <span class="sql-keyword">FROM</span> bucket0
 <span class="sql-keyword">UNION</span> ALL
-<span class="sql-keyword">SELECT</span> <span class="sql-punct">*</span> <span class="sql-keyword">FROM</span> bucket1;</code></pre>
+<span class="sql-keyword">SELECT</span> <span class="sql-punct">*</span> <span class="sql-keyword">FROM</span> bucket1;</code></pre></details>
 <h2 id="zak-global-training-augmentations-and-label-transformations"><span class="badge badge-zak">ZAK</span>Global training augmentations and label transformations</h2>
 <p>The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.</p>
 <p>For <code>mcv_new_phase2</code> inherited from <code>mcv_new_base.yml</code>:</p>
@@ -1867,7 +1909,7 @@ bucket1 <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
 <p>For <code>mcv_new_phase2</code>, <code>LEGACY=True</code>, so <code>TrajectoryInterpolation</code> is used. For <code>mcv_new_phase2x_wta</code>, <code>LEGACY=False</code>, so <code>TrajectoryInterpolationV2</code> is used.</p>
 <p>This transformation is not selected by bucket name directly, but it matters for intervention/pre-intervention samples because it rewrites future speed/path labels before an intervention.</p>
 <p>Legacy interpolation core:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">start2 = round((-time_till_int + offset + -time_till_int) / tick_time)
+<details class="code-details"><summary><span>PYTHON block</span><small>24 lines</small></summary><pre><button class="copy" type="button">Copy</button><code class="language-python">start2 = round((-time_till_int + offset + -time_till_int) / tick_time)
 
 if current_speed &gt; 0 and any future speed until start2 is zero:
     start1 = first zero-speed index
@@ -1890,7 +1932,7 @@ if do_path:
     if steering torque is large and speed is high:
         laterally offset start point by torque_offset * sign(torque)
 
-unroll new_speed over path to produce future egoposition, yaw, curvature</code></pre>
+unroll new_speed over path to produce future egoposition, yaw, curvature</code></pre></details>
 <p>Important config values:</p>
 <ul>
 <li><code>INTERVENTIONS_BEFORE = 1.2s</code></li>
