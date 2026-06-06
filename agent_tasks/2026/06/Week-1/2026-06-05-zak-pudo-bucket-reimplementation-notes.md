@@ -1256,7 +1256,7 @@ Bucket-local augmentation/windowing:
 
 The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.
 
-For `mcv_new_phase2` inherited from `mcv_new_base0.yml`:
+For `mcv_new_phase2` inherited from `mcv_new_base.yml`:
 
 ### ZAK: Image augmentation
 
@@ -1279,50 +1279,88 @@ Interpretation:
 - Temporal dropout randomly drops past/context frames.
 - Half-res JPEG decode is mostly an efficiency/robustness choice, applied probabilistically.
 
-### ZAK: Route / navigation augmentation
+### ZAK: Route / navigation, route masking, and route shortening
 
-Applies to all sampled buckets where route context is loaded, with behavior depending on whether the sampled frame is considered parking.
+Applies to all sampled buckets where route context is loaded. This is **not** a bucket selector; it happens after the sampler has already picked a frame.
 
 | Config | Value |
 |---|---:|
-| `ROUTE.AUGMENTATION_PROB` | `0.0` |
-| `ROUTE.AUGMENTATION_DROPOUT` | `0.25` |
-| `ROUTE.AUGMENTATION_DROPOUT_BLACK` | `0.9` |
-| `ROUTE.AUGMENTATION_PARKING_REQUEST_PROB` | `0.025` |
-| `ROUTE.AUGMENTATION_END_JITTER` | `rand` |
-| `ROUTE.AUGMENTATION_END_JITTER_BETA_SCALE` | `1.0` |
+| `ROUTE.ENABLED` | `True` |
+| `ROUTE.CONFIG` | `si_medium` |
+| `ROUTE.ENCODER_NAME` | `cnn` |
+| `ROUTE.PATCH_SIZE` | `256` |
+| `ROUTE.AUGMENTATION_PROB` | `0.2` inherited from defaults |
+| `ROUTE.AUGMENTATION_LATLON_STD` | `0.0001` inherited from defaults |
+| `ROUTE.AUGMENTATION_HEAD_SMALL_PROB` | `0.85` inherited from defaults |
+| `ROUTE.AUGMENTATION_HEAD_SMALL_STD` | `8.0` inherited from defaults |
+| `ROUTE.AUGMENTATION_DROPOUT` | `0.25` from `mcv_new_base.yml` |
+| `ROUTE.AUGMENTATION_DROPOUT_BLACK` | `0.9` from `mcv_new_base.yml` |
 | `INDICATOR_STICK.AUGMENTATION_DROPOUT` | `0.7` |
 
 Behavior:
 
-```python
-route_end_jitter:
-    randomly jitter route endpoint using run segment jitter bounds
+- Route map rasterization uses `inferred__state__navigation__latitude_deg`, longitude, heading, route polyline, and route index.
+- With probability `0.2`, the dataset perturbs the GPS latitude/longitude and heading before rasterizing the route map. Heading gets small Gaussian noise most of the time; otherwise it gets a large random heading perturbation.
+- With probability `0.25`, route conditioning is dropped when the indicator stick is active. Inside that route-dropout case, `0.9` of the drops become a fully black route map; otherwise the route polyline is zeroed while the lane network remains visible.
+- When the route is not dropped, the indicator stick can be zeroed with probability `0.7`; this makes the model sometimes rely on the route map without extra indicator-stick hints.
+- `route_command` is also loaded from `inferred__scenario__tactical_behaviour__navigation` and mapped through `ROUTE_COMMANDS`. It is a navigation/tactical behavior signal, not a parking bucket label.
 
-route_dropout:
-    with p=0.25, drop route conditioning
-    with p=0.9 inside that dropout, black route map completely
-    otherwise zero route while keeping lane network visible
+Parking-specific route masking:
+- In the active `cnn` route encoder path, `RouteCNNEncoder.forward()` zeroes the route tensor whenever `batch["parking"]` is true: `route = torch.where(batch["parking"], 0 * route, route)`.
+- So parking/PUDO samples still have route data loaded and augmented by the dataset, but the model route adaptor masks route-map tokens for parking samples before encoding.
+- This is the main "park mode affects navigation" behavior I found in Zak's PUDO path.
 
-indicator_stick_dropout:
-    when route is not dropped, with p=0.7 zero indicator stick
+Route shortening:
+- I do **not** see active route-shortening logic in Zak's `mcv_new_phase2` PUDO path.
+- The base config has old `ROUTE.AUGMENTATION_END_OF_ROUTE = 0.0` defaults marked TODO, and GaiaDrive/world-model configs set `AUGMENTATION_END_OF_ROUTE = 0.025`, but I did not find PUDO dataset code consuming that option.
+- Therefore, for reimplementation of Zak's PUDO buckets, route shortening should not be treated as an active parking augmentation unless we intentionally add it.
 
-parking_request:
-    if sample is parking and rand < 0.025:
-        parking_request = True
-        route_map = black
-```
+### ZAK: Parking mode / parking conditioning
+
+This is separate from bucket generation. The sampler decides which frame to train on; the dataset/model then marks whether that sample is a parking/PUDO-style example and adds parking conditioning.
+
+Active config:
+
+| Config | Value |
+|---|---:|
+| `PARKING.ENABLED` | `True` |
+| `PARKING.PUDO_ENABLED` | `True` |
+| `PARKING_REGRESSION.ENABLED` | `True` |
+| `LOSS_WEIGHTS.PARKING_REGRESSION` | `4.0` |
+
+How the parking signal is built:
+- `data["parking"]` comes from the dataset's precomputed `self.parking` mask at the sampled present frame.
+- `data["parking_type"]` is the label-derived parking type for that frame.
+- If the sample is parking, the dataset computes `parking_position` and `parking_yaw` by transforming from the current ego pose to the final parking pose.
+- `stopping_type` is set from `self.stopping_type - 1`, where `0` means park and `1` means PUDO for the model-side type embedding.
+- Gate-type parking labels are explicitly turned off as parking examples.
+
+Parking conditioning augmentations:
+- Parking position UI conditioning is sometimes jittered for normal parking: with probability `0.05`, the conditioning point is shifted along the final parking forward/lateral axes.
+- PUDO ignores noisy parking-position conditioning.
+- Parking direction conditioning is used for nose/tail parking when that label exists; PUDO ignores the direction preference and samples a random direction token.
+- MRM candidates can be treated as parking with probability `0.1`, setting `data["parking"] = True`.
+
+Model usage:
+- `ParkingEncoder` embeds `parking`, `parking_direction`, `parking_position_ui`, and, because `PUDO_ENABLED=True`, the `stopping_type`.
+- This is closest to "park mode" in Zak's experimental MCV path.
+- There is also a generic Zoo/ST `parking_mode` adaptor (`DataKeys.PARKING_MODE`), but that is a separate ST input-adaptor path, not the main experimental PUDO sampler path summarized here.
 
 ### ZAK: Indicator state augmentation
 
-Configured but disabled:
+Active in `mcv_new_base.yml`:
 
-```python
-INDICATOR_STATE.CHANGE_AUGMENTATION_PROB = 0.0
-INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.0
-```
+- `INDICATOR_STATE.ENABLED = True`
+- `INDICATOR_STATE.PAST = True`
+- `INDICATOR_STATE.CHANGE_AUGMENTATION_PROB = 0.8`
+- `INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.01`
 
-No active indicator-state corruption is applied in this config.
+Behavior:
+- If the route map is dropped, the code uses the raw indicator signal without the route lead-time behavior.
+- If the route map is not dropped, indicator state includes the configured lead time.
+- With probability `0.8`, the past indicator state up to present is reset to its earlier value when there was a recent change; this forces the model to predict/react to an indicator change.
+- With probability `0.01`, the past/current indicator state is made wrong: off becomes a random left/right signal, and left/right becomes off.
+- This is global training-time state augmentation, not bucket-local upsampling.
 
 ### ZAK: Gear state augmentation
 
@@ -1393,8 +1431,8 @@ This table separates bucket-local time/window augmentation from global training 
 | Intervention suffix `0` | pre-intervention `-1.2s..0s` | same global transforms; ego-pose interpolation most relevant here |
 | Intervention suffix `1` | post-intervention `0s..+1s`, expert/DC only | same global transforms |
 | Intervention gear-change `0/1` | same as intervention `0/1`, plus CA anchor within 30s of gear change | same global transforms |
-| Parking | no final dilation; uses nearby-motion requirement to remove long stops | same global transforms; parking request may activate with p=0.025 |
-| PUDO | no final dilation; stopping_type=2 and near/far pin split | same global transforms; parking request can apply if sample is marked parking |
+| Parking | no final dilation; uses nearby-motion requirement to remove long stops | same global transforms; route-map tokens are masked for parking; parking encoder consumes parking position/type/direction |
+| PUDO | no final dilation; stopping_type=2 and near/far pin split | same global transforms; PUDO uses parking encoder stopping type but ignores parking-position jitter/direction preference |
 | Unparking | first moving frame after gear leaves park, dilated `0s..+10s` | same global transforms |
 
 ## ZAK: OTF config comparison
