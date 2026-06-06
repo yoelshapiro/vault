@@ -1,10 +1,24 @@
-# Zak PUDO Bucket Reimplementation Notes
+# Zak PUDO and Generic Driving Bucket Notes
 
 Date: 2026-06-05
 
 Branch inspected: `origin/zmurez/pudo` at `22a4ac634eb3e88112059946f98e7c2ef7d3876f`.
 
-Primary source files:
+## How to read this page
+
+This page compares two different bucket systems:
+
+| Label | Meaning | Where it lives |
+|---|---|---|
+| `DRIVING` | Generic materialized driving buckets. These write parquet partitions under `dataset_bucket=...`. | `wayve/ai/si/materialisation` and `wayve/ai/zoo/sampling` |
+| `ZAK` | Zak's `zmurez/pudo` experimental training-time sampler. These buckets are built in memory by the dataloader/sampler and are not written as materialized tables. | `wayve/ai/experimental` |
+| `COMPARISON` | Notes that connect the two systems for reimplementation. | This document |
+
+Headings are prefixed with `DRIVING`, `ZAK`, or `COMPARISON` so the side navigation stays readable.
+
+## Source files
+
+Zak source files:
 - `/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2.yml`
 - `/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2x.yml`
 - `/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2x_wta.yml`
@@ -13,6 +27,8 @@ Primary source files:
 - `/workspace/materialization/wayve/ai/experimental/dataset/datasets.py`
 - `/workspace/materialization/wayve/ai/experimental/dataset/ipace.py`
 - `/workspace/materialization/wayve/ai/experimental/transforms.py`
+
+Generic driving source files:
 - `/workspace/materialization/wayve/ai/si/materialisation/README.md`
 - `/workspace/materialization/wayve/ai/si/materialisation/materialise.py`
 - `/workspace/materialization/wayve/ai/zoo/sampling/bucket.py`
