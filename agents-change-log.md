@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-06 - PUDO Generic Zak Materialization
+
+- Topic: Port corpus-derivable Zak PUDO/parking sampler buckets into the parking materialization notebook.
+- Labels: parking, pudo, zak, materialization, spark, buckets.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: N/A.
+- Change type: Notebook implementation.
+- Areas: `/workspace/materialization/wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb`.
+- Changes:
+  - Added generic `zak_*` bucket generation over `wayve_corpus.all_data`, split by country.
+  - Added Zak-style gear cleanup, hazard cleanup, PUDO/parking mask generation, unparking movement anchors, start-near-gear-change, gear-change, and near-gear-change CA buckets.
+  - Defaulted output to generic Zak-style buckets only, with `INCLUDE_EXISTING_EVENT_DERIVED_BUCKETS` available for comparison.
+  - Documented that annotation-only Zak splits (`pred_pudo_pin_valid_*`, `pred_park_type`) are not materialized from corpus data.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-pudo-generic-zak-materialization|2026-06-06 PUDO Generic Zak Materialization]]
+
 ## 2026-06-05 - Zak PUDO Bucket Reimplementation Notes
 
 - Topic: Document Zak Murez's `zmurez/pudo` bucket generation and augmentation behavior for reimplementation.
