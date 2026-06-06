@@ -1197,6 +1197,14 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li><code>PUDO_USA_FAR</code></li>
 </ul>
 <p>Function: <code>get_parking_indices(stop_type=&amp;quot;pudo&amp;quot;)</code>.</p>
+<p>Zak PUDO is built on top of the parking-window machinery. It is not a pure label bucket, and it is not a pure generic speed/gear bucket. It combines:</p>
+<ul>
+<li>cleaned gear, to find gear-to-park events,</li>
+<li>cleaned indicator/hazard state, to identify PUDO-like stops,</li>
+<li>parking geofence location, to separate office/track parking from &quot;other&quot;,</li>
+<li>predicted PUDO pin-valid labels, to split near/far,</li>
+<li>speed, to remove long boring stopped periods.</li>
+</ul>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">mask = dataset.parking
 mask &amp;= parking_location == -1
 mask &amp;= stopping_type == 2
@@ -1212,11 +1220,91 @@ else:
     keep ~is_near
 
 mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>How <code>dataset.parking</code> is built:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">into_park = where((gear[:-1] != 0) &amp; (gear[1:] == 0))
+
+parking_window = make_park_masks(
+    gear,
+    indicator,
+    cumdist,
+    frame_distances,
+    distance_before_per_park=pudo_pin_valid_before_distances,
+)</code></pre>
+<p><code>make_park_masks()</code> creates a window around each gear-to-park event. The default window reaches backward by distance/time before the park event and forward briefly after the event. For PUDO, the before distance can be extended using the predicted <code>pudo_pin_valid_before</code> distance for that park event. If the indicator turned on shortly before the park, the window can also start earlier.</p>
+<h4 id="hazard-cleanup">Hazard cleanup</h4>
+<p><code>cleanup_hazard()</code> is a dataset scalar cleanup step, not just a bucket-local filter and not image augmentation. When <code>DATASET.WAYVE.CLEAN_UP_SCALARS=True</code>, it mutates the in-memory <code>indicator</code> signal before sampling and before training examples are built.</p>
+<p>The cleanup looks for hazard regions (<code>indicator == 3</code>) that contain a park segment (<code>gear == 0</code>):</p>
+<ul>
+<li>If a hazard region has no park segment, leave it alone.</li>
+<li>On approach before the first park, while speed is above about 5 mph, convert hazard into a directional indicator inferred from driving side.</li>
+<li>During the parked/PUDO part, keep hazard.</li>
+<li>On departure after the last park, once speed rises above about 5 mph, turn hazard off.</li>
+</ul>
+<p>Because it mutates <code>dataset.indicator</code>, it affects both:</p>
+<ul>
+<li>PUDO filtering, because <code>pred_stop_type</code> uses the cleaned hazard signal.</li>
+<li>Training sample contents, because later dataset item construction reads the same cleaned <code>dataset.indicator</code>.</li>
+</ul>
+<h4 id="stopping-type">Stopping type</h4>
+<p><code>pred_stop_type</code> is computed inside <code>single_run.py</code>; it is not loaded from a JSON/NPZ label artifact.</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">parking_location_raw = assign_box_ids(lon, lat, PARKING_GEOFENCES)
+
+park_moments = pad((gear[:-1] != 0) &amp; (gear[1:] == 0), right=1)
+hazard_mask = indicator == 3
+hazard_mask &amp;= parking_location_raw == -1  # outside known office/track parking geofences
+hazard_dilated = dilate(hazard_mask, before=10s, after=10s)
+
+pred_stop_type[park_moments &amp; ~hazard_dilated] = 1  # park
+pred_stop_type[park_moments &amp; hazard_dilated] = 2   # pudo</code></pre>
+<p>So for Zak:</p>
+<ul>
+<li><code>stopping_type == 1</code> means park.</li>
+<li><code>stopping_type == 2</code> means PUDO.</li>
+<li>The PUDO-vs-park distinction is computed from gear-to-park + cleaned hazard + geofence location.</li>
+</ul>
+<p><code>parking_location</code> is the geofence id associated with the park event:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><code>0</code></td><td>London office</td></tr>
+<tr><td><code>1</code></td><td>Sunnyvale office</td></tr>
+<tr><td><code>2</code></td><td>Mountain View office</td></tr>
+<tr><td><code>3</code></td><td>Millbrook track</td></tr>
+<tr><td><code>-1</code></td><td>outside all known parking geofences / other</td></tr>
+<tr><td><code>-2</code></td><td>no associated park event</td></tr>
+</tbody></table></div>
+<p>The active PUDO buckets use <code>locations=[-1]</code>, so they only use PUDO-like stops outside the known office/track parking geofences.</p>
+<h4 id="near-far-split">Near / far split</h4>
+<p><code>pudo_pin_valid_before</code> and <code>pudo_pin_valid_after</code> are precomputed prediction artifacts loaded by <code>get_global_annotations()</code>:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">pred_pudo_pin_valid_before = np_load(&quot;wayve/ai/experimental/predictions/pudo_pin_valid_before.npz&quot;)
+pred_pudo_pin_valid_after = np_load(&quot;wayve/ai/experimental/predictions/pudo_pin_valid_after.npz&quot;)</code></pre>
+<p>There are also manual JSON labels for these tasks, but the active PUDO near/far bucket split uses the predicted arrays:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">self.pudo_pin_valid_before = annotations[&quot;pred_pudo_pin_valid_before&quot;][index_of_park - 1]
+self.pudo_pin_valid_after = annotations[&quot;pred_pudo_pin_valid_after&quot;][index_of_park - 1]
+
+is_near = (pudo_pin_valid_before &lt;= 2) &amp; (pudo_pin_valid_after &lt;= 1)</code></pre>
+<p>The label maps are:</p>
+<ul>
+<li>before: <code>10m</code>, <code>20m</code>, <code>30m</code>, <code>40m</code>, <code>50m</code>, <code>60m</code>, <code>80m</code>, <code>100m</code></li>
+<li>after: <code>10m</code>, <code>25m</code>, <code>50m</code></li>
+</ul>
+<p>So near roughly means:</p>
+<ul>
+<li>before is <code>10m</code> or <code>20m</code>,</li>
+<li>after is <code>10m</code>.</li>
+</ul>
+<p>Far means anything outside that near condition.</p>
+<p>If a frame/run is missing from the <code>pred_pudo_pin_valid_*.npz</code> artifact and the loaded value is <code>0</code>, the code treats it as default-near:</p>
+<ul>
+<li>default PUDO window distances stay at <code>10m</code> before and <code>10m</code> after,</li>
+<li><code>0 &amp;lt;= 2</code> and <code>0 &amp;lt;= 1</code>, so the near/far split classifies it as <code>near</code>.</li>
+</ul>
+<p>That means new frames not covered by the prediction artifact can fall into the near bucket by default, depending on how the loader represents missing predictions.</p>
 <p>Notes:</p>
 <ul>
 <li>PUDO here is a stopping bucket, not an unPUDO/departure bucket.</li>
-<li>Near/far is based on predicted/propagated PUDO-pin-valid fields at the sampled frames.</li>
 <li>It does not use a movement-start anchor.</li>
+<li>Speed is used to remove long stopped stretches, but the actual PUDO-vs-park distinction is from the computed hazard/location heuristic.</li>
 </ul>
 <h3 id="zak-unparking"><span class="badge badge-zak">ZAK</span>Unparking</h3>
 <p>Buckets:</p>
