@@ -10,8 +10,9 @@
 - Areas: `/workspace/materialization/wayve/ai/services/sampling/datasets/parking_pudo`, `/workspace/materialization/wayve/ai/services/sampling/datasets/store.py`, `/workspace/materialization/wayve/ai/services/sampling/BUILD`.
 - Changes:
   - Added the `parking_pudo/default` dataset and registered it in the services/sampling dataset store.
-  - Implemented corpus-derived `park`, `pudo`, `unpark`, `unpudo`, `pre_unpark`, `pre_unpudo`, `gear_change`, `pre_ca`, and `ca` buckets split by country.
+  - Implemented corpus-derived `park`, `pudo`, `unpark`, `unpudo`, `pre_unpark`, `pre_unpudo`, `gear_change`, PUDO gear-change, pre-CA, short/long CA, and PUDO CA buckets split by country and explicit office geofence.
   - Added programmable gear smoothing, hazard cleanup, hazard-based PUDO/UnPUDO splitting over the parked/pre-movement departure interval, movement anchors after gear leaves park, and near-gear-change CA filters with the remain-stopped speed filter.
+  - Removed generic geofence exclusion from parking_pudo exclusions so office buckets are materialized instead of filtered out.
   - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
 
