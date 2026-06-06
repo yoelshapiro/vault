@@ -132,16 +132,7 @@ for run_id, df in zip(run_ids, dfs):
 write_parquet_partitions()
 ```
 
-The written parquet rows contain the sample identity, not the full sensor row:
-
-```sql
-SELECT
-  run_id,
-  timestamp_unixus
-FROM bucket_indices
-```
-
-The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.
+The written parquet rows contain only the sample identity: `run_id` and `timestamp_unixus`. The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.
 
 ### DRIVING: Bucket definition model
 
@@ -801,6 +792,16 @@ mask = dilate(mask, before=0.9s, after=0s)
 mask &= ALL_VALID_MASKS2
 ```
 
+In words:
+
+1. Find any gear transition: `gear[t-1] != gear[t]`.
+2. Optionally restrict that gear transition to a parking location group.
+3. Expand those gear-transition frames by `+/-30s`.
+4. Find movement-start frames: `speed[t-1] == 0` and `speed[t] != 0`.
+5. Keep only movement-start frames that fall inside the `+/-30s` gear-change window.
+6. Expand the selected movement-start frame by `before=0.9s`, `after=0.0s`.
+7. Apply `ALL_VALID_MASKS2`.
+
 Location coding:
 - LDN office: `[0]`
 - LDN other: `[-1]`
@@ -808,38 +809,26 @@ Location coding:
 - USA other: `[-1]`
 - MSC other: `[-1]`
 
-SQL-ish:
-
-```sql
-WITH transitions AS (
-  SELECT *,
-         gear != LAG(gear) OVER w AS gear_changed,
-         LAG(speed) OVER w = 0 AND speed != 0 AS started_moving
-  FROM frames
-  WINDOW w AS (PARTITION BY run_id ORDER BY timestamp_unixus)
-),
-gear_windows AS (
-  SELECT f.*
-  FROM transitions f
-  WHERE EXISTS (
-    SELECT 1 FROM transitions g
-    WHERE g.run_id = f.run_id
-      AND g.gear_changed
-      AND ABS(g.timestamp_unixus - f.timestamp_unixus) <= 30 * 1000000
-  )
-)
-SELECT *
-FROM dilate_by_time(
-  (SELECT * FROM gear_windows WHERE started_moving),
-  before_s => 0.9,
-  after_s => 0.0
-);
-```
-
 Bucket-local augmentation/windowing:
 - Detects a movement-start frame.
 - Keeps the 0.9s before that movement-start frame.
 - Requires the movement-start frame to be within 30s of a gear transition.
+
+Gear is not raw if the normal config path is used. On `zmurez/pudo`, `DATASET.WAYVE.CLEAN_UP_SCALARS=True` by default, and the dataset cleans gear before these sampler buckets run:
+
+```python
+self.gear = clean_up_gear(self.gear, -1, self.cumdist, None, 0.05)
+self.gear = clean_up_gear(self.gear, 0, self.cumdist, self.frame_rate, None)
+self.gear = clean_up_gear_stopped(self.gear, self.speed, self.frame_rate)
+```
+
+That cleanup is not a generic rolling smoother. It is targeted gear cleanup:
+
+- Short reverse segments under `0.05m` are replaced with the adjacent gear.
+- Short park segments under about `1s` are replaced with the adjacent gear.
+- If the car stops and then shifts to park, `clean_up_gear_stopped()` pulls park earlier over part of the stopped interval.
+
+So `START_GEAR_CHANGE_*` uses cleaned gear, assuming `CLEAN_UP_SCALARS=True`.
 
 ### ZAK: Indicator and indicator-change
 
