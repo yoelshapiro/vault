@@ -579,6 +579,7 @@ if after_frames &lt; 0:
 <li>Parking/PUDO intervention <code>what</code> labels are removed for the generic driving variants.</li>
 <li>Bucket-level masks are applied after candidate generation.</li>
 </ol>
+<p>Unlike Zak&#x27;s intervention sampler, generic driving <code>get_filtered_intervention_indices()</code> does not have an explicit &quot;remove if stopped at intervention and still stopped 1s later&quot; filter. It may still remove boring stationary data through generic masks such as <code>stopped_segment</code> and <code>long_stationary</code>, but that is not the same as Zak&#x27;s 1-second movement-after-intervention check.</p>
 <p>Specialized driving buckets can add label filters. For example, highway pre-CA variants can request labels such as <code>failed_to_follow_lane_position</code> or <code>failed_to_slow</code>. Those are narrower buckets layered on top of the same AV-to-DC intervention anchor logic.</p>
 <h3 id="driving-parking-invalid-intervention-whats"><span class="badge badge-driving">DRIVING</span>Parking invalid intervention whats</h3>
 <p><code>PARKING_INVALID_INT_WHATS</code> is the list of parking/PUDO intervention labels excluded from generic driving intervention buckets:</p>
@@ -1060,6 +1061,7 @@ require interventions_label != 255
 
 filter by country/platform bucket
 apply bucket masks</code></pre>
+<p>The <code>remove_remain_stopped</code> check is generic for Zak intervention buckets that call <code>get_intervention_indices()</code> with the flag enabled. It is not parking-specific. It applies to the base <code>INTERVENTIONS_GEN2_*</code> buckets and to <code>INTERVENTIONS_GEAR_CHANGE0/1</code>.</p>
 <p>What they do not require:</p>
 <ul>
 <li>no acceleration threshold,</li>
@@ -1128,7 +1130,7 @@ bucket 1:
     window = 0s..+1.0s
     keep only auto == 0 after intervention
     masks = [&quot;autonomous&quot;, &quot;autonomous_engage&quot;, &quot;not_ends&quot;, &quot;has_video&quot;, &quot;dropped_frames&quot;]</code></pre>
-<p>This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions.</p>
+<p>This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions. The remain-stopped filter is the same generic Zak intervention filter used by the base intervention buckets, not a parking-only rule.</p>
 <h3 id="zak-parking"><span class="badge badge-zak">ZAK</span>Parking</h3>
 <p>Buckets:</p>
 <ul>

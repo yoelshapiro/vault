@@ -352,6 +352,8 @@ What is filtered:
 5. Parking/PUDO intervention `what` labels are removed for the generic driving variants.
 6. Bucket-level masks are applied after candidate generation.
 
+Unlike Zak's intervention sampler, generic driving `get_filtered_intervention_indices()` does not have an explicit "remove if stopped at intervention and still stopped 1s later" filter. It may still remove boring stationary data through generic masks such as `stopped_segment` and `long_stationary`, but that is not the same as Zak's 1-second movement-after-intervention check.
+
 Specialized driving buckets can add label filters. For example, highway pre-CA variants can request labels such as `failed_to_follow_lane_position` or `failed_to_slow`. Those are narrower buckets layered on top of the same AV-to-DC intervention anchor logic.
 
 ### DRIVING: Parking invalid intervention whats
@@ -921,6 +923,8 @@ filter by country/platform bucket
 apply bucket masks
 ```
 
+The `remove_remain_stopped` check is generic for Zak intervention buckets that call `get_intervention_indices()` with the flag enabled. It is not parking-specific. It applies to the base `INTERVENTIONS_GEN2_*` buckets and to `INTERVENTIONS_GEAR_CHANGE0/1`.
+
 What they do not require:
 
 - no acceleration threshold,
@@ -997,7 +1001,7 @@ bucket 1:
     masks = ["autonomous", "autonomous_engage", "not_ends", "has_video", "dropped_frames"]
 ```
 
-This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions.
+This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions. The remain-stopped filter is the same generic Zak intervention filter used by the base intervention buckets, not a parking-only rule.
 
 ### ZAK: Parking
 
