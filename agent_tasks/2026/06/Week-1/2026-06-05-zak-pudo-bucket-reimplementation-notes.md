@@ -70,7 +70,7 @@ The generic driving materializer is a third mechanism. It creates persisted parq
 - `INTERVENTIONS_GEN2_ALPHA31` changes `0.04 -> 0.065`.
 - Net effect: the 5% large-error weight moves to alpha3 intervention windows.
 
-## Direct answer: does DC include CA?
+## DRIVING: Does DC include CA?
 
 Short answer: DC and CA are not guaranteed disjoint in generic materialization.
 
@@ -105,7 +105,7 @@ write("dataset_bucket=dc_mache_usa", dc_mache_usa)
 write("dataset_bucket=ca_short_usa", ca_short_usa)
 ```
 
-## Generic driving materialization
+## DRIVING: Generic materialization
 
 The generic driving materializer is the production path for turning corpus runs into persisted training partitions.
 
@@ -143,7 +143,7 @@ FROM bucket_indices
 
 The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.
 
-### Bucket definition model
+### DRIVING: Bucket definition model
 
 Each bucket is a `Bucket` object:
 
@@ -192,7 +192,7 @@ for bucket in ALL_BUCKETS:
 
 This independence is the key conceptual difference from a mutually exclusive taxonomy. A frame can be in `dc_mache_usa`, `dc_indicator_on_usa`, and `ca_short_usa` at the same time if it satisfies all three recipes.
 
-### Generic driving bucket families
+### DRIVING: Bucket families
 
 The generic driving buckets are broad driving coverage plus targeted oversampling.
 
@@ -233,7 +233,7 @@ Important nuance:
 - For pre-CA (`after_intervention_sec < 0`), the function additionally intersects with `AUTOMATION_ACTIVE == True`.
 - For CA short/long, there is no equivalent autonomy-on requirement. The downstream `DC_MASKS` then excludes frames where autonomy is still active.
 
-### Driving pre-start DC
+### DRIVING: Pre-start DC
 
 `dc_pre_start_*` is not an intervention bucket. It is a regular DC driving bucket that oversamples the moment just before the vehicle starts moving from a stop.
 
@@ -284,7 +284,7 @@ So this bucket means: "frames from about 0.2 seconds before start-from-stop thro
 
 After candidate selection, `DC_MASKS` are applied. That makes this a human-driving/DC sample bucket: autonomy-active frames, reverse/neutral, geofence, high speed, long stationary, invalid video, non-contiguous data, bad windows, etc. are removed.
 
-### Driving pre-CA / CA calculation
+### DRIVING: Pre-CA / CA calculation
 
 For standard driving `pre_ca_*`, `ca_short_*`, and `ca_long_*`, the base anchor is the AV-to-DC transition:
 
@@ -363,7 +363,7 @@ What is filtered:
 
 Specialized driving buckets can add label filters. For example, highway pre-CA variants can request labels such as `failed_to_follow_lane_position` or `failed_to_slow`. Those are narrower buckets layered on top of the same AV-to-DC intervention anchor logic.
 
-### Parking invalid intervention whats
+### DRIVING: Parking invalid intervention whats
 
 `PARKING_INVALID_INT_WHATS` is the list of parking/PUDO intervention labels excluded from generic driving intervention buckets:
 
@@ -385,7 +385,7 @@ That means:
 - They are not "all intervention types including parking."
 - Parking-specific variants intentionally do not apply `PARKING_INVALID_INT_WHATS`, so parking/PUDO buckets can retain `failed_to_park`, `parking`, `failed_to_pudo`, etc.
 
-### Generic masks
+### DRIVING: Masks
 
 The core mask groups are:
 
@@ -419,7 +419,7 @@ Read this as:
 - DC/CA buckets also remove long boring stopped segments and diversion/lens-obscured interventions.
 - Neither `AV_MASKS` nor `DC_MASKS` enforces mutual exclusivity between bucket families.
 
-### Generic driving training weights
+### DRIVING: Training weights
 
 The generic materializer creates partitions. Training decides what to consume and how much to sample from each partition.
 
@@ -447,7 +447,7 @@ train_data:
 
 Those weights are consumption weights. They do not change how the materializer assigns a timestamp to bucket partitions.
 
-### Reimplementation guidance from generic materialization
+### COMPARISON: Reimplementation guidance
 
 For a parking/PUDO/unPUDO materialized framework, copy these principles:
 
@@ -464,7 +464,7 @@ For our unPUDO work, the overlap decision matters:
 - `unpudo_moving_ca_*` should be a separate CA subset where the vehicle is moving at CA or starts moving within the configured lookahead.
 - If broad DC should not contain CA, subtract CA windows explicitly. Generic driving does not do that by default.
 
-## Core sampler algorithm
+## ZAK: Core sampler algorithm
 
 Zak's heuristic sampler is equivalent to:
 
@@ -497,7 +497,7 @@ shuffle_final_epoch_indices()
 
 There is no one-to-one materialized output table. A bucket is a set of sampled frame indices inside the dataloader.
 
-## Shared validity masks
+## ZAK: Shared validity masks
 
 The most important shared masks:
 
@@ -581,7 +581,7 @@ dropped_frames:
     remove frames around timestamp gaps > 5 * 1e6 / frame_rate
 ```
 
-## Active `mcv_new_phase2` bucket weights
+## ZAK: Active `mcv_new_phase2` bucket weights
 
 These weights already sum to 1.0, so raw weight equals sampling percent.
 
@@ -674,9 +674,9 @@ These weights already sum to 1.0, so raw weight equals sampling percent.
 | `UNPARKING_ALPHA3_OFFICE` | 0.0025 | 0.25% |
 | `UNPARKING_MSC_OFFICE` | 0.0025 | 0.25% |
 
-## Bucket generation recipes
+## ZAK: Bucket generation recipes
 
-### DC not-stopped / stopped
+### ZAK: DC not-stopped / stopped
 
 Buckets:
 - `NOT_STOPPED_DC_GEN2_MACHE_{LDN,USA,JPN,DEU}`
@@ -739,7 +739,7 @@ Bucket-local augmentation/windowing:
 - Stopped DC has no dilation.
 - Both remove frames within 5s of automation transitions.
 
-### Large-error slow
+### ZAK: Large-error slow
 
 Buckets:
 - `LARGE_ERROR_1_{LDN,USA,JPN,DEU}_SLOW`
@@ -755,7 +755,7 @@ mask &= ALL_VALID_MASKS2
 
 In `mcv_new_phase2x_wta`, these are disabled and their 5% goes into alpha3 CA buckets.
 
-### Start
+### ZAK: Start
 
 Bucket:
 - `START`
@@ -770,7 +770,7 @@ mask &= ALL_VALID_MASKS with autonomous, geofence, reverse, uturn, high_speed, b
 
 This is a generic start bucket, not specifically parking/unparking.
 
-### Start near gear change
+### ZAK: Start near gear change
 
 Buckets:
 - `START_GEAR_CHANGE_LDN_OFFICE`
@@ -841,7 +841,7 @@ Bucket-local augmentation/windowing:
 - Keeps the 0.9s before that movement-start frame.
 - Requires the movement-start frame to be within 30s of a gear transition.
 
-### Indicator and indicator-change
+### ZAK: Indicator and indicator-change
 
 Buckets:
 - `INDICATOR_{LDN,USA,JPN,DEU}`
@@ -879,7 +879,7 @@ Bucket-local augmentation/windowing:
 - Indicator-change gets a narrow `-1s..+1s` window.
 - Hazard is deliberately excluded from these buckets; hazard is treated elsewhere.
 
-### Gear change
+### ZAK: Gear change
 
 Buckets:
 - `GEAR_CHANGE_GEN2_MACHE_LDN`
@@ -908,7 +908,7 @@ Bucket-local augmentation/windowing:
 - No smoothing in this sampler.
 - No park-only restriction; any gear value change is included.
 
-### Interventions / corrective actions
+### ZAK: Interventions / corrective actions
 
 Buckets:
 - `INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}0`
@@ -991,7 +991,7 @@ INTERVENTIONS_GEN2_LDN0_TORQUE_CURVATURE:
 - `INTERVENTIONS_GEN2_ALPHA30 = 0.075`
 - `INTERVENTIONS_GEN2_ALPHA31 = 0.065`
 
-### Interventions near gear change
+### ZAK: Interventions near gear change
 
 Buckets:
 - `INTERVENTIONS_GEAR_CHANGE0`
@@ -1017,7 +1017,7 @@ bucket 1:
 
 This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions.
 
-### Parking
+### ZAK: Parking
 
 Buckets:
 - `PARKING_LDN_OFFICE`
@@ -1101,7 +1101,7 @@ Bucket-local augmentation/windowing:
 - No explicit time dilation after the final mask.
 - The long-stop removal uses a motion dilation around `speed != 0`.
 
-### PUDO
+### ZAK: PUDO
 
 Buckets:
 - `PUDO_LDN_NEAR`
@@ -1134,7 +1134,7 @@ Notes:
 - Near/far is based on predicted/propagated PUDO-pin-valid fields at the sampled frames.
 - It does not use a movement-start anchor.
 
-### Unparking
+### ZAK: Unparking
 
 Buckets:
 - `UNPARKING_LDN_OFFICE`
@@ -1208,13 +1208,13 @@ Bucket-local augmentation/windowing:
 - Window is `0s..+10s`.
 - No pre-departure frames are included in these buckets.
 
-## Global training augmentations and label transformations
+## ZAK: Global training augmentations and label transformations
 
 The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.
 
 For `mcv_new_phase2` inherited from `mcv_new_base0.yml`:
 
-### Image augmentation
+### ZAK: Image augmentation
 
 Applies to all sampled buckets during training.
 
@@ -1235,7 +1235,7 @@ Interpretation:
 - Temporal dropout randomly drops past/context frames.
 - Half-res JPEG decode is mostly an efficiency/robustness choice, applied probabilistically.
 
-### Route / navigation augmentation
+### ZAK: Route / navigation augmentation
 
 Applies to all sampled buckets where route context is loaded, with behavior depending on whether the sampled frame is considered parking.
 
@@ -1269,7 +1269,7 @@ parking_request:
         route_map = black
 ```
 
-### Indicator state augmentation
+### ZAK: Indicator state augmentation
 
 Configured but disabled:
 
@@ -1280,11 +1280,11 @@ INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.0
 
 No active indicator-state corruption is applied in this config.
 
-### Gear state augmentation
+### ZAK: Gear state augmentation
 
 `GEAR_STATE.ENABLED = True`, but there is no bucket-specific gear-state augmentation in this path. Gear state is a model input/loss target. Gear-change upsampling is done by the sampler buckets, not by mutating gear labels.
 
-### Ego-pose interpolation / pre-corrective action pseudo-labeling
+### ZAK: Ego-pose interpolation / pre-corrective action pseudo-labeling
 
 `EGO_POSE_INTERPOLATION.ENABLED = True`.
 
@@ -1332,7 +1332,7 @@ Important config values:
 
 `EGO_POSE_AUGMENTATION.ENABLED = False` in `mcv_new_base0.yml`, so the separate trajectory augmentation object is disabled.
 
-## Per-bucket "augmentation" summary
+## ZAK: Per-bucket "augmentation" summary
 
 This table separates bucket-local time/window augmentation from global training augmentation.
 
@@ -1353,7 +1353,7 @@ This table separates bucket-local time/window augmentation from global training 
 | PUDO | no final dilation; stopping_type=2 and near/far pin split | same global transforms; parking request can apply if sample is marked parking |
 | Unparking | first moving frame after gear leaves park, dilated `0s..+10s` | same global transforms |
 
-## OTF config comparison
+## ZAK: OTF config comparison
 
 `mcv_new_phase2_otf.yml` is not the same mechanism. It reads materialized partitions:
 
@@ -1382,7 +1382,7 @@ The OTF path includes `PRE_CORRECTIVE_ACTION_INTERPOLATION=True`; the lower-leve
 
 There are no explicit parking/PUDO/unparking partitions in `mcv_new_phase2_otf.yml`.
 
-## Reimplementation checklist
+## COMPARISON: Reimplementation checklist
 
 For a Spark/materialization-style implementation:
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zak PUDO Bucket Reimplementation Notes</title>
+  <title>Zak PUDO and Generic Driving Bucket Notes</title>
   <style>
     :root {
       --ink: #18211f;
@@ -62,7 +62,9 @@
       font: 700 22px/1.15 Georgia, serif;
     }
     nav a {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       color: var(--muted);
       text-decoration: none;
       border-left: 2px solid transparent;
@@ -75,8 +77,45 @@
       background: rgba(15, 118, 110, .06);
     }
     nav .level-3 {
-      padding-left: 24px;
+      padding-left: 20px;
       font-size: 13px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 74px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      line-height: 1;
+      vertical-align: middle;
+      color: #10201d;
+      border: 1px solid transparent;
+    }
+    .badge-driving {
+      color: #063f3b;
+      background: #d8f2eb;
+      border-color: #92d8c8;
+    }
+    .badge-zak {
+      color: #59330b;
+      background: #ffe7bd;
+      border-color: #e4b46c;
+    }
+    .badge-comparison {
+      color: #22304f;
+      background: #dce7ff;
+      border-color: #a7bdec;
+    }
+    nav .badge {
+      min-width: 72px;
+      font-size: 9px;
+      padding: 3px 6px;
+      flex: 0 0 auto;
     }
     main {
       min-width: 0;
@@ -90,7 +129,7 @@
       margin: 0 0 10px;
       color: #111c19;
       font: 800 clamp(34px, 5vw, 58px)/1.02 Georgia, serif;
-      max-width: 11ch;
+      max-width: 16ch;
     }
     h2 {
       margin: 44px 0 16px;
@@ -98,6 +137,10 @@
       border-top: 1px solid var(--line);
       color: #142420;
       font: 760 30px/1.15 Georgia, serif;
+    }
+    h2 .badge, h3 .badge {
+      margin-right: 10px;
+      transform: translateY(-2px);
     }
     h3 {
       margin: 34px 0 12px;
@@ -209,47 +252,60 @@
   <div class="shell">
     <aside>
       <p class="eyebrow">Parking / PUDO</p>
-      <h2>Zak Buckets</h2>
-      <nav><a class="level-2" href="#executive-summary">Executive summary</a>
-<a class="level-2" href="#direct-answer-does-dc-include-ca">Direct answer: does DC include CA?</a>
-<a class="level-2" href="#generic-driving-materialization">Generic driving materialization</a>
-<a class="level-3" href="#bucket-definition-model">Bucket definition model</a>
-<a class="level-3" href="#generic-driving-bucket-families">Generic driving bucket families</a>
-<a class="level-3" href="#driving-pre-start-dc">Driving pre-start DC</a>
-<a class="level-3" href="#driving-pre-ca-ca-calculation">Driving pre-CA / CA calculation</a>
-<a class="level-3" href="#parking-invalid-intervention-whats">Parking invalid intervention whats</a>
-<a class="level-3" href="#generic-masks">Generic masks</a>
-<a class="level-3" href="#generic-driving-training-weights">Generic driving training weights</a>
-<a class="level-3" href="#reimplementation-guidance-from-generic-materialization">Reimplementation guidance from generic materialization</a>
-<a class="level-2" href="#core-sampler-algorithm">Core sampler algorithm</a>
-<a class="level-2" href="#shared-validity-masks">Shared validity masks</a>
-<a class="level-2" href="#active-mcv-new-phase2-bucket-weights">Active <code>mcv_new_phase2</code> bucket weights</a>
-<a class="level-2" href="#bucket-generation-recipes">Bucket generation recipes</a>
-<a class="level-3" href="#dc-not-stopped-stopped">DC not-stopped / stopped</a>
-<a class="level-3" href="#large-error-slow">Large-error slow</a>
-<a class="level-3" href="#start">Start</a>
-<a class="level-3" href="#start-near-gear-change">Start near gear change</a>
-<a class="level-3" href="#indicator-and-indicator-change">Indicator and indicator-change</a>
-<a class="level-3" href="#gear-change">Gear change</a>
-<a class="level-3" href="#interventions-corrective-actions">Interventions / corrective actions</a>
-<a class="level-3" href="#interventions-near-gear-change">Interventions near gear change</a>
-<a class="level-3" href="#parking">Parking</a>
-<a class="level-3" href="#pudo">PUDO</a>
-<a class="level-3" href="#unparking">Unparking</a>
-<a class="level-2" href="#global-training-augmentations-and-label-transformations">Global training augmentations and label transformations</a>
-<a class="level-3" href="#image-augmentation">Image augmentation</a>
-<a class="level-3" href="#route-navigation-augmentation">Route / navigation augmentation</a>
-<a class="level-3" href="#indicator-state-augmentation">Indicator state augmentation</a>
-<a class="level-3" href="#gear-state-augmentation">Gear state augmentation</a>
-<a class="level-3" href="#ego-pose-interpolation-pre-corrective-action-pseudo-labeling">Ego-pose interpolation / pre-corrective action pseudo-labeling</a>
-<a class="level-2" href="#per-bucket-augmentation-summary">Per-bucket &quot;augmentation&quot; summary</a>
-<a class="level-2" href="#otf-config-comparison">OTF config comparison</a>
-<a class="level-2" href="#reimplementation-checklist">Reimplementation checklist</a></nav>
+      <h2>Bucket Map</h2>
+      <nav><a class="level-2" href="#how-to-read-this-page">How to read this page</a>
+<a class="level-2" href="#source-files">Source files</a>
+<a class="level-2" href="#executive-summary">Executive summary</a>
+<a class="level-2" href="#driving-does-dc-include-ca"><span class="badge badge-driving">DRIVING</span>Does DC include CA?</a>
+<a class="level-2" href="#driving-generic-materialization"><span class="badge badge-driving">DRIVING</span>Generic materialization</a>
+<a class="level-3" href="#driving-bucket-definition-model"><span class="badge badge-driving">DRIVING</span>Bucket definition model</a>
+<a class="level-3" href="#driving-bucket-families"><span class="badge badge-driving">DRIVING</span>Bucket families</a>
+<a class="level-3" href="#driving-pre-start-dc"><span class="badge badge-driving">DRIVING</span>Pre-start DC</a>
+<a class="level-3" href="#driving-pre-ca-ca-calculation"><span class="badge badge-driving">DRIVING</span>Pre-CA / CA calculation</a>
+<a class="level-3" href="#driving-parking-invalid-intervention-whats"><span class="badge badge-driving">DRIVING</span>Parking invalid intervention whats</a>
+<a class="level-3" href="#driving-masks"><span class="badge badge-driving">DRIVING</span>Masks</a>
+<a class="level-3" href="#driving-training-weights"><span class="badge badge-driving">DRIVING</span>Training weights</a>
+<a class="level-3" href="#comparison-reimplementation-guidance"><span class="badge badge-comparison">COMPARISON</span>Reimplementation guidance</a>
+<a class="level-2" href="#zak-core-sampler-algorithm"><span class="badge badge-zak">ZAK</span>Core sampler algorithm</a>
+<a class="level-2" href="#zak-shared-validity-masks"><span class="badge badge-zak">ZAK</span>Shared validity masks</a>
+<a class="level-2" href="#zak-active-mcv-new-phase2-bucket-weights"><span class="badge badge-zak">ZAK</span>Active <code>mcv_new_phase2</code> bucket weights</a>
+<a class="level-2" href="#zak-bucket-generation-recipes"><span class="badge badge-zak">ZAK</span>Bucket generation recipes</a>
+<a class="level-3" href="#zak-dc-not-stopped-stopped"><span class="badge badge-zak">ZAK</span>DC not-stopped / stopped</a>
+<a class="level-3" href="#zak-large-error-slow"><span class="badge badge-zak">ZAK</span>Large-error slow</a>
+<a class="level-3" href="#zak-start"><span class="badge badge-zak">ZAK</span>Start</a>
+<a class="level-3" href="#zak-start-near-gear-change"><span class="badge badge-zak">ZAK</span>Start near gear change</a>
+<a class="level-3" href="#zak-indicator-and-indicator-change"><span class="badge badge-zak">ZAK</span>Indicator and indicator-change</a>
+<a class="level-3" href="#zak-gear-change"><span class="badge badge-zak">ZAK</span>Gear change</a>
+<a class="level-3" href="#zak-interventions-corrective-actions"><span class="badge badge-zak">ZAK</span>Interventions / corrective actions</a>
+<a class="level-3" href="#zak-interventions-near-gear-change"><span class="badge badge-zak">ZAK</span>Interventions near gear change</a>
+<a class="level-3" href="#zak-parking"><span class="badge badge-zak">ZAK</span>Parking</a>
+<a class="level-3" href="#zak-pudo"><span class="badge badge-zak">ZAK</span>PUDO</a>
+<a class="level-3" href="#zak-unparking"><span class="badge badge-zak">ZAK</span>Unparking</a>
+<a class="level-2" href="#zak-global-training-augmentations-and-label-transformations"><span class="badge badge-zak">ZAK</span>Global training augmentations and label transformations</a>
+<a class="level-3" href="#zak-image-augmentation"><span class="badge badge-zak">ZAK</span>Image augmentation</a>
+<a class="level-3" href="#zak-route-navigation-augmentation"><span class="badge badge-zak">ZAK</span>Route / navigation augmentation</a>
+<a class="level-3" href="#zak-indicator-state-augmentation"><span class="badge badge-zak">ZAK</span>Indicator state augmentation</a>
+<a class="level-3" href="#zak-gear-state-augmentation"><span class="badge badge-zak">ZAK</span>Gear state augmentation</a>
+<a class="level-3" href="#zak-ego-pose-interpolation-pre-corrective-action-pseudo-labeling"><span class="badge badge-zak">ZAK</span>Ego-pose interpolation / pre-corrective action pseudo-labeling</a>
+<a class="level-2" href="#zak-per-bucket-augmentation-summary"><span class="badge badge-zak">ZAK</span>Per-bucket &quot;augmentation&quot; summary</a>
+<a class="level-2" href="#zak-otf-config-comparison"><span class="badge badge-zak">ZAK</span>OTF config comparison</a>
+<a class="level-2" href="#comparison-reimplementation-checklist"><span class="badge badge-comparison">COMPARISON</span>Reimplementation checklist</a></nav>
     </aside>
-    <main><h1 id="zak-pudo-bucket-reimplementation-notes">Zak PUDO Bucket Reimplementation Notes</h1>
+    <main><h1 id="zak-pudo-and-generic-driving-bucket-notes">Zak PUDO and Generic Driving Bucket Notes</h1>
 <p>Date: 2026-06-05</p>
 <p>Branch inspected: <code>origin/zmurez/pudo</code> at <code>22a4ac634eb3e88112059946f98e7c2ef7d3876f</code>.</p>
-<p>Primary source files:</p>
+<h2 id="how-to-read-this-page">How to read this page</h2>
+<p>This page compares two different bucket systems:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Label</th><th>Meaning</th><th>Where it lives</th></tr></thead>
+<tbody>
+<tr><td><code>DRIVING</code></td><td>Generic materialized driving buckets. These write parquet partitions under <code>dataset_bucket=...</code>.</td><td><code>wayve/ai/si/materialisation</code> and <code>wayve/ai/zoo/sampling</code></td></tr>
+<tr><td><code>ZAK</code></td><td>Zak&#x27;s <code>zmurez/pudo</code> experimental training-time sampler. These buckets are built in memory by the dataloader/sampler and are not written as materialized tables.</td><td><code>wayve/ai/experimental</code></td></tr>
+<tr><td><code>COMPARISON</code></td><td>Notes that connect the two systems for reimplementation.</td><td>This document</td></tr>
+</tbody></table></div>
+<p>Headings are prefixed with <code>DRIVING</code>, <code>ZAK</code>, or <code>COMPARISON</code> so the side navigation stays readable.</p>
+<h2 id="source-files">Source files</h2>
+<p>Zak source files:</p>
 <ul>
 <li><code>/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2.yml</code></li>
 <li><code>/workspace/materialization/wayve/ai/experimental/configs/mcv_new_phase2x.yml</code></li>
@@ -259,6 +315,9 @@
 <li><code>/workspace/materialization/wayve/ai/experimental/dataset/datasets.py</code></li>
 <li><code>/workspace/materialization/wayve/ai/experimental/dataset/ipace.py</code></li>
 <li><code>/workspace/materialization/wayve/ai/experimental/transforms.py</code></li>
+</ul>
+<p>Generic driving source files:</p>
+<ul>
 <li><code>/workspace/materialization/wayve/ai/si/materialisation/README.md</code></li>
 <li><code>/workspace/materialization/wayve/ai/si/materialisation/materialise.py</code></li>
 <li><code>/workspace/materialization/wayve/ai/zoo/sampling/bucket.py</code></li>
@@ -298,7 +357,7 @@
 <li><code>INTERVENTIONS_GEN2_ALPHA31</code> changes <code>0.04 -&amp;gt; 0.065</code>.</li>
 <li>Net effect: the 5% large-error weight moves to alpha3 intervention windows.</li>
 </ul>
-<h2 id="direct-answer-does-dc-include-ca">Direct answer: does DC include CA?</h2>
+<h2 id="driving-does-dc-include-ca"><span class="badge badge-driving">DRIVING</span>Does DC include CA?</h2>
 <p>Short answer: DC and CA are not guaranteed disjoint in generic materialization.</p>
 <p>The reason is mechanical:</p>
 <ul>
@@ -326,7 +385,7 @@ ca_short_usa = intervention_window(
 # These are separate outputs. The same timestamp can appear in both.
 write(&quot;dataset_bucket=dc_mache_usa&quot;, dc_mache_usa)
 write(&quot;dataset_bucket=ca_short_usa&quot;, ca_short_usa)</code></pre>
-<h2 id="generic-driving-materialization">Generic driving materialization</h2>
+<h2 id="driving-generic-materialization"><span class="badge badge-driving">DRIVING</span>Generic materialization</h2>
 <p>The generic driving materializer is the production path for turning corpus runs into persisted training partitions.</p>
 <p>High-level flow:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">run_ids = load_run_list()
@@ -353,7 +412,7 @@ write_parquet_partitions()</code></pre>
   timestamp_unixus
 FROM bucket_indices</code></pre>
 <p>The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.</p>
-<h3 id="bucket-definition-model">Bucket definition model</h3>
+<h3 id="driving-bucket-definition-model"><span class="badge badge-driving">DRIVING</span>Bucket definition model</h3>
 <p>Each bucket is a <code>Bucket</code> object:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">Bucket(
     name=&quot;dc_mache_usa&quot;,
@@ -392,7 +451,7 @@ for bucket in ALL_BUCKETS:
     invalid = logical_or([valid_masks[name] for name in bucket.masks])
     bucket_indices[bucket.name] = candidates[~invalid[candidates]]</code></pre>
 <p>This independence is the key conceptual difference from a mutually exclusive taxonomy. A frame can be in <code>dc_mache_usa</code>, <code>dc_indicator_on_usa</code>, and <code>ca_short_usa</code> at the same time if it satisfies all three recipes.</p>
-<h3 id="generic-driving-bucket-families">Generic driving bucket families</h3>
+<h3 id="driving-bucket-families"><span class="badge badge-driving">DRIVING</span>Bucket families</h3>
 <p>The generic driving buckets are broad driving coverage plus targeted oversampling.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Family</th><th>Example buckets</th><th>Candidate function</th><th>Masks</th></tr></thead>
@@ -428,7 +487,7 @@ ca_long  = [intervention_t + 1.52s, intervention_t + 5.0s]</code></pre>
 <li>For pre-CA (<code>after_intervention_sec &amp;lt; 0</code>), the function additionally intersects with <code>AUTOMATION_ACTIVE == True</code>.</li>
 <li>For CA short/long, there is no equivalent autonomy-on requirement. The downstream <code>DC_MASKS</code> then excludes frames where autonomy is still active.</li>
 </ul>
-<h3 id="driving-pre-start-dc">Driving pre-start DC</h3>
+<h3 id="driving-pre-start-dc"><span class="badge badge-driving">DRIVING</span>Pre-start DC</h3>
 <p><code>dc_pre_start_*</code> is not an intervention bucket. It is a regular DC driving bucket that oversamples the moment just before the vehicle starts moving from a stop.</p>
 <p>The actual generic Gen2 Mach-E buckets are:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">Bucket(
@@ -463,7 +522,7 @@ mask = (offset &gt;= seconds_to_frames(-0.2)) &amp; (offset &lt;= seconds_to_fra
 indices = np.nonzero(mask)[0]</code></pre>
 <p>So this bucket means: &quot;frames from about 0.2 seconds before start-from-stop through the start frame.&quot; It does not use the generic <code>START_BEFORE_WINDOW=-1.0</code> / <code>START_AFTER_WINDOW=6.0</code> helper; these bucket definitions use the tighter <code>[-0.2s, 0.0s]</code> window.</p>
 <p>After candidate selection, <code>DC_MASKS</code> are applied. That makes this a human-driving/DC sample bucket: autonomy-active frames, reverse/neutral, geofence, high speed, long stationary, invalid video, non-contiguous data, bad windows, etc. are removed.</p>
-<h3 id="driving-pre-ca-ca-calculation">Driving pre-CA / CA calculation</h3>
+<h3 id="driving-pre-ca-ca-calculation"><span class="badge badge-driving">DRIVING</span>Pre-CA / CA calculation</h3>
 <p>For standard driving <code>pre_ca_*</code>, <code>ca_short_*</code>, and <code>ca_long_*</code>, the base anchor is the AV-to-DC transition:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">def get_intervention_mask(df):
     auto = df.ground_truth__state__vehicle__automation_active.to_numpy(dtype=int)
@@ -526,7 +585,7 @@ if after_frames &lt; 0:
 <li>Bucket-level masks are applied after candidate generation.</li>
 </ol>
 <p>Specialized driving buckets can add label filters. For example, highway pre-CA variants can request labels such as <code>failed_to_follow_lane_position</code> or <code>failed_to_slow</code>. Those are narrower buckets layered on top of the same AV-to-DC intervention anchor logic.</p>
-<h3 id="parking-invalid-intervention-whats">Parking invalid intervention whats</h3>
+<h3 id="driving-parking-invalid-intervention-whats"><span class="badge badge-driving">DRIVING</span>Parking invalid intervention whats</h3>
 <p><code>PARKING_INVALID_INT_WHATS</code> is the list of parking/PUDO intervention labels excluded from generic driving intervention buckets:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">PARKING_INVALID_INT_WHATS = (
     &quot;failed_to_park&quot;,
@@ -542,7 +601,7 @@ if after_frames &lt; 0:
 <li>They are not &quot;all intervention types including parking.&quot;</li>
 <li>Parking-specific variants intentionally do not apply <code>PARKING_INVALID_INT_WHATS</code>, so parking/PUDO buckets can retain <code>failed_to_park</code>, <code>parking</code>, <code>failed_to_pudo</code>, etc.</li>
 </ul>
-<h3 id="generic-masks">Generic masks</h3>
+<h3 id="driving-masks"><span class="badge badge-driving">DRIVING</span>Masks</h3>
 <p>The core mask groups are:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">_DEFAULT_MASKS = (
     &quot;known_bad_runs_and_timestamps&quot;,
@@ -571,7 +630,7 @@ DC_MASKS = (
 <li>DC/CA buckets also remove long boring stopped segments and diversion/lens-obscured interventions.</li>
 <li>Neither <code>AV_MASKS</code> nor <code>DC_MASKS</code> enforces mutual exclusivity between bucket families.</li>
 </ul>
-<h3 id="generic-driving-training-weights">Generic driving training weights</h3>
+<h3 id="driving-training-weights"><span class="badge badge-driving">DRIVING</span>Training weights</h3>
 <p>The generic materializer creates partitions. Training decides what to consume and how much to sample from each partition.</p>
 <p>The default driving data bucket configs in <code>/workspace/materialization/wayve/ai/drive/bc/configs/defaults/data/buckets.py</code> contain the training-time mix for materialized driving partitions. The families match the materialized names:</p>
 <ul>
@@ -592,7 +651,7 @@ DC_MASKS = (
   - dataset_bucket: pre_ca_usa
     weight: &lt;pre_ca_weight&gt;</code></pre>
 <p>Those weights are consumption weights. They do not change how the materializer assigns a timestamp to bucket partitions.</p>
-<h3 id="reimplementation-guidance-from-generic-materialization">Reimplementation guidance from generic materialization</h3>
+<h3 id="comparison-reimplementation-guidance"><span class="badge badge-comparison">COMPARISON</span>Reimplementation guidance</h3>
 <p>For a parking/PUDO/unPUDO materialized framework, copy these principles:</p>
 <ol>
 <li>Treat event detection as anchor creation.</li>
@@ -608,7 +667,7 @@ DC_MASKS = (
 <li><code>unpudo_moving_ca_*</code> should be a separate CA subset where the vehicle is moving at CA or starts moving within the configured lookahead.</li>
 <li>If broad DC should not contain CA, subtract CA windows explicitly. Generic driving does not do that by default.</li>
 </ul>
-<h2 id="core-sampler-algorithm">Core sampler algorithm</h2>
+<h2 id="zak-core-sampler-algorithm"><span class="badge badge-zak">ZAK</span>Core sampler algorithm</h2>
 <p>Zak&#x27;s heuristic sampler is equivalent to:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">weights = {bucket_name: configured_weight for bucket_name in config if configured_weight &gt; 0}
 
@@ -635,7 +694,7 @@ for bucket_name:
 concat_all_bucket_samples()
 shuffle_final_epoch_indices()</code></pre>
 <p>There is no one-to-one materialized output table. A bucket is a set of sampled frame indices inside the dataloader.</p>
-<h2 id="shared-validity-masks">Shared validity masks</h2>
+<h2 id="zak-shared-validity-masks"><span class="badge badge-zak">ZAK</span>Shared validity masks</h2>
 <p>The most important shared masks:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">ALL_VALID_MASKS = [
     &quot;autonomous&quot;,
@@ -709,7 +768,7 @@ has_video:
 
 dropped_frames:
     remove frames around timestamp gaps &gt; 5 * 1e6 / frame_rate</code></pre>
-<h2 id="active-mcv-new-phase2-bucket-weights">Active <code>mcv_new_phase2</code> bucket weights</h2>
+<h2 id="zak-active-mcv-new-phase2-bucket-weights"><span class="badge badge-zak">ZAK</span>Active <code>mcv_new_phase2</code> bucket weights</h2>
 <p>These weights already sum to 1.0, so raw weight equals sampling percent.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Bucket</th><th>Weight</th><th>Percent</th></tr></thead>
@@ -801,8 +860,8 @@ dropped_frames:
 <tr><td><code>UNPARKING_ALPHA3_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
 <tr><td><code>UNPARKING_MSC_OFFICE</code></td><td>0.0025</td><td>0.25%</td></tr>
 </tbody></table></div>
-<h2 id="bucket-generation-recipes">Bucket generation recipes</h2>
-<h3 id="dc-not-stopped-stopped">DC not-stopped / stopped</h3>
+<h2 id="zak-bucket-generation-recipes"><span class="badge badge-zak">ZAK</span>Bucket generation recipes</h2>
+<h3 id="zak-dc-not-stopped-stopped"><span class="badge badge-zak">ZAK</span>DC not-stopped / stopped</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>NOT_STOPPED_DC_GEN2_MACHE_{LDN,USA,JPN,DEU}</code></li>
@@ -853,7 +912,7 @@ SELECT * FROM dilate_by_time(not_stopped, before_s =&gt; 2, after_s =&gt; 2);</c
 <li>Stopped DC has no dilation.</li>
 <li>Both remove frames within 5s of automation transitions.</li>
 </ul>
-<h3 id="large-error-slow">Large-error slow</h3>
+<h3 id="zak-large-error-slow"><span class="badge badge-zak">ZAK</span>Large-error slow</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>LARGE_ERROR_1_{LDN,USA,JPN,DEU}_SLOW</code></li>
@@ -864,7 +923,7 @@ mask &amp;= country_filter
 mask = dilate(mask, before=2_frames, after=2_frames)
 mask &amp;= ALL_VALID_MASKS2</code></pre>
 <p>In <code>mcv_new_phase2x_wta</code>, these are disabled and their 5% goes into alpha3 CA buckets.</p>
-<h3 id="start">Start</h3>
+<h3 id="zak-start"><span class="badge badge-zak">ZAK</span>Start</h3>
 <p>Bucket:</p>
 <ul>
 <li><code>START</code></li>
@@ -874,7 +933,7 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 mask &amp;= annotations[&quot;start_offset&quot;] &lt;= 0s
 mask &amp;= ALL_VALID_MASKS with autonomous, geofence, reverse, uturn, high_speed, bad stop/park, not_ends, video, dropped frames</code></pre>
 <p>This is a generic start bucket, not specifically parking/unparking.</p>
-<h3 id="start-near-gear-change">Start near gear change</h3>
+<h3 id="zak-start-near-gear-change"><span class="badge badge-zak">ZAK</span>Start near gear change</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>START_GEAR_CHANGE_LDN_OFFICE</code></li>
@@ -938,7 +997,7 @@ FROM dilate_by_time(
 <li>Keeps the 0.9s before that movement-start frame.</li>
 <li>Requires the movement-start frame to be within 30s of a gear transition.</li>
 </ul>
-<h3 id="indicator-and-indicator-change">Indicator and indicator-change</h3>
+<h3 id="zak-indicator-and-indicator-change"><span class="badge badge-zak">ZAK</span>Indicator and indicator-change</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>INDICATOR_{LDN,USA,JPN,DEU}</code></li>
@@ -970,7 +1029,7 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li>Indicator-change gets a narrow <code>-1s..+1s</code> window.</li>
 <li>Hazard is deliberately excluded from these buckets; hazard is treated elsewhere.</li>
 </ul>
-<h3 id="gear-change">Gear change</h3>
+<h3 id="zak-gear-change"><span class="badge badge-zak">ZAK</span>Gear change</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>GEAR_CHANGE_GEN2_MACHE_LDN</code></li>
@@ -995,7 +1054,7 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li>No smoothing in this sampler.</li>
 <li>No park-only restriction; any gear value change is included.</li>
 </ul>
-<h3 id="interventions-corrective-actions">Interventions / corrective actions</h3>
+<h3 id="zak-interventions-corrective-actions"><span class="badge badge-zak">ZAK</span>Interventions / corrective actions</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}0</code></li>
@@ -1064,7 +1123,7 @@ INTERVENTIONS_GEN2_LDN0_TORQUE_CURVATURE:
 <li><code>INTERVENTIONS_GEN2_ALPHA30 = 0.075</code></li>
 <li><code>INTERVENTIONS_GEN2_ALPHA31 = 0.065</code></li>
 </ul>
-<h3 id="interventions-near-gear-change">Interventions near gear change</h3>
+<h3 id="zak-interventions-near-gear-change"><span class="badge badge-zak">ZAK</span>Interventions near gear change</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>INTERVENTIONS_GEAR_CHANGE0</code></li>
@@ -1085,7 +1144,7 @@ bucket 1:
     keep only auto == 0 after intervention
     masks = [&quot;autonomous&quot;, &quot;autonomous_engage&quot;, &quot;not_ends&quot;, &quot;has_video&quot;, &quot;dropped_frames&quot;]</code></pre>
 <p>This is not a PUDO/unPUDO bucket by itself, but it deliberately upweights CA around gear transitions.</p>
-<h3 id="parking">Parking</h3>
+<h3 id="zak-parking"><span class="badge badge-zak">ZAK</span>Parking</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>PARKING_LDN_OFFICE</code></li>
@@ -1162,7 +1221,7 @@ WHERE parking
 <li>No explicit time dilation after the final mask.</li>
 <li>The long-stop removal uses a motion dilation around <code>speed != 0</code>.</li>
 </ul>
-<h3 id="pudo">PUDO</h3>
+<h3 id="zak-pudo"><span class="badge badge-zak">ZAK</span>PUDO</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>PUDO_LDN_NEAR</code></li>
@@ -1192,7 +1251,7 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li>Near/far is based on predicted/propagated PUDO-pin-valid fields at the sampled frames.</li>
 <li>It does not use a movement-start anchor.</li>
 </ul>
-<h3 id="unparking">Unparking</h3>
+<h3 id="zak-unparking"><span class="badge badge-zak">ZAK</span>Unparking</h3>
 <p>Buckets:</p>
 <ul>
 <li><code>UNPARKING_LDN_OFFICE</code></li>
@@ -1258,10 +1317,10 @@ WHERE f.parking_location_raw IN (-1)
 <li>Window is <code>0s..+10s</code>.</li>
 <li>No pre-departure frames are included in these buckets.</li>
 </ul>
-<h2 id="global-training-augmentations-and-label-transformations">Global training augmentations and label transformations</h2>
+<h2 id="zak-global-training-augmentations-and-label-transformations"><span class="badge badge-zak">ZAK</span>Global training augmentations and label transformations</h2>
 <p>The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.</p>
 <p>For <code>mcv_new_phase2</code> inherited from <code>mcv_new_base0.yml</code>:</p>
-<h3 id="image-augmentation">Image augmentation</h3>
+<h3 id="zak-image-augmentation"><span class="badge badge-zak">ZAK</span>Image augmentation</h3>
 <p>Applies to all sampled buckets during training.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Config</th><th>Value</th></tr></thead>
@@ -1282,7 +1341,7 @@ WHERE f.parking_location_raw IN (-1)
 <li>Temporal dropout randomly drops past/context frames.</li>
 <li>Half-res JPEG decode is mostly an efficiency/robustness choice, applied probabilistically.</li>
 </ul>
-<h3 id="route-navigation-augmentation">Route / navigation augmentation</h3>
+<h3 id="zak-route-navigation-augmentation"><span class="badge badge-zak">ZAK</span>Route / navigation augmentation</h3>
 <p>Applies to all sampled buckets where route context is loaded, with behavior depending on whether the sampled frame is considered parking.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Config</th><th>Value</th></tr></thead>
@@ -1311,14 +1370,14 @@ parking_request:
     if sample is parking and rand &lt; 0.025:
         parking_request = True
         route_map = black</code></pre>
-<h3 id="indicator-state-augmentation">Indicator state augmentation</h3>
+<h3 id="zak-indicator-state-augmentation"><span class="badge badge-zak">ZAK</span>Indicator state augmentation</h3>
 <p>Configured but disabled:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">INDICATOR_STATE.CHANGE_AUGMENTATION_PROB = 0.0
 INDICATOR_STATE.WRONG_AUGMENTATION_PROB = 0.0</code></pre>
 <p>No active indicator-state corruption is applied in this config.</p>
-<h3 id="gear-state-augmentation">Gear state augmentation</h3>
+<h3 id="zak-gear-state-augmentation"><span class="badge badge-zak">ZAK</span>Gear state augmentation</h3>
 <p><code>GEAR_STATE.ENABLED = True</code>, but there is no bucket-specific gear-state augmentation in this path. Gear state is a model input/loss target. Gear-change upsampling is done by the sampler buckets, not by mutating gear labels.</p>
-<h3 id="ego-pose-interpolation-pre-corrective-action-pseudo-labeling">Ego-pose interpolation / pre-corrective action pseudo-labeling</h3>
+<h3 id="zak-ego-pose-interpolation-pre-corrective-action-pseudo-labeling"><span class="badge badge-zak">ZAK</span>Ego-pose interpolation / pre-corrective action pseudo-labeling</h3>
 <p><code>EGO_POSE_INTERPOLATION.ENABLED = True</code>.</p>
 <p>For <code>mcv_new_phase2</code>, <code>LEGACY=True</code>, so <code>TrajectoryInterpolation</code> is used. For <code>mcv_new_phase2x_wta</code>, <code>LEGACY=False</code>, so <code>TrajectoryInterpolationV2</code> is used.</p>
 <p>This transformation is not selected by bucket name directly, but it matters for intervention/pre-intervention samples because it rewrites future speed/path labels before an intervention.</p>
@@ -1358,7 +1417,7 @@ unroll new_speed over path to produce future egoposition, yaw, curvature</code><
 <li><code>TORQUE_SPEED_THRESH = 2.23 m/s</code> (5 mph)</li>
 </ul>
 <p><code>EGO_POSE_AUGMENTATION.ENABLED = False</code> in <code>mcv_new_base0.yml</code>, so the separate trajectory augmentation object is disabled.</p>
-<h2 id="per-bucket-augmentation-summary">Per-bucket &quot;augmentation&quot; summary</h2>
+<h2 id="zak-per-bucket-augmentation-summary"><span class="badge badge-zak">ZAK</span>Per-bucket &quot;augmentation&quot; summary</h2>
 <p>This table separates bucket-local time/window augmentation from global training augmentation.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>Bucket family</th><th>Bucket-local augmentation/window</th><th>Global augmentations</th></tr></thead>
@@ -1378,7 +1437,7 @@ unroll new_speed over path to produce future egoposition, yaw, curvature</code><
 <tr><td>PUDO</td><td>no final dilation; stopping_type=2 and near/far pin split</td><td>same global transforms; parking request can apply if sample is marked parking</td></tr>
 <tr><td>Unparking</td><td>first moving frame after gear leaves park, dilated <code>0s..+10s</code></td><td>same global transforms</td></tr>
 </tbody></table></div>
-<h2 id="otf-config-comparison">OTF config comparison</h2>
+<h2 id="zak-otf-config-comparison"><span class="badge badge-zak">ZAK</span>OTF config comparison</h2>
 <p><code>mcv_new_phase2_otf.yml</code> is not the same mechanism. It reads materialized partitions:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-yaml">DATASET:
   NAME: OTF
@@ -1400,7 +1459,7 @@ unroll new_speed over path to produce future egoposition, yaw, curvature</code><
 </tbody></table></div>
 <p>The OTF path includes <code>PRE_CORRECTIVE_ACTION_INTERPOLATION=True</code>; the lower-level OTF dataset receives this flag and emits <code>is_pre_intervention_corrected</code>. This is comparable in spirit to the heuristic pre-intervention interpolation, but it applies in the OTF materialized data reader rather than through the heuristic sampler bucket functions.</p>
 <p>There are no explicit parking/PUDO/unparking partitions in <code>mcv_new_phase2_otf.yml</code>.</p>
-<h2 id="reimplementation-checklist">Reimplementation checklist</h2>
+<h2 id="comparison-reimplementation-checklist"><span class="badge badge-comparison">COMPARISON</span>Reimplementation checklist</h2>
 <p>For a Spark/materialization-style implementation:</p>
 <ol>
 <li>Decide whether to reproduce heuristic buckets or OTF partitions. For PUDO/unPUDO behavior, reproduce heuristic buckets.</li>

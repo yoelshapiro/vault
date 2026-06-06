@@ -36,6 +36,16 @@ def inline(text: str) -> str:
     return escaped
 
 
+def label_title_html(title: str) -> str:
+    match = re.match(r"^(DRIVING|ZAK|COMPARISON):\s+(.+)$", title)
+    if not match:
+        return inline(title)
+
+    label = match.group(1)
+    body = match.group(2)
+    return f'<span class="badge badge-{label.lower()}">{label}</span>{inline(body)}'
+
+
 def table_to_html(lines: list[str]) -> str:
     rows: list[list[str]] = []
     for line in lines:
@@ -150,7 +160,7 @@ def markdown_to_html(markdown_text: str) -> str:
             seen[slug] = count + 1
             if count:
                 slug = f"{slug}-{count + 1}"
-            out.append(f'<h{level} id="{slug}">{inline(title)}</h{level}>')
+            out.append(f'<h{level} id="{slug}">{label_title_html(title)}</h{level}>')
             i += 1
             continue
 
@@ -191,7 +201,7 @@ def render() -> str:
     body = markdown_to_html(markdown_text)
 
     toc_html = "\n".join(
-        f'<a class="level-{level}" href="#{slug}">{inline(title)}</a>' for level, title, slug in toc
+        f'<a class="level-{level}" href="#{slug}">{label_title_html(title)}</a>' for level, title, slug in toc
     )
 
     return f"""<!doctype html>
@@ -199,7 +209,7 @@ def render() -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zak PUDO Bucket Reimplementation Notes</title>
+  <title>Zak PUDO and Generic Driving Bucket Notes</title>
   <style>
     :root {{
       --ink: #18211f;
@@ -258,7 +268,9 @@ def render() -> str:
       font: 700 22px/1.15 Georgia, serif;
     }}
     nav a {{
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       color: var(--muted);
       text-decoration: none;
       border-left: 2px solid transparent;
@@ -271,8 +283,45 @@ def render() -> str:
       background: rgba(15, 118, 110, .06);
     }}
     nav .level-3 {{
-      padding-left: 24px;
+      padding-left: 20px;
       font-size: 13px;
+    }}
+    .badge {{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 74px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      line-height: 1;
+      vertical-align: middle;
+      color: #10201d;
+      border: 1px solid transparent;
+    }}
+    .badge-driving {{
+      color: #063f3b;
+      background: #d8f2eb;
+      border-color: #92d8c8;
+    }}
+    .badge-zak {{
+      color: #59330b;
+      background: #ffe7bd;
+      border-color: #e4b46c;
+    }}
+    .badge-comparison {{
+      color: #22304f;
+      background: #dce7ff;
+      border-color: #a7bdec;
+    }}
+    nav .badge {{
+      min-width: 72px;
+      font-size: 9px;
+      padding: 3px 6px;
+      flex: 0 0 auto;
     }}
     main {{
       min-width: 0;
@@ -286,7 +335,7 @@ def render() -> str:
       margin: 0 0 10px;
       color: #111c19;
       font: 800 clamp(34px, 5vw, 58px)/1.02 Georgia, serif;
-      max-width: 11ch;
+      max-width: 16ch;
     }}
     h2 {{
       margin: 44px 0 16px;
@@ -294,6 +343,10 @@ def render() -> str:
       border-top: 1px solid var(--line);
       color: #142420;
       font: 760 30px/1.15 Georgia, serif;
+    }}
+    h2 .badge, h3 .badge {{
+      margin-right: 10px;
+      transform: translateY(-2px);
     }}
     h3 {{
       margin: 34px 0 12px;
@@ -405,7 +458,7 @@ def render() -> str:
   <div class="shell">
     <aside>
       <p class="eyebrow">Parking / PUDO</p>
-      <h2>Zak Buckets</h2>
+      <h2>Bucket Map</h2>
       <nav>{toc_html}</nav>
     </aside>
     <main>{body}</main>
