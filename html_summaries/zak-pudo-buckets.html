@@ -406,12 +406,7 @@ for run_id, df in zip(run_ids, dfs):
         append(rows, key=f&quot;dataset_split={split}/dataset_bucket={bucket_name}&quot;)
 
 write_parquet_partitions()</code></pre>
-<p>The written parquet rows contain the sample identity, not the full sensor row:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">SELECT
-  run_id,
-  timestamp_unixus
-FROM bucket_indices</code></pre>
-<p>The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.</p>
+<p>The written parquet rows contain only the sample identity: <code>run_id</code> and <code>timestamp_unixus</code>. The full training data is resolved later by joining those sample identities back to corpus/video/tensor sources.</p>
 <h3 id="driving-bucket-definition-model"><span class="badge badge-driving">DRIVING</span>Bucket definition model</h3>
 <p>Each bucket is a <code>Bucket</code> object:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">Bucket(
@@ -882,30 +877,6 @@ mask = country_or_platform_filter(mask)
 mask = dilate(mask, before=0s, after=0s)
 mask = remove_near_auto_transitions(mask, margin=5s)
 mask &amp;= ALL_VALID_MASKS2</code></pre>
-<p>SQL-ish version:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH base AS (
-  SELECT *,
-         ABS(speed) &gt; 0.01 AS is_not_stopped,
-         ABS(speed) &lt;= 0.01 AS is_stopped
-  FROM run_frames
-),
-auto_transitions AS (
-  SELECT run_id, timestamp_unixus
-  FROM base
-  WHERE auto != LAG(auto) OVER (PARTITION BY run_id ORDER BY timestamp_unixus)
-),
-not_stopped AS (
-  SELECT b.*
-  FROM base b
-  WHERE b.is_not_stopped
-    AND b.country = &#x27;USA&#x27;
-    AND NOT EXISTS (
-      SELECT 1 FROM auto_transitions t
-      WHERE t.run_id = b.run_id
-        AND ABS(t.timestamp_unixus - b.timestamp_unixus) &lt;= 5 * 1000000
-    )
-)
-SELECT * FROM dilate_by_time(not_stopped, before_s =&gt; 2, after_s =&gt; 2);</code></pre>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>Not-stopped DC gets a 2s before/after dilation around moving frames.</li>
@@ -959,6 +930,16 @@ start_moment = pad((speed[:-1] == 0) &amp; (speed[1:] != 0), right=1)
 mask = near_gear_change &amp; start_moment
 mask = dilate(mask, before=0.9s, after=0s)
 mask &amp;= ALL_VALID_MASKS2</code></pre>
+<p>In words:</p>
+<ol>
+<li>Find any gear transition: <code>gear[t-1] != gear[t]</code>.</li>
+<li>Optionally restrict that gear transition to a parking location group.</li>
+<li>Expand those gear-transition frames by <code>+/-30s</code>.</li>
+<li>Find movement-start frames: <code>speed[t-1] == 0</code> and <code>speed[t] != 0</code>.</li>
+<li>Keep only movement-start frames that fall inside the <code>+/-30s</code> gear-change window.</li>
+<li>Expand the selected movement-start frame by <code>before=0.9s</code>, <code>after=0.0s</code>.</li>
+<li>Apply <code>ALL_VALID_MASKS2</code>.</li>
+</ol>
 <p>Location coding:</p>
 <ul>
 <li>LDN office: <code>[0]</code></li>
@@ -967,36 +948,23 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li>USA other: <code>[-1]</code></li>
 <li>MSC other: <code>[-1]</code></li>
 </ul>
-<p>SQL-ish:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH transitions AS (
-  SELECT *,
-         gear != LAG(gear) OVER w AS gear_changed,
-         LAG(speed) OVER w = 0 AND speed != 0 AS started_moving
-  FROM frames
-  WINDOW w AS (PARTITION BY run_id ORDER BY timestamp_unixus)
-),
-gear_windows AS (
-  SELECT f.*
-  FROM transitions f
-  WHERE EXISTS (
-    SELECT 1 FROM transitions g
-    WHERE g.run_id = f.run_id
-      AND g.gear_changed
-      AND ABS(g.timestamp_unixus - f.timestamp_unixus) &lt;= 30 * 1000000
-  )
-)
-SELECT *
-FROM dilate_by_time(
-  (SELECT * FROM gear_windows WHERE started_moving),
-  before_s =&gt; 0.9,
-  after_s =&gt; 0.0
-);</code></pre>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>Detects a movement-start frame.</li>
 <li>Keeps the 0.9s before that movement-start frame.</li>
 <li>Requires the movement-start frame to be within 30s of a gear transition.</li>
 </ul>
+<p>Gear is not raw if the normal config path is used. On <code>zmurez/pudo</code>, <code>DATASET.WAYVE.CLEAN_UP_SCALARS=True</code> by default, and the dataset cleans gear before these sampler buckets run:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">self.gear = clean_up_gear(self.gear, -1, self.cumdist, None, 0.05)
+self.gear = clean_up_gear(self.gear, 0, self.cumdist, self.frame_rate, None)
+self.gear = clean_up_gear_stopped(self.gear, self.speed, self.frame_rate)</code></pre>
+<p>That cleanup is not a generic rolling smoother. It is targeted gear cleanup:</p>
+<ul>
+<li>Short reverse segments under <code>0.05m</code> are replaced with the adjacent gear.</li>
+<li>Short park segments under about <code>1s</code> are replaced with the adjacent gear.</li>
+<li>If the car stops and then shifts to park, <code>clean_up_gear_stopped()</code> pulls park earlier over part of the stopped interval.</li>
+</ul>
+<p>So <code>START_GEAR_CHANGE_*</code> uses cleaned gear, assuming <code>CLEAN_UP_SCALARS=True</code>.</p>
 <h3 id="zak-indicator-and-indicator-change"><span class="badge badge-zak">ZAK</span>Indicator and indicator-change</h3>
 <p>Buckets:</p>
 <ul>
@@ -1196,26 +1164,6 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <tr><td><code>PARKING_MRM</code></td><td>any</td><td><code>[-1]</code></td><td>mrm</td></tr>
 <tr><td><code>PARKING_MRM_TRACK</code></td><td>any</td><td><code>[3]</code></td><td>mrm</td></tr>
 </tbody></table></div>
-<p>SQL-ish:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH non_long_stop AS (
-  SELECT *,
-         EXISTS (
-           SELECT 1
-           FROM frames n
-           WHERE n.run_id = f.run_id
-             AND ABS(n.frame_idx - f.frame_idx) &lt;= 40
-             AND n.speed != 0
-         ) AS has_nearby_motion
-  FROM frames f
-)
-SELECT *
-FROM non_long_stop
-WHERE parking
-  AND has_nearby_motion
-  AND stopping_type = 1
-  AND parking_location IN (-1)
-  AND parking_type = &#x27;nose&#x27;
-  AND all_valid_masks2;</code></pre>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>No explicit time dilation after the final mask.</li>
@@ -1284,33 +1232,6 @@ if locations:
 
 mask = dilate(mask, before=0s, after=10s)
 mask &amp;= ALL_VALID_MASKS2</code></pre>
-<p>SQL-ish:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH gear_out AS (
-  SELECT run_id, frame_idx, timestamp_unixus
-  FROM frames
-  WHERE LAG(gear) OVER (PARTITION BY run_id ORDER BY frame_idx) = 0
-    AND gear != 0
-),
-moving AS (
-  SELECT run_id, frame_idx, timestamp_unixus
-  FROM frames
-  WHERE ABS(speed) &gt; 0
-),
-anchors AS (
-  SELECT g.run_id, MIN(m.frame_idx) AS anchor_frame_idx
-  FROM gear_out g
-  JOIN moving m
-    ON m.run_id = g.run_id
-   AND m.frame_idx &gt;= g.frame_idx
-  GROUP BY g.run_id, g.frame_idx
-)
-SELECT f.*
-FROM frames f
-JOIN anchors a
-  ON f.run_id = a.run_id
- AND f.frame_idx BETWEEN a.anchor_frame_idx AND a.anchor_frame_idx + 10 * frame_rate
-WHERE f.parking_location_raw IN (-1)
-  AND all_valid_masks2;</code></pre>
 <p>Bucket-local augmentation/windowing:</p>
 <ul>
 <li>Anchor is first future non-zero-speed frame after gear leaves park.</li>

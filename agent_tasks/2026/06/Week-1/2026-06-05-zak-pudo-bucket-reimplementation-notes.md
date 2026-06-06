@@ -697,34 +697,6 @@ mask = remove_near_auto_transitions(mask, margin=5s)
 mask &= ALL_VALID_MASKS2
 ```
 
-SQL-ish version:
-
-```sql
-WITH base AS (
-  SELECT *,
-         ABS(speed) > 0.01 AS is_not_stopped,
-         ABS(speed) <= 0.01 AS is_stopped
-  FROM run_frames
-),
-auto_transitions AS (
-  SELECT run_id, timestamp_unixus
-  FROM base
-  WHERE auto != LAG(auto) OVER (PARTITION BY run_id ORDER BY timestamp_unixus)
-),
-not_stopped AS (
-  SELECT b.*
-  FROM base b
-  WHERE b.is_not_stopped
-    AND b.country = 'USA'
-    AND NOT EXISTS (
-      SELECT 1 FROM auto_transitions t
-      WHERE t.run_id = b.run_id
-        AND ABS(t.timestamp_unixus - b.timestamp_unixus) <= 5 * 1000000
-    )
-)
-SELECT * FROM dilate_by_time(not_stopped, before_s => 2, after_s => 2);
-```
-
 Bucket-local augmentation/windowing:
 - Not-stopped DC gets a 2s before/after dilation around moving frames.
 - Stopped DC has no dilation.
@@ -1062,30 +1034,6 @@ Location / type mapping used by active buckets:
 | `PARKING_MRM` | any | `[-1]` | mrm |
 | `PARKING_MRM_TRACK` | any | `[3]` | mrm |
 
-SQL-ish:
-
-```sql
-WITH non_long_stop AS (
-  SELECT *,
-         EXISTS (
-           SELECT 1
-           FROM frames n
-           WHERE n.run_id = f.run_id
-             AND ABS(n.frame_idx - f.frame_idx) <= 40
-             AND n.speed != 0
-         ) AS has_nearby_motion
-  FROM frames f
-)
-SELECT *
-FROM non_long_stop
-WHERE parking
-  AND has_nearby_motion
-  AND stopping_type = 1
-  AND parking_location IN (-1)
-  AND parking_type = 'nose'
-  AND all_valid_masks2;
-```
-
 Bucket-local augmentation/windowing:
 - No explicit time dilation after the final mask.
 - The long-stop removal uses a motion dilation around `speed != 0`.
@@ -1159,37 +1107,6 @@ if locations:
 
 mask = dilate(mask, before=0s, after=10s)
 mask &= ALL_VALID_MASKS2
-```
-
-SQL-ish:
-
-```sql
-WITH gear_out AS (
-  SELECT run_id, frame_idx, timestamp_unixus
-  FROM frames
-  WHERE LAG(gear) OVER (PARTITION BY run_id ORDER BY frame_idx) = 0
-    AND gear != 0
-),
-moving AS (
-  SELECT run_id, frame_idx, timestamp_unixus
-  FROM frames
-  WHERE ABS(speed) > 0
-),
-anchors AS (
-  SELECT g.run_id, MIN(m.frame_idx) AS anchor_frame_idx
-  FROM gear_out g
-  JOIN moving m
-    ON m.run_id = g.run_id
-   AND m.frame_idx >= g.frame_idx
-  GROUP BY g.run_id, g.frame_idx
-)
-SELECT f.*
-FROM frames f
-JOIN anchors a
-  ON f.run_id = a.run_id
- AND f.frame_idx BETWEEN a.anchor_frame_idx AND a.anchor_frame_idx + 10 * frame_rate
-WHERE f.parking_location_raw IN (-1)
-  AND all_valid_masks2;
 ```
 
 Bucket-local augmentation/windowing:
