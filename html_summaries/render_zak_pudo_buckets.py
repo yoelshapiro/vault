@@ -66,6 +66,98 @@ def table_to_html(lines: list[str]) -> str:
     return "\n".join(out)
 
 
+SQL_KEYWORDS = {
+    "AND",
+    "AS",
+    "BETWEEN",
+    "BOOLEAN",
+    "BY",
+    "CASE",
+    "CAST",
+    "COALESCE",
+    "COUNT",
+    "DISTINCT",
+    "ELSE",
+    "END",
+    "FALSE",
+    "FIRST_VALUE",
+    "FROM",
+    "GROUP",
+    "IN",
+    "IS",
+    "JOIN",
+    "LAG",
+    "LEFT",
+    "MIN",
+    "MIN_BY",
+    "NOT",
+    "NULL",
+    "ON",
+    "OR",
+    "ORDER",
+    "OVER",
+    "PARTITION",
+    "SELECT",
+    "SUM",
+    "THEN",
+    "TRUE",
+    "UNION",
+    "WHEN",
+    "WHERE",
+    "WITH",
+}
+
+
+def highlight_sql(code: str) -> str:
+    token_pattern = re.compile(
+        r"(--[^\n]*|"
+        r"'(?:''|[^'])*'|"
+        r"`[^`]*`|"
+        r"\b\d+(?:\.\d+)?L?\b|"
+        r"\b[A-Za-z_][A-Za-z0-9_]*\b|"
+        r"[(),.*=<>+-])"
+    )
+
+    output: list[str] = []
+    pos = 0
+    for match in token_pattern.finditer(code):
+        output.append(html.escape(code[pos : match.start()]))
+        token = match.group(0)
+        token_upper = token.upper()
+        escaped = html.escape(token)
+        if token.startswith("--"):
+            output.append(f'<span class="sql-comment">{escaped}</span>')
+        elif token.startswith("'") or token.startswith("`"):
+            output.append(f'<span class="sql-string">{escaped}</span>')
+        elif re.fullmatch(r"\d+(?:\.\d+)?L?", token):
+            output.append(f'<span class="sql-number">{escaped}</span>')
+        elif token_upper in SQL_KEYWORDS:
+            output.append(f'<span class="sql-keyword">{escaped}</span>')
+        elif token in {"(", ")", ",", ".", "*", "=", "<", ">", "+", "-"}:
+            output.append(f'<span class="sql-punct">{escaped}</span>')
+        else:
+            output.append(escaped)
+        pos = match.end()
+
+    output.append(html.escape(code[pos:]))
+    return "".join(output)
+
+
+def render_code_block(code_lines: list[str], code_lang: str) -> str:
+    code = "\n".join(code_lines)
+    language = code_lang.strip().lower()
+    language_class = f" language-{html.escape(language)}" if language else ""
+    if language == "sql":
+        rendered_code = highlight_sql(code)
+    else:
+        rendered_code = html.escape(code)
+    return (
+        f'<pre><button class="copy" type="button">Copy</button><code class="{language_class.strip()}">'
+        + rendered_code
+        + "</code></pre>"
+    )
+
+
 def collect_toc(markdown_text: str) -> list[tuple[int, str, str]]:
     toc: list[tuple[int, str, str]] = []
     seen: dict[str, int] = {}
@@ -111,12 +203,7 @@ def markdown_to_html(markdown_text: str) -> str:
 
         if in_code:
             if line.startswith("```"):
-                language_class = f" language-{html.escape(code_lang)}" if code_lang else ""
-                out.append(
-                    f'<pre><button class="copy" type="button">Copy</button><code class="{language_class.strip()}">'
-                    + html.escape("\n".join(code_lines))
-                    + "</code></pre>"
-                )
+                out.append(render_code_block(code_lines, code_lang))
                 in_code = False
                 code_lang = ""
                 code_lines = []
@@ -387,6 +474,24 @@ def render() -> str:
       font-size: 13px;
       line-height: 1.55;
       white-space: pre;
+    }}
+    .language-sql .sql-keyword {{
+      color: #7dd3fc;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }}
+    .language-sql .sql-string {{
+      color: #f6d365;
+    }}
+    .language-sql .sql-number {{
+      color: #f5a3b7;
+    }}
+    .language-sql .sql-comment {{
+      color: #8bb0a4;
+      font-style: italic;
+    }}
+    .language-sql .sql-punct {{
+      color: #b9d9d0;
     }}
     .copy {{
       position: sticky;

@@ -182,6 +182,24 @@
       line-height: 1.55;
       white-space: pre;
     }
+    .language-sql .sql-keyword {
+      color: #7dd3fc;
+      font-weight: 800;
+      letter-spacing: .02em;
+    }
+    .language-sql .sql-string {
+      color: #f6d365;
+    }
+    .language-sql .sql-number {
+      color: #f5a3b7;
+    }
+    .language-sql .sql-comment {
+      color: #8bb0a4;
+      font-style: italic;
+    }
+    .language-sql .sql-punct {
+      color: #b9d9d0;
+    }
     .copy {
       position: sticky;
       left: calc(100% - 58px);
@@ -1382,357 +1400,357 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 </ul>
 <h3 id="comparison-sql-1-unparking-movement-anchor"><span class="badge badge-comparison">COMPARISON</span>SQL 1 - Unparking movement anchor</h3>
 <p>Purpose: mimic <code>UNPARKING_*</code>. For each cleaned gear transition from park to non-park, find the first future frame with non-zero speed, then produce a <code>0s..+10s</code> bucket window.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH params AS (
-  SELECT
-    2000000L AS min_gear_segment_us,
-    10000000L AS bucket_after_us
-),
-base AS (
-  SELECT
-    run_id,
-    run_date_iso,
-    timestamp_unixus,
-    CAST(ground_truth__state__vehicle__gear_direction AS INT) AS raw_gear,
-    ABS(COALESCE(inferred__state__odometry__speed_kmh, 0.0)) AS abs_speed_kmh
-  FROM prod_data_pipeline.wayve_corpus.all_data
-  WHERE run_date_iso &gt;= &#x27;${run_date_from}&#x27;
-    AND run_date_iso &lt;= &#x27;${run_date_to}&#x27;
-    -- AND run_id IN (...)
-),
-ordered AS (
-  SELECT
-    *,
-    LAG(raw_gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_raw_gear
-  FROM base
-),
-gear_segments AS (
-  SELECT
-    *,
-    SUM(CASE WHEN prev_raw_gear IS NULL OR raw_gear &lt;&gt; prev_raw_gear THEN 1 ELSE 0 END)
-      OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS gear_segment_id
-  FROM ordered
-),
-segments AS (
-  SELECT
-    run_id,
-    gear_segment_id,
-    MIN(timestamp_unixus) AS segment_start_ts,
-    MAX(timestamp_unixus) AS segment_end_ts,
-    MIN_BY(raw_gear, timestamp_unixus) AS segment_gear
-  FROM gear_segments
-  GROUP BY run_id, gear_segment_id
-),
-segments_with_prev AS (
-  SELECT
-    *,
-    LAG(segment_gear) OVER (PARTITION BY run_id ORDER BY gear_segment_id) AS prev_segment_gear
-  FROM segments
-),
-smoothed AS (
-  SELECT
-    g.*,
-    s.segment_start_ts,
-    s.segment_end_ts,
-    CASE
-      WHEN s.segment_end_ts - s.segment_start_ts &lt; (SELECT min_gear_segment_us FROM params)
-        AND s.prev_segment_gear IS NOT NULL
-      THEN s.prev_segment_gear
-      ELSE s.segment_gear
-    END AS gear
-  FROM gear_segments g
-  JOIN segments_with_prev s
-    ON s.run_id = g.run_id
-   AND s.gear_segment_id = g.gear_segment_id
-),
-gear_context AS (
-  SELECT
-    *,
-    LAG(gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_gear
-  FROM smoothed
-),
-gear_from_park AS (
-  SELECT
-    run_id,
-    timestamp_unixus AS gear_from_park_ts
-  FROM gear_context
-  WHERE prev_gear = 0 AND gear &lt;&gt; 0
-),
-moving_frames AS (
-  SELECT
-    run_id,
-    timestamp_unixus AS moving_ts
-  FROM smoothed
-  WHERE abs_speed_kmh &gt; 0
-),
-anchors AS (
-  SELECT
-    g.run_id,
-    g.gear_from_park_ts,
-    MIN(m.moving_ts) AS movement_anchor_ts
-  FROM gear_from_park g
-  JOIN moving_frames m
-    ON m.run_id = g.run_id
-   AND m.moving_ts &gt;= g.gear_from_park_ts
-  GROUP BY g.run_id, g.gear_from_park_ts
-)
-SELECT
-  run_id,
-  gear_from_park_ts,
-  movement_anchor_ts,
-  movement_anchor_ts AS bucket_start_ts,
-  movement_anchor_ts + (SELECT bucket_after_us FROM params) AS bucket_end_ts,
-  &#x27;unparking&#x27; AS zak_like_event_type
-FROM anchors;</code></pre>
+<pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-number">2000000L</span> <span class="sql-keyword">AS</span> min_gear_segment_us<span class="sql-punct">,</span>
+    <span class="sql-number">10000000L</span> <span class="sql-keyword">AS</span> bucket_after_us
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+base <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    run_date_iso<span class="sql-punct">,</span>
+    timestamp_unixus<span class="sql-punct">,</span>
+    <span class="sql-keyword">CAST</span><span class="sql-punct">(</span>ground_truth__state__vehicle__gear_direction <span class="sql-keyword">AS</span> INT<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> raw_gear<span class="sql-punct">,</span>
+    ABS<span class="sql-punct">(</span><span class="sql-keyword">COALESCE</span><span class="sql-punct">(</span>inferred__state__odometry__speed_kmh<span class="sql-punct">,</span> <span class="sql-number">0.0</span><span class="sql-punct">)</span><span class="sql-punct">)</span> <span class="sql-keyword">AS</span> abs_speed_kmh
+  <span class="sql-keyword">FROM</span> prod_data_pipeline<span class="sql-punct">.</span>wayve_corpus<span class="sql-punct">.</span>all_data
+  <span class="sql-keyword">WHERE</span> run_date_iso <span class="sql-punct">&gt;</span><span class="sql-punct">=</span> <span class="sql-string">&#x27;${run_date_from}&#x27;</span>
+    <span class="sql-keyword">AND</span> run_date_iso <span class="sql-punct">&lt;</span><span class="sql-punct">=</span> <span class="sql-string">&#x27;${run_date_to}&#x27;</span>
+    <span class="sql-comment">-- AND run_id IN (...)</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+ordered <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>raw_gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_raw_gear
+  <span class="sql-keyword">FROM</span> base
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_segments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">SUM</span><span class="sql-punct">(</span><span class="sql-keyword">CASE</span> <span class="sql-keyword">WHEN</span> prev_raw_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NULL</span> <span class="sql-keyword">OR</span> raw_gear <span class="sql-punct">&lt;</span><span class="sql-punct">&gt;</span> prev_raw_gear <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span><span class="sql-punct">)</span>
+      <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> gear_segment_id
+  <span class="sql-keyword">FROM</span> ordered
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+segments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    gear_segment_id<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN</span><span class="sql-punct">(</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_start_ts<span class="sql-punct">,</span>
+    MAX<span class="sql-punct">(</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_end_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN_BY</span><span class="sql-punct">(</span>raw_gear<span class="sql-punct">,</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_gear
+  <span class="sql-keyword">FROM</span> gear_segments
+  <span class="sql-keyword">GROUP</span> <span class="sql-keyword">BY</span> run_id<span class="sql-punct">,</span> gear_segment_id
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+segments_with_prev <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>segment_gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> gear_segment_id<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_segment_gear
+  <span class="sql-keyword">FROM</span> segments
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+smoothed <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    g<span class="sql-punct">.</span><span class="sql-punct">*</span><span class="sql-punct">,</span>
+    s<span class="sql-punct">.</span>segment_start_ts<span class="sql-punct">,</span>
+    s<span class="sql-punct">.</span>segment_end_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">CASE</span>
+      <span class="sql-keyword">WHEN</span> s<span class="sql-punct">.</span>segment_end_ts <span class="sql-punct">-</span> s<span class="sql-punct">.</span>segment_start_ts <span class="sql-punct">&lt;</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> min_gear_segment_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+        <span class="sql-keyword">AND</span> s<span class="sql-punct">.</span>prev_segment_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NOT</span> <span class="sql-keyword">NULL</span>
+      <span class="sql-keyword">THEN</span> s<span class="sql-punct">.</span>prev_segment_gear
+      <span class="sql-keyword">ELSE</span> s<span class="sql-punct">.</span>segment_gear
+    <span class="sql-keyword">END</span> <span class="sql-keyword">AS</span> gear
+  <span class="sql-keyword">FROM</span> gear_segments g
+  <span class="sql-keyword">JOIN</span> segments_with_prev s
+    <span class="sql-keyword">ON</span> s<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> s<span class="sql-punct">.</span>gear_segment_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>gear_segment_id
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_context <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_gear
+  <span class="sql-keyword">FROM</span> smoothed
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_from_park <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    timestamp_unixus <span class="sql-keyword">AS</span> gear_from_park_ts
+  <span class="sql-keyword">FROM</span> gear_context
+  <span class="sql-keyword">WHERE</span> prev_gear <span class="sql-punct">=</span> <span class="sql-number">0</span> <span class="sql-keyword">AND</span> gear <span class="sql-punct">&lt;</span><span class="sql-punct">&gt;</span> <span class="sql-number">0</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+moving_frames <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    timestamp_unixus <span class="sql-keyword">AS</span> moving_ts
+  <span class="sql-keyword">FROM</span> smoothed
+  <span class="sql-keyword">WHERE</span> abs_speed_kmh <span class="sql-punct">&gt;</span> <span class="sql-number">0</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+anchors <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    g<span class="sql-punct">.</span>run_id<span class="sql-punct">,</span>
+    g<span class="sql-punct">.</span>gear_from_park_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN</span><span class="sql-punct">(</span>m<span class="sql-punct">.</span>moving_ts<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> movement_anchor_ts
+  <span class="sql-keyword">FROM</span> gear_from_park g
+  <span class="sql-keyword">JOIN</span> moving_frames m
+    <span class="sql-keyword">ON</span> m<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> m<span class="sql-punct">.</span>moving_ts <span class="sql-punct">&gt;</span><span class="sql-punct">=</span> g<span class="sql-punct">.</span>gear_from_park_ts
+  <span class="sql-keyword">GROUP</span> <span class="sql-keyword">BY</span> g<span class="sql-punct">.</span>run_id<span class="sql-punct">,</span> g<span class="sql-punct">.</span>gear_from_park_ts
+<span class="sql-punct">)</span>
+<span class="sql-keyword">SELECT</span>
+  run_id<span class="sql-punct">,</span>
+  gear_from_park_ts<span class="sql-punct">,</span>
+  movement_anchor_ts<span class="sql-punct">,</span>
+  movement_anchor_ts <span class="sql-keyword">AS</span> bucket_start_ts<span class="sql-punct">,</span>
+  movement_anchor_ts <span class="sql-punct">+</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> bucket_after_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> bucket_end_ts<span class="sql-punct">,</span>
+  <span class="sql-string">&#x27;unparking&#x27;</span> <span class="sql-keyword">AS</span> zak_like_event_type
+<span class="sql-keyword">FROM</span> anchors;</code></pre>
 <h3 id="comparison-sql-2-pudo-stopping-anchor"><span class="badge badge-comparison">COMPARISON</span>SQL 2 - PUDO stopping anchor</h3>
 <p>Purpose: mimic the PUDO event detection behind <code>get_parking_indices(stop_type=&amp;quot;pudo&amp;quot;)</code>. Zak first detects park moments, classifies park moments as PUDO when a hazard signal is nearby, then the parking bucket samples the approach frames associated with that final park moment.</p>
 <p>This SQL emits the event anchor: gear changes into park and hazard was active within <code>+-10s</code>. To mimic the full bucket, join these anchors back to frames from the associated parking approach and apply the long-stop removal.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH params AS (
-  SELECT
-    2000000L AS min_gear_segment_us,
-    10000000L AS hazard_window_us
-),
-base AS (
-  SELECT
-    run_id,
-    run_date_iso,
-    timestamp_unixus,
-    CAST(ground_truth__state__vehicle__gear_direction AS INT) AS raw_gear,
-    ground_truth__state__vehicle__indicator_light AS indicator_light,
-    ABS(COALESCE(inferred__state__odometry__speed_kmh, 0.0)) AS abs_speed_kmh,
-    inferred__state__navigation__latitude_deg AS lat,
-    inferred__state__navigation__longitude_deg AS lon
-  FROM prod_data_pipeline.wayve_corpus.all_data
-  WHERE run_date_iso &gt;= &#x27;${run_date_from}&#x27;
-    AND run_date_iso &lt;= &#x27;${run_date_to}&#x27;
-    -- AND run_id IN (...)
-),
-ordered AS (
-  SELECT
-    *,
-    LAG(raw_gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_raw_gear
-  FROM base
-),
-gear_segments AS (
-  SELECT
-    *,
-    SUM(CASE WHEN prev_raw_gear IS NULL OR raw_gear &lt;&gt; prev_raw_gear THEN 1 ELSE 0 END)
-      OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS gear_segment_id
-  FROM ordered
-),
-segments AS (
-  SELECT
-    run_id,
-    gear_segment_id,
-    MIN(timestamp_unixus) AS segment_start_ts,
-    MAX(timestamp_unixus) AS segment_end_ts,
-    MIN_BY(raw_gear, timestamp_unixus) AS segment_gear
-  FROM gear_segments
-  GROUP BY run_id, gear_segment_id
-),
-segments_with_prev AS (
-  SELECT
-    *,
-    LAG(segment_gear) OVER (PARTITION BY run_id ORDER BY gear_segment_id) AS prev_segment_gear
-  FROM segments
-),
-smoothed AS (
-  SELECT
-    g.*,
-    s.segment_start_ts,
-    s.segment_end_ts,
-    CASE
-      WHEN s.segment_end_ts - s.segment_start_ts &lt; (SELECT min_gear_segment_us FROM params)
-        AND s.prev_segment_gear IS NOT NULL
-      THEN s.prev_segment_gear
-      ELSE s.segment_gear
-    END AS gear
-  FROM gear_segments g
-  JOIN segments_with_prev s
-    ON s.run_id = g.run_id
-   AND s.gear_segment_id = g.gear_segment_id
-),
-gear_context AS (
-  SELECT
-    *,
-    LAG(gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_gear
-  FROM smoothed
-),
-park_moments AS (
-  SELECT
-    run_id,
-    timestamp_unixus AS park_ts,
-    lat,
+<pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-number">2000000L</span> <span class="sql-keyword">AS</span> min_gear_segment_us<span class="sql-punct">,</span>
+    <span class="sql-number">10000000L</span> <span class="sql-keyword">AS</span> hazard_window_us
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+base <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    run_date_iso<span class="sql-punct">,</span>
+    timestamp_unixus<span class="sql-punct">,</span>
+    <span class="sql-keyword">CAST</span><span class="sql-punct">(</span>ground_truth__state__vehicle__gear_direction <span class="sql-keyword">AS</span> INT<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> raw_gear<span class="sql-punct">,</span>
+    ground_truth__state__vehicle__indicator_light <span class="sql-keyword">AS</span> indicator_light<span class="sql-punct">,</span>
+    ABS<span class="sql-punct">(</span><span class="sql-keyword">COALESCE</span><span class="sql-punct">(</span>inferred__state__odometry__speed_kmh<span class="sql-punct">,</span> <span class="sql-number">0.0</span><span class="sql-punct">)</span><span class="sql-punct">)</span> <span class="sql-keyword">AS</span> abs_speed_kmh<span class="sql-punct">,</span>
+    inferred__state__navigation__latitude_deg <span class="sql-keyword">AS</span> lat<span class="sql-punct">,</span>
+    inferred__state__navigation__longitude_deg <span class="sql-keyword">AS</span> lon
+  <span class="sql-keyword">FROM</span> prod_data_pipeline<span class="sql-punct">.</span>wayve_corpus<span class="sql-punct">.</span>all_data
+  <span class="sql-keyword">WHERE</span> run_date_iso <span class="sql-punct">&gt;</span><span class="sql-punct">=</span> <span class="sql-string">&#x27;${run_date_from}&#x27;</span>
+    <span class="sql-keyword">AND</span> run_date_iso <span class="sql-punct">&lt;</span><span class="sql-punct">=</span> <span class="sql-string">&#x27;${run_date_to}&#x27;</span>
+    <span class="sql-comment">-- AND run_id IN (...)</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+ordered <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>raw_gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_raw_gear
+  <span class="sql-keyword">FROM</span> base
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_segments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">SUM</span><span class="sql-punct">(</span><span class="sql-keyword">CASE</span> <span class="sql-keyword">WHEN</span> prev_raw_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NULL</span> <span class="sql-keyword">OR</span> raw_gear <span class="sql-punct">&lt;</span><span class="sql-punct">&gt;</span> prev_raw_gear <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span><span class="sql-punct">)</span>
+      <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> gear_segment_id
+  <span class="sql-keyword">FROM</span> ordered
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+segments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    gear_segment_id<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN</span><span class="sql-punct">(</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_start_ts<span class="sql-punct">,</span>
+    MAX<span class="sql-punct">(</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_end_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN_BY</span><span class="sql-punct">(</span>raw_gear<span class="sql-punct">,</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_gear
+  <span class="sql-keyword">FROM</span> gear_segments
+  <span class="sql-keyword">GROUP</span> <span class="sql-keyword">BY</span> run_id<span class="sql-punct">,</span> gear_segment_id
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+segments_with_prev <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>segment_gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> gear_segment_id<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_segment_gear
+  <span class="sql-keyword">FROM</span> segments
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+smoothed <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    g<span class="sql-punct">.</span><span class="sql-punct">*</span><span class="sql-punct">,</span>
+    s<span class="sql-punct">.</span>segment_start_ts<span class="sql-punct">,</span>
+    s<span class="sql-punct">.</span>segment_end_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">CASE</span>
+      <span class="sql-keyword">WHEN</span> s<span class="sql-punct">.</span>segment_end_ts <span class="sql-punct">-</span> s<span class="sql-punct">.</span>segment_start_ts <span class="sql-punct">&lt;</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> min_gear_segment_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+        <span class="sql-keyword">AND</span> s<span class="sql-punct">.</span>prev_segment_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NOT</span> <span class="sql-keyword">NULL</span>
+      <span class="sql-keyword">THEN</span> s<span class="sql-punct">.</span>prev_segment_gear
+      <span class="sql-keyword">ELSE</span> s<span class="sql-punct">.</span>segment_gear
+    <span class="sql-keyword">END</span> <span class="sql-keyword">AS</span> gear
+  <span class="sql-keyword">FROM</span> gear_segments g
+  <span class="sql-keyword">JOIN</span> segments_with_prev s
+    <span class="sql-keyword">ON</span> s<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> s<span class="sql-punct">.</span>gear_segment_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>gear_segment_id
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_context <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_gear
+  <span class="sql-keyword">FROM</span> smoothed
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+park_moments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    timestamp_unixus <span class="sql-keyword">AS</span> park_ts<span class="sql-punct">,</span>
+    lat<span class="sql-punct">,</span>
     lon
-  FROM gear_context
-  WHERE prev_gear &lt;&gt; 0 AND gear = 0
-),
-hazard_frames AS (
-  SELECT
-    run_id,
-    timestamp_unixus AS hazard_ts
-  FROM smoothed
-  WHERE indicator_light = &#x27;hazard&#x27;
-    -- Zak excludes office geofences from hazard PUDO detection:
-    -- AND NOT in_parking_office_geofence(lat, lon)
-),
-pudo_anchors AS (
-  SELECT
-    p.run_id,
-    p.park_ts,
-    COUNT(h.hazard_ts) &gt; 0 AS has_hazard_near_park
-  FROM park_moments p
-  LEFT JOIN hazard_frames h
-    ON h.run_id = p.run_id
-   AND h.hazard_ts BETWEEN p.park_ts - (SELECT hazard_window_us FROM params)
-                       AND p.park_ts + (SELECT hazard_window_us FROM params)
-  GROUP BY p.run_id, p.park_ts
-)
-SELECT
-  run_id,
-  park_ts AS pudo_anchor_ts,
-  &#x27;pudo&#x27; AS zak_like_event_type
-FROM pudo_anchors
-WHERE has_hazard_near_park;</code></pre>
+  <span class="sql-keyword">FROM</span> gear_context
+  <span class="sql-keyword">WHERE</span> prev_gear <span class="sql-punct">&lt;</span><span class="sql-punct">&gt;</span> <span class="sql-number">0</span> <span class="sql-keyword">AND</span> gear <span class="sql-punct">=</span> <span class="sql-number">0</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+hazard_frames <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    timestamp_unixus <span class="sql-keyword">AS</span> hazard_ts
+  <span class="sql-keyword">FROM</span> smoothed
+  <span class="sql-keyword">WHERE</span> indicator_light <span class="sql-punct">=</span> <span class="sql-string">&#x27;hazard&#x27;</span>
+    <span class="sql-comment">-- Zak excludes office geofences from hazard PUDO detection:</span>
+    <span class="sql-comment">-- AND NOT in_parking_office_geofence(lat, lon)</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+pudo_anchors <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    p<span class="sql-punct">.</span>run_id<span class="sql-punct">,</span>
+    p<span class="sql-punct">.</span>park_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">COUNT</span><span class="sql-punct">(</span>h<span class="sql-punct">.</span>hazard_ts<span class="sql-punct">)</span> <span class="sql-punct">&gt;</span> <span class="sql-number">0</span> <span class="sql-keyword">AS</span> has_hazard_near_park
+  <span class="sql-keyword">FROM</span> park_moments p
+  <span class="sql-keyword">LEFT</span> <span class="sql-keyword">JOIN</span> hazard_frames h
+    <span class="sql-keyword">ON</span> h<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> p<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> h<span class="sql-punct">.</span>hazard_ts <span class="sql-keyword">BETWEEN</span> p<span class="sql-punct">.</span>park_ts <span class="sql-punct">-</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> hazard_window_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+                       <span class="sql-keyword">AND</span> p<span class="sql-punct">.</span>park_ts <span class="sql-punct">+</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> hazard_window_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+  <span class="sql-keyword">GROUP</span> <span class="sql-keyword">BY</span> p<span class="sql-punct">.</span>run_id<span class="sql-punct">,</span> p<span class="sql-punct">.</span>park_ts
+<span class="sql-punct">)</span>
+<span class="sql-keyword">SELECT</span>
+  run_id<span class="sql-punct">,</span>
+  park_ts <span class="sql-keyword">AS</span> pudo_anchor_ts<span class="sql-punct">,</span>
+  <span class="sql-string">&#x27;pudo&#x27;</span> <span class="sql-keyword">AS</span> zak_like_event_type
+<span class="sql-keyword">FROM</span> pudo_anchors
+<span class="sql-keyword">WHERE</span> has_hazard_near_park;</code></pre>
 <h3 id="comparison-sql-3-parking-like-corrective-actions-near-gear-change"><span class="badge badge-comparison">COMPARISON</span>SQL 3 - Parking-like corrective actions near gear change</h3>
 <p>Purpose: mimic Zak&#x27;s <code>INTERVENTIONS_GEAR_CHANGE0</code> and <code>INTERVENTIONS_GEAR_CHANGE1</code> buckets. These are <strong>general interventions near a gear change</strong>, not intervention-label taxonomy buckets for parking. They are parking-like because the gear-change proximity makes them relevant to parking/PUDO/unparking behavior.</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-sql">WITH params AS (
-  SELECT
-    2000000L AS min_gear_segment_us,
-    30000000L AS gear_window_us,
-    1200000L AS bucket0_before_us,
-    1000000L AS bucket1_after_us,
-    1000000L AS remain_stopped_check_us
-),
-base AS (
-  SELECT
-    run_id,
-    run_date_iso,
-    timestamp_unixus,
-    CAST(ground_truth__state__vehicle__gear_direction AS INT) AS raw_gear,
-    CAST(ground_truth__state__vehicle__automation_active AS BOOLEAN) AS auto_active,
-    ABS(COALESCE(inferred__state__odometry__speed_kmh, 0.0)) AS abs_speed_kmh
-  FROM prod_data_pipeline.wayve_corpus.all_data
-  WHERE run_date_iso &gt;= &#x27;${run_date_from}&#x27;
-    AND run_date_iso &lt;= &#x27;${run_date_to}&#x27;
-    -- AND run_id IN (...)
-),
-ordered AS (
-  SELECT
-    *,
-    LAG(raw_gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_raw_gear,
-    LAG(auto_active) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_auto_active
-  FROM base
-),
-gear_segments AS (
-  SELECT
-    *,
-    SUM(CASE WHEN prev_raw_gear IS NULL OR raw_gear &lt;&gt; prev_raw_gear THEN 1 ELSE 0 END)
-      OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS gear_segment_id
-  FROM ordered
-),
-segments AS (
-  SELECT
-    run_id,
-    gear_segment_id,
-    MIN(timestamp_unixus) AS segment_start_ts,
-    MAX(timestamp_unixus) AS segment_end_ts,
-    MIN_BY(raw_gear, timestamp_unixus) AS segment_gear
-  FROM gear_segments
-  GROUP BY run_id, gear_segment_id
-),
-segments_with_prev AS (
-  SELECT
-    *,
-    LAG(segment_gear) OVER (PARTITION BY run_id ORDER BY gear_segment_id) AS prev_segment_gear
-  FROM segments
-),
-smoothed AS (
-  SELECT
-    g.*,
-    s.segment_start_ts,
-    s.segment_end_ts,
-    CASE
-      WHEN s.segment_end_ts - s.segment_start_ts &lt; (SELECT min_gear_segment_us FROM params)
-        AND s.prev_segment_gear IS NOT NULL
-      THEN s.prev_segment_gear
-      ELSE s.segment_gear
-    END AS gear
-  FROM gear_segments g
-  JOIN segments_with_prev s
-    ON s.run_id = g.run_id
-   AND s.gear_segment_id = g.gear_segment_id
-),
-gear_context AS (
-  SELECT
-    *,
-    LAG(gear) OVER (PARTITION BY run_id ORDER BY timestamp_unixus) AS prev_gear
-  FROM smoothed
-),
-gear_changes AS (
-  SELECT
-    run_id,
-    timestamp_unixus AS gear_change_ts
-  FROM gear_context
-  WHERE prev_gear IS NOT NULL AND gear &lt;&gt; prev_gear
-),
-ca_anchors_raw AS (
-  SELECT
-    run_id,
-    timestamp_unixus AS intervention_ts,
-    abs_speed_kmh AS speed_at_intervention
-  FROM ordered
-  WHERE prev_auto_active = TRUE
-    AND auto_active = FALSE
-),
-ca_with_future_speed AS (
-  SELECT
-    c.*,
-    MIN_BY(f.abs_speed_kmh, f.timestamp_unixus) AS speed_1s_after
-  FROM ca_anchors_raw c
-  LEFT JOIN base f
-    ON f.run_id = c.run_id
-   AND f.timestamp_unixus &gt;= c.intervention_ts + (SELECT remain_stopped_check_us FROM params)
-  GROUP BY c.run_id, c.intervention_ts, c.speed_at_intervention
-),
-ca_after_remain_stopped_filter AS (
-  SELECT *
-  FROM ca_with_future_speed
-  WHERE NOT (
-    speed_at_intervention = 0
-    AND COALESCE(speed_1s_after, 0) = 0
-  )
-),
-parking_like_ca AS (
-  SELECT DISTINCT
-    c.run_id,
-    c.intervention_ts
-  FROM ca_after_remain_stopped_filter c
-  JOIN gear_changes g
-    ON g.run_id = c.run_id
-   AND g.gear_change_ts BETWEEN c.intervention_ts - (SELECT gear_window_us FROM params)
-                            AND c.intervention_ts + (SELECT gear_window_us FROM params)
-),
-bucket0 AS (
-  SELECT
-    run_id,
-    intervention_ts,
-    intervention_ts - (SELECT bucket0_before_us FROM params) AS bucket_start_ts,
-    intervention_ts AS bucket_end_ts,
-    &#x27;interventions_gear_change0&#x27; AS zak_like_bucket
-  FROM parking_like_ca
-),
-bucket1 AS (
-  SELECT
-    run_id,
-    intervention_ts,
-    intervention_ts AS bucket_start_ts,
-    intervention_ts + (SELECT bucket1_after_us FROM params) AS bucket_end_ts,
-    &#x27;interventions_gear_change1&#x27; AS zak_like_bucket
-  FROM parking_like_ca
-)
-SELECT * FROM bucket0
-UNION ALL
-SELECT * FROM bucket1;</code></pre>
+<pre><button class="copy" type="button">Copy</button><code class="language-sql"><span class="sql-keyword">WITH</span> params <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-number">2000000L</span> <span class="sql-keyword">AS</span> min_gear_segment_us<span class="sql-punct">,</span>
+    <span class="sql-number">30000000L</span> <span class="sql-keyword">AS</span> gear_window_us<span class="sql-punct">,</span>
+    <span class="sql-number">1200000L</span> <span class="sql-keyword">AS</span> bucket0_before_us<span class="sql-punct">,</span>
+    <span class="sql-number">1000000L</span> <span class="sql-keyword">AS</span> bucket1_after_us<span class="sql-punct">,</span>
+    <span class="sql-number">1000000L</span> <span class="sql-keyword">AS</span> remain_stopped_check_us
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+base <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    run_date_iso<span class="sql-punct">,</span>
+    timestamp_unixus<span class="sql-punct">,</span>
+    <span class="sql-keyword">CAST</span><span class="sql-punct">(</span>ground_truth__state__vehicle__gear_direction <span class="sql-keyword">AS</span> INT<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> raw_gear<span class="sql-punct">,</span>
+    <span class="sql-keyword">CAST</span><span class="sql-punct">(</span>ground_truth__state__vehicle__automation_active <span class="sql-keyword">AS</span> <span class="sql-keyword">BOOLEAN</span><span class="sql-punct">)</span> <span class="sql-keyword">AS</span> auto_active<span class="sql-punct">,</span>
+    ABS<span class="sql-punct">(</span><span class="sql-keyword">COALESCE</span><span class="sql-punct">(</span>inferred__state__odometry__speed_kmh<span class="sql-punct">,</span> <span class="sql-number">0.0</span><span class="sql-punct">)</span><span class="sql-punct">)</span> <span class="sql-keyword">AS</span> abs_speed_kmh
+  <span class="sql-keyword">FROM</span> prod_data_pipeline<span class="sql-punct">.</span>wayve_corpus<span class="sql-punct">.</span>all_data
+  <span class="sql-keyword">WHERE</span> run_date_iso <span class="sql-punct">&gt;</span><span class="sql-punct">=</span> <span class="sql-string">&#x27;${run_date_from}&#x27;</span>
+    <span class="sql-keyword">AND</span> run_date_iso <span class="sql-punct">&lt;</span><span class="sql-punct">=</span> <span class="sql-string">&#x27;${run_date_to}&#x27;</span>
+    <span class="sql-comment">-- AND run_id IN (...)</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+ordered <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>raw_gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_raw_gear<span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>auto_active<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_auto_active
+  <span class="sql-keyword">FROM</span> base
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_segments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">SUM</span><span class="sql-punct">(</span><span class="sql-keyword">CASE</span> <span class="sql-keyword">WHEN</span> prev_raw_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NULL</span> <span class="sql-keyword">OR</span> raw_gear <span class="sql-punct">&lt;</span><span class="sql-punct">&gt;</span> prev_raw_gear <span class="sql-keyword">THEN</span> <span class="sql-number">1</span> <span class="sql-keyword">ELSE</span> <span class="sql-number">0</span> <span class="sql-keyword">END</span><span class="sql-punct">)</span>
+      <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> gear_segment_id
+  <span class="sql-keyword">FROM</span> ordered
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+segments <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    gear_segment_id<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN</span><span class="sql-punct">(</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_start_ts<span class="sql-punct">,</span>
+    MAX<span class="sql-punct">(</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_end_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN_BY</span><span class="sql-punct">(</span>raw_gear<span class="sql-punct">,</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> segment_gear
+  <span class="sql-keyword">FROM</span> gear_segments
+  <span class="sql-keyword">GROUP</span> <span class="sql-keyword">BY</span> run_id<span class="sql-punct">,</span> gear_segment_id
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+segments_with_prev <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>segment_gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> gear_segment_id<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_segment_gear
+  <span class="sql-keyword">FROM</span> segments
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+smoothed <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    g<span class="sql-punct">.</span><span class="sql-punct">*</span><span class="sql-punct">,</span>
+    s<span class="sql-punct">.</span>segment_start_ts<span class="sql-punct">,</span>
+    s<span class="sql-punct">.</span>segment_end_ts<span class="sql-punct">,</span>
+    <span class="sql-keyword">CASE</span>
+      <span class="sql-keyword">WHEN</span> s<span class="sql-punct">.</span>segment_end_ts <span class="sql-punct">-</span> s<span class="sql-punct">.</span>segment_start_ts <span class="sql-punct">&lt;</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> min_gear_segment_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+        <span class="sql-keyword">AND</span> s<span class="sql-punct">.</span>prev_segment_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NOT</span> <span class="sql-keyword">NULL</span>
+      <span class="sql-keyword">THEN</span> s<span class="sql-punct">.</span>prev_segment_gear
+      <span class="sql-keyword">ELSE</span> s<span class="sql-punct">.</span>segment_gear
+    <span class="sql-keyword">END</span> <span class="sql-keyword">AS</span> gear
+  <span class="sql-keyword">FROM</span> gear_segments g
+  <span class="sql-keyword">JOIN</span> segments_with_prev s
+    <span class="sql-keyword">ON</span> s<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> s<span class="sql-punct">.</span>gear_segment_id <span class="sql-punct">=</span> g<span class="sql-punct">.</span>gear_segment_id
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_context <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    <span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">LAG</span><span class="sql-punct">(</span>gear<span class="sql-punct">)</span> <span class="sql-keyword">OVER</span> <span class="sql-punct">(</span><span class="sql-keyword">PARTITION</span> <span class="sql-keyword">BY</span> run_id <span class="sql-keyword">ORDER</span> <span class="sql-keyword">BY</span> timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> prev_gear
+  <span class="sql-keyword">FROM</span> smoothed
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+gear_changes <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    timestamp_unixus <span class="sql-keyword">AS</span> gear_change_ts
+  <span class="sql-keyword">FROM</span> gear_context
+  <span class="sql-keyword">WHERE</span> prev_gear <span class="sql-keyword">IS</span> <span class="sql-keyword">NOT</span> <span class="sql-keyword">NULL</span> <span class="sql-keyword">AND</span> gear <span class="sql-punct">&lt;</span><span class="sql-punct">&gt;</span> prev_gear
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+ca_anchors_raw <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    timestamp_unixus <span class="sql-keyword">AS</span> intervention_ts<span class="sql-punct">,</span>
+    abs_speed_kmh <span class="sql-keyword">AS</span> speed_at_intervention
+  <span class="sql-keyword">FROM</span> ordered
+  <span class="sql-keyword">WHERE</span> prev_auto_active <span class="sql-punct">=</span> <span class="sql-keyword">TRUE</span>
+    <span class="sql-keyword">AND</span> auto_active <span class="sql-punct">=</span> <span class="sql-keyword">FALSE</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+ca_with_future_speed <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    c<span class="sql-punct">.</span><span class="sql-punct">*</span><span class="sql-punct">,</span>
+    <span class="sql-keyword">MIN_BY</span><span class="sql-punct">(</span>f<span class="sql-punct">.</span>abs_speed_kmh<span class="sql-punct">,</span> f<span class="sql-punct">.</span>timestamp_unixus<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> speed_1s_after
+  <span class="sql-keyword">FROM</span> ca_anchors_raw c
+  <span class="sql-keyword">LEFT</span> <span class="sql-keyword">JOIN</span> base f
+    <span class="sql-keyword">ON</span> f<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> c<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> f<span class="sql-punct">.</span>timestamp_unixus <span class="sql-punct">&gt;</span><span class="sql-punct">=</span> c<span class="sql-punct">.</span>intervention_ts <span class="sql-punct">+</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> remain_stopped_check_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+  <span class="sql-keyword">GROUP</span> <span class="sql-keyword">BY</span> c<span class="sql-punct">.</span>run_id<span class="sql-punct">,</span> c<span class="sql-punct">.</span>intervention_ts<span class="sql-punct">,</span> c<span class="sql-punct">.</span>speed_at_intervention
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+ca_after_remain_stopped_filter <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span> <span class="sql-punct">*</span>
+  <span class="sql-keyword">FROM</span> ca_with_future_speed
+  <span class="sql-keyword">WHERE</span> <span class="sql-keyword">NOT</span> <span class="sql-punct">(</span>
+    speed_at_intervention <span class="sql-punct">=</span> <span class="sql-number">0</span>
+    <span class="sql-keyword">AND</span> <span class="sql-keyword">COALESCE</span><span class="sql-punct">(</span>speed_1s_after<span class="sql-punct">,</span> <span class="sql-number">0</span><span class="sql-punct">)</span> <span class="sql-punct">=</span> <span class="sql-number">0</span>
+  <span class="sql-punct">)</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+parking_like_ca <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span> <span class="sql-keyword">DISTINCT</span>
+    c<span class="sql-punct">.</span>run_id<span class="sql-punct">,</span>
+    c<span class="sql-punct">.</span>intervention_ts
+  <span class="sql-keyword">FROM</span> ca_after_remain_stopped_filter c
+  <span class="sql-keyword">JOIN</span> gear_changes g
+    <span class="sql-keyword">ON</span> g<span class="sql-punct">.</span>run_id <span class="sql-punct">=</span> c<span class="sql-punct">.</span>run_id
+   <span class="sql-keyword">AND</span> g<span class="sql-punct">.</span>gear_change_ts <span class="sql-keyword">BETWEEN</span> c<span class="sql-punct">.</span>intervention_ts <span class="sql-punct">-</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> gear_window_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+                            <span class="sql-keyword">AND</span> c<span class="sql-punct">.</span>intervention_ts <span class="sql-punct">+</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> gear_window_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span>
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+bucket0 <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    intervention_ts<span class="sql-punct">,</span>
+    intervention_ts <span class="sql-punct">-</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> bucket0_before_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> bucket_start_ts<span class="sql-punct">,</span>
+    intervention_ts <span class="sql-keyword">AS</span> bucket_end_ts<span class="sql-punct">,</span>
+    <span class="sql-string">&#x27;interventions_gear_change0&#x27;</span> <span class="sql-keyword">AS</span> zak_like_bucket
+  <span class="sql-keyword">FROM</span> parking_like_ca
+<span class="sql-punct">)</span><span class="sql-punct">,</span>
+bucket1 <span class="sql-keyword">AS</span> <span class="sql-punct">(</span>
+  <span class="sql-keyword">SELECT</span>
+    run_id<span class="sql-punct">,</span>
+    intervention_ts<span class="sql-punct">,</span>
+    intervention_ts <span class="sql-keyword">AS</span> bucket_start_ts<span class="sql-punct">,</span>
+    intervention_ts <span class="sql-punct">+</span> <span class="sql-punct">(</span><span class="sql-keyword">SELECT</span> bucket1_after_us <span class="sql-keyword">FROM</span> params<span class="sql-punct">)</span> <span class="sql-keyword">AS</span> bucket_end_ts<span class="sql-punct">,</span>
+    <span class="sql-string">&#x27;interventions_gear_change1&#x27;</span> <span class="sql-keyword">AS</span> zak_like_bucket
+  <span class="sql-keyword">FROM</span> parking_like_ca
+<span class="sql-punct">)</span>
+<span class="sql-keyword">SELECT</span> <span class="sql-punct">*</span> <span class="sql-keyword">FROM</span> bucket0
+<span class="sql-keyword">UNION</span> ALL
+<span class="sql-keyword">SELECT</span> <span class="sql-punct">*</span> <span class="sql-keyword">FROM</span> bucket1;</code></pre>
 <h2 id="zak-global-training-augmentations-and-label-transformations"><span class="badge badge-zak">ZAK</span>Global training augmentations and label transformations</h2>
 <p>The sampler does not define image/route/state augmentation per bucket. Once a frame index is sampled, the dataset applies the same training-time data transforms regardless of which bucket produced the sample.</p>
 <p>For <code>mcv_new_phase2</code> inherited from <code>mcv_new_base.yml</code>:</p>
