@@ -94,3 +94,22 @@
 - Ran `bazel test //wayve/ai/services/sampling:test_datasets_py_test`.
 - Re-ran `bazel test //wayve/ai/services/sampling:test_datasets`; aggregate target passed from cache after the full pytest run.
 - For the anchor-only update, re-ran `git diff --check` and `bazel test //wayve/ai/services/sampling:test_datasets`; all four lint/type/pytest targets passed.
+
+## 2026-06-06 Flyte Materialisation Run
+
+- Published the sampling workflow image from `boris/pudo_generic_materialization`.
+- Image tag: `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.123-boris-pudo_generic_materialization-59584`.
+- Image digest: `sha256:688cd9cd18630e920b07c6fbdd42cfeea3009fc7741dc3f9c7849c0c2950bd2c`.
+- Started `filter_and_bucket_stage` for `parking_pudo/default`.
+- Job name: `parking_pudo_generic_materialization`.
+- Flyte execution: `a4x7v7qkfsg4hk9b52sr`.
+- Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a4x7v7qkfsg4hk9b52sr
+- Command:
+
+```bash
+bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_stage \
+  --dataset_name parking_pudo/default \
+  --job_name parking_pudo_generic_materialization
+```
+
+- Local status query note: `flytectl` is not installed in the current shell, so status should be checked from the Flyte console or another Flyte CLI environment.
