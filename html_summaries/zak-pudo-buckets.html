@@ -1028,11 +1028,10 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <ul>
 <li><code>INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}0</code></li>
 <li><code>INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}1</code></li>
-<li>torque and torque-curvature variants</li>
-<li>acceleration slow/fast variants are defined but weight <code>0.0</code> in phase2</li>
+<li><code>INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}2</code> is defined, but phase2 weights are <code>0.0</code></li>
 </ul>
 <p>Function: <code>get_intervention_indices</code>.</p>
-<p>These are Zak&#x27;s general driving intervention / CA buckets, not the parking/PUDO-specific buckets.</p>
+<p>These are Zak&#x27;s general driving intervention / CA buckets. They are not the parking/PUDO-specific buckets, and they are not the near-gear-change buckets.</p>
 <p>The bucket definitions pass empty label and correction filters:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">get_intervention_indices(
     labels=[],
@@ -1044,33 +1043,31 @@ mask &amp;= ALL_VALID_MASKS2</code></pre>
 <li><code>PARKING_*</code> -&gt; <code>get_parking_indices(..., stop_type=&amp;quot;park&amp;quot;, ...)</code></li>
 <li><code>PUDO_*</code> -&gt; <code>get_parking_indices(..., stop_type=&amp;quot;pudo&amp;quot;, ...)</code></li>
 <li><code>UNPARKING_*</code> -&gt; <code>get_unparking_indices(...)</code></li>
+<li><code>INTERVENTIONS_GEAR_CHANGE0/1</code> -&gt; separate near-gear-change intervention buckets in the next section</li>
 </ul>
 <p>The intervention anchor is an autonomous disengagement:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">intervention_indices = where((auto[:-1] == 1) &amp; (auto[1:] == 0)) + 1</code></pre>
-<p>General filtering:</p>
-<pre><button class="copy" type="button">Copy</button><code class="language-python">if torque_thresh &gt; 0:
-    keep abs(steering_torque[anchor]) &gt; torque_thresh
-    keep speed[anchor] &gt; torque_speed_thresh
-
-if acceleration_thresh != 0:
-    acceleration = (speed[t + 2s] - speed[t]) / 2s
-    keep acceleration sign / threshold
-
-if curvature_thresh &gt; 0:
-    keep abs(curvature[anchor]) &gt; curvature_thresh
-
-if gear_window &gt; 0:
-    keep anchors within gear_window seconds of any gear change
+<p>What the base <code>INTERVENTIONS_GEN2_*0/1/2</code> buckets actually do:</p>
+<pre><button class="copy" type="button">Copy</button><code class="language-python">anchor = frame where auto changes 1 -&gt; 0
 
 if remove_remain_stopped:
     remove anchors where speed[anchor] == 0 and speed[anchor + 1s] == 0
 
 remove abort-lane-change interventions by default
 
-filter annotation labels:
-    interventions_label != 0 and != 255
-filter corrections if corrections list is non-empty
-filter country/platform</code></pre>
+require interventions_label != 0
+require interventions_label != 255
+
+filter by country/platform bucket
+apply bucket masks</code></pre>
+<p>What they do not require:</p>
+<ul>
+<li>no acceleration threshold,</li>
+<li>no torque threshold,</li>
+<li>no curvature threshold,</li>
+<li>no gear-change proximity,</li>
+<li>no parking/PUDO-specific label.</li>
+</ul>
 <p>Window creation:</p>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">if start_offset &lt; 0:
     # pre-intervention frames
@@ -1091,7 +1088,13 @@ if end_offset &gt; 0:
 <li>suffix <code>1</code> buckets use <code>0s..+1.0s</code> after intervention, only while expert/DC (<code>auto == 0</code>).</li>
 <li>suffix <code>2</code> buckets are defined as <code>+1.0s..+5.0s</code>, but all phase2 weights are <code>0.0</code>.</li>
 </ul>
-<p>Torque variants:</p>
+<p>Related variants that reuse the same function:</p>
+<ul>
+<li><code>INTERVENTIONS_GEN2_*_TORQUE</code>: same base intervention anchor, plus steering torque and speed thresholds.</li>
+<li><code>INTERVENTIONS_GEN2_*_TORQUE_CURVATURE</code>: torque variant plus curvature threshold.</li>
+<li><code>INTERVENTIONS_GEN2_*_SLOW</code> / <code>*_FAST</code>: acceleration variants, defined but weight <code>0.0</code> in phase2.</li>
+<li><code>INTERVENTIONS_GEAR_CHANGE0/1</code>: near-gear-change intervention variants. These are documented in the next section, not part of the base <code>INTERVENTIONS_GEN2_*</code> behavior.</li>
+</ul>
 <pre><button class="copy" type="button">Copy</button><code class="language-python">INTERVENTIONS_GEN2_LDN0_TORQUE:
     same as LDN0
     plus abs(steering_torque) &gt; 1.6

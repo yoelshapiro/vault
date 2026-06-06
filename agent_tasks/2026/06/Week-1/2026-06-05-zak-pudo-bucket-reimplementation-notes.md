@@ -875,12 +875,11 @@ Bucket-local augmentation/windowing:
 Buckets:
 - `INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}0`
 - `INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}1`
-- torque and torque-curvature variants
-- acceleration slow/fast variants are defined but weight `0.0` in phase2
+- `INTERVENTIONS_GEN2_{LDN,USA,JPN,DEU,MSC,NAR,ALPHA3}2` is defined, but phase2 weights are `0.0`
 
 Function: `get_intervention_indices`.
 
-These are Zak's general driving intervention / CA buckets, not the parking/PUDO-specific buckets.
+These are Zak's general driving intervention / CA buckets. They are not the parking/PUDO-specific buckets, and they are not the near-gear-change buckets.
 
 The bucket definitions pass empty label and correction filters:
 
@@ -897,6 +896,7 @@ That means they accept any annotated valid intervention label, then apply the ge
 - `PARKING_*` -> `get_parking_indices(..., stop_type="park", ...)`
 - `PUDO_*` -> `get_parking_indices(..., stop_type="pudo", ...)`
 - `UNPARKING_*` -> `get_unparking_indices(...)`
+- `INTERVENTIONS_GEAR_CHANGE0/1` -> separate near-gear-change intervention buckets in the next section
 
 The intervention anchor is an autonomous disengagement:
 
@@ -904,33 +904,30 @@ The intervention anchor is an autonomous disengagement:
 intervention_indices = where((auto[:-1] == 1) & (auto[1:] == 0)) + 1
 ```
 
-General filtering:
+What the base `INTERVENTIONS_GEN2_*0/1/2` buckets actually do:
 
 ```python
-if torque_thresh > 0:
-    keep abs(steering_torque[anchor]) > torque_thresh
-    keep speed[anchor] > torque_speed_thresh
-
-if acceleration_thresh != 0:
-    acceleration = (speed[t + 2s] - speed[t]) / 2s
-    keep acceleration sign / threshold
-
-if curvature_thresh > 0:
-    keep abs(curvature[anchor]) > curvature_thresh
-
-if gear_window > 0:
-    keep anchors within gear_window seconds of any gear change
+anchor = frame where auto changes 1 -> 0
 
 if remove_remain_stopped:
     remove anchors where speed[anchor] == 0 and speed[anchor + 1s] == 0
 
 remove abort-lane-change interventions by default
 
-filter annotation labels:
-    interventions_label != 0 and != 255
-filter corrections if corrections list is non-empty
-filter country/platform
+require interventions_label != 0
+require interventions_label != 255
+
+filter by country/platform bucket
+apply bucket masks
 ```
+
+What they do not require:
+
+- no acceleration threshold,
+- no torque threshold,
+- no curvature threshold,
+- no gear-change proximity,
+- no parking/PUDO-specific label.
 
 Window creation:
 
@@ -954,7 +951,12 @@ So:
 - suffix `1` buckets use `0s..+1.0s` after intervention, only while expert/DC (`auto == 0`).
 - suffix `2` buckets are defined as `+1.0s..+5.0s`, but all phase2 weights are `0.0`.
 
-Torque variants:
+Related variants that reuse the same function:
+
+- `INTERVENTIONS_GEN2_*_TORQUE`: same base intervention anchor, plus steering torque and speed thresholds.
+- `INTERVENTIONS_GEN2_*_TORQUE_CURVATURE`: torque variant plus curvature threshold.
+- `INTERVENTIONS_GEN2_*_SLOW` / `*_FAST`: acceleration variants, defined but weight `0.0` in phase2.
+- `INTERVENTIONS_GEAR_CHANGE0/1`: near-gear-change intervention variants. These are documented in the next section, not part of the base `INTERVENTIONS_GEN2_*` behavior.
 
 ```python
 INTERVENTIONS_GEN2_LDN0_TORQUE:
