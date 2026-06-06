@@ -19,8 +19,8 @@
 - Added Zak-style hazard cleanup before PUDO/UnPUDO splitting:
   - hazard approach above 5 mph becomes a side-dependent directional indicator,
   - hazard departure after movement becomes off,
-  - office parking geofences are not considered PUDO hazard evidence.
-- Added country-split and explicit office-geofence buckets named with the new terminology:
+  - hazard evidence inside the standard geofence exclusion list is ignored.
+- Added country-split buckets named with the new terminology:
   - `park_*`
   - `pudo_*`
   - `unpark_*`
@@ -35,8 +35,8 @@
   - `parking_ca_long_*`
   - `pudo_ca_short_*`
   - `pudo_ca_long_*`
-- Added office-geofence suffixes for `london_office`, `millbrook`, `mountain_view_office`, `sunnyvale_office`, `tokyo_trc_office`, and `yokohama_office`.
-- Removed `exclude_geofenced` from the parking_pudo exclusion sets so explicit office buckets are not filtered empty upstream.
+- Kept the inherited parking/driving `exclude_geofenced` filter in every bucket, instead of creating explicit office-geofence buckets.
+- Removed the incorrect office-geofence suffix buckets for `london_office`, `millbrook`, `mountain_view_office`, `sunnyvale_office`, `tokyo_trc_office`, and `yokohama_office`.
 - Split `unpark` from `unpudo` using hazard evidence on the preceding parked segment and stopped departure tail up to the movement anchor.
 - Implemented `pre_unpark` / `pre_unpudo` as the 0.9s pre-start window equivalent to Zak's `start_gear_change_*` bucket, but using the requested names.
 - Implemented parking and PUDO CA filters as separate AV-to-DC intervention buckets near a smoothed gear change, including short/long post-CA windows and the speed filter that removes interventions where the vehicle is stopped at handover and still stopped 1s later.
