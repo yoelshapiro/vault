@@ -238,3 +238,6 @@
 - Verification after layout fix: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
 - Follow-up default SQL update: changed the default query to dedupe by `(runID, timestamp_unixus)` and return a random 250-row sample. Bumped the Streamlit SQL default version so existing browser sessions pick up the new default after restart.
 - Verification after default SQL update: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
+- Follow-up SQL execution control: added explicit `Run SQL again` and `Reset SQL` actions. Editing the SQL text no longer changes the active Databricks query until `Run SQL again` is clicked; the action clears the Streamlit query cache before loading events.
+- Verification after SQL button update: Ruff, Flake8, and type checks passed; restarted `unpudo-event-viewer` on `http://127.0.0.1:3001/`; health endpoint returned `ok`.
+- Flyte status snapshot at 2026-06-06 04:28 UTC for execution `anfr26csqwll76rf9m54`: overall phase `RUNNING`; `start-node`, `n0`, `n1`, and Spark `n2` succeeded; dynamic `n3` still running. Container-array external resource phases: 1738 succeeded, 49 running, 1 initializing, 2 failed, 242 unknown/not yet reported. Output prefix currently has 1745 MP4s.
