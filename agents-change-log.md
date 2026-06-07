@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-07 - Bazel Cache Cleanup Script
+
+- Topic: Add a safe helper for deleting unused Bazel cache folders across multiple worktrees.
+- Labels: bazel, cleanup, tooling, worktrees.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: N/A.
+- Change type: Tooling script.
+- Areas: `/workspace/WayveCode/tools/delete_unused_bazel_caches.sh`.
+- Changes:
+  - Added a standalone script that maps current Git worktrees to exact Bazel output bases with `bazel info output_base`.
+  - Keeps output-base directories used by current worktrees or referenced by live process command lines.
+  - Prints a deletion plan and requires typing `DELETE` before running `sudo rm -rf`.
+  - Leaves the shared repository cache alone by default, with an explicit `--include-repository-cache` option.
+  - Verified help output, Bash syntax, and an aborting dry run; `shellcheck` was unavailable locally.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-bazel-cache-cleanup-script|2026-06-07 Bazel Cache Cleanup Script]]
+
 ## 2026-06-07 - Event Clip Viewer Rebase Reset
 
 - Topic: Rebase `boris/event_clip_viewer` onto main and reset the event viewer subtree to main.
