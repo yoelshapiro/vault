@@ -367,3 +367,21 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Verification:
   - `git diff --check`
   - `bazel test //wayve/ai/services/sampling:test_spark_tasks_py_test //wayve/ai/services/sampling:test_spark_tasks_py_lint_ruff //wayve/ai/services/sampling:test_spark_tasks_py_lint_flake8 //wayve/ai/services/sampling:test_spark_tasks_ty`
+
+## 2026-06-07 700-Run-Cap Reruns
+
+- Committed and pushed the 700-run partition cap:
+  - commit: `6a64024b1f3a`
+  - branch: `boris/pudo_generic_materialization`
+- Published fresh sampling image:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:7f7836ccd4a15e2f4eecc6d88a25399566be666e4fd5f0b47dee5dd3d416906d`
+- Submitted full `sample` workflow for `parking_pudo/default`:
+  - job name: `parking_pudo_700_default_full`
+  - Flyte execution: `a7pb56zxxprtxdxqftsr`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a7pb56zxxprtxdxqftsr
+  - Initial status check: `RUNNING`
+- Submitted full `sample` workflow for `parking_pudo/anchors`:
+  - job name: `parking_pudo_700_anchors_full`
+  - Flyte execution: `afxkknqm2p7rn79sx2t8`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/afxkknqm2p7rn79sx2t8
+  - Initial status check: `RUNNING`

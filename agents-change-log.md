@@ -87,6 +87,7 @@
   - Kept office-geofence handling inside PUDO context classification by ignoring geofenced hazard evidence, matching Zak's stop-type logic instead of dropping every geofenced frame globally.
   - Pushed commit `39f906b30c2d`, published sampling image `sha256:696f65cfde1d549bace850cd416eb3822543b44835b13136fd7bba6ac4b09928`, and submitted full reruns for `parking_pudo/default` (`arjghbl5t57t24hmk8nb`) and `parking_pudo/anchors` (`arv78r4gprwflcv2wsdv`).
   - Diagnosed those reruns failing because partition 0 had `49,044,708` rows and requested `200.0 GiB`, above the Ray worker half-memory cap of `179.5 GiB`; reduced the Spark partition planner run-id cap from `1000` to `700`.
+  - Pushed commit `6a64024b1f3a`, published sampling image `sha256:7f7836ccd4a15e2f4eecc6d88a25399566be666e4fd5f0b47dee5dd3d416906d`, and submitted full 700-cap reruns for `parking_pudo/default` (`a7pb56zxxprtxdxqftsr`) and `parking_pudo/anchors` (`afxkknqm2p7rn79sx2t8`).
   - Added explanatory selector/helper docstrings and split the internal signal derivation helpers into `parking_pudo/signals.py`.
   - Aligned park/PUDO and unpark/UnPUDO context classification to Zak's `index_of_park - 1` convention and matched `make_park_masks` first-assignment behavior for overlapping approach windows.
   - Added separate `unpark` and `unpudo` pre/short/long CA buckets around first-movement departure anchors, with UnPUDO classification using the same parked/pre-departure hazard scan as the event buckets.
