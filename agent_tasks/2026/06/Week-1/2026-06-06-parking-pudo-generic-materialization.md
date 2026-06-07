@@ -361,9 +361,9 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - The partition planner chunked by `MAX_NUM_RUN_IDS_PER_PARTITION = 1000`.
   - The Ray stage reserves memory by row count, so a dense date/platform group can create an oversized task even with a normal run-id count.
 - Code fix:
-  - Added `MAX_NUM_ROWS_PER_PARTITION = 40_000_000`.
-  - Updated explicit-run-id and Spark-planned partitioning to respect both the run-id cap and the cumulative row-count cap.
-  - Runs remain atomic; if a single run exceeds the cap, the Ray memory guard remains the final failure signal.
+  - Reduced `MAX_NUM_RUN_IDS_PER_PARTITION` from `1000` to `700`.
+  - Kept the generic materialisation partitioning logic otherwise unchanged.
+  - Added a regression assertion for the default `700` run-id cap.
 - Verification:
   - `git diff --check`
-  - `bazel test //wayve/ai/services/sampling:test_spark_tasks_py_test //wayve/ai/services/sampling:test_spark_tasks_py_lint_ruff //wayve/ai/services/sampling:test_spark_tasks_py_lint_flake8 //wayve/ai/services/sampling:test_spark_tasks_ty //wayve/ai/services/sampling:test_datasets_py_test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty`
+  - `bazel test //wayve/ai/services/sampling:test_spark_tasks_py_test //wayve/ai/services/sampling:test_spark_tasks_py_lint_ruff //wayve/ai/services/sampling:test_spark_tasks_py_lint_flake8 //wayve/ai/services/sampling:test_spark_tasks_ty`
