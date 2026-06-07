@@ -41,9 +41,10 @@
 			- [ ] licensing
 			- [ ] exp
 	- [ ] generic by zak
-		- [ ] implement
-		- [ ] go over samples
+		- [x] implement
+		- [x] go over samples
 		- [ ] compare
+			- [ ] fix filtering
 - [ ] licensing issue
 	- [ ] investigate what happened
 	- [ ] look at deployment wrapper
