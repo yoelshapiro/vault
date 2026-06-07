@@ -129,3 +129,25 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Flyte execution: `a2pr4q8qqvwr45f65mmj`.
 - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a2pr4q8qqvwr45f65mmj
 - Initial status query immediately after creation showed the execution exists but had not reported a phase yet.
+
+## 2026-06-07 Output Validation For 700 Run
+
+- Flyte execution `a2pr4q8qqvwr45f65mmj` finished successfully.
+- Output path:
+  - `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/default/dev/parking_pudo_generic_materialization_700__2026-06-06-21-40`
+- This run used `filter_and_bucket_stage`, so it produced Ray-stage `buckets/` output only.
+- There is no final `dataset/` tree and no generated summary YAML:
+  - `summary.yaml` returned `BlobNotFound`.
+  - `dataset/dataset_split=train/summary.yaml` returned `BlobNotFound`.
+  - `dataset/` returned `PathNotFound`.
+- Azure file inventory for `buckets/`:
+  - `33,401` parquet files.
+  - `661,027,442` bytes total.
+  - `254` split/bucket-country combinations with at least one file.
+  - Train: `130` bucket-country combinations, `20,804` files, `563,041,969` bytes.
+  - Validation: `124` bucket-country combinations, `12,597` files, `97,985,473` bytes.
+- Configured `parking_pudo/default` has `160` bucket-country names per split.
+- Missing output buckets are zero-sample buckets for that split; all missing buckets are failed-to intervention variants.
+- `failed_to_unpark_{pre_ca,ca_short,ca_long}_*` produced no output in either split.
+- Databricks SQL direct parquet validation was attempted but the session lacks file SELECT permission on the ADLS path:
+  - `INSUFFICIENT_PERMISSIONS: User does not have permission SELECT on any file`.
