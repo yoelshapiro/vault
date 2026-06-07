@@ -194,5 +194,16 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - Flyte execution: `allr4wnws66dqdrgsgxm`
   - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/allr4wnws66dqdrgsgxm
 - Submitted both executions with an explicit image digest to bypass ACR tag discovery.
+- Terminated both filter-only executions after deciding to run the complete `sample` workflow instead:
+  - `a6dnzj55wwfpz6552wws`
+  - `allr4wnws66dqdrgsgxm`
+- Submitted full `sample` workflow for `parking_pudo/default`, which runs filter/bucket, balance, compare, and distributions.
+  - Job name: `parking_pudo_bc_names_700_full`
+  - Flyte execution: `altdzx8gtggm4dpfdr97`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/altdzx8gtggm4dpfdr97
+- Submitted full `sample` workflow for `parking_pudo/anchors`, which runs filter/bucket, balance, compare, and distributions.
+  - Job name: `parking_pudo_anchors_bc_names_700_full`
+  - Flyte execution: `ad59w7rlsf2x8r269755`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ad59w7rlsf2x8r269755
 - Local `flytectl` is not installed. Attempted the local `obs-flyte-execution` skill, but its Bazel wrapper depends on an older robotics Flyte package path missing in this checkout, so status validation should use the console links or another Flyte CLI environment.
 - After submission, origin advanced by one `py-format` commit that only reorders two imports in `parking_pudo/anchors/dataset.py`; no runtime behavior change from the submitted image.
