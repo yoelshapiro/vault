@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-07 - Mercurial Interleave Redeploy
+
+- Topic: Redeploy the Guy-recipe gear-root Parking/PUDO model with interleave control group parking.
+- Labels: parking, pudo, deployment, interleave-control, model-card.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/guy_recipe_gear_root`.
+- PR: N/A.
+- Change type: Model redeploy.
+- Areas: `/workspace/guy_recipe_gear_root`, Parking/PUDO model-card Notion table.
+- Changes:
+  - Resolved `mercurial-sapphire-jellyfish` to `session_2026_06_06_22_07_21_guyroot`.
+  - Deployed latest/100K checkpoint with `--enable_interleave_control --interleave_control_group parking`.
+  - Retried after `/mnt/remote` trace write I/O failure and `/tmp` space failure; successful output used `/workspace/parking_deploy_output`.
+  - Uploaded deployed model `contemplative-gold-lion`, session `session_2026_06_06_22_07_21_guyroot__mercurial-sapphire-jellyfish_interleave_control_v3`.
+  - Verified Gen2 radar config includes X/Y/Z/range-rate/SNR and `points_per_scan=800`.
+  - Updated the Parking/PUDO Notion model-card row/page for the deployed model.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-mercurial-interleave-redeploy|2026-06-07 Mercurial Interleave Redeploy]]
+
 ## 2026-06-07 - Event Viewer Materialization Anchors
 
 - Topic: Extend the parking event clip viewer to load generic materialisation anchor buckets.
