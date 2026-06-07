@@ -1,18 +1,10 @@
-- [x] Guy's PR
-- [x] interleave PR
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance
 	- [x] cherry pick
 	- [ ] cherry pick with latest model + new materialization + new driving
 - [ ] parking augmentations
-- [x] lineage html
-- [x] parking model lifecycle skill tree
 - [ ] pre train updated augmentations request
-- [x] Zak-Becky
-- [x] Ulad parking windowing
-- [x] answer Tom
-- [x] answer Pablo
 - [ ] investigate train warnings 
       ![:warning:](https://a.slack-edge.com/production-standard-emoji-assets/16.0/apple-medium/26a0-fe0f@2x.png) **Low Unique Sample Ratio** ![:warning:](https://a.slack-edge.com/production-standard-emoji-assets/16.0/apple-medium/26a0-fe0f@2x.png)  
 	Unique ratio: `94.5%` (threshold: `95%`)  
@@ -51,4 +43,5 @@
 	- [ ] look at augmentations
 - [ ] eval studio - too many errors
 	- [ ] PR to fix negative waypoints
-	- [ ] 
+- [ ] Model experiments
+	- [ ] request licensing
