@@ -1,5 +1,23 @@
 # Agents Change Log
 
+## 2026-06-07 - Parking Interleave Clamp Redeploy
+
+- Topic: Align parking interleave-control waypoint clamping with the 03-20 reference branch and redeploy the trained model.
+- Labels: parking, pudo, deployment, interleave-control, waypoint-clamping.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
+- PR: N/A.
+- Change type: Deployment-wrapper fix / model redeploy.
+- Areas: `/workspace/main_cherrypick_new_driving/wayve/ai/zoo/deployment/deployment_wrapper.py`, Parking/PUDO model-card Notion table.
+- Changes:
+  - Ported the 03-20-style parking interleave-control waypoint clamping so policy waypoints are clamped from the effective predicted/postprocessed gear.
+  - Removed the extra `POLICY_PATH_POSITION_FORWARD` clamp from this branch.
+  - Verified `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test`.
+  - Committed and pushed `c39bd6c4d494`.
+  - Redeployed `gorilla-tan-splendid` latest/100K checkpoint with interleave control group `parking`; deployed nickname is `crane-indigo-sleepy`.
+  - Verified exported Gen2 radar config includes X/Y/Z/range-rate/SNR and `points_per_scan=800`.
+  - Updated the Parking/PUDO Notion model-card row/page for the deployed model.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-parking-interleave-clamp-redeploy|2026-06-07 Parking Interleave Clamp Redeploy]]
+
 ## 2026-06-06 - Guy Recipe PUDO Root Train
 
 - Topic: Fork Guy's parking/PUDO recipe, update only the PUDO materialized root, and submit training.
@@ -40,7 +58,7 @@
   - Guarded anchor-only selectors so they emit an anchor only when the corresponding expanded bucket window would contain frames.
   - Updated public bucket names to follow BC naming conventions: `dc_*` for DC windows, `pre_ca_*` for pre-CA, and scenario-specific `ca_<scenario>_short/long_*` names for CA buckets.
   - Published BC-name sampling image `sha256:6cdf613116fd4ea5af9e44988a6f449c35dd8d05e798536f3710f6198b8d1123`, terminated the initial filter-only reruns, and submitted full `sample` workflows for `parking_pudo/default` (`altdzx8gtggm4dpfdr97`) and `parking_pudo/anchors` (`ad59w7rlsf2x8r269755`).
-  - Validated both full `sample` workflows finished successfully: `parking_pudo/default` produced `130` train buckets / `67,773,809` samples, and `parking_pudo/anchors` produced `130` train buckets / `782,562` anchor samples.
+  - Validated both full `sample` workflows finished successfully: `parking_pudo/default` produced `130` train buckets / `67,773,809` samples and `124` validation buckets / `10,212,496` samples; `parking_pudo/anchors` produced `130` train buckets / `782,562` anchor samples and `124` validation buckets / `115,107` anchor samples.
   - Published the sampling workflow image and started Flyte `filter_and_bucket_stage` for `parking_pudo/default` as execution `a4x7v7qkfsg4hk9b52sr`.
   - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]

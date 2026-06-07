@@ -228,6 +228,12 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
     - `jpn`: `26` buckets, `3,517,037` samples.
     - `global`: `20` buckets, `2,659,867` samples.
   - No zero-sample materialized train buckets; smallest train bucket is `pre_ca_failed_to_pudo_jpn` with `23` samples.
+  - Validation summary: `124` buckets, `10,212,496` samples.
+  - Validation family totals:
+    - `dc`: `40` buckets, `8,372,056` samples.
+    - `pre_ca`: `28` buckets, `243,237` samples.
+    - `ca`: `56` buckets, `1,597,203` samples.
+  - No zero-sample materialized validation buckets; smallest validation bucket is `pre_ca_failed_to_park_deu` with `23` samples.
 - `parking_pudo/anchors`:
   - Flyte execution: `ad59w7rlsf2x8r269755`
   - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ad59w7rlsf2x8r269755
@@ -245,6 +251,12 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
     - `jpn`: `26` buckets, `33,985` samples.
     - `global`: `20` buckets, `22,670` samples.
   - No zero-sample materialized train buckets; smallest train bucket is `pre_ca_failed_to_pudo_jpn` with `1` sample.
+  - Validation summary: `124` buckets, `115,107` samples.
+  - Validation family totals:
+    - `dc`: `40` buckets, `72,470` samples.
+    - `pre_ca`: `28` buckets, `10,351` samples.
+    - `ca`: `56` buckets, `32,286` samples.
+  - No zero-sample materialized validation buckets; smallest validation bucket is `pre_ca_failed_to_park_deu` with `1` sample.
 - Root summaries for both runs show:
   - `start_date: 2025-08-01`
   - `end_date: 2026-06-06`
