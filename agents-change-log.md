@@ -1260,6 +1260,8 @@
   - Built `gear_change_to_park` and `gear_change_from_park` from smoothed per-frame gear context.
   - Switched PUDO and UnPUDO gear transition seeding to use the new booleans while preserving raw gear and output table schema.
   - Removed a stale trip-table helper join to `prod_analytics.analytics.robotaxi_disengagement` after a runtime failure on unavailable `episode_start_lat` / `episode_start_lon` columns; the join's `event_success` output was not consumed downstream.
+  - Added deterministic event-key canonicalization after location dedup, after office-geofence filtering, and before final enrichment/write to prevent duplicate event rows introduced by smoothed-gear candidate paths.
+  - Marked trip-summary PUDO candidates as `source = "trip_summary"` instead of inheriting the raw hazard source label.
   - Isolated the event notebook changes onto `boris/event_creation_gear_fix` from latest `main` and opened draft PR #116673.
   - Removed unused `prev2_gear_direction` and `next_gear_direction` context columns from the isolated PR branch.
   - Validated notebook JSON, code-cell AST parse, `git diff --check`, and static invariants.

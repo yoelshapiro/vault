@@ -28,6 +28,24 @@
 - The join referenced unavailable `episode_start_lat` / `episode_start_lon` columns and its `event_success` output was not consumed by downstream candidate matching.
 - Pushed commit `65736381549e` with the fix.
 
+## Follow-up Duplicate Event Fix
+
+- After the smoothed-gear change, the event notebook could emit duplicate rows for the same logical event key.
+- Root cause:
+  - PUDO candidates can enter through both hazard-window evidence and trip-summary evidence.
+  - The geofence helper used unique keep keys but joined them back to the original candidate rows, preserving any duplicates for the same key.
+  - The enrichment stage deduplicated anchors internally, but then joined enrichment back onto the original `all_candidates_final`, so duplicate event rows still reached the output table.
+- Code change:
+  - Added `dedup_rows_by_key(events_df, key_cols)` to keep one deterministic row per logical event key.
+  - Applied it after location deduplication and after office-geofence filtering.
+  - Applied it to the final candidate union before URL/relative-time/enrichment.
+  - Marked trip-summary PUDO candidates as `source = "trip_summary"` instead of inheriting `source = "hazards"`.
+  - Added an optional duplicate-key diagnostic under `ENABLE_PROGRESS_COUNTS`.
+- Validation:
+  - `jq empty wayve/ai/parking/notebooks/pudo_unpudo_event_detection.ipynb`
+  - Parsed all notebook code cells with Python AST.
+  - `git diff --check -- wayve/ai/parking/notebooks/pudo_unpudo_event_detection.ipynb`
+
 ## Isolated PR
 
 - Created branch `boris/event_creation_gear_fix` from latest `origin/main`.
