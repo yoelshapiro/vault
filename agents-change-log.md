@@ -14,6 +14,7 @@
   - Loaded anchor rows from Parquet using `runID`/`run_id` and `timestamp_unixus`, exposing the selected bucket as `event_type` for the existing clip-player UI.
   - Preserved the improved `boris/event_clip_viewer` SQL editor, model-catalogue video source, URL warmer, and `back_backward` camera support.
   - Added the default current `parking_pudo/anchors` path, the `pyarrow` Bazel dependency, README documentation, and a small `materialization.py` UI/source helper.
+  - Reapplied the previously fixed video containment pattern to selected-clip single/multi-player views so they use iframe scrolling, fixed 16:9 video boxes, `object-fit: contain`, and larger height budgets.
   - Verified syntax, diff whitespace, viewer Ruff/Flake8/type Bazel targets, and a running Streamlit endpoint on `http://127.0.0.1:3001`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-event-viewer-materialization-anchors|2026-06-07 Event Viewer Materialization Anchors]]
 

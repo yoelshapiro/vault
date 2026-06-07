@@ -26,6 +26,7 @@ Extended the parking event clip viewer so it can load clips from either the exis
 - Preserved the improved `boris/event_clip_viewer` SQL editor, model-catalogue video source, URL warmer, and `back_backward` camera support.
 - Split the materialisation sidebar/source loader into `materialization.py` to keep `app.py` under the repo file-size guidance.
 - Updated the README and Bazel deps for the new `pyarrow` reader.
+- Fixed a selected-clip player layout regression by applying the previous generous-height, iframe-scroll, fixed-aspect-ratio, `object-fit: contain` pattern to `render_players` and `render_single_player`, not only playlist autoplay.
 
 ## Validation
 
@@ -33,6 +34,7 @@ Extended the parking event clip viewer so it can load clips from either the exis
 - `git diff --check -- wayve/ai/parking/tools/event_clip_viewer`
 - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_lint_ruff //wayve/ai/parking/tools/event_clip_viewer:py_lint_flake8 //wayve/ai/parking/tools/event_clip_viewer:ty`
 - Started the corrected branch viewer on `http://127.0.0.1:3001` and verified HTTP 200.
+- Re-ran the same syntax, diff whitespace, and Bazel viewer checks after the player layout fix, then restarted `http://127.0.0.1:3001`.
 
 ## Notes
 
