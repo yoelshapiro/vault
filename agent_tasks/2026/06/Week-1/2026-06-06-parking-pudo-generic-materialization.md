@@ -207,3 +207,52 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ad59w7rlsf2x8r269755
 - Local `flytectl` is not installed. Attempted the local `obs-flyte-execution` skill, but its Bazel wrapper depends on an older robotics Flyte package path missing in this checkout, so status validation should use the console links or another Flyte CLI environment.
 - After submission, origin advanced by one `py-format` commit that only reorders two imports in `parking_pudo/anchors/dataset.py`; no runtime behavior change from the submitted image.
+
+## 2026-06-07 Full Sample Workflow Results
+
+- Both complete `sample` workflows finished successfully.
+- `parking_pudo/default`:
+  - Flyte execution: `altdzx8gtggm4dpfdr97`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/altdzx8gtggm4dpfdr97
+  - Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/default/dev/parking_pudo_bc_names_700_full__2026-06-07-09-22`
+  - Runtime: about `1:59`.
+  - Train summary: `130` buckets, `67,773,809` samples.
+  - Family totals:
+    - `dc`: `40` buckets, `54,889,797` samples.
+    - `pre_ca`: `30` buckets, `1,674,744` samples.
+    - `ca`: `60` buckets, `11,209,268` samples.
+  - Country totals:
+    - `usa`: `29` buckets, `26,891,979` samples.
+    - `uk`: `29` buckets, `19,686,523` samples.
+    - `deu`: `26` buckets, `15,018,403` samples.
+    - `jpn`: `26` buckets, `3,517,037` samples.
+    - `global`: `20` buckets, `2,659,867` samples.
+  - No zero-sample materialized train buckets; smallest train bucket is `pre_ca_failed_to_pudo_jpn` with `23` samples.
+- `parking_pudo/anchors`:
+  - Flyte execution: `ad59w7rlsf2x8r269755`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ad59w7rlsf2x8r269755
+  - Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/parking_pudo_anchors_bc_names_700_full__2026-06-07-09-19`
+  - Runtime: about `1:54`.
+  - Train summary: `130` buckets, `782,562` samples.
+  - Family totals:
+    - `dc`: `40` buckets, `484,241` samples.
+    - `pre_ca`: `30` buckets, `71,392` samples.
+    - `ca`: `60` buckets, `226,929` samples.
+  - Country totals:
+    - `usa`: `29` buckets, `338,672` samples.
+    - `uk`: `29` buckets, `249,506` samples.
+    - `deu`: `26` buckets, `137,729` samples.
+    - `jpn`: `26` buckets, `33,985` samples.
+    - `global`: `20` buckets, `22,670` samples.
+  - No zero-sample materialized train buckets; smallest train bucket is `pre_ca_failed_to_pudo_jpn` with `1` sample.
+- Root summaries for both runs show:
+  - `start_date: 2025-08-01`
+  - `end_date: 2026-06-06`
+  - `partition_source_type: binary_success_index_table`
+  - binary source: `driving/stable/3.0.58`
+- Post-balance workflow nodes:
+  - Compare completed, but reported `No comparison results to aggregate`, expected for a new dataset with no stable comparison baseline.
+  - Distributions completed, but `get_train_bucket_combinations` returned an empty list, so there is no saved `distributions/` tree for these runs.
+- The local checkout is still dirty only because of the experimental generic framework constant used for this run:
+  - `wayve/ai/services/sampling/common/spark_tasks.py`
+  - `MAX_NUM_RUN_IDS_PER_PARTITION = 700`
