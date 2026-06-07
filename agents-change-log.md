@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-07 - Gear-Aware Controller X Validation
+
+- Topic: Make controller agent-input x-position validation respect model-predicted reverse gear.
+- Labels: parking, pudo, controller, validation, reverse-gear.
+- Branch: `codex/gear-aware-controller-x-validation`.
+- PR: `#117112`.
+- Change type: Controller validation fix.
+- Areas: `/workspace/codex_gear_aware_controller_x_validation/wayve/robot/core/controller`.
+- Changes:
+  - Forked from `origin/main` in a clean worktree.
+  - Made `checkAgentToControllerXPositions` use `InterfaceAgentToController.drive_position` to choose forward vs reverse x-position convention.
+  - Kept `UNKNOWN` drive position rejected before x-position validation.
+  - Added regression coverage for reverse-signed waypoints passing when predicted gear is reverse and forward-signed x failing for reverse.
+  - Verified `bazel test //wayve/robot/core/controller:test_trajectory_validation`.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-gear-aware-controller-x-validation|2026-06-07 Gear-Aware Controller X Validation]]
+
 ## 2026-06-07 - Mercurial Interleave Redeploy
 
 - Topic: Redeploy the Guy-recipe gear-root Parking/PUDO model with interleave control group parking.
