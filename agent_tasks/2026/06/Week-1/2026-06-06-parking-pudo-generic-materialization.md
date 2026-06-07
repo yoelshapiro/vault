@@ -176,3 +176,23 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - `git diff --check`
   - `bazel test //wayve/ai/services/sampling:test_datasets --test_output=errors`
   - A filtered parking-pudo pytest run selected 29 tests and all passed, but the generated pytest target failed coverage because most tests were deselected; the full `test_datasets` target passed.
+
+## 2026-06-07 BC-Name Materialisation Reruns
+
+- Published a fresh sampling image from the local `boris/pudo_generic_materialization` checkout after the BC-style bucket-name commit.
+- The local image build included the existing experimental partition change:
+  - `MAX_NUM_RUN_IDS_PER_PARTITION = 700`
+  - File: `/workspace/WayveCode/wayve/ai/services/sampling/common/spark_tasks.py`
+- Image digest:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:6cdf613116fd4ea5af9e44988a6f449c35dd8d05e798536f3710f6198b8d1123`
+- Started `filter_and_bucket_stage` for `parking_pudo/default`.
+  - Job name: `parking_pudo_bc_names_700`
+  - Flyte execution: `a6dnzj55wwfpz6552wws`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a6dnzj55wwfpz6552wws
+- Started `filter_and_bucket_stage` for `parking_pudo/anchors`.
+  - Job name: `parking_pudo_anchors_bc_names_700`
+  - Flyte execution: `allr4wnws66dqdrgsgxm`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/allr4wnws66dqdrgsgxm
+- Submitted both executions with an explicit image digest to bypass ACR tag discovery.
+- Local `flytectl` is not installed. Attempted the local `obs-flyte-execution` skill, but its Bazel wrapper depends on an older robotics Flyte package path missing in this checkout, so status validation should use the console links or another Flyte CLI environment.
+- After submission, origin advanced by one `py-format` commit that only reorders two imports in `parking_pudo/anchors/dataset.py`; no runtime behavior change from the submitted image.
