@@ -38,6 +38,7 @@
   - Split parking/PUDO intervention selectors into `parking_pudo/intervention_filters.py` and added focused tests for departure CA and failed-to CA behavior.
   - Added `parking_pudo/anchors`, an anchor-only companion dataset that mirrors every default bucket name/country split and collapses each bucket to its detected anchor frame using the same filtering logic.
   - Guarded anchor-only selectors so they emit an anchor only when the corresponding expanded bucket window would contain frames.
+  - Updated public bucket names to follow BC naming conventions: `dc_*` for DC windows, `pre_ca_*` for pre-CA, and scenario-specific `ca_<scenario>_short/long_*` names for CA buckets.
   - Published the sampling workflow image and started Flyte `filter_and_bucket_stage` for `parking_pudo/default` as execution `a4x7v7qkfsg4hk9b52sr`.
   - Added focused pandas filter tests and verified the full `//wayve/ai/services/sampling:test_datasets` target.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
