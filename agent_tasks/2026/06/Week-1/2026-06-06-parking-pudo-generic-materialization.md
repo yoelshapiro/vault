@@ -268,3 +268,27 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - The local checkout is still dirty only because of the experimental generic framework constant used for this run:
   - `wayve/ai/services/sampling/common/spark_tasks.py`
   - `MAX_NUM_RUN_IDS_PER_PARTITION = 700`
+
+## 2026-06-07 UK PUDO Event Table vs Anchor Check
+
+- Compared event-table UK PUDO rows from `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix` using the dedupe query:
+  - `event_type = 'pudo'`
+  - `ISO_country_code = 'GBR'`
+  - `ROW_NUMBER() OVER (PARTITION BY timestamp_unixus ORDER BY event_startOrEnd_timestampunixus DESC) = 1`
+- Event table result: `51,355` unique timestamps.
+- Generic anchors `dc_pudo_uk`:
+  - train: `10,676`
+  - validation: `2,252`
+  - total: `12,928`
+- Exact timestamp overlap between event table and anchors: `7,523`.
+- Same-run tolerance overlap:
+  - within `0.5s`: `8,675`
+  - within `1s`: `9,424`
+  - within `30s`: `11,534`
+- `30,932` event-table rows are from runs with no `dc_pudo_uk` anchors at all.
+- Example exact timestamp mismatch but same-run anchor exists:
+  - event: `fme20012/2025-12-04--10-05-41--gen2-av-53df2e1f-0016-414d-85a9-70a9a75dff35`, `1764848211783310`
+  - nearest anchor: `1764848211483310`, `-0.300s`
+- Example missing run from the anchor bucket:
+  - event: `fme20018/2025-12-03--06-50-52--gen2-av-bd51a1cf-5dea-43a9-9b18-380446dbe9ef`, `1764745076683307`
+  - no `dc_pudo_uk` anchor in that run.
