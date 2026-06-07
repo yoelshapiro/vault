@@ -379,9 +379,21 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - job name: `parking_pudo_700_default_full`
   - Flyte execution: `a7pb56zxxprtxdxqftsr`
   - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a7pb56zxxprtxdxqftsr
-  - Initial status check: `RUNNING`
+  - Failed before materialisation because the submission passed `branch_name` without `branch_version`:
+    - `ValueError: branch_version is required when branch_name is set`
 - Submitted full `sample` workflow for `parking_pudo/anchors`:
   - job name: `parking_pudo_700_anchors_full`
   - Flyte execution: `afxkknqm2p7rn79sx2t8`
   - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/afxkknqm2p7rn79sx2t8
-  - Initial status check: `RUNNING`
+  - Failed before materialisation for the same missing `branch_version` submission issue.
+- Resubmitted both without branch metadata, still using the same `7f7836c` image:
+  - `parking_pudo/default`
+    - job name: `parking_pudo_700_default_full_retry`
+    - Flyte execution: `an6qkxt4x5bd252b8wk6`
+    - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/an6qkxt4x5bd252b8wk6
+    - Initial status check: `RUNNING`
+  - `parking_pudo/anchors`
+    - job name: `parking_pudo_700_anchors_full_retry`
+    - Flyte execution: `ahz6slkd8llpl4649rzk`
+    - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ahz6slkd8llpl4649rzk
+    - Initial status check: `RUNNING`
