@@ -151,3 +151,18 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - `failed_to_unpark_{pre_ca,ca_short,ca_long}_*` produced no output in either split.
 - Databricks SQL direct parquet validation was attempted but the session lacks file SELECT permission on the ADLS path:
   - `INSUFFICIENT_PERMISSIONS: User does not have permission SELECT on any file`.
+
+## 2026-06-07 Balance Stage From Existing Buckets
+
+- Reused the existing `filter_and_bucket_stage` output instead of recomputing filters.
+- Input/output run root:
+  - `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/default/dev/parking_pudo_generic_materialization_700__2026-06-06-21-40`
+- Workflow: `balance_stage`.
+- Dataset: `parking_pudo/default`.
+- Image override:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:f310b139ef3223662ecd5938e0bc5e24130d139612da1e577b79f26cc1f6dba9`
+- First submission without an explicit image failed before execution creation because ACR tag listing required authentication.
+- Retried with the explicit image digest to bypass tag discovery.
+- Flyte execution: `axdbhpm6fpnvqqbqcdpx`.
+- Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/axdbhpm6fpnvqqbqcdpx
+- Initial `flytectl` status query showed the execution exists but had not reported a phase yet.
