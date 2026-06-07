@@ -339,3 +339,13 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - Flyte execution: `arv78r4gprwflcv2wsdv`
   - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/arv78r4gprwflcv2wsdv
 - Local `flytectl` is not installed in this shell, so follow-up status should be checked from the console or another Flyte CLI environment.
+
+## 2026-06-07 Bucket Name Refactor
+
+- Removed the `PARKING_PUDO_*_BUCKET_NAMES` conversion maps from `parking_pudo/common.py`.
+- Updated default and anchor filter dictionaries to use the final emitted bucket stem directly as the key, for example `dc_pudo`, `pre_ca_unpudo`, and `ca_failed_to_pudo_short`.
+- Updated `parking_pudo/default/dataset.py` and `parking_pudo/anchors/dataset.py` to append the country suffix directly to each filter key.
+- This is a readability refactor only; emitted bucket names remain unchanged.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty`

@@ -94,6 +94,7 @@
   - Added `parking_pudo/anchors`, an anchor-only companion dataset that mirrors every default bucket name/country split and collapses each bucket to its detected anchor frame using the same filtering logic.
   - Guarded anchor-only selectors so they emit an anchor only when the corresponding expanded bucket window would contain frames.
   - Updated public bucket names to follow BC naming conventions: `dc_*` for DC windows, `pre_ca_*` for pre-CA, and scenario-specific `ca_<scenario>_short/long_*` names for CA buckets.
+  - Removed the internal `PARKING_PUDO_*_BUCKET_NAMES` conversion maps; filter dictionaries now use the final emitted bucket stem directly, with no bucket-name behavior change.
   - Published BC-name sampling image `sha256:6cdf613116fd4ea5af9e44988a6f449c35dd8d05e798536f3710f6198b8d1123`, terminated the initial filter-only reruns, and submitted full `sample` workflows for `parking_pudo/default` (`altdzx8gtggm4dpfdr97`) and `parking_pudo/anchors` (`ad59w7rlsf2x8r269755`).
   - Validated both full `sample` workflows finished successfully: `parking_pudo/default` produced `130` train buckets / `67,773,809` samples and `124` validation buckets / `10,212,496` samples; `parking_pudo/anchors` produced `130` train buckets / `782,562` anchor samples and `124` validation buckets / `115,107` anchor samples.
   - Published the sampling workflow image and started Flyte `filter_and_bucket_stage` for `parking_pudo/default` as execution `a4x7v7qkfsg4hk9b52sr`.
