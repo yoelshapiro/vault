@@ -10,13 +10,13 @@
 
 ## Summary
 
-- Made agent-to-controller x-position validation use the model-predicted `InterfaceAgentToController.drive_position`.
-- Preserved the forward convention for non-reverse predictions and allowed reverse-signed x waypoints only when predicted gear is reverse.
+- Kept agent-to-controller x-position validation in controller-frame coordinates, where x should be forward/non-negative after reverse preprocessing.
 - Moved `UNKNOWN` drive-position validation before x-position validation so gear-aware logic only runs on known predicted gear.
-- Updated regression coverage so reverse-signed waypoints pass for reverse predictions and forward-signed waypoints fail for reverse predictions.
-- Updated the violation message to report the predicted drive position and the expected x-position convention for that gear.
+- Updated regression coverage so reverse predictions with controller-frame forward x pass and negative controller-frame x fails.
+- Updated the violation message to report the predicted drive position and the expected controller-frame x-position convention.
 
 ## Verification
 
 - `bazel test //wayve/robot/core/controller:test_trajectory_validation`
 - Re-ran after message update/rebase: `bazel test //wayve/robot/core/controller:test_trajectory_validation`
+- `bazel test //wayve/robot/controller:controller_prod_reverse_integration_tests`

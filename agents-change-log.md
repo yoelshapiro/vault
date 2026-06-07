@@ -17,7 +17,7 @@
 
 ## 2026-06-07 - Gear-Aware Controller X Validation
 
-- Topic: Make controller agent-input x-position validation respect model-predicted reverse gear.
+- Topic: Clarify controller agent-input x-position validation using predicted gear and controller-frame x convention.
 - Labels: parking, pudo, controller, validation, reverse-gear.
 - Branch: `codex/gear-aware-controller-x-validation`.
 - PR: `#117112`.
@@ -25,11 +25,11 @@
 - Areas: `/workspace/codex_gear_aware_controller_x_validation/wayve/robot/core/controller`.
 - Changes:
   - Forked from `origin/main` in a clean worktree.
-  - Made `checkAgentToControllerXPositions` use `InterfaceAgentToController.drive_position` to choose forward vs reverse x-position convention.
+  - Confirmed `checkAgentToControllerXPositions` runs on controller-frame waypoints after reverse preprocessing, so x-position validation remains forward/non-negative for all predicted gears.
   - Kept `UNKNOWN` drive position rejected before x-position validation.
-  - Added regression coverage for reverse-signed waypoints passing when predicted gear is reverse and forward-signed x failing for reverse.
-  - Updated the x-position violation message to include the predicted drive position and expected x-position convention.
-  - Verified `bazel test //wayve/robot/core/controller:test_trajectory_validation`.
+  - Added regression coverage for reverse predicted gear passing with controller-frame forward x and failing with negative controller-frame x.
+  - Updated the x-position violation message to include the predicted drive position and expected controller-frame x-position convention.
+  - Verified `bazel test //wayve/robot/core/controller:test_trajectory_validation` and `bazel test //wayve/robot/controller:controller_prod_reverse_integration_tests`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-gear-aware-controller-x-validation|2026-06-07 Gear-Aware Controller X Validation]]
 
 ## 2026-06-07 - Mercurial Interleave Redeploy
