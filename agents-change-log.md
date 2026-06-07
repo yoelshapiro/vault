@@ -4,16 +4,17 @@
 
 - Topic: Extend the parking event clip viewer to load generic materialisation anchor buckets.
 - Labels: parking, pudo, unpudo, streamlit, materialization, anchors, video.
-- Branch: `boris/pudo_generic_materialization`.
-- PR: `#117075` branch context; viewer changes local/unpushed.
+- Branch: `boris/event_clip_viewer`.
+- PR: `#116721` branch context; viewer changes local/unpushed.
 - Change type: Tool/UI code change.
 - Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
 - Changes:
   - Added a sidebar data-source toggle between the existing Databricks event table and a generic materialisation anchors path.
   - Added materialisation split and bucket selection by listing `dataset/dataset_split=<split>/dataset_bucket=<bucket>/` Parquet outputs.
   - Loaded anchor rows from Parquet using `runID`/`run_id` and `timestamp_unixus`, exposing the selected bucket as `event_type` for the existing clip-player UI.
-  - Added the default current `parking_pudo/anchors` path, the `pyarrow` Bazel dependency, and README documentation.
-  - Verified syntax, diff whitespace, viewer Ruff/Flake8/type Bazel targets, and a running Streamlit endpoint on `http://127.0.0.1:3004`.
+  - Preserved the improved `boris/event_clip_viewer` SQL editor, model-catalogue video source, URL warmer, and `back_backward` camera support.
+  - Added the default current `parking_pudo/anchors` path, the `pyarrow` Bazel dependency, README documentation, and a small `materialization.py` UI/source helper.
+  - Verified syntax, diff whitespace, viewer Ruff/Flake8/type Bazel targets, and a running Streamlit endpoint on `http://127.0.0.1:3001`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-event-viewer-materialization-anchors|2026-06-07 Event Viewer Materialization Anchors]]
 
 ## 2026-06-07 - Parking Interleave Clamp Redeploy
