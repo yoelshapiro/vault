@@ -321,3 +321,21 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
   - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff`
   - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_flake8`
   - `bazel test //wayve/ai/services/sampling:test_datasets_ty`
+
+## 2026-06-07 Zak-Style Exclusion Full Reruns
+
+- Committed and pushed the exclusion update:
+  - commit: `39f906b30c2d`
+  - branch: `boris/pudo_generic_materialization`
+- Initial default `sample` submission without an explicit image failed before execution creation because ACR tag listing required authentication.
+- Ran `make acr-login`, then published a fresh sampling image from the pushed branch:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:696f65cfde1d549bace850cd416eb3822543b44835b13136fd7bba6ac4b09928`
+- Submitted full `sample` workflow for `parking_pudo/default`:
+  - job name: `parking_pudo_zak_exclusions_default_full`
+  - Flyte execution: `arjghbl5t57t24hmk8nb`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/arjghbl5t57t24hmk8nb
+- Submitted full `sample` workflow for `parking_pudo/anchors`:
+  - job name: `parking_pudo_zak_exclusions_anchors_full`
+  - Flyte execution: `arv78r4gprwflcv2wsdv`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/arv78r4gprwflcv2wsdv
+- Local `flytectl` is not installed in this shell, so follow-up status should be checked from the console or another Flyte CLI environment.
