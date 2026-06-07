@@ -49,3 +49,6 @@
 	- [ ] investigate what happened
 	- [ ] look at deployment wrapper
 	- [ ] look at augmentations
+- [ ] eval studio - too many errors
+	- [ ] PR to fix negative waypoints
+	- [ ] 
