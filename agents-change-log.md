@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-07 - Event Clip Viewer Rebase Reset
+
+- Topic: Rebase `boris/event_clip_viewer` onto main and reset the event viewer subtree to main.
+- Labels: parking, pudo, streamlit, git, rebase.
+- Branch: `boris/event_clip_viewer`.
+- PR: `#116721` branch context; not pushed in this task.
+- Change type: Branch maintenance.
+- Areas: `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Rebased the existing `/workspace/event_clip_viewer` worktree branch onto `origin/main`.
+  - Resolved event viewer add/add conflicts by restoring `wayve/ai/parking/tools/event_clip_viewer` from `origin/main`.
+  - Added local commit `39c5f4c3814d` (`fix: restore event clip viewer from main`) so the event viewer path has no net diff against `origin/main`.
+  - Verified `origin/main` is an ancestor of `HEAD` and both branch-level and path-specific diffs against `origin/main` are empty.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-07-event-clip-viewer-rebase-reset|2026-06-07 Event Clip Viewer Rebase Reset]]
+
 ## 2026-06-07 - Gear-Aware Controller X Validation
 
 - Topic: Make controller agent-input x-position validation respect model-predicted reverse gear.
