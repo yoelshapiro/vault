@@ -45,7 +45,12 @@
   - `ca_failed_to_pudo_short/long_*`
   - `ca_failed_to_unpark_short/long_*`
   - `ca_failed_to_unpudo_short/long_*`
-- Kept the inherited parking/driving `exclude_geofenced` filter in every bucket, instead of creating explicit office-geofence buckets.
+- Replaced the inherited `datasets.parking` exclusion tuple with a local `parking_pudo` exclusion policy:
+  - removed `exclude_stopped_segments`, which was stronger than Zak's CA-only remain-stopped rejection,
+  - did not include run-level `exclude_autonomous_runs`,
+  - removed the parking-specific first/last-index exclusion because Zak's `all_valid_masks2` omits `not_ends` for parking/PUDO buckets,
+  - removed the global `exclude_geofenced` bucket exclusion and kept office-geofence handling in PUDO context classification only.
+- Kept office-geofence hazards from creating PUDO/UnPUDO context by continuing to ignore hazard evidence inside configured office geofences before hazard dilation.
 - Removed the incorrect office-geofence suffix buckets for `london_office`, `millbrook`, `mountain_view_office`, `sunnyvale_office`, `tokyo_trc_office`, and `yokohama_office`.
 - Split `unpark` from `unpudo` using hazard evidence on the preceding parked segment and stopped departure tail up to the movement anchor.
 - Implemented `pre_unpark` / `pre_unpudo` as the 0.9s pre-start window equivalent to Zak's `start_gear_change_*` bucket, but using the requested names.
@@ -292,3 +297,27 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Example missing run from the anchor bucket:
   - event: `fme20018/2025-12-03--06-50-52--gen2-av-bd51a1cf-5dea-43a9-9b18-380446dbe9ef`, `1764745076683307`
   - no `dc_pudo_uk` anchor in that run.
+
+## 2026-06-07 Zak-Style Exclusion Policy Update
+
+- Rechecked `origin/zmurez/pudo` before changing the generic materialisation filters:
+  - Zak's PUDO/park buckets call `get_parking_indices(..., all_valid_masks2, ...)`.
+  - `all_valid_masks2` includes `autonomous`, `autonomous_engage`, `bad_park`, `bad_park1`, `bad_stop`, `has_video`, and `dropped_frames`.
+  - It does not include the sampler's global `geofence`, `reverse`, `uturn`, or `not_ends` masks.
+  - PUDO/park separation still uses parking location / hazard logic: office-geofence hazards do not create PUDO context.
+  - Zak's intervention speed filter is CA-specific via `remove_remain_stopped=True`, not a global stopped-segment exclusion for all parking/PUDO buckets.
+- Updated `parking_pudo/common.py` to stop importing `PARKING_EXCLUSIONS_DC_CA` / `PARKING_EXCLUSIONS_PRE_CA` from `datasets.parking.common`.
+- Added local `PARKING_PUDO_BASE_EXCLUSIONS`, `PARKING_PUDO_EVENT_EXCLUSIONS`, and `PARKING_PUDO_PRE_CA_EXCLUSIONS`.
+- Removed these inherited filters from Parking/PUDO buckets:
+  - global `exclude_stopped_segments`,
+  - run-level `exclude_autonomous_runs`,
+  - parking-specific `exclude_first_or_last_indices_parking`,
+  - global `exclude_geofenced`.
+- Kept per-frame `exclude_autonomous` for DC/post-CA buckets, and left pre-CA without `exclude_autonomous` because pre-CA is expected to be AV before handover.
+- Kept the existing `signals.py` office-geofence hazard cleanup, so geofenced hazards are ignored before PUDO/UnPUDO classification without dropping all geofenced frames globally.
+- Fixed an anchor dataset mismatch found by the focused test run: `parking_pudo/anchors` now uses the same country suffix set as `parking_pudo/default` instead of only UK/USA.
+- Verification:
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_flake8`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_ty`

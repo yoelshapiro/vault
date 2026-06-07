@@ -83,7 +83,8 @@
   - Implemented corpus-derived `park`, `pudo`, `unpark`, `unpudo`, `pre_unpark`, `pre_unpudo`, parking/PUDO gear-change, parking/PUDO pre-CA, and parking/PUDO short/long CA buckets split by country.
   - Removed the generic all-context gear-change/CA selectors in favor of explicit parking and PUDO selector names.
   - Added programmable gear smoothing, hazard cleanup, hazard-based PUDO/UnPUDO splitting over the parked/pre-movement departure interval, movement anchors after gear leaves park, and near-gear-change CA filters with the remain-stopped speed filter.
-  - Kept the inherited parking/driving `exclude_geofenced` filter in every bucket and removed the incorrect explicit office-geofence bucket suffixes.
+  - Replaced inherited `datasets.parking` exclusions with a local `parking_pudo` exclusion policy; removed global stopped-segment, geofence, first/last-index, and run-level autonomous exclusions while keeping per-frame `exclude_autonomous` for DC/post-CA.
+  - Kept office-geofence handling inside PUDO context classification by ignoring geofenced hazard evidence, matching Zak's stop-type logic instead of dropping every geofenced frame globally.
   - Added explanatory selector/helper docstrings and split the internal signal derivation helpers into `parking_pudo/signals.py`.
   - Aligned park/PUDO and unpark/UnPUDO context classification to Zak's `index_of_park - 1` convention and matched `make_park_masks` first-assignment behavior for overlapping approach windows.
   - Added separate `unpark` and `unpudo` pre/short/long CA buckets around first-movement departure anchors, with UnPUDO classification using the same parked/pre-departure hazard scan as the event buckets.
