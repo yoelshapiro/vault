@@ -21,34 +21,30 @@
   - hazard departure after movement becomes off,
   - hazard evidence inside the standard geofence exclusion list is ignored.
 - Added country-split buckets named with the new terminology:
-  - `park_*`
-  - `pudo_*`
-  - `unpark_*`
-  - `unpudo_*`
-  - `pre_unpark_*`
-  - `pre_unpudo_*`
-  - `parking_gear_change_*`
-  - `pudo_gear_change_*`
-  - `parking_pre_ca_*`
-  - `pudo_pre_ca_*`
-  - `parking_ca_short_*`
-  - `parking_ca_long_*`
-  - `pudo_ca_short_*`
-  - `pudo_ca_long_*`
-  - `unpark_pre_ca_*`
-  - `unpudo_pre_ca_*`
-  - `unpark_ca_short_*`
-  - `unpark_ca_long_*`
-  - `unpudo_ca_short_*`
-  - `unpudo_ca_long_*`
-  - `failed_to_park_pre_ca_*`
-  - `failed_to_pudo_pre_ca_*`
-  - `failed_to_unpark_pre_ca_*`
-  - `failed_to_unpudo_pre_ca_*`
-  - `failed_to_park_ca_short/long_*`
-  - `failed_to_pudo_ca_short/long_*`
-  - `failed_to_unpark_ca_short/long_*`
-  - `failed_to_unpudo_ca_short/long_*`
+  - `dc_park_*`
+  - `dc_pudo_*`
+  - `dc_unpark_*`
+  - `dc_unpudo_*`
+  - `dc_pre_unpark_*`
+  - `dc_pre_unpudo_*`
+  - `dc_parking_gear_change_*`
+  - `dc_pudo_gear_change_*`
+  - `pre_ca_parking_*`
+  - `pre_ca_pudo_*`
+  - `ca_parking_short/long_*`
+  - `ca_pudo_short/long_*`
+  - `pre_ca_unpark_*`
+  - `pre_ca_unpudo_*`
+  - `ca_unpark_short/long_*`
+  - `ca_unpudo_short/long_*`
+  - `pre_ca_failed_to_park_*`
+  - `pre_ca_failed_to_pudo_*`
+  - `pre_ca_failed_to_unpark_*`
+  - `pre_ca_failed_to_unpudo_*`
+  - `ca_failed_to_park_short/long_*`
+  - `ca_failed_to_pudo_short/long_*`
+  - `ca_failed_to_unpark_short/long_*`
+  - `ca_failed_to_unpudo_short/long_*`
 - Kept the inherited parking/driving `exclude_geofenced` filter in every bucket, instead of creating explicit office-geofence buckets.
 - Removed the incorrect office-geofence suffix buckets for `london_office`, `millbrook`, `mountain_view_office`, `sunnyvale_office`, `tokyo_trc_office`, and `yokohama_office`.
 - Split `unpark` from `unpudo` using hazard evidence on the preceding parked segment and stopped departure tail up to the movement anchor.
@@ -166,3 +162,17 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Flyte execution: `axdbhpm6fpnvqqbqcdpx`.
 - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/axdbhpm6fpnvqqbqcdpx
 - Initial `flytectl` status query showed the execution exists but had not reported a phase yet.
+
+## 2026-06-07 BC-Style Bucket Naming Update
+
+- Updated the public Parking/PUDO bucket names to follow `bc/default/dataset.py` conventions:
+  - DC windows use `dc_*`.
+  - Pre-CA windows use `pre_ca_*`.
+  - Scenario-specific CA windows use `ca_<scenario>_short/long_*`, matching patterns like `ca_diversion_short_*`.
+- Kept the existing filter keys and selector names as implementation details; only the emitted bucket names changed.
+- Applied the same display-name maps to `parking_pudo/default` and `parking_pudo/anchors` so anchor buckets still mirror default bucket names exactly.
+- Updated the README and name-regression assertions for the new public names.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/services/sampling:test_datasets --test_output=errors`
+  - A filtered parking-pudo pytest run selected 29 tests and all passed, but the generated pytest target failed coverage because most tests were deselected; the full `test_datasets` target passed.
