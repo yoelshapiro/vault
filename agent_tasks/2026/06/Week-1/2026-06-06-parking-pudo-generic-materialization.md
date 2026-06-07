@@ -349,3 +349,21 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Verification:
   - `git diff --check`
   - `bazel test //wayve/ai/services/sampling:test_datasets_py_test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty`
+
+## 2026-06-07 Zak-Style Rerun Failure and Partition Fix
+
+- Both reruns failed in the same place:
+  - `parking_pudo/default`: Flyte `arjghbl5t57t24hmk8nb`
+  - `parking_pudo/anchors`: Flyte `arv78r4gprwflcv2wsdv`
+- Flyte details hit the known `unsupported literal scalar type *core.Scalar_Error` renderer issue, but `-o yaml` exposed the actual traceback:
+  - `ValueError: Partition 0 requests 200.0 GiB (num_rows=49044708) which exceeds 50% of worker memory (179.5 GiB)`.
+- Root cause:
+  - The partition planner chunked by `MAX_NUM_RUN_IDS_PER_PARTITION = 1000`.
+  - The Ray stage reserves memory by row count, so a dense date/platform group can create an oversized task even with a normal run-id count.
+- Code fix:
+  - Added `MAX_NUM_ROWS_PER_PARTITION = 40_000_000`.
+  - Updated explicit-run-id and Spark-planned partitioning to respect both the run-id cap and the cumulative row-count cap.
+  - Runs remain atomic; if a single run exceeds the cap, the Ray memory guard remains the final failure signal.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/services/sampling:test_spark_tasks_py_test //wayve/ai/services/sampling:test_spark_tasks_py_lint_ruff //wayve/ai/services/sampling:test_spark_tasks_py_lint_flake8 //wayve/ai/services/sampling:test_spark_tasks_ty //wayve/ai/services/sampling:test_datasets_py_test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty`
