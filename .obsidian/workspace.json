@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-1/2026-06-07-bazel-cache-cleanup-script.md",
     "agent_tasks/2026/06/Week-1/2026-06-07-event-clip-viewer-rebase-reset.md",
     "agent_tasks/2026/06/Week-1/2026-06-07-gear-aware-controller-x-validation.md",
     "agent_tasks/2026/06/Week-1/2026-06-07-mercurial-interleave-redeploy.md",
@@ -522,7 +523,6 @@
     "agent_tasks/2026/01/Week-3/2026-01-13-parking-hazard-filter-updates.md",
     "agent_tasks/2025/12/Week-5/2025-12-30-parking-maneuver-filter-task-summary.md",
     "todo-list.md",
-    "agent_tasks/2026/06/Week-1/2026-06-02-pudo-baseline-pr.md",
     "agent_tasks/2026/06/Week-1",
     "agent_tasks/2026/06",
     "agent_tasks/2026/05/Week-5",
