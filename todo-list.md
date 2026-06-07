@@ -30,4 +30,21 @@
 		- [ ] go over videos
 		- [ ] split videos to smaller chunks
 	- [ ] illigal
-	- [ ] 
+- [ ] materialization
+	- [ ] fix gear
+		- [x] train red sea
+			- [ ] eval
+			- [ ] licensing
+			- [ ] exp
+		- [x] train merge to main
+			- [ ]  eval
+			- [ ] licensing
+			- [ ] exp
+	- [ ] generic by zak
+		- [ ] implement
+		- [ ] go over samples
+		- [ ] compare
+- [ ] licensing issue
+	- [ ] investigate what happened
+	- [ ] look at deployment wrapper
+	- [ ] look at augmentations
