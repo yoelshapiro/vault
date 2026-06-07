@@ -213,6 +213,7 @@
 - Launch args: `clip_length_sec=20`, `highlight_middle_seconds=1.0`, `video_speed=3`, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
 - Initial status: Flyte dispatch succeeded and mapped the local build tag to digest `sha256:74479ab9e03b6d604a5a7ea126f81615289f740d9946c6063c58f715e9e037da`. Local `flytectl` is not installed in this shell, so status polling was deferred to the Flyte console.
 - Completion/viewing update: execution `anfr26csqwll76rf9m54` finished with 2030 MP4s under the output prefix. Served a direct Azure Blob SAS-backed static viewer from `/tmp/unpudo_anchor_clip_serve` on `http://localhost:3005/` via tmux session `unpudo-anchor-videos-3005`; SAS expiry is `2026-06-08T23:59Z`.
+- HARI upload attempt: ran `hari_upload_videos upload` against folder prefix `flyte_remote/videos/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/gen2/` with dataset name `UnPUDO Anchor Standstill 2026-06-05`. The script found/prepared all 2030 videos, then blocked in Auth0 device-code authorization before creating a dataset. Stopped the attempt with no dataset id printed.
 
 
 ## 2026-06-05 Event Viewer Model-Catalogue Video Source
