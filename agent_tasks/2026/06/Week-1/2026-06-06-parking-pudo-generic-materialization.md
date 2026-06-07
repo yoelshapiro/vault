@@ -411,3 +411,20 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Verification:
   - `bazel run //wayve/ai/services/sampling:debug_sampling_ipython -- -c '...'`
   - Confirmed `dc_pudo_uk`, `ca_pudo_short_uk`, and `pre_ca_pudo_uk` do not include the disabled filters.
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg="-k=parking_pudo" --test_arg="--no-cov"`
+- Committed and pushed:
+  - commit: `916300d7c11c`
+  - branch: `boris/pudo_generic_materialization`
+  - note: remote formatter commit `c51e11279cf9` landed after the push and only reformatted the `PARKING_PUDO_PRE_CA_EXCLUSIONS` tuple.
+- Published fresh sampling image:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:3b2cdd22a20c252831f5b53a8484c6b2677603a2af43b5b69068fd0c5e3b73e1`
+- Submitted full branch-release `sample` workflow for `parking_pudo/default`:
+  - job name: `parking_pudo_no_strict_filters_default`
+  - branch version: `2026-06-07-1`
+  - Flyte execution: `ajknvcp7szpbd79b9672`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ajknvcp7szpbd79b9672
+- Submitted full branch-release `sample` workflow for `parking_pudo/anchors`:
+  - job name: `parking_pudo_no_strict_filters_anchors`
+  - branch version: `2026-06-07-1`
+  - Flyte execution: `agrhccqmg2dvtgmcjd88`
+  - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/agrhccqmg2dvtgmcjd88

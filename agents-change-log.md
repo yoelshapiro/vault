@@ -1319,5 +1319,8 @@
 - Changes:
   - Removed missing-wheel-odometry, diversion/lens-obscured, and broad out-of-scope filters from active parking/PUDO bucket exclusions.
   - Preserved those filters in `PARKING_PUDO_DISABLED_DATA_QUALITY_EXCLUSIONS` for a future stricter variant.
-  - Verified representative `dc_pudo_uk`, `ca_pudo_short_uk`, and `pre_ca_pudo_uk` filter lists with Bazel.
+  - Added regression assertions for the disabled filters and verified the focused parking_pudo test slice with Bazel.
+  - Pushed commit `916300d7c11c` and submitted full branch-release reruns:
+    - `parking_pudo/default`: Flyte `ajknvcp7szpbd79b9672`.
+    - `parking_pudo/anchors`: Flyte `agrhccqmg2dvtgmcjd88`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
