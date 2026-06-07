@@ -1307,3 +1307,17 @@
   - Cancelled job `174665` after confirming it trained too slowly versus Zak's latest native W&B runs; terminal Surfboard state `Canceled`, final W&B summary `trainer/global_step=496`, `trainer/samples_seen=31744`, throughput `5.92` samples/sec world.
   - Notion update remains pending unless requested for this experimental branch.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-03-zak-datamodule-parking-training|2026-06-03 Zak Datamodule Parking Training]]
+
+## 2026-06-07 - Parking/PUDO Strict Filter Disable
+
+- Topic: Disable overly aggressive strict data-quality filters from generic parking/PUDO materialisation.
+- Labels: parking, pudo, materialization, generic-materialisation, filters.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, local.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo/common.py`.
+- Changes:
+  - Removed missing-wheel-odometry, diversion/lens-obscured, and broad out-of-scope filters from active parking/PUDO bucket exclusions.
+  - Preserved those filters in `PARKING_PUDO_DISABLED_DATA_QUALITY_EXCLUSIONS` for a future stricter variant.
+  - Verified representative `dc_pudo_uk`, `ca_pudo_short_uk`, and `pre_ca_pudo_uk` filter lists with Bazel.
+- Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]

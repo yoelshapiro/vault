@@ -397,3 +397,17 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
     - Flyte execution: `ahz6slkd8llpl4649rzk`
     - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ahz6slkd8llpl4649rzk
     - Initial status check: `RUNNING`
+
+## 2026-06-07 Disabled Parking/PUDO Strict Data Filters
+
+- Investigated the `dc_pudo_uk` anchor mismatch on a single run and found the anchor itself was selected, but then removed by `exclude_diversion_and_lens_obscured_interventions`.
+- Databricks checks showed the concrete missing sample had `inferred__intervention__what = 'diversion'` at the exact anchor timestamp.
+- A lens-obscured example reviewed in Console did not appear visually obscured, so the strict diversion/lens filter is too aggressive for the current Zak-parity parking/PUDO buckets.
+- Code change:
+  - Removed `exclude_mache_without_wheel_odometery` from active parking/PUDO base exclusions.
+  - Removed `exclude_diversion_and_lens_obscured_interventions` from active event/CA exclusions.
+  - Removed broad `exclude_out_of_scope_intervention` from active pre-CA exclusions so diversion/lens are not reintroduced through a different path.
+  - Kept all three filters in `PARKING_PUDO_DISABLED_DATA_QUALITY_EXCLUSIONS` for a future stricter dataset variant.
+- Verification:
+  - `bazel run //wayve/ai/services/sampling:debug_sampling_ipython -- -c '...'`
+  - Confirmed `dc_pudo_uk`, `ca_pudo_short_uk`, and `pre_ca_pudo_uk` do not include the disabled filters.
