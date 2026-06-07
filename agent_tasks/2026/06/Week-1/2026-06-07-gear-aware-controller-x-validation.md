@@ -14,7 +14,9 @@
 - Preserved the forward convention for non-reverse predictions and allowed reverse-signed x waypoints only when predicted gear is reverse.
 - Moved `UNKNOWN` drive-position validation before x-position validation so gear-aware logic only runs on known predicted gear.
 - Updated regression coverage so reverse-signed waypoints pass for reverse predictions and forward-signed waypoints fail for reverse predictions.
+- Updated the violation message to report the predicted drive position and the expected x-position convention for that gear.
 
 ## Verification
 
 - `bazel test //wayve/robot/core/controller:test_trajectory_validation`
+- Re-ran after message update/rebase: `bazel test //wayve/robot/core/controller:test_trajectory_validation`
