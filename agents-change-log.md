@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-08 - Parking PUDO Anchor Gap Debug
+
+- Topic: Investigate why generic `dc_pudo_uk` anchors are much lower than the event notebook table.
+- Labels: parking, pudo, generic-materialization, anchors, databricks.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: N/A.
+- Change type: Debugging / data analysis.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Compared `51,355` deduped UK PUDO event-table rows against `13,219` local generic `dc_pudo_uk` anchors.
+  - Split missing rows into `30,827` from runs with no generic anchor and `12,906` from runs with a different generic anchor timestamp.
+  - Sampled missing rows against Databricks quality inputs and found active `low_steering_bias_confidence` and allowed-run-tag filters explain many no-anchor misses.
+  - Computed nearest-anchor deltas showing many same-run misses are small timestamp offsets rather than missing events.
+  - Replayed generic signal logic on quality-passing examples and found true PUDO/park classification differences where `park_start - 1` hazard context is false.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
 ## 2026-06-07 - Bazel Cache Cleanup Script
 
 - Topic: Add a safe helper for deleting unused Bazel cache folders across multiple worktrees.
