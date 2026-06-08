@@ -1375,3 +1375,17 @@
   - Kept PUDO hazard geofence suppression in `signals.py`.
   - Updated README and regression assertions; focused parking_pudo Bazel test passed.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
+## 2026-06-08 - Parking/PUDO Out-of-Scope Filter Narrowing
+
+- Topic: Keep out-of-scope intervention filtering except for diversion and lens-obscured.
+- Labels: parking, pudo, materialization, generic-materialisation, filters, interventions.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added a parking/PUDO-specific active filter that excludes `OUT_OF_SCOPE_INTERVENTION_WHATS` except `diversion` and `lens_obscured`.
+  - Kept `exclude_diversion_and_lens_obscured_interventions` disabled.
+  - Updated README and regression assertions; focused parking_pudo pytest and ruff lint passed.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]

@@ -113,3 +113,18 @@ The count gap is not one bug:
 - Verification:
   - `git diff --check`
   - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k=parking_pudo --test_arg=--no-cov`
+
+## 2026-06-08 Narrowed Out-of-Scope Exclusion
+
+- Decision: keep excluding out-of-scope intervention labels, except for `diversion` and `lens_obscured`.
+- Rationale: the intended policy was to stop dropping diversion/lens-obscured parking/PUDO examples, not to disable every out-of-scope intervention label.
+- Code change:
+  - Added `exclude_out_of_scope_except_diversion_and_lens_obscured`.
+  - The active filter excludes `OUT_OF_SCOPE_INTERVENTION_WHATS` minus `diversion` and `lens_obscured`.
+  - `end_of_run`, `emergency_service`, `accidental_avso_intervention`, `uncommanded_disengagement`, `uncategorised`, and `unprompted_manoeuvre` remain excluded.
+  - Kept `exclude_diversion_and_lens_obscured_interventions` disabled.
+  - Updated README and regression assertions to encode the exact allowed/excluded out-of-scope labels.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k=parking_pudo --test_arg=--no-cov`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff`
