@@ -57,3 +57,46 @@ The count gap is not one bug:
 - `/tmp/missing_dc_pudo_uk_reasons.csv`
 - `/tmp/debug_pudo_anchor_logic_only.py`
 - `/tmp/nearest_dc_pudo_uk_anchors.py`
+
+## 2026-06-08 Relaxed Filter Rerun
+
+- Removed two more active generic filters from Parking/PUDO buckets:
+  - `select_allowed_run_tags`
+  - `exclude_low_steering_bias_confidence`
+- Kept both filters in `PARKING_PUDO_DISABLED_DATA_QUALITY_EXCLUSIONS` with the other stricter future-variant filters.
+- Updated the README to document that these filters are intentionally disabled for the current Zak-parity dataset.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k=parking_pudo --test_arg=--no-cov`
+- Committed and pushed:
+  - commit: `a0fc5caa4984`
+  - branch: `boris/pudo_generic_materialization`
+- Published sampling image:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:f8171ace3aa8247978824f8b19a9b6f843ad5ee838e4041c4d2cdd2d17982040`
+- Submitted full branch-release `sample` workflows:
+  - `parking_pudo/default`
+    - job name: `parking_pudo_relaxed_filters_default`
+    - branch version: `2026-06-08-1`
+    - Flyte execution: `a7v5p9b8vwfpdc74b8nx`
+    - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a7v5p9b8vwfpdc74b8nx
+  - `parking_pudo/anchors`
+    - job name: `parking_pudo_relaxed_filters_anchors`
+    - branch version: `2026-06-08-1`
+    - Flyte execution: `ashhhp9w5wlvcg2gv9r8`
+    - Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ashhhp9w5wlvcg2gv9r8
+
+## Additional Missing-Anchor Root Causes
+
+- The previously sampled quality-passing no-anchor examples are explained by PUDO hazard geofence suppression, not by the removed data-quality filters:
+  - `colorado/2025-12-09--13-37-22--gen2-av-0af30585-f8b7-424a-ae55-08f23740f085`, timestamp `1765288974483310`.
+  - `fme20016/2025-12-11--09-26-11--gen2-av-f087277f-6008-4e5c-9f92-b0305cfa42d9`, timestamp `1765445371833305`.
+  - Both have raw/cleaned hazard at the event frame, but `excluded_geofence_mask=True`, so `pudo_hazard=False`; generic classifies the nearby stop as `dc_park`, not `dc_pudo`.
+  - Both are around latitude `52.56245`, longitude `-1.45825`, consistent with a proving-ground excluded geofence.
+- Exact timestamp comparison still overstates the gap:
+  - In the sampled same-run-anchor set, many generic anchors are within `0.05s` to `2s` of the event-table timestamp.
+  - Example: `fme20012/2025-12-04--10-05-41...`, event timestamp `1764848211783310`, generic anchor `1764848211483310` (`-0.3s`).
+- A separate real logic difference exists for event-table rows whose generic gear-to-park segment has no materializable approach window:
+  - Example: `fme20007/2026-01-10--15-55-57--gen2-av-532346ee-0665-46a6-8f3e-093807a3236e`, event timestamp `1768060602233306`.
+  - Generic detects a PUDO park segment at `1768060558183310` (`-44.05s`) with hazard context and DC state, but `_parking_window(...)` has `0` frames because the vehicle is already stopped around the gear-to-park anchor.
+  - Anchor-only selection intentionally requires the corresponding expanded bucket window to be non-empty, so this segment is not emitted as `dc_pudo_uk`.
+  - The same run has another emitted PUDO anchor at `1768061164683312`, which is why the nearest-anchor comparison showed a `+562.45s` nearest anchor for the event-table timestamp.

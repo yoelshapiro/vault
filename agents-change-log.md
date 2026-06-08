@@ -1342,3 +1342,21 @@
     - `parking_pudo/default`: Flyte `ajknvcp7szpbd79b9672`.
     - `parking_pudo/anchors`: Flyte `agrhccqmg2dvtgmcjd88`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization|2026-06-06 Parking PUDO Generic Materialization]]
+
+## 2026-06-08 - Parking/PUDO Anchor Gap Follow-Up
+
+- Topic: Relax remaining generic Parking/PUDO strict filters and continue event-table vs anchor-gap diagnosis.
+- Labels: parking, pudo, materialization, generic-materialisation, filters, anchors.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, Flyte runs, data investigation.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Removed `select_allowed_run_tags` and `exclude_low_steering_bias_confidence` from active Parking/PUDO bucket exclusions.
+  - Preserved both filters in `PARKING_PUDO_DISABLED_DATA_QUALITY_EXCLUSIONS` for a stricter future dataset variant.
+  - Updated README and regression assertions for the relaxed exclusion policy.
+  - Pushed commit `a0fc5caa4984` and submitted full branch-release reruns:
+    - `parking_pudo/default`: Flyte `a7v5p9b8vwfpdc74b8nx`.
+    - `parking_pudo/anchors`: Flyte `ashhhp9w5wlvcg2gv9r8`.
+  - Found additional non-filter root causes for missing `dc_pudo_uk` anchors: excluded-geofence hazard suppression and empty approach windows at some gear-to-park anchors.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
