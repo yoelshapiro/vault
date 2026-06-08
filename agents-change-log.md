@@ -1452,3 +1452,18 @@
   - Added an `all` split default and fixed split-specific loading so absent splits no longer fall back to train.
   - Verified corrected `dc_pudo_uk` counts: `28,658` all-split anchors, `26,362` matched events within 30s, `24,993` missing events.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
+
+## 2026-06-08 - Parking/PUDO Anchor Geofence Rerun
+
+- Topic: Dispatch anchor materialization after global geofence reintroduction.
+- Labels: parking, pudo, materialization, anchors, flyte, geofence.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Flyte run.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Published sampling image `wayveacrprodflyte.azurecr.io/sampling@sha256:b8d0012d96d563423fc346ba82e7f1fc32a81462b5d7b025b9a443a37a8b46d7`.
+  - Pushed branch-release tag `sampling/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2`.
+  - Submitted `parking_pudo/anchors` Flyte execution `a6jn55f87zptzqkkdsv7`.
+  - Expected output root: `sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]

@@ -164,3 +164,20 @@ The count gap is not one bug:
   - `/tmp/missing_colorado_20251209_frames.csv`
   - `/tmp/missing_colorado_automation.csv`
   - `/tmp/missing_colorado_wo_skip.csv`
+
+## 2026-06-08 Anchor Rerun After Geofence Reintroduction
+
+- Dispatched a branch-release rerun for `parking_pudo/anchors` after the committed global geofence reintroduction.
+- Release details:
+  - Branch: `boris/pudo_generic_materialization`
+  - Commit: `b3f697a68caf56ab22f5767303a680f93a547dc4`
+  - Version: `2026-06-08-2`
+  - Job name: `parking_pudo_geofence_anchors`
+  - Flyte execution: `a6jn55f87zptzqkkdsv7`
+  - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a6jn55f87zptzqkkdsv7`
+  - Image: `wayveacrprodflyte.azurecr.io/sampling@sha256:b8d0012d96d563423fc346ba82e7f1fc32a81462b5d7b025b9a443a37a8b46d7`
+  - Expected root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2`
+- Operational notes:
+  - Used a temporary clean clone at `/workspace/pudo_generic_materialization_release` because the main materialization worktree had uncommitted out-of-scope filter narrowing edits.
+  - This rerun includes the pushed geofence commit, but not the uncommitted local out-of-scope narrowing diff.
+  - The release script pushed tag `sampling/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2` before submitting Flyte.
