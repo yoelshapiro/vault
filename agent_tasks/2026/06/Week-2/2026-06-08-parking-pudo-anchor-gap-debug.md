@@ -181,3 +181,44 @@ The count gap is not one bug:
   - Used a temporary clean clone at `/workspace/pudo_generic_materialization_release` because the main materialization worktree had uncommitted out-of-scope filter narrowing edits.
   - This rerun includes the pushed geofence commit, but not the uncommitted local out-of-scope narrowing diff.
   - The release script pushed tag `sampling/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2` before submitting Flyte.
+
+## 2026-06-08 Focused 5K Anchor Investigation
+
+- Investigated the concrete missing event:
+  - `fme20005/2026-01-10--10-41-01--gen2-av-c6d55d4a-1b21-44e4-932f-c736271e6be1`
+  - timestamp `1768043284433309`
+- Current local branch state:
+  - Branch: `boris/pudo_generic_materialization`
+  - Commit: `d898b31869a8`
+  - The branch is aligned with origin.
+- Added temporary debug-helper support in `wayve/ai/services/sampling/datasets/debug_sampling.py`:
+  - `--run-id` to load a single run instead of a full day/platform partition.
+  - `--event-ts` to print per-filter truth for the closest row.
+  - `--skip-funnels` to avoid huge per-bucket output.
+  - `--parquet-path` to inspect local materialized parquet files.
+- Current-code filter trace for the example:
+  - Loaded the single run from `wayve_corpus.all_data` via generic materialization dependencies.
+  - At the exact event timestamp, the row passes:
+    - `exclude_geofenced`
+    - `exclude_autonomous`
+    - `select_platform_parking_pudo_mache`
+    - `select_country_gbr`
+    - `select_pudo_anchor`
+  - The row matches `dc_pudo_uk` and `dc_pudo_gear_change_uk`.
+  - Therefore this example is not filtered by the current local code.
+- Produced-root checks:
+  - `2026-06-08-1` sampled dataset `dc_pudo_uk` contains the exact example and has `23,932` sampled rows.
+  - `2026-06-08-2` sampled dataset `dc_pudo_uk` does not contain the exact example and has `4,495` rows.
+  - `dev/parking_pudo_anchors_bc_names_700_full__2026-06-07-09-19` sampled dataset `dc_pudo_uk` does not contain the exact example and has `10,676` rows.
+- Raw bucket check for `2026-06-08-2`:
+  - Downloaded all 51 raw `dc_pudo_uk` train bucket parquet parts under:
+    - `sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2/buckets/dataset_split=train/dataset_bucket=dc_pudo_uk/balancing_attribute_joint_key=_no_group_/`
+  - Raw bucket also has exactly `4,495` rows, so this is not a train-dataset post-sampling undercount.
+  - The raw bucket has no `2026-01-10` rows at all.
+- Interpretation:
+  - The low `2026-06-08-2` artifact is not explained by the inspected row failing current filters.
+  - The artifact was built from tag `sampling/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2` at commit `b3f697a68caf`, not current commit `d898b31869a8`.
+  - The current branch code needs a fresh anchor materialization before using the 5K count as evidence about current logic.
+- Blocked check:
+  - Tried reproducing the exact b3f tag in a temporary worktree, but the separate Bazel universe failed with `OSError: [Errno 28] No space left on device` while extracting `tensorrt_cu12_libs`.
+  - Removed the temporary worktree afterward.
