@@ -1404,3 +1404,18 @@
   - Confirmed the remaining UK/USA event-vs-anchor gap is still large after tolerance checks.
   - Inspected a concrete missing `dc_pudo_uk` example and confirmed raw gear, hazard, speed, autonomy, skip-reason, and filtered-corpus signals are valid, leaving generic window/assignment or another base exclusion as the next trace target.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
+## 2026-06-08 - Event Clip Viewer Anchor Comparison
+
+- Topic: Add event-table vs materialization-anchor comparison to the Parking event clip viewer.
+- Labels: parking, pudo, event-viewer, anchors, materialization.
+- Branch: `boris/event_clip_viewer`.
+- PR: n/a.
+- Change type: Code change, local server.
+- Areas: `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added an anchor-comparison mode defaulting to `dc_pudo_uk` and the latest parking/PUDO anchors root.
+  - Loaded selected bucket anchors from parquet and matched them to event-table rows by nearest same-run timestamp within 30 seconds.
+  - Added matched, missing-in-anchors, event rows, and anchor rows tables while preserving clip playback.
+  - Verified scoped `py_checks`, ran a small matcher smoke check, and served the app on port 3001.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
