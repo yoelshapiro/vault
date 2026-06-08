@@ -245,6 +245,20 @@ The count gap is not one bug:
   - For this sample, current branch code accepts the event-table timestamp as a valid `dc_pudo_uk` anchor.
   - The earlier local anchor parquet cache had zero rows for this run, so that cache/artifact is stale or was produced from older code/config rather than the current local branch behavior.
   - This sample is not evidence of a current-code PUDO selector bug.
+
+## 2026-06-08 Full Anchors Sample Rerun
+
+- Submitted a full `sample` workflow for all anchor buckets, not the one-bucket debug dataset:
+  - Dataset: `parking_pudo/anchors`
+  - Job name: `parking_pudo_anchors_all_buckets_sample_20260608`
+  - Flyte execution: `azz442g8r5hnmwc4267d`
+  - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/azz442g8r5hnmwc4267d`
+  - Image: `wayveacrprodflyte.azurecr.io/sampling@sha256:d7daaf08884792ea699f5111f329848a8123c35cd6958746bd7920390c7d26d2`
+- Submission payload confirmed:
+  - `dataset_name="parking_pudo/anchors"`
+  - Workflow: `sample`
+  - `run_ids_filter=None`
+  - No `dc_pudo_uk`-only filtering.
   - The current branch code needs a fresh anchor materialization before using the 5K count as evidence about current logic.
 - Blocked check:
   - Tried reproducing the exact b3f tag in a temporary worktree, but the separate Bazel universe failed with `OSError: [Errno 28] No space left on device` while extracting `tensorrt_cu12_libs`.
