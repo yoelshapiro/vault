@@ -259,6 +259,38 @@ The count gap is not one bug:
   - Workflow: `sample`
   - `run_ids_filter=None`
   - No `dc_pudo_uk`-only filtering.
+
+## 2026-06-08 Focused failed_to_pudo Timestamp Offset Example
+
+- Investigated:
+  - `fme20037/2026-04-14--13-01-08--gen2-av-f065aca7-a3ab-4239-acd6-f30a4f47f873`
+  - Event-table timestamp: `1776174365383296`
+  - Event-table `event_startOrEnd_timestampunixus`: `1776174353383296`
+- Event table lookup:
+  - The table returns two identical rows for the same timestamp.
+  - `event_type="pudo"`, `ISO_country_code="GBR"`, `av_mode_at_event=0`.
+  - `disengagement_what="failed_to_pudo"`, `gearchange_timestamp=NULL`, `speed_kmh=0.0`.
+- One-bucket `dc_pudo_uk` debug:
+  - At `timestamp_unixus=1776174365383296`, all global/base filters pass, including `exclude_autonomous`, but `select_pudo_anchor=False`.
+  - At `event_startOrEnd_timestampunixus=1776174353383296`, `exclude_autonomous=False` and `select_pudo_anchor=False`.
+  - The run has `dc_pudo_uk` selector hits, but the nearest pure `select_pudo_anchor` frame is `+283.25s`; this event timestamp is not a `dc_pudo_uk` gear-to-park anchor.
+- Full-anchor debug:
+  - At the event-table timestamp, the row matches no anchor bucket.
+  - The nearest `select_failed_to_pudo_ca_short_anchor` frame is `1776174358383313`, about `-7.0s`.
+  - At that earlier timestamp, the row matches:
+    - `pre_ca_parking_uk`
+    - `pre_ca_unpark_uk`
+    - `pre_ca_failed_to_pudo_uk`
+    - `ca_parking_short_uk`
+    - `ca_parking_long_uk`
+    - `ca_unpark_short_uk`
+    - `ca_unpark_long_uk`
+    - `ca_failed_to_pudo_short_uk`
+    - `ca_failed_to_pudo_long_uk`
+- Interpretation:
+  - This is not accepted as `dc_pudo_uk` because generic `dc_pudo` anchors are gear-to-park/PUDO-stop anchors, and this notebook event row is a `failed_to_pudo` intervention event with no gear-change timestamp.
+  - Current generic code does capture the event family, but at the actual AV-to-DC intervention anchor about 7 seconds earlier, in the failed-to-PUDO CA buckets.
+  - Exact timestamp comparison between notebook PUDO rows and generic anchors will count this as missing even though the corresponding generic CA anchor exists nearby.
   - The current branch code needs a fresh anchor materialization before using the 5K count as evidence about current logic.
 - Blocked check:
   - Tried reproducing the exact b3f tag in a temporary worktree, but the separate Bazel universe failed with `OSError: [Errno 28] No space left on device` while extracting `tensorrt_cu12_libs`.
