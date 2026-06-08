@@ -128,3 +128,39 @@ The count gap is not one bug:
   - `git diff --check`
   - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k=parking_pudo --test_arg=--no-cov`
   - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff`
+
+## 2026-06-08 Full PUDO/UnPUDO Event-vs-Anchor Recheck
+
+- Compared deduped `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix` PUDO/UnPUDO rows against the completed `parking_pudo/anchors` root:
+  - `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-1`
+  - This root was produced from commit `a0fc5caa4984`, before the later global geofence reintroduction and narrowed out-of-scope filter changes.
+- Exact `(bucket, run_id, timestamp_unixus)` matching shows the event table is larger in UK/USA PUDO and UnPUDO, but exact matching is not enough:
+  - `dc_pudo_uk`: event `51355`, anchors `23932`, exact-missing event rows `36445`.
+  - `dc_pudo_usa`: event `40293`, anchors `23141`, exact-missing event rows `27242`.
+  - `dc_unpudo_uk`: event `48646`, anchors `23610`, exact-missing event rows `48643`.
+  - `dc_unpudo_usa`: event `37129`, anchors `21230`, exact-missing event rows `37126`.
+- Timestamp-definition mismatch explains part of the apparent gap:
+  - For `dc_unpudo_uk`, only `3` exact event timestamp matches exist, but `18501` event rows have a same-run anchor within `1s`.
+  - For `dc_unpudo_usa`, only `3` exact matches exist, but `13783` event rows have a same-run anchor within `1s`.
+  - Many UnPUDO anchors are offset by around `0.05s` because generic anchors use first movement frame after park while the notebook timestamp has slightly different frame alignment.
+- The larger remaining gap is real and mixed:
+  - `dc_pudo_uk`: `16863` event rows have no same-run PUDO anchor; `12853` have same-run PUDO anchors but nearest anchor is more than `10s` away.
+  - `dc_unpudo_uk`: `15738` event rows have no same-run UnPUDO anchor; `13607` have same-run UnPUDO anchors but nearest anchor is more than `10s` away.
+  - Similar pattern exists for USA.
+- Concrete missing example inspected:
+  - `colorado/2025-12-09--13-37-22--gen2-av-0af30585-f8b7-424a-ae55-08f23740f085`, timestamp `1765288974483310`.
+  - Event table has `dc_pudo_uk`; anchor parquet has no same-run `dc_pudo_uk` anchor and no same-run `dc_park_uk` anchor.
+  - Raw corpus frame window shows a clean `gear=-1 -> 0` transition exactly at the event timestamp, hazard throughout the inspected 60s window, low-speed approach, `automation_active=False`, `wo_skip_reason=NULL`, and filtered-corpus presence.
+  - This means the event is not explained by autonomous filtering, low-steering-bias skip reason, empty tags, or missing filtered-corpus membership.
+  - Remaining suspects for this example are generic window/assignment behavior or a base exclusion not yet traced in the focused materializer run; a heavy `debug_sampling_ipython` trace was attempted but stopped because it expanded into a large dependency build.
+- Temporary artifacts:
+  - `/tmp/pudo_unpudo_events.csv`
+  - `/tmp/parking_pudo_event_anchors/`
+  - `/tmp/pudo_unpudo_anchor_compare_summary.csv`
+  - `/tmp/pudo_unpudo_missing_from_anchors.csv`
+  - `/tmp/pudo_unpudo_missing_examples.csv`
+  - `/tmp/pudo_unpudo_anchor_delta_analysis.csv`
+  - `/tmp/pudo_unpudo_nearest_anchor_bucket_summary.csv`
+  - `/tmp/missing_colorado_20251209_frames.csv`
+  - `/tmp/missing_colorado_automation.csv`
+  - `/tmp/missing_colorado_wo_skip.csv`

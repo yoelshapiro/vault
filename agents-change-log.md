@@ -1389,3 +1389,18 @@
   - Kept `exclude_diversion_and_lens_obscured_interventions` disabled.
   - Updated README and regression assertions; focused parking_pudo pytest and ruff lint passed.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
+## 2026-06-08 - Parking/PUDO Event-vs-Anchor Recheck
+
+- Topic: Recheck missing PUDO/UnPUDO event-table rows against completed generic anchor parquet.
+- Labels: parking, pudo, materialization, anchors, databricks.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Data investigation.
+- Areas: `parking.pudo_unpudo_unpark_events_gear_fix`, `sampling_materialised/parking_pudo/anchors`.
+- Changes:
+  - Exported deduped PUDO/UnPUDO event-table rows and compared them with local copies of `dc_pudo_*` and `dc_unpudo_*` anchor parquet.
+  - Found exact timestamp matching overstates the UnPUDO gap because many generic movement anchors are within `~0.05s` to `1s` of the notebook timestamp.
+  - Confirmed the remaining UK/USA event-vs-anchor gap is still large after tolerance checks.
+  - Inspected a concrete missing `dc_pudo_uk` example and confirmed raw gear, hazard, speed, autonomy, skip-reason, and filtered-corpus signals are valid, leaving generic window/assignment or another base exclusion as the next trace target.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
