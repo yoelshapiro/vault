@@ -13,6 +13,8 @@
 - Removed the `ENABLE_GEAR_SMOOTHING` flag; smoothing is always applied.
 - Reviewed PR comments on `116673`.
 - Added post-cast gear validation, leading-short-segment smoothing to next stable gear, trip-table candidate progress metrics, and a final event-key uniqueness guard.
+- Changed PUDO/park disengagement blacklist semantics so a blacklisted main-window disengagement removes the event instead of only suppressing metadata.
+- Kept UnPUDO blacklist behavior separate; it still only controls selected disengagement metadata.
 
 ## Validation
 
