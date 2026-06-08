@@ -314,3 +314,40 @@ The count gap is not one bug:
 - Blocked check:
   - Tried reproducing the exact b3f tag in a temporary worktree, but the separate Bazel universe failed with `OSError: [Errno 28] No space left on device` while extracting `tensorrt_cu12_libs`.
   - Removed the temporary worktree afterward.
+
+## 2026-06-08 Trip-Table PUDO Context Implementation
+
+- Cleaned up the temporary `parking_pudo/anchors_dc_pudo_uk` dataset that existed only for focused debugging:
+  - Removed the dataset registration from `wayve/ai/services/sampling/datasets/store.py`.
+  - Removed the one-bucket dataset from `parking_pudo/anchors/dataset.py`.
+  - Removed the focused one-bucket test.
+- Investigated missing event-table sample:
+  - Run: `fme20014/2026-05-29--05-57-48--gen2-av-5c63f225-7ae3-4043-8553-20c16b2903bc`
+  - Event timestamp: `1780038076083316`
+  - Event-table row: duplicate `pudo`, `GBR`, `av_mode_at_event=0`, `event_startOrEnd_method=indicator_extension`, `gearchange_timestamp=NULL`.
+  - Closest corpus frame at the exact timestamp is DC, UK, indicator `off`, and gear changes into park (`-1 -> 0`).
+  - `prod_data_pipeline.inferred__robotaxi.trip_events` has completed dropoff rows at the same location:
+    - `1780038076889012` (`+0.806s`)
+    - `1780038095395229` (`+19.312s`)
+  - Interpretation: this is a trip/dropoff-backed PUDO stop, not a hazard-backed stop. The generic hazard-only context missed it.
+- Implemented trip-table context in the generic parking/PUDO framework:
+  - Added a `join_parking_pudo_trip_events` helper on `inferred__robotaxi.trip_events`.
+  - Preprocesses trip rows to completed pickup/dropoff events and aggregates them to one row per run, avoiding corpus-frame duplication on join.
+  - Adds `pudo_trip` context by matching pickup/dropoff locations to raw park anchors within `5m`, then dilates that evidence with the same context window as hazards.
+  - Main PUDO/UnPUDO selectors now use `hazard OR trip` context by default.
+  - Added trip-only debug overlap buckets:
+    - `dc_pudo_trip_*`
+    - `dc_unpudo_trip_*`
+    - `dc_pre_unpudo_trip_*`
+- Validation:
+  - `make py-format`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov --test_output=errors`
+  - Result: passed.
+  - Attempted local `debug_sampling` on the fme20014 run, but stopped it after the joined date-partition read stayed quiet for over a minute; the Databricks evidence and unit coverage were used as the preflight.
+- Published sampling image:
+  - `wayveacrprodflyte.azurecr.io/sampling@sha256:640f413f20cb9b46b7e59b35f42342ff08c0edecfd4950e3294765dc9bc444b6`
+- Submitted full anchors `sample` workflow:
+  - Dataset: `parking_pudo/anchors`
+  - Job name: `parking_pudo_anchors_trip_context_sample_20260608`
+  - Flyte execution: `a4hm2jqk2m4ntvrjjggb`
+  - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a4hm2jqk2m4ntvrjjggb`

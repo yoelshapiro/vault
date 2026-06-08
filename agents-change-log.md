@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-08 - Parking PUDO Trip Context Anchors
+
+- Topic: Add trip-table PUDO context to generic parking/PUDO anchors and rerun full anchors materialisation.
+- Labels: parking, pudo, generic-materialization, anchors, trip-events, flyte.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Code implementation / data rerun.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Removed the temporary `parking_pudo/anchors_dc_pudo_uk` debug-only dataset and registration.
+  - Confirmed missing sample `fme20014/2026-05-29--05-57-48...` is a DC UK gear-to-park stop with indicator off and completed dropoff trip events at the same location.
+  - Added trip-table context from `inferred__robotaxi.trip_events`, aggregated per run before joining to avoid duplicating corpus frames.
+  - Main PUDO/UnPUDO selectors now use cleaned hazard OR completed pickup/dropoff trip context; trip-only debug overlap buckets were added for `dc_pudo`, `dc_unpudo`, and `dc_pre_unpudo`.
+  - Verified formatting and scoped parking/PUDO sampling tests, published sampling image `sha256:640f413f20cb9b46b7e59b35f42342ff08c0edecfd4950e3294765dc9bc444b6`, and submitted full anchors `sample` execution `a4hm2jqk2m4ntvrjjggb`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
 ## 2026-06-08 - PUDO Generic Materialization Viewer Port
 
 - Topic: Rebase `boris/pudo_generic_materialization` to main and port anchor comparison/debug viewer support.
