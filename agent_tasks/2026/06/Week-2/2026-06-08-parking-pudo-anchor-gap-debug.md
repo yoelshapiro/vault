@@ -260,6 +260,25 @@ The count gap is not one bug:
   - `run_ids_filter=None`
   - No `dc_pudo_uk`-only filtering.
 
+## 2026-06-08 dc_pudo_uk-Only Anchor Bucket Count
+
+- Checked the completed one-bucket Flyte execution:
+  - Execution: `apdqtlrmf2clgfgn8gvd`
+  - Workflow: `filter_and_bucket_stage`
+  - Dataset: `parking_pudo/anchors_dc_pudo_uk`
+  - Job name: `dc_pudo_uk_anchors_only_20260608`
+  - Status: `SUCCEEDED`
+  - Runtime: about `1,685.8s`
+- Output root:
+  - `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors_dc_pudo_uk/dev/dc_pudo_uk_anchors_only_20260608__2026-06-08-21-03`
+- Counted rows from the raw `buckets/` parquet output:
+  - Parquet files: `367`
+  - Total `dc_pudo_uk` anchors: `27,197`
+  - Train: `22,738`
+  - Validation: `4,459`
+- Note:
+  - This was only `filter_and_bucket_stage`, so the count is from `buckets/`; no balancing/sample `dataset/` stage was run for this one-bucket execution.
+
 ## 2026-06-08 Focused failed_to_pudo Timestamp Offset Example
 
 - Investigated:
