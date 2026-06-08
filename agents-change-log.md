@@ -307,6 +307,21 @@
   - `git diff --check` passed; focused Bazel validation was blocked during analysis by Azure ACR `401 Unauthorized` for `wayve.azurecr.io/azure-storage/azurite`.
 - Task note: [[agent_tasks/2026/06/Week-1/2026-06-04-pr-115840-lr-scheduler-test-comment|2026-06-04 PR 115840 LR Scheduler Test Comment]]
 
+## 2026-06-08 - Event Creation Gear Dedup
+
+- Topic: Deduplicate final PUDO/UnPUDO event keys after gear smoothing.
+- Labels: parking, event-creation, gear-smoothing, notebook.
+- Branch: `boris/event_creation_gear_fix`.
+- PR: N/A.
+- Change type: Notebook code change, uncommitted.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/notebooks/pudo_unpudo_event_detection.ipynb`.
+- Changes:
+  - Added one final event-key dedupe stage after event-type union and date filtering.
+  - Dedupe key is `(runID, timestamp_unixus, event_type)`.
+  - Tie-breaks prefer rows with coordinates, then gear-change metadata, then closest transition distance.
+  - Validated notebook JSON, extracted-code AST parse, and `git diff --check`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-creation-gear-dedup|2026-06-08 Event Creation Gear Dedup]]
+
 ## 2026-06-03 - Zmurez PUDO Data Loading Investigation
 
 - Topic: Inspect Zak Murez's `zmurez/pudo` experimental data loading and compare it with SI parking data modules.
