@@ -11,6 +11,8 @@
 - The dedupe key is `(runID, timestamp_unixus, event_type)`.
 - Tie-breaks prefer rows with coordinates, then gear-change metadata, then closest transition distance.
 - Removed the `ENABLE_GEAR_SMOOTHING` flag; smoothing is always applied.
+- Reviewed PR comments on `116673`.
+- Added post-cast gear validation, leading-short-segment smoothing to next stable gear, trip-table candidate progress metrics, and a final event-key uniqueness guard.
 
 ## Validation
 
