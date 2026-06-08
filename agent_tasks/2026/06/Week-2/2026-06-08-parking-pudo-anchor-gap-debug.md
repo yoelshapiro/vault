@@ -218,6 +218,33 @@ The count gap is not one bug:
 - Interpretation:
   - The low `2026-06-08-2` artifact is not explained by the inspected row failing current filters.
   - The artifact was built from tag `sampling/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2` at commit `b3f697a68caf`, not current commit `d898b31869a8`.
+
+## 2026-06-08 Focused dc_pudo_uk Debug Sampling
+
+- Investigated:
+  - `fme20012/2026-01-15--16-27-00--gen2-av-f5fb5b5e-e2e8-45e0-971b-5e75bedebd06`
+  - Event-table timestamp: `1768494744833312`
+  - Event-table `event_startOrEnd_timestampunixus`: `1768494732833312`
+- Ran `debug_sampling.py` on the single-run one-bucket anchors dataset:
+  - Dataset: `parking_pudo/anchors_dc_pudo_uk`
+  - Date/platform: `2026-01-15`, `gen2`
+  - Cache: `/tmp/parking_pudo_debug/parking_pudo/anchors_dc_pudo_uk/2026-01-15_gen2_fme20012_2026-01-15--16-27-00--gen2-av-f5fb5b5e-e2e8-45e0-971b-5e75bedebd06.parquet`
+- Result at `event_startOrEnd_timestampunixus=1768494732833312`:
+  - Closest frame timestamp: `1768494732833311`.
+  - Failing filters: `exclude_autonomous`, `select_pudo_anchor`.
+  - Interpretation: this is not the comparable generic anchor for `dc_pudo_uk`; it is an earlier approach/window timestamp and is still autonomous.
+- Result at `timestamp_unixus=1768494744833312`:
+  - The exact frame passes every active filter:
+    - base exclusions,
+    - `exclude_autonomous`,
+    - `select_platform_parking_pudo_mache`,
+    - `select_country_gbr`,
+    - `select_pudo_anchor`.
+  - Bucket membership: `dc_pudo_uk`.
+- Interpretation:
+  - For this sample, current branch code accepts the event-table timestamp as a valid `dc_pudo_uk` anchor.
+  - The earlier local anchor parquet cache had zero rows for this run, so that cache/artifact is stale or was produced from older code/config rather than the current local branch behavior.
+  - This sample is not evidence of a current-code PUDO selector bug.
   - The current branch code needs a fresh anchor materialization before using the 5K count as evidence about current logic.
 - Blocked check:
   - Tried reproducing the exact b3f tag in a temporary worktree, but the separate Bazel universe failed with `OSError: [Errno 28] No space left on device` while extracting `tensorrt_cu12_libs`.
