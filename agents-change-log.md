@@ -1360,3 +1360,18 @@
     - `parking_pudo/anchors`: Flyte `ashhhp9w5wlvcg2gv9r8`.
   - Found additional non-filter root causes for missing `dc_pudo_uk` anchors: excluded-geofence hazard suppression and empty approach windows at some gear-to-park anchors.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
+## 2026-06-08 - Parking/PUDO Global Geofence Exclusion
+
+- Topic: Reintroduce global geofence exclusion for generic Parking/PUDO buckets.
+- Labels: parking, pudo, materialization, generic-materialisation, geofence, filters.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added `exclude_geofenced` back to `PARKING_PUDO_BASE_EXCLUSIONS`.
+  - This applies to every default and anchor bucket so no samples are emitted from excluded offices/test tracks.
+  - Kept PUDO hazard geofence suppression in `signals.py`.
+  - Updated README and regression assertions; focused parking_pudo Bazel test passed.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]

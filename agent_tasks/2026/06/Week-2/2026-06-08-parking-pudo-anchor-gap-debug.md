@@ -100,3 +100,16 @@ The count gap is not one bug:
   - Generic detects a PUDO park segment at `1768060558183310` (`-44.05s`) with hazard context and DC state, but `_parking_window(...)` has `0` frames because the vehicle is already stopped around the gear-to-park anchor.
   - Anchor-only selection intentionally requires the corresponding expanded bucket window to be non-empty, so this segment is not emitted as `dc_pudo_uk`.
   - The same run has another emitted PUDO anchor at `1768061164683312`, which is why the nearest-anchor comparison showed a `+562.45s` nearest anchor for the event-table timestamp.
+
+## 2026-06-08 Reintroduced Global Geofence Exclusion
+
+- Decision: bring back global `exclude_geofenced` for the generic Parking/PUDO dataset.
+- Rationale: the user observed that some materialized anchors were still inside excluded geofence areas; the desired behavior is no emitted samples from those geofences, not just hazard suppression.
+- Code change:
+  - Added `exclude_geofenced` to `PARKING_PUDO_BASE_EXCLUSIONS`.
+  - This applies to every default and anchor bucket because all bucket families derive from the base exclusions.
+  - Kept the existing `signals.py` geofence hazard suppression, so geofence remains both a global sample exclusion and a PUDO-context guard.
+  - Updated README and regression assertions to require `exclude_geofenced` in every `parking_pudo/default` and `parking_pudo/anchors` bucket.
+- Verification:
+  - `git diff --check`
+  - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k=parking_pudo --test_arg=--no-cov`
