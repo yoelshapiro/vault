@@ -321,6 +321,7 @@
   - Tie-breaks prefer rows with coordinates, then gear-change metadata, then closest transition distance.
   - Removed the `ENABLE_GEAR_SMOOTHING` flag so gear smoothing is always applied.
   - Reviewed PR comments and added post-cast gear validation, leading-short-segment smoothing to next stable gear, trip-table candidate progress metrics, and a final event-key uniqueness guard.
+  - Updated disengagement blacklist behavior so blacklisted PUDO/park main-window disengagements remove the event row; UnPUDO blacklist semantics remain separate.
   - Validated notebook JSON, extracted-code AST parse, and `git diff --check`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-creation-gear-dedup|2026-06-08 Event Creation Gear Dedup]]
 
