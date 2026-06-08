@@ -10,6 +10,7 @@
 - Added one final event-key dedupe stage after event-type union and date filtering.
 - The dedupe key is `(runID, timestamp_unixus, event_type)`.
 - Tie-breaks prefer rows with coordinates, then gear-change metadata, then closest transition distance.
+- Removed the `ENABLE_GEAR_SMOOTHING` flag; smoothing is always applied.
 
 ## Validation
 

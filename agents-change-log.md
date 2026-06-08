@@ -319,6 +319,7 @@
   - Added one final event-key dedupe stage after event-type union and date filtering.
   - Dedupe key is `(runID, timestamp_unixus, event_type)`.
   - Tie-breaks prefer rows with coordinates, then gear-change metadata, then closest transition distance.
+  - Removed the `ENABLE_GEAR_SMOOTHING` flag so gear smoothing is always applied.
   - Validated notebook JSON, extracted-code AST parse, and `git diff --check`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-creation-gear-dedup|2026-06-08 Event Creation Gear Dedup]]
 
