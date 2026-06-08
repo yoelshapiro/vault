@@ -67,3 +67,26 @@ gear-fix event table.
   - `curl -I http://localhost:3001/`
   - Full Bazel build was blocked by workspace cache pressure:
     `OSError: [Errno 28] No space left on device: 'whl_file.json'`.
+
+## Port To PUDO Generic Materialization
+
+- Rebasing target: `/workspace/WayveCode`, branch
+  `boris/pudo_generic_materialization`, onto `origin/main`.
+- Skipped two generated `bump-versions` commits during rebase so main's
+  autopublish metadata won.
+- Resolved the sampling partition-cap conflict by preserving the current
+  Spark-based partition planner and keeping the `700` run-id cap regression
+  check.
+- Ported the uncommitted comparison/debug viewer changes into the rebased main
+  folder:
+  - `wayve/ai/parking/tools/event_clip_viewer/anchor_compare.py`
+  - comparison mode in `app.py`
+  - default anchor comparison controls in `config.py`
+  - BUILD deps and README usage note
+  - single-run/timestamp debug support in `debug_sampling.py`
+- Served the rebased `/workspace/WayveCode` viewer on `http://127.0.0.1:3001`.
+- Verification:
+  - `python -m py_compile wayve/ai/parking/tools/event_clip_viewer/app.py wayve/ai/parking/tools/event_clip_viewer/anchor_compare.py wayve/ai/services/sampling/datasets/debug_sampling.py`
+  - `git diff --check`
+  - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`
+  - `curl -I http://127.0.0.1:3001/`
