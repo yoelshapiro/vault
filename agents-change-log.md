@@ -1436,3 +1436,19 @@
   - Added matched, missing-in-anchors, event rows, and anchor rows tables while preserving clip playback.
   - Verified scoped `py_checks`, ran a small matcher smoke check, and served the app on port 3001.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
+
+## 2026-06-08 - Event Clip Viewer Anchor Cache Fix
+
+- Topic: Correct event-viewer anchor root and avoid slow full-root scans.
+- Labels: parking, pudo, event-viewer, anchors, materialization, cache.
+- Branch: `boris/event_clip_viewer`.
+- PR: n/a.
+- Change type: Code change, local server.
+- Areas: `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Restored the default anchor root to `parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-1`.
+  - Replaced remote recursive bucket discovery with the known parking/PUDO bucket list.
+  - Added selected-bucket local parquet caching under `/tmp/event_clip_viewer_anchor_cache`.
+  - Added an `all` split default and fixed split-specific loading so absent splits no longer fall back to train.
+  - Verified corrected `dc_pudo_uk` counts: `28,658` all-split anchors, `26,362` matched events within 30s, `24,993` missing events.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]

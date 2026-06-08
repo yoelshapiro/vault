@@ -27,3 +27,21 @@ gear-fix event table.
 - Synthetic matcher smoke check through `viewer_ipython`: one matched, two
   missing, one extra anchor.
 - Served the updated viewer on `http://127.0.0.1:3001`.
+
+## Follow-up Fix
+
+- Restored the default anchors root to the branch-release path:
+  `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-1`.
+- Removed recursive bucket discovery from the Streamlit sidebar.
+- Added local selected-bucket caching under `/tmp/event_clip_viewer_anchor_cache`.
+- Added an `all` split default and fixed split handling so missing splits do not fall back to train.
+- Verified `dc_pudo_uk` anchor loads:
+  - `all`: `28,658`
+  - `train`: `23,932`
+  - `validation`: `4,726`
+  - `test`: `0`
+- Corrected 30s comparison with all anchors:
+  - events: `51,355`
+  - anchors: `28,658`
+  - matched: `26,362`
+  - missing: `24,993`
