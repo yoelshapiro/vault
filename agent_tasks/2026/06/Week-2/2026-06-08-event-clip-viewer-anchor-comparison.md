@@ -45,3 +45,25 @@ gear-fix event table.
   - anchors: `28,658`
   - matched: `26,362`
   - missing: `24,993`
+
+## Missing-Event Debug Button
+
+- Added a `Debug Missing Event` control below the missing-events table.
+- The control renders quick `Run` buttons for the first missing rows, capped to
+  keep the Streamlit page responsive, plus a selectbox for choosing any missing
+  row explicitly.
+- Each selected event-table row that is missing from anchors runs:
+  `bazel run //wayve/ai/services/sampling:debug_sampling -- --dataset parking_pudo/anchors --run-id ... --event-ts ... --skip-funnels`.
+- The command runs from `/workspace/WayveCode` by default so it uses the current
+  parking PUDO materialization implementation; this can be overridden with
+  `EVENT_CLIP_VIEWER_DEBUG_REPO_ROOT`.
+- The Streamlit UI shows the exact command, return code, stdout, and stderr so
+  failures in the filter/debug path are visible from the viewer.
+- Also ported the single-run/timestamp debug options into
+  `wayve/ai/services/sampling/datasets/debug_sampling.py` in the event-viewer
+  worktree for branch-local debugging.
+- Verification:
+  - `python -m py_compile wayve/ai/parking/tools/event_clip_viewer/app.py wayve/ai/services/sampling/datasets/debug_sampling.py`
+  - `curl -I http://localhost:3001/`
+  - Full Bazel build was blocked by workspace cache pressure:
+    `OSError: [Errno 28] No space left on device: 'whl_file.json'`.
