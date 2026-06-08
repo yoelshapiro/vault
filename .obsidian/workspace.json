@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "todo-list.md",
+                "file": "projects.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "todo-list"
+              "title": "projects"
             }
           }
         ],
@@ -348,7 +348,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "026-04-20-parking-otf-drop-audit-sampled-100.",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -493,6 +493,9 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects/generic-materialisation-parking-pudo-migration.md",
+    "projects.md",
+    "todo-list.md",
     "agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug.md",
     "agent_tasks/2026/06/Week-2",
     "agent_tasks/2026/06/Week-1/2026-06-07-bazel-cache-cleanup-script.md",
@@ -520,10 +523,7 @@
     "agent_tasks/2026/06/Week-1/2026-06-03-zmurez-pudo-data-loading-investigation.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-interleave-control-main-merge.md",
     "agent_tasks/2026/06/Week-1/2026-06-03-driving-interleave-control-deploys.md",
-    "projects.md",
     "projects/zak-classifiers-parking-maneuver.md",
-    "agent_tasks/2026/01/Week-3/2026-01-13-parking-hazard-filter-updates.md",
-    "agent_tasks/2025/12/Week-5/2025-12-30-parking-maneuver-filter-task-summary.md",
     "agent_tasks/2026/06/Week-1",
     "agent_tasks/2026/06",
     "agent_tasks/2026/05/Week-5",
