@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-08 - PUDO Generic Materialization Viewer Port
+
+- Topic: Rebase `boris/pudo_generic_materialization` to main and port anchor comparison/debug viewer support.
+- Labels: parking, pudo, generic-materialization, streamlit, anchors, debug-sampling.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Branch maintenance / tool UI code change.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`, `/workspace/WayveCode/wayve/ai/services/sampling/datasets/debug_sampling.py`.
+- Changes:
+  - Rebasing skipped generated autopublish `bump-versions` conflicts and preserved the `700` run-id partition cap.
+  - Added the event-table vs anchor comparison source to the main-folder viewer, defaulting to `dc_pudo_uk`.
+  - Ported missing-event `debug_sampling` controls so Streamlit can run single-run/timestamp sampling diagnostics.
+  - Verified `py_compile`, `git diff --check`, `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`, and HTTP 200 on port 3001.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
+
 ## 2026-06-08 - Parking PUDO Anchor Gap Debug
 
 - Topic: Investigate why generic `dc_pudo_uk` anchors are much lower than the event notebook table.
