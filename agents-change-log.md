@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-09 - Parking PUDO Anchor Comparison Rerun
+
+- Topic: Rerun generic parking/PUDO anchors with temporary event-table comparison filters.
+- Labels: parking, pudo, generic-materialization, anchors, trip-events, flyte.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context.
+- Change type: Code implementation / data rerun.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Documented that event-notebook-only geofences and relaxed DC `inferred__intervention__what` filtering are temporary comparison choices.
+  - Changed trip-table matching to 100m and synthesized hazard context over matched parked segments for forgotten-hazard PUDO cases.
+  - Kept trip-only overlap buckets for debugging and CA/pre-CA out-of-scope filtering unchanged.
+  - Verified sampling py_checks, published sampling image `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`, and submitted full anchors `sample` execution `a6vp6f5srkrncnt8k4g7`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-comparison-rerun|2026-06-09 Parking PUDO Anchor Comparison Rerun]]
+
 ## 2026-06-09 - Event Viewer Debug Runner Removal
 
 - Topic: Remove the slow inline `debug_sampling` runner from the parking event viewer.
