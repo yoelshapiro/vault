@@ -45,3 +45,7 @@
 	- [ ] PR to fix negative waypoints
 - [ ] Model experiments
 	- [ ] request licensing
+- [ ] corpus
+	- [ ] add trip id
+	- [ ] add distance to destination
+	- [ ] 

@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects.md",
+                "file": "todo-list.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "projects"
+              "title": "todo-list"
             }
           }
         ],
@@ -493,10 +493,10 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "projects.md",
     "agent_tasks/2026/06/Week-2/2026-06-08-event-creation-gear-dedup.md",
     "agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
-    "projects.md",
     "todo-list.md",
     "agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug.md",
     "agent_tasks/2026/06/Week-2",
