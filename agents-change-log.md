@@ -1513,3 +1513,18 @@
   - Submitted `parking_pudo/anchors` Flyte execution `a6jn55f87zptzqkkdsv7`.
   - Expected output root: `sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-08-2`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-parking-pudo-anchor-gap-debug|2026-06-08 Parking PUDO Anchor Gap Debug]]
+
+## 2026-06-09 - Parking/PUDO Anchors Current Rerun
+
+- Topic: Dispatch full anchors materialization from current branch state.
+- Labels: parking, pudo, materialization, anchors, flyte.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Flyte run.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Fast-forwarded local branch to `d8d061a38992b97e6d63e3acfb38a93db0335fe5`.
+  - Refreshed ACR auth and published missing sampling image tag `borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`.
+  - Submitted full `parking_pudo/anchors` sample workflow execution `alfttk58xgtc5gdgwg7f`.
+  - Expected output root: `sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-09-1`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchors-current-rerun|2026-06-09 Parking/PUDO Anchors Current Rerun]]
