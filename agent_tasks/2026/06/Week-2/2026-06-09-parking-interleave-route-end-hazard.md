@@ -25,6 +25,8 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - Added Console lifecycle note `40f6efe3-e054-4b0d-b6e7-b8c619de90a5`.
 - Triggered Model CI build `75365` for gen2 artefact `31c66a8a-7719-4f95-9d18-0cff43dba71e`.
 - Created Notion model-card row `37a03da5-d69a-81e0-8824-e050ad86bef0`.
+- Investigated Model CI build `75365` failure: `Gen2 Alpha3 HiL Model Validation` failed during setup when DUT `g2b10007` called BackseatManager `DownloadModel` and received `Artifact did not specify any data for required field deployment_artefact_url`. The artefact now has a populated deployment archive URL/hash/size in Model Catalogue, so this is likely a stale-read/race around deployment archive propagation rather than a model forward-pass failure.
+- Attempted to retry the failed Buildkite job, but the local Buildkite token lacks `write_builds` and returned `403`.
 
 ## Verification
 
