@@ -1608,4 +1608,5 @@
   - Aligned the Python deployment output validator with the DMI 4-channel indicator contract so hazard indicator weights can compile.
   - Moved the generic interleave end-of-route threshold to a base-wrapper instance attribute so generated TorchScript wrapper classes resolve it.
   - Moved the remaining generic interleave constants used by scripted methods to initialized attributes/buffers, covering handover speed, forward-drive position, and valid drive-position values.
+  - Deployed `gorilla-tan-splendid` as `teal-elk-amused` with parking interleave control, verified Gen2 radar config, added Console lifecycle note, created the Notion model-card row, and triggered Model CI build `75365`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-interleave-route-end-hazard|2026-06-09 Parking Interleave Route-End Hazard]]

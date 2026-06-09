@@ -21,6 +21,10 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - Updated the Python deployment output validator to allow the existing DMI 4-channel indicator contract `[off, right, left, hazard]`.
 - Moved the generic interleave end-of-route threshold to an initialized base-wrapper instance attribute so TorchScript can resolve it on generated wrapper classes.
 - Moved the generic interleave handover speed, forward-drive position, and valid drive-position set behind initialized attributes/buffers so generated TorchScript wrapper classes resolve them.
+- Deployed `gorilla-tan-splendid` with parking interleave control as `teal-elk-amused`.
+- Added Console lifecycle note `40f6efe3-e054-4b0d-b6e7-b8c619de90a5`.
+- Triggered Model CI build `75365` for gen2 artefact `31c66a8a-7719-4f95-9d18-0cff43dba71e`.
+- Created Notion model-card row `37a03da5-d69a-81e0-8824-e050ad86bef0`.
 
 ## Verification
 
@@ -32,3 +36,4 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - `SELECT= bazel test //wayve/ai/lib:test_lib_py_test --test_arg='-k=test_output_allows_hazard_indicator_channel' --test_arg='--no-cov'`
 - `SELECT= bazel test //wayve/ai/lib:test_lib_py_lint_ruff //wayve/ai/lib:test_lib_py_lint_flake8 //wayve/ai/lib:test_lib_ty`
 - `SELECT= bazel test //wayve/ai/zoo/deployment:test_deployment_py_test //wayve/ai/si:test_deployment_wrapper --test_arg='-k=interleave_codegen or parking_route_end or parking_postprocess_latches or parking_postprocess_gear_latch or parking_wrapper'`
+- `SELECT= bazel run //wayve/ai/si:deploy -- --suffix __gorilla-tan-splendid_interleave_control_v3 --with_temporal_caching True --upload --enable_interleave_control --interleave_control_group parking --session_path abfss://training-session-store@wayveprodmlexperiments.dfs.core.windows.net/Parking/parking_bc/session_2026_06_06_21_38_04_pgearfix2 --output_dir /tmp/parking_deploy_gorilla_v3_retry5`
