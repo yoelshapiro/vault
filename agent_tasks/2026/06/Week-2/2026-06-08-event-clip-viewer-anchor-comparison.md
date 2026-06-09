@@ -90,3 +90,18 @@ gear-fix event table.
   - `git diff --check`
   - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`
   - `curl -I http://127.0.0.1:3001/`
+
+## Remove Inline debug_sampling Runner
+
+- Removed the Streamlit controls that launched
+  `bazel run //wayve/ai/services/sampling:debug_sampling` from missing-anchor rows.
+- Kept the event-table vs anchor comparison source, missing/matched tables, and
+  clip-player row browsing.
+- Reason: single-run debug sampling loads joined materialisation dependencies and
+  can take long enough to make the viewer unusable.
+- Served the viewer again on `http://127.0.0.1:3001`.
+- Verification:
+  - `make py-format`
+  - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks --test_output=errors`
+  - `git diff --check`
+  - `curl -I http://localhost:3001/`

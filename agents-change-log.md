@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-09 - Event Viewer Debug Runner Removal
+
+- Topic: Remove the slow inline `debug_sampling` runner from the parking event viewer.
+- Labels: parking, pudo, streamlit, anchors, debug-sampling.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool/UI code change.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Removed missing-anchor `debug_sampling` buttons and subprocess execution from the Streamlit app.
+  - Kept anchor comparison tables and clip-player browsing.
+  - Verified viewer py_checks and restarted Streamlit on `http://127.0.0.1:3001`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
+
 ## 2026-06-08 - Parking PUDO Trip Context Anchors
 
 - Topic: Add trip-table PUDO context to generic parking/PUDO anchors and rerun full anchors materialisation.
