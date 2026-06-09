@@ -8,6 +8,7 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 
 - Added a persistent parking route-end latch in `ParkingDeploymentWrapperImpl`.
 - Added default-on flags `enable_end_of_route_hazard_lights` and `enable_end_of_route_gear_latch` to control the behavior.
+- Reused parking's `_end_of_route_mask` for the hazard/latch gate so it matches the existing parking-mode route-end definition.
 - When the parking wrapper is under the close-to-route-end gate:
   - expands indicator weights to 4 channels if needed,
   - forces the hazard channel so the inference-node detensorizer emits `INDICATORS_STATE_V2_HAZARD_ON`,

@@ -1571,6 +1571,7 @@
   - Added the persistent parking route-end latch to `ParkingDeploymentWrapperImpl` so once policy gear reaches `PARK` under the close-to-route-end gate, later non-park gears are blocked until the gate clears.
   - Forced parking output indicator weights from `ParkingDeploymentWrapperImpl` to expose a hazard channel and select it when the route-end gate is true.
   - Added default-on flags `enable_end_of_route_hazard_lights` and `enable_end_of_route_gear_latch` to control these behaviors independently.
+  - Reused parking's `_end_of_route_mask` for the hazard/latch gate instead of the base `_is_end_of_route`.
   - Kept `DeploymentWrapperBase` on the generic pre-existing interleave control behavior and avoided a parking `_wrap_with_interleave_control` override.
   - Added focused tests for hazard forcing, latch reset behavior, and disabled-flag behavior, plus ran deployment wrapper lint/type checks.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-interleave-route-end-hazard|2026-06-09 Parking Interleave Route-End Hazard]]
