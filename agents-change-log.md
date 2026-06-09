@@ -1568,7 +1568,8 @@
 - Change type: Code change, tests.
 - Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`, `wayve/ai/si/test/interfaces/test_deployment_wrapper.py`.
 - Changes:
-  - Added a persistent parking interleave latch so once policy gear reaches `PARK` under the close-to-route-end gate, later non-park gears are blocked until the gate clears.
-  - Forced parking interleave indicator weights to expose a hazard channel and select it when the route-end gate is true.
+  - Added the persistent parking interleave latch to `ParkingDeploymentWrapperImpl` so once policy gear reaches `PARK` under the close-to-route-end gate, later non-park gears are blocked until the gate clears.
+  - Forced parking interleave indicator weights from `ParkingDeploymentWrapperImpl` to expose a hazard channel and select it when the route-end gate is true.
+  - Kept `DeploymentWrapperBase` on the generic pre-existing interleave control behavior.
   - Added focused tests for hazard forcing and latch reset behavior, plus ran deployment wrapper lint/type checks.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-interleave-route-end-hazard|2026-06-09 Parking Interleave Route-End Hazard]]
