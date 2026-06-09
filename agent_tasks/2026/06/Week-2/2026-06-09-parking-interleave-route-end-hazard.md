@@ -17,7 +17,7 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - Added CPU unit tests in `wayve/ai/si/test/interfaces/test_deployment_wrapper.py` for hazard forcing and park-latch reset behavior.
 - Added tests for disabling the hazard and gear-latch behavior independently.
 - Moved the hazard/latch behavior into the normal parking output path, not a parking `_wrap_with_interleave_control` override, so it applies regardless of whether interleave control is enabled.
-- Fixed SI deploy temporal-cache config rewriting for release-loader backed BC models by setting `model.model.overrides.video_enable_cache_at_inference` instead of passing the flag as a direct `load_pretrained_backbone` kwarg.
+- Fixed SI deploy temporal-cache config rewriting for release-loader backed BC models by setting `model.model.overrides.input_adaptor.adaptors.video.enable_cache_at_inference` instead of passing the training-time flag as a direct `load_pretrained_backbone`/`MIMOSTTransformer` kwarg.
 
 ## Verification
 
