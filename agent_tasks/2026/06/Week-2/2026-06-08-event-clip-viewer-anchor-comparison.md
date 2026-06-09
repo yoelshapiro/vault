@@ -105,3 +105,43 @@ gear-fix event table.
   - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks --test_output=errors`
   - `git diff --check`
   - `curl -I http://localhost:3001/`
+
+## Reverse Missing-Anchors View
+
+- Updated `/workspace/WayveCode` on branch `boris/pudo_generic_materialization`.
+- Made anchors with no matching event-table row a first-class comparison result:
+  - added a `Missing in event table` metric,
+  - added a default-visible table,
+  - made those rows selectable in the clip player.
+- Added an `Anchor parquet` control:
+  - `Raw buckets` checks what materialization produced,
+  - `Balanced dataset` checks sampled train/validation/test rows.
+- Changed raw bucket loading to prefer `buckets/` parquet before `dataset/`
+  parquet and bumped the local cache key version.
+- Updated the default root to:
+  `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/parking_pudo_anchors_temp_compare_20260609_1402__2026-06-09-14-06`.
+
+### Sample investigation
+
+- Sample:
+  `fme20036/2026-03-26--15-41-18--gen2-av-9e2f4bbd-d3ca-4e67-be30-58c11cc21e09`
+  at `1774544581333311`.
+- Event table row is PUDO, GBR, non-AV, and appears four times because of the
+  model-session join; the viewer dedupe setting collapses this by
+  `(runID, timestamp_unixus)`.
+- Exact corpus frame at the event timestamp:
+  - `gear_direction = 0`
+  - `indicator_light = off`
+  - `automation_active = false`
+  - `speed_kmh = 0.67`
+  - `inferred__intervention__what = uncategorised`
+- The +/-60s frame window showed right/left indicator spans but no hazard state.
+- `prod_data_pipeline.inferred__robotaxi.trip_events` returned no rows for the
+  run, so the generic trip-table PUDO synthesis cannot rescue this sample.
+- Current conclusion: this is missing from `dc_pudo_uk` because generic PUDO
+  requires cleaned real hazard evidence or matched trip-table context over the
+  parked segment. This run has neither in corpus/trip tables, even though the
+  event notebook classified it as PUDO.
+- Verification:
+  - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`
+  - served viewer on `http://127.0.0.1:3001`

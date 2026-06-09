@@ -1543,3 +1543,18 @@
   - Submitted full `parking_pudo/anchors` sample workflow execution `alfttk58xgtc5gdgwg7f`.
   - Expected output root: `sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-09-1`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchors-current-rerun|2026-06-09 Parking/PUDO Anchors Current Rerun]]
+
+## 2026-06-09 - Event Viewer Reverse Anchor Mismatches
+
+- Topic: Make event-viewer anchor rows missing from the event table visible and inspect one missing PUDO example.
+- Labels: parking, pudo, event-viewer, anchors, databricks.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, data investigation, local server.
+- Areas: `wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added a default-visible `Missing in event table` metric/table and clip-player row source.
+  - Added raw-buckets vs balanced-dataset anchor parquet selection, defaulting to raw bucket semantics for event comparison.
+  - Updated the default anchor root to the latest dev root.
+  - Investigated `fme20036/... · 1774544581333311`: event-table PUDO/GBR/non-AV, but corpus has no hazard around the stop and trip events are empty, so generic has no PUDO context to emit `dc_pudo_uk`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
