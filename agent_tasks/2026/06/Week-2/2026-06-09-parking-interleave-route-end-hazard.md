@@ -18,6 +18,7 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - Added tests for disabling the hazard and gear-latch behavior independently.
 - Moved the hazard/latch behavior into the normal parking output path, not a parking `_wrap_with_interleave_control` override, so it applies regardless of whether interleave control is enabled.
 - Fixed SI deploy temporal-cache config rewriting for release-loader backed BC models by setting `model.model.overrides.input_adaptor.adaptors.video.enable_cache_at_inference` instead of passing the training-time flag as a direct `load_pretrained_backbone`/`MIMOSTTransformer` kwarg.
+- Updated the Python deployment output validator to allow the existing DMI 4-channel indicator contract `[off, right, left, hazard]`.
 
 ## Verification
 
@@ -26,3 +27,5 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg='-k=interleave_codegen or parking_interleave'`
 - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/zoo/deployment:test_deployment_py_lint_flake8 //wayve/ai/zoo/deployment:test_deployment_ty`
 - `bazel test //wayve/ai/si:test_deploy --test_arg='-k=apply_temporal_caching_to_config'`
+- `SELECT= bazel test //wayve/ai/lib:test_lib_py_test --test_arg='-k=test_output_allows_hazard_indicator_channel' --test_arg='--no-cov'`
+- `SELECT= bazel test //wayve/ai/lib:test_lib_py_lint_ruff //wayve/ai/lib:test_lib_py_lint_flake8 //wayve/ai/lib:test_lib_ty`
