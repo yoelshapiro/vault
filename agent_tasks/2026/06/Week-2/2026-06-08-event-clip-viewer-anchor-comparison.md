@@ -149,12 +149,18 @@ gear-fix event table.
 ## Date Cutoff
 
 - Updated `/workspace/WayveCode` on branch `boris/pudo_generic_materialization`.
-- Added a viewer-wide minimum run date cutoff: `2025-12-01`.
+- Added a viewer-wide run date range: `2025-12-01 <= run_date < 2026-05-17`.
 - Applied the cutoff in three places:
-  - event-table SQL defaults and generated event queries filter `run_date_iso >= '2025-12-01'`,
+  - event-table SQL defaults and generated event queries filter `run_date_iso >= '2025-12-01'` and `run_date_iso < '2026-05-17'`,
   - materialization anchor parquet reads infer the date from `runID` when `run_date_iso` is absent,
   - app-level event normalization applies the same guard so custom SQL or cached anchor data cannot reintroduce older rows.
 - Bumped the local anchor cache version to avoid reusing older unfiltered cache files.
+- Recalculated `dc_pudo_uk` raw-bucket comparison with the range:
+  - `32,136` event rows
+  - `33,914` anchor rows
+  - `29,698` matched
+  - `2,438` missing in anchors
+  - `4,232` missing in event table
 - Verification:
   - `git diff --check`
   - `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`

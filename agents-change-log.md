@@ -1,15 +1,15 @@
 # Agents Change Log
 
-## 2026-06-09 - Event Viewer Date Cutoff
+## 2026-06-09 - Event Viewer Date Range
 
-- Topic: Filter parking event-viewer tables and anchor materialization rows to post-2025-12-01 data.
+- Topic: Filter parking event-viewer tables and anchor materialization rows to `2025-12-01 <= run_date < 2026-05-17`.
 - Labels: parking, pudo, streamlit, anchors, event-table.
 - Branch: `boris/pudo_generic_materialization`.
 - PR: Draft PR branch context; not pushed in this task.
 - Change type: Tool code change.
 - Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
 - Changes:
-  - Added `MIN_EVENT_RUN_DATE = "2025-12-01"` to the viewer config.
+  - Added `MIN_EVENT_RUN_DATE = "2025-12-01"` and `MAX_EVENT_RUN_DATE_EXCLUSIVE = "2026-05-17"` to the viewer config.
   - Applied the cutoff to event-table SQL, materialization anchor parquet loading, and app-level normalization.
   - Bumped the local anchor cache key version so older cached anchor reads are not reused.
   - Verified `git diff --check`, viewer `py_checks`, and HTTP 200 on port 3001.
