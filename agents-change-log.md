@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-09 - Event Viewer Date Cutoff
+
+- Topic: Filter parking event-viewer tables and anchor materialization rows to post-2025-12-01 data.
+- Labels: parking, pudo, streamlit, anchors, event-table.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool code change.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added `MIN_EVENT_RUN_DATE = "2025-12-01"` to the viewer config.
+  - Applied the cutoff to event-table SQL, materialization anchor parquet loading, and app-level normalization.
+  - Bumped the local anchor cache key version so older cached anchor reads are not reused.
+  - Verified `git diff --check`, viewer `py_checks`, and HTTP 200 on port 3001.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
+
 ## 2026-06-09 - Parking PUDO Anchor Comparison Rerun
 
 - Topic: Rerun generic parking/PUDO anchors with temporary event-table comparison filters.
