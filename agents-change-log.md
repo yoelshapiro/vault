@@ -1,5 +1,18 @@
 # Agents Change Log
 
+### Parking/PUDO anchor mismatch debug
+- Labels: parking, pudo, generic-materialization, debugging
+- Branch: `boris/pudo_generic_materialization`
+- PR: draft PR in progress
+- Change type: fix/debug
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/signals.py`, event viewer comparison
+- Changes:
+  - Investigated `dc_pudo_uk` mismatches between event-table rows and generic anchor output.
+  - Found stale Streamlit comparison root versus the still-running `3.0.68` Flyte execution.
+  - Removed backward stop-snapping from generic park/PUDO anchors so anchors stay at smoothed gear-to-park.
+  - Verified representative shifted and generic-extra samples with `debug_sampling`.
+  - Notes: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug]]
+
 ## 2026-06-09 - Parking PUDO Anchors Driving 3.0.68 Rerun
 
 - Topic: Rerun generic parking/PUDO anchors with driving binary `3.0.68`.
