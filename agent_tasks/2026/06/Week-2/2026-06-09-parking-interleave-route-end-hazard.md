@@ -20,6 +20,7 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - Fixed SI deploy temporal-cache config rewriting for release-loader backed BC models by setting `model.model.overrides.input_adaptor.adaptors.video.enable_cache_at_inference` instead of passing the training-time flag as a direct `load_pretrained_backbone`/`MIMOSTTransformer` kwarg.
 - Updated the Python deployment output validator to allow the existing DMI 4-channel indicator contract `[off, right, left, hazard]`.
 - Moved the generic interleave end-of-route threshold to an initialized base-wrapper instance attribute so TorchScript can resolve it on generated wrapper classes.
+- Moved the generic interleave handover speed, forward-drive position, and valid drive-position set behind initialized attributes/buffers so generated TorchScript wrapper classes resolve them.
 
 ## Verification
 
