@@ -1587,6 +1587,23 @@
   - Expected output root: `sampling_materialised/parking_pudo/anchors/boris-pudo-generic-materialization/2026-06-09-1`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchors-current-rerun|2026-06-09 Parking/PUDO Anchors Current Rerun]]
 
+## 2026-06-09 - Parking/PUDO Anchor 120s Mismatch Audit
+
+- Topic: Audit `dc_pudo_uk` notebook/generic anchor mismatches with a 120s threshold and temporary no-snap code.
+- Labels: parking, pudo, materialization, anchors, databricks, flyte.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Flyte run, data investigation.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`, `wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Published sampling image digest `sha256:cb913f28e91c8ff258de411d040a9fef1b712ea5b7fefdf4dc7a443989dcf6e5` with `_snap_park_to_stop` temporarily removed.
+  - Submitted full anchors sample workflow execution `amspk7tzzcgd9ds4tjvm`.
+  - Recomputed cached `dc_pudo_uk` event-vs-anchor comparison at 120s: `30,061` matched, `2,075` missing in anchors, `4,524` missing in event table.
+  - Debugged five March-May rows from each mismatch type with `debug_sampling`.
+  - Found four of five sampled missing-in-anchor rows are selected by current code and are stale-root issues; one remains a real generic-vs-notebook PUDO context mismatch.
+  - Found sampled missing-in-event-table rows are current generic PUDO anchors, while notebook rows are absent, shifted outside 120s, or classified as another event type.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug|2026-06-09 Parking/PUDO Anchor Mismatch Debug]]
+
 ## 2026-06-09 - Event Viewer Reverse Anchor Mismatches
 
 - Topic: Make event-viewer anchor rows missing from the event table visible and inspect one missing PUDO example.
