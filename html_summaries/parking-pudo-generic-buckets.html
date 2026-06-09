@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parking / PUDO Generic Materialisation — Bucket Groups</title>
+  <style>
+    :root {
+      --ink: #161b22;
+      --muted: #5b6671;
+      --line: #dde3ea;
+      --paper: #f7f8fb;
+      --panel: #ffffff;
+      --accent: #2563cc;
+      --accent-dark: #15397a;
+      --code-bg: #11161d;
+      --code-ink: #e7eef7;
+      --warn: #a8540d;
+      --park: #0f766e;
+      --pudo: #b4480b;
+      --depart: #6d28b8;
+      --gear: #1f6f3a;
+      --ca: #1d4ed8;
+      --failed: #b91c4a;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 14% 8%, rgba(37, 99, 204, .10), transparent 30rem),
+        radial-gradient(circle at 90% 4%, rgba(180, 72, 11, .07), transparent 26rem),
+        linear-gradient(180deg, #eef1f7 0, var(--paper) 16rem);
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI", system-ui, sans-serif;
+      line-height: 1.6;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: minmax(230px, 320px) minmax(0, 1000px);
+      gap: 2rem;
+      width: min(1440px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 40px 0 80px;
+    }
+    aside {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .82);
+      backdrop-filter: blur(10px);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 12px 40px rgba(30, 41, 59, .08);
+    }
+    .eyebrow {
+      margin: 0 0 6px;
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    aside h2 { margin: 0 0 14px; font: 700 21px/1.15 Georgia, serif; }
+    nav a {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--muted); text-decoration: none;
+      border-left: 2px solid transparent;
+      padding: 5px 0 5px 10px; font-size: 14px;
+    }
+    nav a:hover { color: var(--accent-dark); border-left-color: var(--accent); background: rgba(37, 99, 204, .06); }
+    nav .level-3 { padding-left: 22px; font-size: 13px; }
+    main { min-width: 0; }
+    header.page {
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #ffffff, #f0f4fb);
+      border-radius: 16px; padding: 30px 32px; margin-bottom: 26px;
+      box-shadow: 0 14px 44px rgba(30, 41, 59, .08);
+    }
+    header.page h1 { margin: 6px 0 8px; font: 800 32px/1.1 Georgia, serif; letter-spacing: -.01em; }
+    header.page p { margin: 0; color: var(--muted); max-width: 70ch; }
+    .meta-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .chip {
+      font-size: 12px; font-weight: 700; padding: 5px 11px; border-radius: 999px;
+      background: #eef2f9; color: var(--accent-dark); border: 1px solid #cfdcf0;
+    }
+    .chip code { background: none; padding: 0; color: inherit; font-size: 12px; }
+    section.card {
+      border: 1px solid var(--line); background: var(--panel);
+      border-radius: 14px; padding: 26px 30px; margin-bottom: 22px;
+      box-shadow: 0 8px 28px rgba(30, 41, 59, .05);
+    }
+    section.card h2 { margin: 0 0 4px; font: 700 24px/1.2 Georgia, serif; scroll-margin-top: 20px; }
+    section.card h3 { margin: 26px 0 8px; font: 700 17px/1.3 "Aptos", "Segoe UI", sans-serif; }
+    .lead { color: var(--muted); margin: 4px 0 14px; }
+    p, li { font-size: 15px; }
+    code { background: #eef1f6; padding: 1px 6px; border-radius: 5px; font-size: 13px; font-family: "JetBrains Mono", "SF Mono", Consolas, monospace; }
+    pre {
+      background: var(--code-bg); color: var(--code-ink); border-radius: 11px;
+      padding: 16px 18px; overflow: auto; font-size: 13px; line-height: 1.55;
+      font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: 13px; }
+    .group { border: 1px solid var(--line); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+    .group > summary {
+      cursor: pointer; list-style: none; padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px;
+      background: #f5f7fb; font-weight: 700; font-size: 16px;
+    }
+    .group > summary::-webkit-details-marker { display: none; }
+    .group > summary::before { content: "▸"; color: var(--accent); font-size: 13px; transition: transform .15s; }
+    .group[open] > summary::before { transform: rotate(90deg); }
+    .group > summary:hover { background: #eef2f9; }
+    .group .body { padding: 8px 20px 18px; }
+    .tag {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 800;
+      letter-spacing: .03em; color: #fff; margin-left: auto;
+    }
+    .t-park { background: var(--park); }
+    .t-pudo { background: var(--pudo); }
+    .t-depart { background: var(--depart); }
+    .t-gear { background: var(--gear); }
+    .t-ca { background: var(--ca); }
+    .t-failed { background: var(--failed); }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 13.5px; }
+    th, td { text-align: left; padding: 8px 11px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { background: #f3f6fb; font-weight: 700; color: var(--accent-dark); position: sticky; top: 0; }
+    tbody tr:hover { background: #f8fafd; }
+    td code { font-size: 12.5px; }
+    .pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+    .pill-ctx { background: #fde9d6; color: #8a3d05; }
+    .pill-non { background: #d8f0eb; color: #0a554d; }
+    .pill-dbg { background: #e7e7ef; color: #4a4a63; }
+    .note {
+      border-left: 4px solid var(--warn); background: #fdf4e8;
+      padding: 12px 16px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 14px;
+    }
+    .note strong { color: var(--warn); }
+    .filterbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 8px 0 18px; }
+    .filterbar input {
+      flex: 1; min-width: 220px; padding: 9px 13px; border-radius: 9px;
+      border: 1px solid var(--line); font-size: 14px; font-family: inherit;
+    }
+    .filterbar input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+    .fbtn {
+      border: 1px solid var(--line); background: #fff; border-radius: 999px;
+      padding: 6px 13px; font-size: 12.5px; font-weight: 700; cursor: pointer; color: var(--muted);
+    }
+    .fbtn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .pipeline { counter-reset: step; margin: 14px 0; }
+    .pipeline .step {
+      position: relative; padding: 10px 14px 10px 52px; border: 1px solid var(--line);
+      border-radius: 10px; margin-bottom: 10px; background: #fbfcfe;
+    }
+    .pipeline .step::before {
+      counter-increment: step; content: counter(step);
+      position: absolute; left: 14px; top: 12px; width: 26px; height: 26px;
+      background: var(--accent); color: #fff; border-radius: 50%;
+      display: grid; place-items: center; font-weight: 800; font-size: 13px;
+    }
+    .pipeline .step b { color: var(--accent-dark); }
+    .kv { font-size: 13.5px; }
+    .kv b { color: var(--accent-dark); }
+    .hidden { display: none !important; }
+    footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 10px; }
+    a.src { color: var(--accent); text-decoration: none; font-weight: 600; }
+    a.src:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <p class="eyebrow">Branch</p>
+    <h2>parking_pudo<br>generic materialisation</h2>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#pipeline">Shared signal pipeline</a>
+      <a href="#explorer">Bucket explorer</a>
+      <a href="#g-event" class="level-3">① Park / PUDO event</a>
+      <a href="#g-depart" class="level-3">② Unpark / UnPUDO</a>
+      <a href="#g-predepart" class="level-3">③ Pre-departure</a>
+      <a href="#g-gear" class="level-3">④ Gear change</a>
+      <a href="#g-preca" class="level-3">⑤ Pre-CA</a>
+      <a href="#g-ca" class="level-3">⑥ CA short / long</a>
+      <a href="#g-failed" class="level-3">⑦ Failed-to CA</a>
+      <a href="#exclusions">Exclusion policy</a>
+      <a href="#context">PUDO context &amp; geofences</a>
+      <a href="#anchors">Anchor-only variant</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="page">
+      <p class="eyebrow">Dataset summary</p>
+      <h1>Parking / PUDO bucket groups</h1>
+      <p>How each bucket group in the new <code>parking_pudo</code> generic-materialisation dataset is
+      <b>calculated</b> from the raw corpus frame stream and how it is <b>filtered</b>. Materialised directly
+      from <code>wayve_corpus.all_data</code> via <code>services/sampling</code> — no parking notebooks, no
+      pre-built PUDO event table.</p>
+      <div class="meta-grid">
+        <span class="chip">dataset <code>parking_pudo/default</code></span>
+        <span class="chip">anchors <code>parking_pudo/anchors</code></span>
+        <span class="chip">platform Gen2 Mache (+ Alpha3 / Alpha3-Lidar)</span>
+        <span class="chip">dates 2025-12-01 → 2026-06-07</span>
+        <span class="chip">suffixes uk · usa · deu · jpn · global</span>
+      </div>
+    </header>
+
+    <!-- OVERVIEW -->
+    <section class="card" id="overview">
+      <h2>Overview</h2>
+      <p class="lead">Every bucket is <code>combine(exclusions, platform filter, country suffix, event filter)</code>.
+      The <b>event filter</b> is the interesting part — it recomputes parking events per run from gear, speed,
+      indicator and trip-table signals, then selects a frame window. There are five families of event filters and
+      they are crossed with the five country suffixes to produce the final bucket set.</p>
+
+      <table>
+        <thead><tr><th>Family</th><th>Filter source</th><th>Exclusion set</th><th>What anchors it</th></tr></thead>
+        <tbody>
+          <tr><td><b>Park / PUDO event</b></td><td><code>select_park_pudo_event</code></td><td>EVENT</td><td>smoothed gear → Park</td></tr>
+          <tr><td><b>Unpark / UnPUDO + pre-departure</b></td><td><code>select_unpark_unpudo_event</code> · <code>select_pre_departure_event</code></td><td>EVENT</td><td>first movement after Park</td></tr>
+          <tr><td><b>Gear change</b></td><td><code>select_gear_change_event</code></td><td>EVENT</td><td>smoothed gear change</td></tr>
+          <tr><td><b>Pre-CA</b></td><td><code>select_intervention_near_*</code> · <code>select_failed_to_intervention</code></td><td>PRE-CA</td><td>AV→DC intervention</td></tr>
+          <tr><td><b>CA short / long</b></td><td>same intervention selectors (post window)</td><td>CA</td><td>AV→DC intervention</td></tr>
+        </tbody>
+      </table>
+      <p class="kv"><b>Sources:</b>
+        <a class="src" href="#">datasets/parking_pudo/default/dataset.py</a> ·
+        <a class="src" href="#">common.py</a> ·
+        <a class="src" href="#">filters.py</a> ·
+        <a class="src" href="#">intervention_filters.py</a> ·
+        <a class="src" href="#">signals.py</a></p>
+    </section>
+
+    <!-- PIPELINE -->
+    <section class="card" id="pipeline">
+      <h2>Shared signal pipeline</h2>
+      <p class="lead">Before any bucket is selected, <code>_signals()</code> in <code>signals.py</code> normalises
+      one run into the arrays every selector consumes. This is where parking events are actually "detected".</p>
+
+      <div class="pipeline">
+        <div class="step"><b>Timestamps &amp; speed.</b> <code>timestamps_s = TIMESTAMP_UNIXUS / 1e6</code>; <code>speed_mps = get_speed(df)</code>; frame rate from <code>get_frequency</code>.</div>
+        <div class="step"><b>Gear smoothing.</b> <code>get_gear</code> → integer gear, then <code>_smooth_short_gear_segments</code> replaces any gear segment shorter than <code>min_gear_segment_sec</code> (default <b>2.0s</b>) with the previous stable gear. Park = gear&nbsp;<code>0</code>.</div>
+        <div class="step"><b>Indicator cleanup.</b> <code>indicator_light</code> normalised to enum IDs, then <code>_cleanup_hazard</code> rewrites the fast approach part of a hazard segment to a directional indicator (left/right by drive-side country GBR/JPN) and the fast departure part to OFF — so only the genuinely-stopped portion stays HAZARD.</div>
+        <div class="step"><b>Geofence mask.</b> <code>non_geofenced = ~excluded_geofence_mask(df)</code> removes the four office geofences before any PUDO evidence counts.</div>
+        <div class="step"><b>Hazard evidence.</b> <code>real_pudo_hazard = (indicator == HAZARD) &amp; non_geofenced</code>, then time-dilated by ±<code>hazard_window_sec</code>.</div>
+        <div class="step"><b>Trip evidence.</b> <code>_trip_pudo_context</code>: completed pickup/dropoff locations from <code>inferred__robotaxi.trip_events</code> matched to a gear-to-park anchor within <b>100m</b> (haversine); the whole parked segment becomes synthetic hazard context, dilated and masked by <code>non_geofenced</code>.</div>
+        <div class="step"><b>PUDO context.</b> <code>pudo_hazard = real_pudo_hazard | pudo_trip</code>. Selectors pick the source with <code>context_source ∈ {all, hazard, trip}</code> (<code>all</code> = union). A frame is "PUDO" if this mask is true, "parking" if false.</div>
+      </div>
+
+      <h3>Park segments &amp; the parking window</h3>
+      <p><code>_parking_segments</code> keeps Park (gear 0) runs whose smoothed duration ≥ <code>min_parking_duration_sec</code>
+      (default <b>2.0s</b>). For each such segment the <b>approach-to-stop window</b> (<code>_parking_window</code>) is:</p>
+      <ul>
+        <li>start = earlier of "30m before stop" (cumulative distance) and "12s before stop" (time);</li>
+        <li>extended back to a nearby directional-indicator onset (−3s) if that indicator is within 30m of the park anchor;</li>
+        <li>end = 1s after the gear-to-park frame;</li>
+        <li>intersected with <code>|speed| &gt; 0.01</code> dilated ±2s, so only the moving-nearby part is kept.</li>
+      </ul>
+      <p>A segment is classified <b>park vs PUDO</b> by the PUDO-context value at the frame just before Park starts
+      (<code>_park_context_index = park_start − 1</code>).</p>
+    </section>
+
+    <!-- EXPLORER -->
+    <section class="card" id="explorer">
+      <h2>Bucket explorer</h2>
+      <p class="lead">Every concrete bucket name (before the country suffix). Filter by name or by family. Each window
+      bucket has a matching <code>_anchor</code> variant in <code>parking_pudo/anchors</code> that keeps only the
+      triggering frame.</p>
+      <div class="filterbar">
+        <input id="bucketSearch" type="text" placeholder="Filter buckets — try 'pudo', 'unpark', 'long', 'failed'…">
+        <button class="fbtn active" data-fam="all">all</button>
+        <button class="fbtn" data-fam="event">park/pudo</button>
+        <button class="fbtn" data-fam="depart">departure</button>
+        <button class="fbtn" data-fam="gear">gear</button>
+        <button class="fbtn" data-fam="ca">CA</button>
+        <button class="fbtn" data-fam="failed">failed-to</button>
+      </div>
+      <div style="max-height:460px; overflow:auto; border:1px solid var(--line); border-radius:10px;">
+      <table id="bucketTable">
+        <thead><tr><th>Bucket</th><th>Context</th><th>Window</th><th>Selector / key params</th></tr></thead>
+        <tbody>
+          <tr data-fam="event"><td><code>dc_park</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>approach-to-stop (≈ −30m/−12s → +1s)</td><td><code>select_park_pudo_event</code> event=park</td></tr>
+          <tr data-fam="event"><td><code>dc_pudo</code></td><td><span class="pill pill-ctx">PUDO (all)</span></td><td>same approach window</td><td>event=pudo, ctx=all</td></tr>
+          <tr data-fam="event"><td><code>dc_pudo_trip</code></td><td><span class="pill pill-dbg">debug · trip</span></td><td>same approach window</td><td>event=pudo, ctx=trip</td></tr>
+          <tr data-fam="depart"><td><code>dc_unpark</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>anchor → +10s</td><td><code>select_unpark_unpudo_event</code> event=unpark</td></tr>
+          <tr data-fam="depart"><td><code>dc_unpudo</code></td><td><span class="pill pill-ctx">PUDO (all)</span></td><td>anchor → +10s</td><td>event=unpudo, ctx=all</td></tr>
+          <tr data-fam="depart"><td><code>dc_unpudo_trip</code></td><td><span class="pill pill-dbg">debug · trip</span></td><td>anchor → +10s</td><td>event=unpudo, ctx=trip</td></tr>
+          <tr data-fam="depart"><td><code>dc_pre_unpark</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>−0.9s → anchor</td><td><code>select_pre_departure_event</code> event=unpark</td></tr>
+          <tr data-fam="depart"><td><code>dc_pre_unpudo</code></td><td><span class="pill pill-ctx">PUDO (all)</span></td><td>−0.9s → anchor</td><td>event=unpudo, ctx=all</td></tr>
+          <tr data-fam="depart"><td><code>dc_pre_unpudo_trip</code></td><td><span class="pill pill-dbg">debug · trip</span></td><td>−0.9s → anchor</td><td>event=unpudo, ctx=trip</td></tr>
+          <tr data-fam="gear"><td><code>dc_parking_gear_change</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>0 → +0.5s</td><td><code>select_gear_change_event</code> event=parking</td></tr>
+          <tr data-fam="gear"><td><code>dc_pudo_gear_change</code></td><td><span class="pill pill-ctx">PUDO · hz 30s</span></td><td>0 → +0.5s</td><td>event=pudo, hazard_window=30s</td></tr>
+          <tr data-fam="gear ca"><td><code>pre_ca_parking</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>−1.2s → intervention</td><td><code>select_intervention_near_gear_change</code> pre</td></tr>
+          <tr data-fam="gear ca"><td><code>pre_ca_pudo</code></td><td><span class="pill pill-ctx">PUDO · hz 30s</span></td><td>−1.2s → intervention</td><td>near gear change, pre</td></tr>
+          <tr data-fam="depart ca"><td><code>pre_ca_unpark</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>−1.2s → intervention</td><td><code>select_intervention_near_departure_event</code> pre</td></tr>
+          <tr data-fam="depart ca"><td><code>pre_ca_unpudo</code></td><td><span class="pill pill-ctx">PUDO</span></td><td>−1.2s → intervention</td><td>near departure anchor, pre</td></tr>
+          <tr data-fam="gear ca"><td><code>ca_parking_short</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>0 → +1.48s (auto=0)</td><td>near gear change, post short</td></tr>
+          <tr data-fam="gear ca"><td><code>ca_parking_long</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>+1.52 → +5.0s</td><td>near gear change, post long</td></tr>
+          <tr data-fam="gear ca"><td><code>ca_pudo_short</code></td><td><span class="pill pill-ctx">PUDO · hz 30s</span></td><td>0 → +1.48s</td><td>near gear change, post short</td></tr>
+          <tr data-fam="gear ca"><td><code>ca_pudo_long</code></td><td><span class="pill pill-ctx">PUDO · hz 30s</span></td><td>+1.52 → +5.0s</td><td>near gear change, post long</td></tr>
+          <tr data-fam="depart ca"><td><code>ca_unpark_short</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>0 → +1.48s</td><td>near departure anchor, post short</td></tr>
+          <tr data-fam="depart ca"><td><code>ca_unpark_long</code></td><td><span class="pill pill-non">non-PUDO</span></td><td>+1.52 → +5.0s</td><td>near departure anchor, post long</td></tr>
+          <tr data-fam="depart ca"><td><code>ca_unpudo_short</code></td><td><span class="pill pill-ctx">PUDO</span></td><td>0 → +1.48s</td><td>near departure anchor, post short</td></tr>
+          <tr data-fam="depart ca"><td><code>ca_unpudo_long</code></td><td><span class="pill pill-ctx">PUDO</span></td><td>+1.52 → +5.0s</td><td>near departure anchor, post long</td></tr>
+          <tr data-fam="failed ca"><td><code>pre_ca_failed_to_park</code></td><td><span class="pill pill-dbg">label</span></td><td>−1.2s → intervention</td><td><code>select_failed_to_intervention</code> what=failed_to_park</td></tr>
+          <tr data-fam="failed ca"><td><code>pre_ca_failed_to_pudo</code></td><td><span class="pill pill-dbg">label</span></td><td>−1.2s → intervention</td><td>what=failed_to_pudo</td></tr>
+          <tr data-fam="failed ca"><td><code>pre_ca_failed_to_unpark</code></td><td><span class="pill pill-dbg">label</span></td><td>−1.2s → intervention</td><td>what=failed_to_unpark</td></tr>
+          <tr data-fam="failed ca"><td><code>pre_ca_failed_to_unpudo</code></td><td><span class="pill pill-dbg">label</span></td><td>−1.2s → intervention</td><td>what=failed_to_unpudo</td></tr>
+          <tr data-fam="failed ca"><td><code>ca_failed_to_{park,pudo,unpark,unpudo}_short</code></td><td><span class="pill pill-dbg">label</span></td><td>0 → +1.48s</td><td>failed-to label, post short</td></tr>
+          <tr data-fam="failed ca"><td><code>ca_failed_to_{park,pudo,unpark,unpudo}_long</code></td><td><span class="pill pill-dbg">label</span></td><td>+1.52 → +5.0s</td><td>failed-to label, post long</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- GROUP 1: EVENT -->
+    <section class="card" id="g-event">
+      <h2>① Park / PUDO event buckets</h2>
+      <details class="group" open>
+        <summary><code>dc_park</code> · <code>dc_pudo</code> · <code>dc_pudo_trip</code> <span class="tag t-park">PARK</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p><code>select_park_pudo_event</code> builds signals, finds valid park segments, and for each computes the
+          approach-to-stop window. Windows are assigned greedily so earlier segments claim frames first
+          (<code>unassigned_window = window &amp; ~assigned</code>). A segment is emitted into the bucket when its
+          PUDO-context value at <code>park_start − 1</code> matches the requested <code>event_type</code>:</p>
+          <pre><code>is_pudo = pudo_context[park_start - 1]
+if (event_type == "pudo") == is_pudo:
+    mask |= unassigned_window      # window bucket
+    # or mask[start] = window.any()  (anchor_only)</code></pre>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>Context:</b> <code>dc_park</code> = non-PUDO; <code>dc_pudo</code> = PUDO with <code>ctx=all</code> (hazard ∪ trip); <code>dc_pudo_trip</code> = debug overlap, <code>ctx=trip</code> only.</li>
+            <li><b>Params:</b> <code>min_parking_duration_sec=2.0</code>, <code>min_gear_segment_sec=2.0</code>, <code>hazard_window_sec=10.0</code>.</li>
+            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code> = DC base (no intervention-label filter) + <code>exclude_autonomous</code> (DC = driver-controlled frames only).</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- GROUP 2: DEPARTURE -->
+    <section class="card" id="g-depart">
+      <h2>② Unpark / UnPUDO buckets</h2>
+      <details class="group">
+        <summary><code>dc_unpark</code> · <code>dc_unpudo</code> · <code>dc_unpudo_trip</code> <span class="tag t-depart">DEPART</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p><code>_departure_events</code> walks every valid park segment, finds the first frame with
+          <code>|speed| &gt; 0.01</code> after the segment ends (the <b>movement anchor</b>, not crossing into the
+          next park segment), and classifies it as UnPUDO if the PUDO context is true anywhere across the parked
+          + pre-movement interval (<code>park_start−1 … max(end, anchor)+1</code>).
+          <code>select_unpark_unpudo_event</code> then selects <code>anchor → anchor + 10s</code>.</p>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>Context:</b> <code>dc_unpark</code> = parked interval not PUDO; <code>dc_unpudo</code> = parked interval is PUDO (<code>ctx=all</code>); <code>dc_unpudo_trip</code> = debug, <code>ctx=trip</code>.</li>
+            <li><b>Params:</b> <code>movement_speed_threshold_mps=0.01</code>, <code>after_movement_sec=10.0</code>; same min-duration / smoothing defaults.</li>
+            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code> (DC base + <code>exclude_autonomous</code>).</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- GROUP 3: PRE-DEPARTURE -->
+    <section class="card" id="g-predepart">
+      <h2>③ Pre-departure buckets</h2>
+      <details class="group">
+        <summary><code>dc_pre_unpark</code> · <code>dc_pre_unpudo</code> · <code>dc_pre_unpudo_trip</code> <span class="tag t-depart">DEPART</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p>Same movement anchors and same UnPUDO classification as group ②, but
+          <code>select_pre_departure_event</code> selects the <code>0.9s</code> immediately <b>before</b> the anchor:
+          <code>mask[searchsorted(t, t[anchor] − 0.9) : anchor] = True</code>.</p>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>Context:</b> identical unpark/UnPUDO split to group ②; <code>_trip</code> is the debug overlap.</li>
+            <li><b>Params:</b> <code>before_movement_sec=0.9</code>.</li>
+            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code>.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- GROUP 4: GEAR CHANGE -->
+    <section class="card" id="g-gear">
+      <h2>④ Gear-change buckets</h2>
+      <details class="group">
+        <summary><code>dc_parking_gear_change</code> · <code>dc_pudo_gear_change</code> <span class="tag t-gear">GEAR</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p><code>select_gear_change_event</code> takes every smoothed gear transition
+          (<code>diff(gear) != 0</code>) and selects a small window <code>before_sec=0</code> →
+          <code>after_sec=0.5s</code> around frames whose context matches.</p>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>Context:</b> <code>dc_parking_gear_change</code> = non-PUDO at the gear-change frame; <code>dc_pudo_gear_change</code> = PUDO, with a wider <code>hazard_window_sec=30.0</code> so the cleaned hazard reaches the gear change.</li>
+            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code>.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- GROUP 5: PRE-CA -->
+    <section class="card" id="g-preca">
+      <h2>⑤ Pre-CA buckets</h2>
+      <details class="group">
+        <summary><code>pre_ca_parking</code> · <code>pre_ca_pudo</code> · <code>pre_ca_unpark</code> · <code>pre_ca_unpudo</code> <span class="tag t-ca">PRE-CA</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p>Interventions are AV→DC transitions: <code>auto[:-1]==1 &amp; auto[1:]==0</code>. The pre-CA window is the
+          <code>1.2s</code> before each qualifying intervention frame.</p>
+          <p><b>Gear-change variant</b> (<code>select_intervention_near_gear_change</code>): keep interventions within
+          ±<code>30s</code> of a smoothed gear change whose context matches (<code>parking</code> / <code>pudo</code>,
+          PUDO uses <code>hazard_window=30s</code>).<br>
+          <b>Departure variant</b> (<code>select_intervention_near_departure_event</code>): keep interventions within
+          ±<code>30s</code> of a matching unpark/UnPUDO movement anchor.</p>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>Remain-stopped guard:</b> drop handovers where the vehicle is stopped (<code>|speed| ≤ 0.01</code>) at the intervention <em>and</em> still stopped 1s later.</li>
+            <li><b>Exclusions:</b> <code>PARKING_PUDO_PRE_CA_EXCLUSIONS</code> = full base set <em>without</em> <code>exclude_autonomous</code> — pre-CA frames are expected to still be AV before handover.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- GROUP 6: CA -->
+    <section class="card" id="g-ca">
+      <h2>⑥ CA short / long buckets</h2>
+      <details class="group">
+        <summary><code>ca_parking_*</code> · <code>ca_pudo_*</code> · <code>ca_unpark_*</code> · <code>ca_unpudo_*</code> <span class="tag t-ca">CA</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p>Same intervention selectors as pre-CA, but with <code>window="post"</code>. The post window keeps only
+          frames that are <b>driver-controlled</b> after the handover (<code>mask = auto == 0</code> inside the window):</p>
+          <ul>
+            <li><b>short:</b> <code>post_intervention_start=0</code> → <code>CA_SHORT_WINDOW = 1.48s</code></li>
+            <li><b>long:</b> <code>CA_SHORT_WINDOW + 0.04 = 1.52s</code> → <code>CA_LONG_WINDOW = 5.0s</code></li>
+          </ul>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>Context / proximity:</b> identical to the matching pre-CA bucket (gear-change ±30s, or departure-anchor ±30s; same context split).</li>
+            <li><b>Remain-stopped guard:</b> same as pre-CA.</li>
+            <li><b>Exclusions:</b> <code>PARKING_PUDO_CA_EXCLUSIONS</code> = full base set + <code>exclude_autonomous</code> (post-CA frames are DC).</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- GROUP 7: FAILED-TO -->
+    <section class="card" id="g-failed">
+      <h2>⑦ Failed-to CA buckets</h2>
+      <details class="group">
+        <summary><code>pre_ca_failed_to_*</code> · <code>ca_failed_to_*_short</code> · <code>ca_failed_to_*_long</code> <span class="tag t-failed">FAILED-TO</span></summary>
+        <div class="body">
+          <h3>How it's calculated</h3>
+          <p><code>select_failed_to_intervention</code> selects intervention frames directly by the
+          <code>inferred__intervention__what</code> label ∈ {<code>failed_to_park</code>, <code>failed_to_pudo</code>,
+          <code>failed_to_unpark</code>, <code>failed_to_unpudo</code>}. Same pre (1.2s) / post (short 1.48s, long 5.0s)
+          windows.</p>
+          <h3>How it's filtered</h3>
+          <ul>
+            <li><b>No gear / departure proximity check</b> — the label alone qualifies the intervention.</li>
+            <li><b>Remain-stopped guard</b> still applies (rejects stopped-and-stays-stopped handovers).</li>
+            <li>Hazard context is not used (<code>hazard_window_sec=0.0</code>); gear is only smoothed to keep the shared signal derivation consistent.</li>
+            <li><b>Exclusions:</b> pre-CA → <code>PRE_CA</code> set; short/long → <code>CA</code> set.</li>
+          </ul>
+        </div>
+      </details>
+    </section>
+
+    <!-- EXCLUSIONS -->
+    <section class="card" id="exclusions">
+      <h2>Exclusion policy</h2>
+      <p class="lead">This dataset <b>owns</b> its exclusion policy rather than importing
+      <code>datasets.parking.common</code>. Three sets are derived from one base.</p>
+      <table>
+        <thead><tr><th>Set</th><th>Applied to</th><th>Composition</th></tr></thead>
+        <tbody>
+          <tr><td><code>EVENT</code></td><td>DC park/pudo, departure, gear-change buckets</td><td>DC base (= base minus the out-of-scope intervention filter) <b>+ exclude_autonomous</b></td></tr>
+          <tr><td><code>PRE_CA</code></td><td>all pre-CA buckets</td><td>full base set, <b>no exclude_autonomous</b></td></tr>
+          <tr><td><code>CA</code></td><td>all short/long CA buckets</td><td>full base set <b>+ exclude_autonomous</b></td></tr>
+        </tbody>
+      </table>
+      <h3>Base exclusions (always on)</h3>
+      <p><code>exclude_runs_not_in_filtered_corpus</code>, <code>exclude_gen1_without_back_cameras</code>,
+      <code>exclude_runs_that_are_too_short</code>, <code>exclude_gen2_missing_steering_bias</code>,
+      <code>exclude_parking_pudo_event_notebook_office_geofenced</code>, <code>exclude_known_bad_runs_and_windows</code>,
+      <code>exclude_none_contiguous</code>, <code>exclude_invalid_video_file_name</code>,
+      <code>exclude_constant_speed_run_ids</code>, <code>exclude_runs_before_vehicle_cutoff_dates_nissan_alpha3</code>,
+      <code>exclude_speed_greater_than_threshold</code>, <code>exclude_quarantined_runs</code>,
+      <code>exclude_quarantined_segments</code>, and (everywhere except DC buckets)
+      <code>exclude_out_of_scope_except_parking_pudo_allowed</code>.</p>
+
+      <h3>Out-of-scope intervention handling</h3>
+      <p><code>diversion</code>, <code>lens_obscured</code> and <code>uncategorised</code> are <b>kept</b> (allow-listed)
+      for parity with the event notebook; all other out-of-scope whats stay excluded — but only on CA / pre-CA
+      buckets. DC buckets do not filter on <code>inferred__intervention__what</code> at all (event-table comparison mode).</p>
+
+      <h3>Deliberately disabled (kept for a future stricter variant)</h3>
+      <p><code>select_allowed_run_tags</code>, <code>exclude_low_steering_bias_confidence</code>,
+      <code>exclude_mache_without_wheel_odometery</code>, <code>exclude_diversion_and_lens_obscured_interventions</code>.
+      Also not applied: stopped-segment, first/last-index, run-level autonomous masks.</p>
+
+      <div class="note"><strong>Temporary:</strong> the event-notebook-only geofence list and the relaxed DC
+      <code>inferred__intervention__what</code> filtering are comparison choices for notebook parity. Both should be
+      revisited before this becomes the production parking/PUDO materialisation policy.</div>
+    </section>
+
+    <!-- CONTEXT -->
+    <section class="card" id="context">
+      <h2>PUDO context &amp; geofences</h2>
+      <h3>What counts as PUDO</h3>
+      <p>PUDO context is the union of two evidence sources, both masked to exclude office geofences:</p>
+      <ul>
+        <li><b>Hazard</b> — cleaned hazard-light frames (approach/departure rewritten away), time-dilated.</li>
+        <li><b>Trip</b> — completed pickup/dropoff locations from <code>inferred__robotaxi.trip_events</code>
+        (<code>event_type = TRIP_EVENT_TASK_COMPLETED</code>, pickup/dropoff waypoints) matched to a gear-to-park
+        anchor within <b>100m</b>. The raw indicator column is never modified — the synthetic hazard lives only in
+        the derived mask. Trip rows are aggregated to one row per run (list columns) before the join so corpus
+        frames can't be duplicated.</li>
+      </ul>
+      <p>The <code>*_trip_*</code> buckets isolate only the trip-table contribution for debugging.</p>
+
+      <h3>Office geofences ignored for classification</h3>
+      <p><code>london_office</code>, <code>sunnyvale_office</code>, <code>germany_leonberg</code>,
+      <code>yokohama_office</code> — matching <code>EXCLUDE_GEOFENCE_KEYS</code> in the PUDO/UnPUDO event-detection
+      notebook. Hazard/trip evidence inside these is dropped before the park/PUDO split (in <code>signals.py</code>),
+      and the same names are also used as a run exclusion in the base set.</p>
+
+      <h3>Country suffixes</h3>
+      <p>Each event filter is crossed with <code>uk</code>, <code>usa</code>, <code>deu</code>, <code>jpn</code>,
+      <code>global</code> from <code>COUNTRIES_FILTERS</code>.</p>
+    </section>
+
+    <!-- ANCHORS -->
+    <section class="card" id="anchors">
+      <h2>Anchor-only variant (<code>parking_pudo/anchors</code>)</h2>
+      <p class="lead">Mirrors <code>parking_pudo/default</code> bucket-for-bucket, but each bucket keeps only the single
+      triggering frame instead of the expanded training window (<code>anchor_only=True</code>).</p>
+      <table>
+        <thead><tr><th>Bucket family</th><th>Anchor frame</th></tr></thead>
+        <tbody>
+          <tr><td>park / PUDO</td><td>smoothed gear-to-park frame (if its window has any unassigned frame)</td></tr>
+          <tr><td>unpark / UnPUDO &amp; pre-departure</td><td>first movement after leaving park</td></tr>
+          <tr><td>gear change</td><td>smoothed gear-change frame</td></tr>
+          <tr><td>pre-CA / short-CA / long-CA / failed-to</td><td>AV→DC intervention frame, after the same context, proximity and remain-stopped filters pass</td></tr>
+        </tbody>
+      </table>
+      <p>Useful when you want the small anchor table behind every bucket rather than the materialised windows.</p>
+    </section>
+
+    <footer>Generated from branch <code>boris/pudo_generic_materialization</code> ·
+      <code>wayve/ai/services/sampling/datasets/parking_pudo/</code></footer>
+  </main>
+</div>
+
+<script>
+  // Bucket table search + family filter
+  const search = document.getElementById('bucketSearch');
+  const rows = Array.from(document.querySelectorAll('#bucketTable tbody tr'));
+  const fbtns = Array.from(document.querySelectorAll('.fbtn'));
+  let activeFam = 'all';
+
+  function apply() {
+    const q = search.value.trim().toLowerCase();
+    rows.forEach(r => {
+      const fams = (r.dataset.fam || '').split(/\s+/);
+      const famOk = activeFam === 'all' || fams.includes(activeFam);
+      const textOk = !q || r.textContent.toLowerCase().includes(q);
+      r.classList.toggle('hidden', !(famOk && textOk));
+    });
+  }
+  search.addEventListener('input', apply);
+  fbtns.forEach(b => b.addEventListener('click', () => {
+    fbtns.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    activeFam = b.dataset.fam;
+    apply();
+  }));
+
+  // Active-section highlight in sidebar
+  const navLinks = Array.from(document.querySelectorAll('aside nav a'));
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        navLinks.forEach(a => a.style.color = a.getAttribute('href') === '#' + id ? 'var(--accent-dark)' : '');
+        navLinks.forEach(a => a.style.fontWeight = a.getAttribute('href') === '#' + id ? '700' : '');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  document.querySelectorAll('section.card').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
