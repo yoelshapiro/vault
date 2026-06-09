@@ -19,6 +19,7 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - Moved the hazard/latch behavior into the normal parking output path, not a parking `_wrap_with_interleave_control` override, so it applies regardless of whether interleave control is enabled.
 - Fixed SI deploy temporal-cache config rewriting for release-loader backed BC models by setting `model.model.overrides.input_adaptor.adaptors.video.enable_cache_at_inference` instead of passing the training-time flag as a direct `load_pretrained_backbone`/`MIMOSTTransformer` kwarg.
 - Updated the Python deployment output validator to allow the existing DMI 4-channel indicator contract `[off, right, left, hazard]`.
+- Moved the generic interleave end-of-route threshold to an initialized base-wrapper instance attribute so TorchScript can resolve it on generated wrapper classes.
 
 ## Verification
 
@@ -29,3 +30,4 @@ Added route-end behavior to the parking deployment wrapper on branch `boris/park
 - `bazel test //wayve/ai/si:test_deploy --test_arg='-k=apply_temporal_caching_to_config'`
 - `SELECT= bazel test //wayve/ai/lib:test_lib_py_test --test_arg='-k=test_output_allows_hazard_indicator_channel' --test_arg='--no-cov'`
 - `SELECT= bazel test //wayve/ai/lib:test_lib_py_lint_ruff //wayve/ai/lib:test_lib_py_lint_flake8 //wayve/ai/lib:test_lib_ty`
+- `SELECT= bazel test //wayve/ai/zoo/deployment:test_deployment_py_test //wayve/ai/si:test_deployment_wrapper --test_arg='-k=interleave_codegen or parking_route_end or parking_postprocess_latches or parking_postprocess_gear_latch or parking_wrapper'`

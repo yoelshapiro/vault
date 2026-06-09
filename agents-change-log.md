@@ -1591,4 +1591,5 @@
   - Added focused tests for hazard forcing, latch reset behavior, and disabled-flag behavior, plus ran deployment wrapper lint/type checks.
   - Fixed SI deploy temporal-cache config rewriting for release-loader backed BC models and added a focused regression test.
   - Aligned the Python deployment output validator with the DMI 4-channel indicator contract so hazard indicator weights can compile.
+  - Moved the generic interleave end-of-route threshold to a base-wrapper instance attribute so generated TorchScript wrapper classes resolve it.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-interleave-route-end-hazard|2026-06-09 Parking Interleave Route-End Hazard]]
