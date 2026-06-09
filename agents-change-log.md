@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-09 - Parking PUDO Anchors Driving 3.0.68 Rerun
+
+- Topic: Rerun generic parking/PUDO anchors with driving binary `3.0.68`.
+- Labels: parking, pudo, generic-materialization, anchors, flyte, binary-data.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Code config change / image publish / Flyte run.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Updated `parking_pudo/default` and `parking_pudo/anchors` to `binary_version="3.0.68"`.
+  - Updated both dataset configs to `start_date="2025-12-01"` and `end_date="2026-06-07"`.
+  - Published sampling image `wayveacrprodflyte.azurecr.io/sampling:bpudo3068-20260609`.
+  - Submitted full `sample` workflow for `parking_pudo/anchors`, execution `ax4kdrxxjztvzvcxqxp2`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchors-driving-3068-rerun|2026-06-09 Parking/PUDO Anchors Driving 3.0.68 Rerun]]
+
 ## 2026-06-09 - Event Viewer Date Range
 
 - Topic: Filter parking event-viewer tables and anchor materialization rows to `2025-12-01 <= run_date < 2026-05-17`.
