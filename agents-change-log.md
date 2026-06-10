@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-10 - Event Viewer Materialization Segments
+
+- Topic: Support materialization bucket events with continuous timestamp windows in the event clip viewer.
+- Labels: parking, pudo, streamlit, event-viewer, materialization.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool UI/data loading change.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added continuous timestamp bundling per `runID` for materialization bucket rows.
+  - Added sidebar controls for bundled materialization events and the split gap threshold.
+  - Added event start/end/duration/row-count metadata to materialization rows.
+  - Updated live and model-catalogue selected playback/autoplay to use materialization start/end windows when present.
+  - Added a focused regression test for segment bundling.
+  - Verified `git diff --check`, `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`, and HTTP `200 OK` on port `3001`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-materialization-segments|2026-06-10 Event Viewer Materialization Segments]]
+
 ## 2026-06-10 - Main Event Viewer Browser Preload PR
 
 - Topic: Add browser-side selected-clip preloading to the `main` event clip viewer.
