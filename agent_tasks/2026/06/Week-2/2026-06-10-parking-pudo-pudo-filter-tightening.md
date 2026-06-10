@@ -13,7 +13,7 @@ Tightened PUDO/UnPUDO generic materialization filters after the event-table alig
 - Switched PUDO/UnPUDO bucket exclusions back from event-notebook office-only geofence filtering to the shared full `exclude_geofenced` sampling filter.
 - Updated PUDO hazard/trip context generation to ignore evidence inside the full sampling geofence list.
 - Re-enabled `exclude_low_steering_bias_confidence` and `exclude_mache_without_wheel_odometery` for PUDO/UnPUDO event, CA, and pre-CA exclusions.
-- Removed the obsolete `PARKING_PUDO_EVENT_NOTEBOOK_GEOFENCES` constant and `exclude_parking_pudo_event_notebook_office_geofenced` filter.
+- Removed the obsolete `PARKING_PUDO_EVENT_NOTEBOOK_GEOFENCES` constant and `exclude_parking_pudo_event_notebook_office_geofenced` filter, then moved the remaining geofence helper into `signals.py` and deleted `geofences.py`.
 - Left `select_allowed_run_tags`, `exclude_runs_that_are_too_short`, and `exclude_diversion_and_lens_obscured_interventions` disabled for PUDO/UnPUDO for now.
 
 ## Verification
