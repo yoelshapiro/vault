@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-10 - Parking Hub static landing page
+
+- Topic: New lightweight landing page to discover/open parking HTML reports and tools, hosted behind the SSO ingress like data_insights.
+- Labels: parking, tooling, streamlit, aks, frontend, brand.
+- Branch: `boris/parking-hub` (forked from `origin/main`).
+- PR: N/A (not committed yet).
+- Change type: new tool / service scaffold.
+- Areas: `wayve/ai/parking/tools/parking_hub/**`.
+- Changes:
+  - Added a FastAPI + uvicorn static hub that auto-discovers HTML reports in `content/` and lists apps from `registry.yaml` (link-out model).
+  - Branded landing page with Wayve press-kit palette + Karla/Work Sans + white wordmark.
+  - Seeded `pre_intervention_augmentation.html` report and `event_clip_viewer` (local) + `data-insights` (hosted) cards.
+  - Bazel `py_docker_binary` + `data_insights`-style deploy scaffold (Makefile/autopublish/kustomize), static-only (no SA/secrets), host `parking-hub.sso.azr.wayve.{dev,ai}`, namespace `ai--parking`.
+  - Verified: py_checks (flake8/ruff/ty/pytest) pass; local server routes 200/404; kustomize overlays render.
+  - Gating: `ai--parking` namespace + DNS/TLS/SSO must be created by platform before deploy.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-hub-static-landing|2026-06-10 Parking Hub static landing page]]
+
 ## 2026-06-10 - Teal/Zebra PUDO Experiments
 
 - Topic: Create teal-elk-amused Console note plus zebra-control UK PUDO licensing and Drift/PUDO experiments.
