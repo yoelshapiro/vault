@@ -1770,5 +1770,6 @@
   - Switched PUDO/UnPUDO exclusions back to the shared full `exclude_geofenced` filter instead of event-notebook office-only geofencing.
   - Made PUDO hazard/trip context suppression use the full sampling geofence list.
   - Re-enabled `exclude_low_steering_bias_confidence` and `exclude_mache_without_wheel_odometery` for PUDO/UnPUDO bucket families.
+  - Removed the obsolete event-notebook office-only geofence constant and filter.
   - Updated focused parking_pudo filter tests and verified the parking_pudo slice.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-pudo-filter-tightening|2026-06-10 Parking/PUDO PUDO Filter Tightening]]
