@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-10 - Event Clip Viewer Browser Preload
+
+- Topic: Remove date filtering and replace the selected-clip Python video warmer with browser-side preloading.
+- Labels: parking, pudo, streamlit, event-viewer, video-preload.
+- Branch: detached worktree at `/workspace/event_clip_viewer`.
+- PR: N/A; inspected PR #117577 for the browser preload pattern.
+- Change type: Tool UI/runtime fix.
+- Areas: `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Removed selected-clip use of the `VideoUrlWarmer` background thread.
+  - Added hidden browser `<video preload="auto">` elements to single and multi-camera selected playback.
+  - Reused the existing preload slider to warm nearby live, model-catalogue, and generated MP4 clips.
+  - Confirmed no date-filter controls remain in the event clip viewer path.
+  - Updated the default anchors path to the `parking_pudo_anchors_gates_20260610__2026-06-10-08-16` materialization.
+  - Verified `git diff --check`, `py_compile`, and `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-event-clip-viewer-browser-preload|2026-06-10 Event Clip Viewer Browser Preload]]
+
 ## 2026-06-10 - Parking/PUDO Dataset Split
 
 - Topic: Split generic Parking/PUDO dataset assembly into park/unpark and PUDO/UnPUDO bucket modules.
@@ -11,9 +28,12 @@
 - Changes:
   - Added shared country-split bucket builder helper in `common.py`.
   - Added `parking_pudo/parking/buckets.py` for non-PUDO park/unpark filter registries and bucket lists.
+  - Added `parking_pudo/parking/dataset.py` for standalone non-PUDO park/unpark materialisation.
   - Added `parking_pudo/pudo/buckets.py` for PUDO/UnPUDO filter registries and bucket lists.
+  - Added `parking_pudo/pudo/dataset.py` for standalone PUDO/UnPUDO materialisation.
   - Trimmed `common.py` back to shared platform filters, exclusions, exclusion-routing helpers, and bucket assembly helper.
   - Simplified default and anchors datasets to concatenate the semantic bucket lists.
+  - Registered `parking_pudo/parking` and `parking_pudo/pudo` in `DATASET_STORE`.
   - Verified focused `parking_pudo` sampling test passes.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-dataset-split|2026-06-10 Parking/PUDO Dataset Split]]
 
