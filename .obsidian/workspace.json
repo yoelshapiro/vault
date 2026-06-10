@@ -493,6 +493,8 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-pudo-filter-tightening.md",
+    "agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-console-link.md",
     "agents-change-log.md",
     "projects.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
@@ -520,8 +522,6 @@
     "agent_tasks/2026/06/Week-1/2026-06-07-event-viewer-materialization-anchors.md",
     "agent_tasks/2026/06/Week-1/2026-06-07-parking-interleave-clamp-redeploy.md",
     "agent_tasks/2026/06/Week-1/2026-06-06-guy-recipe-pudo-root-train.md",
-    "agent_tasks/2026/06/Week-1/2026-06-06-parking-pudo-generic-materialization.md",
-    "agent_tasks/2026/06/Week-1/2026-06-06-pudo-generic-zak-materialization.md",
     "html_summaries/zak-pudo-buckets.html",
     "html_summaries/render_zak_pudo_buckets.py",
     "html_summaries/__pycache__/render_zak_pudo_buckets.cpython-310.pyc",
