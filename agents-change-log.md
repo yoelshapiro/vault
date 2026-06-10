@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-10 - Teal/Zebra PUDO Experiments
+
+- Topic: Create teal-elk-amused Console note plus zebra-control UK PUDO licensing and Drift/PUDO experiments.
+- Labels: parking, pudo, model-catalogue, on-road-experiment, licensing.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_new_driving`.
+- PR: N/A.
+- Change type: Model Catalogue operations.
+- Areas: Model Catalogue model notes and on-road experiments.
+- Changes:
+  - Created model note `8772c517-5f64-4be0-9442-56460fe36a7d` on `teal-elk-amused`.
+  - Created pending UK PUDO licensing interleave `3d908711-b4a6-47ee-a750-d466414b2d72` with `zebra-aquamarine-reclusive` control and `teal-elk-amused` variant.
+  - Created pending UK Drift/PUDO interleave `a0e64893-d8a2-4cdc-bdbc-6fffbc1d4384` with default controller and PUDO/SBW config copied from the recent zebra setup.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-teal-zebra-pudo-experiments|2026-06-10 Teal/Zebra PUDO Experiments]]
+
 ### Parking/PUDO anchor mismatch debug
 - Labels: parking, pudo, generic-materialization, debugging
 - Branch: `boris/pudo_generic_materialization`
