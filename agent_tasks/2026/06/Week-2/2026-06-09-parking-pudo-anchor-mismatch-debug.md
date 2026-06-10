@@ -173,6 +173,15 @@ physical stop.
 Also moved `exclude_runs_that_are_too_short` from active base exclusions into
 the disabled data-quality exclusions list for event-table comparison.
 
+Added the symmetric departure-side gate for unpark/UnPUDO anchors. For each
+gear-leaves-park candidate, the selector now looks forward `30s`, clipped at the
+next valid gear-to-park anchor, and requires the maximum point-to-point
+displacement from the gear-change point to exceed `5m`. This filters departures
+where the gear or speed signal twitches but the vehicle never meaningfully moves.
+The gate is inside `_departure_events`, so it applies consistently to
+`dc_unpark_*`, `dc_unpudo_*`, `dc_pre_unpark_*`, `dc_pre_unpudo_*`, anchor-only
+buckets, and CA-near-departure buckets.
+
 Validation:
 - `git diff --check` passed.
 - `bazel test //wayve/ai/services/sampling:test_datasets` and

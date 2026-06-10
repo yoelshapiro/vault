@@ -1630,6 +1630,7 @@
 - Changes:
   - Moved `exclude_runs_that_are_too_short` from active base exclusions to the disabled comparison-only exclusions list.
   - Added a programmable 30s lookback / 5m point-to-point displacement gate before the park-vs-PUDO split.
+  - Added a matching 30s lookahead / 5m max-displacement gate for unpark/UnPUDO departure anchors.
   - Documented the temporary filter state in the Parking/PUDO materialization README and mismatch-debug note.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug|2026-06-09 Parking/PUDO Anchor Mismatch Debug]]
 
