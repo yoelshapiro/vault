@@ -10,10 +10,10 @@ Refactored the generic `parking_pudo` dataset assembly so the semantic bucket fa
 
 ## Changes
 
-- Added `parking_pudo/bucket_builders.py` to own the repeated country-split `Bucket` construction.
+- Added `build_country_buckets` in `parking_pudo/common.py` to own the repeated country-split `Bucket` construction.
 - Added `parking_pudo/parking/buckets.py` for non-PUDO park/unpark filter registries, buckets, and anchor buckets.
 - Added `parking_pudo/pudo/buckets.py` for PUDO/UnPUDO filter registries, buckets, and anchor buckets.
-- Trimmed `parking_pudo/common.py` back to shared platform filters, exclusions, and exclusion-routing helpers.
+- Trimmed `parking_pudo/common.py` back to shared platform filters, exclusions, exclusion-routing helpers, and bucket assembly helper.
 - Reduced `parking_pudo/default/dataset.py` to compose `PARKING_BUCKETS + PUDO_BUCKETS`.
 - Reduced `parking_pudo/anchors/dataset.py` to compose `PARKING_ANCHOR_BUCKETS + PUDO_ANCHOR_BUCKETS`.
 - Updated `wayve/ai/services/sampling/BUILD` so the new dataset modules are included in `dataset_configs`.
