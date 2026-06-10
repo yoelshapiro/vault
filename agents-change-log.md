@@ -10,8 +10,9 @@
 - Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
 - Changes:
   - Added shared country-split bucket builder helper.
-  - Added `parking_pudo/parking/buckets.py` for non-PUDO park/unpark bucket lists.
-  - Added `parking_pudo/pudo/buckets.py` for PUDO/UnPUDO bucket lists.
+  - Added `parking_pudo/parking/buckets.py` for non-PUDO park/unpark filter registries and bucket lists.
+  - Added `parking_pudo/pudo/buckets.py` for PUDO/UnPUDO filter registries and bucket lists.
+  - Trimmed `common.py` back to shared platform filters, exclusions, and exclusion-routing helpers.
   - Simplified default and anchors datasets to concatenate the semantic bucket lists.
   - Verified focused `parking_pudo` sampling test passes.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-dataset-split|2026-06-10 Parking/PUDO Dataset Split]]
