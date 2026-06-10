@@ -217,3 +217,27 @@ WAYVECODE_MAIN_COMMIT_META_OVERRIDE=$(git rev-parse --short=12 main) \
   --start_date 2025-12-01 \
   --end_date 2026-06-07
 ```
+
+## Split Park/Unpark vs PUDO/UnPUDO Filters
+
+Changed the dataset filter policy so PUDO/UnPUDO buckets keep the relaxed
+event-table comparison filters, while park/unpark buckets restore the stricter
+filters. The restored park/unpark filters include full geofencing,
+stopped-segment filtering, first/last-index filtering, run length, allowed run
+tags, low steering-bias confidence, missing wheel odometry, and
+diversion/lens-obscured filtering. `exclude_autonomous_runs` remains excluded
+from the park/unpark strict set by request; per-frame `exclude_autonomous` still
+applies to DC and post-CA park/unpark buckets.
+
+Implementation notes:
+- Added `PARK_UNPARK_*_EXCLUSIONS` in `parking_pudo/common.py`.
+- Added `event_exclusions_for_bucket`, `pre_ca_exclusions_for_bucket`, and
+  `ca_exclusions_for_bucket` to route buckets by family.
+- Updated both `parking_pudo/default` and `parking_pudo/anchors` to use the
+  routing helpers.
+
+Validation:
+- `tools/blackfmt --config pyproject.toml ...`
+- `git diff --check`
+- `WAYVECODE_MAIN_COMMIT_META_OVERRIDE=$(git rev-parse --short=12 main) bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov --test_output=errors`
+- Result: passed.

@@ -1645,6 +1645,7 @@
   - Moved `exclude_runs_that_are_too_short` from active base exclusions to the disabled comparison-only exclusions list.
   - Added a programmable 30s lookback / 5m point-to-point displacement gate before the park-vs-PUDO split.
   - Added a matching 30s lookahead / 5m max-displacement gate for unpark/UnPUDO departure anchors.
+  - Split exclusion routing so PUDO/UnPUDO buckets keep relaxed event-table comparison filters, while park/unpark buckets restore the stricter filters except `exclude_autonomous_runs`.
   - Documented the temporary filter state in the Parking/PUDO materialization README and mismatch-debug note.
   - Published test sampling image `wayveacrprodflyte.azurecr.io/sampling:bpudo-gates-20260610` and submitted full anchors sample execution `anlhtrggbm92jdvp5jd7`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug|2026-06-09 Parking/PUDO Anchor Mismatch Debug]]
