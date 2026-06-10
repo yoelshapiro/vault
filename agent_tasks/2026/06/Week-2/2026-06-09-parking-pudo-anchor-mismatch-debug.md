@@ -188,3 +188,32 @@ Validation:
   `bazel build //wayve/ai/services/sampling:debug_sampling` both failed before
   exercising code because WayveMeta invoked
   `get_wayve_meta_service_info.py --commit` with an empty commit argument.
+
+## Flyte Run With Displacement Gates
+
+Published a test sampling image from the dirty local
+`boris/pudo_generic_materialization` worktree and submitted a full anchors
+`sample` workflow.
+
+Run details:
+- Dataset: `parking_pudo/anchors`
+- Workflow: `sample`
+- Job name: `parking_pudo_anchors_gates_20260610`
+- Date range: `2025-12-01` to `2026-06-07`
+- Image tag: `wayveacrprodflyte.azurecr.io/sampling:bpudo-gates-20260610`
+- Image digest: `sha256:9f648f4864c7eafdffcd70ce1aa8b7936a95fe353213490744530a039c5233d3`
+- Flyte execution: `anlhtrggbm92jdvp5jd7`
+- Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/anlhtrggbm92jdvp5jd7`
+
+Command:
+
+```bash
+WAYVECODE_MAIN_COMMIT_META_OVERRIDE=$(git rev-parse --short=12 main) \
+  bazel run //wayve/ai/services/sampling:workflow -- \
+  remote --image wayveacrprodflyte.azurecr.io/sampling:bpudo-gates-20260610 \
+  run sample \
+  --dataset_name parking_pudo/anchors \
+  --job_name parking_pudo_anchors_gates_20260610 \
+  --start_date 2025-12-01 \
+  --end_date 2026-06-07
+```

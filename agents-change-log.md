@@ -1632,6 +1632,7 @@
   - Added a programmable 30s lookback / 5m point-to-point displacement gate before the park-vs-PUDO split.
   - Added a matching 30s lookahead / 5m max-displacement gate for unpark/UnPUDO departure anchors.
   - Documented the temporary filter state in the Parking/PUDO materialization README and mismatch-debug note.
+  - Published test sampling image `wayveacrprodflyte.azurecr.io/sampling:bpudo-gates-20260610` and submitted full anchors sample execution `anlhtrggbm92jdvp5jd7`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug|2026-06-09 Parking/PUDO Anchor Mismatch Debug]]
 
 ## 2026-06-09 - Parking Interleave Route-End Hazard
