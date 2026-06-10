@@ -158,3 +158,24 @@ Interpretation:
 - This suggests the remaining large "extra anchors" count is mostly generic
   over-segmentation / repeated anchors around the same notebook event, not a
   missing-table join issue.
+
+## Temporary Approach-Displacement Gate
+
+Added a temporary park/PUDO anchor eligibility gate to test the duplicate-anchor
+hypothesis. For each gear-to-park candidate, the selector looks back `30s` and
+requires the point-to-point displacement from that lookback frame to the current
+anchor to be more than `5m`. If another valid gear-to-park anchor appears inside
+the lookback window, the displacement check starts from that previous anchor
+instead of the full `30s` point. This is applied before the park/PUDO split, so it
+can suppress repeated `dc_park_*` and `dc_pudo_*` candidates from the same
+physical stop.
+
+Also moved `exclude_runs_that_are_too_short` from active base exclusions into
+the disabled data-quality exclusions list for event-table comparison.
+
+Validation:
+- `git diff --check` passed.
+- `bazel test //wayve/ai/services/sampling:test_datasets` and
+  `bazel build //wayve/ai/services/sampling:debug_sampling` both failed before
+  exercising code because WayveMeta invoked
+  `get_wayve_meta_service_info.py --commit` with an empty commit argument.

@@ -1619,6 +1619,20 @@
   - Investigated `fme20036/... · 1774544581333311`: event-table PUDO/GBR/non-AV, but corpus has no hazard around the stop and trip events are empty, so generic has no PUDO context to emit `dc_pudo_uk`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison|2026-06-08 Event Clip Viewer Anchor Comparison]]
 
+## 2026-06-10 - Parking/PUDO Duplicate Anchor Gate
+
+- Topic: Temporarily relax run-length filtering and add approach-displacement gate for park/PUDO anchors.
+- Labels: parking, pudo, materialization, anchors, duplicate-filtering.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, investigation.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Moved `exclude_runs_that_are_too_short` from active base exclusions to the disabled comparison-only exclusions list.
+  - Added a programmable 30s lookback / 5m point-to-point displacement gate before the park-vs-PUDO split.
+  - Documented the temporary filter state in the Parking/PUDO materialization README and mismatch-debug note.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug|2026-06-09 Parking/PUDO Anchor Mismatch Debug]]
+
 ## 2026-06-09 - Parking Interleave Route-End Hazard
 
 - Topic: Add parking deployment wrapper behavior for route-end hazards and park gear latching.
