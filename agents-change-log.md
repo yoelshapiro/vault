@@ -10,8 +10,10 @@
 - Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
 - Changes:
   - Published sampling image from clean commit `b2f7351b05892e1f899e9b53554e05ae2bb5959a`.
-  - Submitted `parking_pudo/anchors` full `sample` workflow as execution `a9wgjls2rgpc4wx96d8v`.
-  - Submitted `parking_pudo/default` full `sample` workflow as execution `anfd4jj2d4d9ztjdxq8q`.
+  - Initial `parking_pudo/anchors` run `a9wgjls2rgpc4wx96d8v` failed because Flyte resolved the released sampling image instead of the local branch image.
+  - Retagged the published image digest with the exact local-build tag expected by Flyte.
+  - Submitted corrected `parking_pudo/anchors` full `sample` workflow as execution `arxtjfq56rw2cpgdgpkc`.
+  - Submitted corrected `parking_pudo/default` full `sample` workflow as execution `avhqj2wjj7v9577tl5nx`.
   - Used dataset binary `3.0.68` and date range `2025-12-01` to `2026-06-07`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-context-signal-flyte-runs|2026-06-10 Parking/PUDO Context Signal Flyte Runs]]
 
