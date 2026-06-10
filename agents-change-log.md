@@ -23,14 +23,15 @@
 - Branch: `boris/parking-hub` (forked from `origin/main`).
 - PR: #117733 (draft) — https://github.com/wayveai/WayveCode/pull/117733
 - Change type: new tool / service scaffold.
-- Areas: `wayve/ai/parking/tools/parking_hub/**`, `build_support/docker/autopublish_yaml_image_dirs.bzl`.
+- Areas: `wayve/ai/parking/tools/parking_hub/**`, `wayve/ai/parking/tools/event_clip_viewer/**`, `build_support/docker/autopublish_yaml_image_dirs.bzl`.
 - Changes:
   - Added a FastAPI + uvicorn static hub that auto-discovers HTML reports in `content/` and lists apps from `registry.yaml` (link-out model).
-  - Branded landing page with Wayve press-kit palette + Karla/Work Sans + white wordmark.
-  - Seeded `pre_intervention_augmentation.html` report and `event_clip_viewer` (local) + `data-insights` (hosted) cards.
+  - Branded landing page with Wayve press-kit palette + Karla/Work Sans + white wordmark, London hero photo, and a UK/USA/DEU/JPN country strip.
+  - Seeded `pre_intervention_augmentation.html` report and `event_clip_viewer` + `data-insights` (hosted) cards.
   - Bazel `py_docker_binary` + `data_insights`-style deploy scaffold (Makefile/autopublish/kustomize), static-only (no SA/secrets), host `parking-hub.sso.azr.wayve.{dev,ai}`, namespace `ai--parking`.
-  - Verified: py_checks (flake8/ruff/ty/pytest) pass; local server routes 200/404; kustomize overlays render.
-  - Gating: `ai--parking` namespace + DNS/TLS/SSO must be created by platform before deploy.
+  - Deployed `event_clip_viewer` as its own Streamlit AKS app (`event-clip-viewer.sso.azr.wayve.{dev,ai}`) in `ai--datasets`, reusing `team-datasets-tools` workload identity + `datasets-databricks-api-token` secret; env-gated auth (Databricks token + `DefaultAzureCredential` in-cluster, azure-cli locally).
+  - Verified: py_checks (flake8/ruff/ty/pytest) pass for both apps; hub local server routes 200/404; kustomize overlays render. Docker image build not run in sandbox (ACR 401) — CI builds it.
+  - Gating: `ai--parking` namespace + DNS/TLS/SSO for the hub; event_clip_viewer needs the datasets identity to have grants on the parking SQL warehouse + `wayveprodperceptiondata` storage (verify on dev deploy).
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-hub-static-landing|2026-06-10 Parking Hub static landing page]]
 
 ## 2026-06-10 - Teal/Zebra PUDO Experiments
