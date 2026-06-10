@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-10 - Event Clip Viewer Branch Correction
+
+- Topic: Apply event clip viewer date-filter removal and browser-side selected-clip preloading to `boris/pudo_generic_materialization`.
+- Labels: parking, pudo, streamlit, event-viewer, video-preload.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool UI/runtime fix.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Removed date cutoff filtering from SQL, materialization anchors, and anchor comparison code paths.
+  - Removed selected-clip use of the Python `VideoUrlWarmer` background thread.
+  - Added hidden browser `<video preload="auto">` elements for nearby selected clips.
+  - Updated the default anchors path to the `parking_pudo_anchors_gates_20260610__2026-06-10-08-16` materialization.
+  - Verified `git diff --check`, `py_compile`, and `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-branch-correction|2026-06-10 Event Viewer Branch Correction]]
+
 ## 2026-06-10 - Event Clip Viewer Browser Preload
 
 - Topic: Remove date filtering and replace the selected-clip Python video warmer with browser-side preloading.
