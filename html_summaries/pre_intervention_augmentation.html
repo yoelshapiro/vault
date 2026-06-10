@@ -3,649 +3,875 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Pre-Intervention Augmentation — Interactive Explainer</title>
+<title>Pre-Intervention Augmentation — Deep Dive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0d1117;
-    --bg2:#131a24;
-    --panel:#161d29;
-    --panel2:#1b2433;
-    --ink:#e8eef6;
-    --muted:#8aa0b6;
-    --line:#243042;
-    --accent:#ffb000;      /* amber - corrected */
-    --accent2:#3fd0c9;      /* teal  - original */
-    --danger:#ff5d6c;
-    --good:#5ee08a;
-    --violet:#9d8cff;
+    --bg:#0c1016; --bg2:#121925; --panel:#151c28; --panel2:#1a2230; --panel3:#202a3a;
+    --ink:#e9eff7; --muted:#8ba0b6; --faint:#5c6e84;
+    --line:#243144; --line2:#2e3d52;
+    --accent:#ffb000;     /* amber  = corrected */
+    --accent2:#3fd0c9;    /* teal   = original  */
+    --danger:#ff5d6c; --good:#5ee08a; --violet:#9d8cff; --blue:#5aa9ff;
     --mono:'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
     --sans:'Space Grotesk', Georgia, serif;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
+  html,body{margin:0;padding:0;scroll-behavior:smooth}
   body{
     background:
-      radial-gradient(1200px 600px at 80% -10%, #1a2740 0%, transparent 60%),
-      radial-gradient(900px 500px at -10% 10%, #20183a 0%, transparent 55%),
+      radial-gradient(1100px 560px at 85% -8%, #19263e 0%, transparent 58%),
+      radial-gradient(820px 460px at -8% 6%, #20183a 0%, transparent 52%),
       var(--bg);
-    color:var(--ink);
-    font-family:var(--sans);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+    color:var(--ink); font-family:var(--sans); line-height:1.55; -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1180px;margin:0 auto;padding:42px 24px 100px}
-  header.hero{
-    border:1px solid var(--line);
-    border-radius:18px;
-    background:linear-gradient(160deg, rgba(255,176,0,.06), rgba(63,208,201,.05)), var(--panel);
-    padding:34px 36px;
-    position:relative;
-    overflow:hidden;
-  }
-  header.hero:before{
-    content:"";position:absolute;inset:0;
-    background:repeating-linear-gradient(90deg, transparent 0 38px, rgba(255,255,255,.015) 38px 39px);
-    pointer-events:none;
-  }
-  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
-  h1{font-size:38px;line-height:1.08;margin:0 0 12px;font-weight:700;letter-spacing:-.02em}
-  h1 .hl{color:var(--accent)}
-  .sub{color:var(--muted);font-size:16px;max-width:760px;margin:0}
-  .filechip{display:inline-block;font-family:var(--mono);font-size:12.5px;color:var(--accent2);
-    background:rgba(63,208,201,.08);border:1px solid rgba(63,208,201,.25);border-radius:8px;padding:5px 10px;margin-top:18px}
-
-  section{margin-top:34px}
-  h2{font-size:24px;letter-spacing:-.01em;margin:0 0 6px;display:flex;align-items:center;gap:12px}
-  h2 .num{font-family:var(--mono);font-size:14px;color:var(--bg);background:var(--accent);
-    width:30px;height:30px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
-  h3{font-size:17px;margin:22px 0 8px;color:var(--ink)}
+  .wrap{max-width:1200px;margin:0 auto;padding:34px 22px 110px}
+  a{color:var(--accent2)}
+  code{font-family:var(--mono);font-size:.9em;background:rgba(157,140,255,.13);color:#cabfff;padding:1px 6px;border-radius:5px}
+  .ref{font-family:var(--mono);font-size:11.5px;color:var(--accent2);background:rgba(63,208,201,.08);
+       border:1px solid rgba(63,208,201,.22);border-radius:6px;padding:1px 7px;white-space:nowrap}
+  h1,h2,h3,h4{letter-spacing:-.01em}
   p{color:#cdd9e6}
-  .muted{color:var(--muted)}
-  code{font-family:var(--mono);font-size:.92em;background:rgba(157,140,255,.12);color:#cabfff;padding:1px 6px;border-radius:5px}
-  a.ref{font-family:var(--mono);font-size:12px;color:var(--accent2);text-decoration:none;border-bottom:1px dotted rgba(63,208,201,.5)}
-  a.ref:hover{color:var(--accent)}
+  .muted{color:var(--muted)} .faint{color:var(--faint)}
 
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 26px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media(max-width:880px){.grid2{grid-template-columns:1fr}}
+  /* hero */
+  header.hero{border:1px solid var(--line);border-radius:18px;
+    background:linear-gradient(160deg, rgba(255,176,0,.06), rgba(63,208,201,.05)), var(--panel);
+    padding:30px 34px;position:relative;overflow:hidden}
+  header.hero:before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0 40px, rgba(255,255,255,.014) 40px 41px);pointer-events:none}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{font-size:36px;line-height:1.08;margin:0 0 12px;font-weight:700}
+  h1 .hl{color:var(--accent)}
+  .sub{color:var(--muted);font-size:15.5px;max-width:820px;margin:0}
+  .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .chip{font-family:var(--mono);font-size:12px;color:var(--accent2);background:rgba(63,208,201,.08);
+    border:1px solid rgba(63,208,201,.25);border-radius:8px;padding:5px 11px}
+  .chip.b{color:var(--violet);background:rgba(157,140,255,.08);border-color:rgba(157,140,255,.25)}
 
-  /* pipeline steps */
-  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:8px}
-  .step{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
-  .step .k{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em}
-  .step .t{font-weight:600;margin:6px 0 4px;font-size:14.5px}
-  .step .d{font-size:12.5px;color:var(--muted);line-height:1.45}
+  /* tabs */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:26px 0 22px;position:sticky;top:0;z-index:20;
+    background:linear-gradient(180deg,var(--bg) 70%, transparent);padding:10px 0}
+  .tab{cursor:pointer;font-family:var(--mono);font-size:13px;letter-spacing:.02em;color:var(--muted);
+    border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 15px;transition:.15s;display:flex;gap:8px;align-items:center}
+  .tab:hover{border-color:var(--accent2);color:var(--ink)}
+  .tab.active{color:var(--bg);background:var(--accent);border-color:var(--accent);font-weight:600}
+  .tab .n{font-size:11px;opacity:.7}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  /* data source table */
-  table.src{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
-  table.src th,table.src td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-  table.src th{color:var(--accent);font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.06em}
-  table.src td.col{font-family:var(--mono);color:#cabfff;white-space:nowrap}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 26px;margin-bottom:18px}
+  h2{font-size:23px;margin:0 0 4px;display:flex;align-items:center;gap:12px}
+  h2 .num{font-family:var(--mono);font-size:13px;color:var(--bg);background:var(--accent);
+    width:28px;height:28px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-weight:600}
+  h3{font-size:17px;margin:22px 0 8px;color:var(--ink)}
+  h3:first-child{margin-top:4px}
+  h4{font-size:14.5px;margin:16px 0 6px;color:var(--accent2);font-family:var(--mono);letter-spacing:.02em}
+  ul.tight{margin:6px 0 0;padding-left:20px} ul.tight li{margin:5px 0;color:#cdd9e6;font-size:14.5px}
+  .lead{font-size:16px;color:#d6e2ee}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+
+  /* pill / callout */
+  .callout{border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:0 12px 12px 0;
+    background:linear-gradient(120deg,rgba(157,140,255,.07),transparent);padding:14px 18px;margin:14px 0}
+  .callout.amber{border-left-color:var(--accent);background:linear-gradient(120deg,rgba(255,176,0,.07),transparent)}
+  .callout.teal{border-left-color:var(--accent2);background:linear-gradient(120deg,rgba(63,208,201,.07),transparent)}
+  .callout.red{border-left-color:var(--danger);background:linear-gradient(120deg,rgba(255,93,108,.07),transparent)}
+  .callout h4{margin:0 0 6px} .callout p{margin:5px 0;font-size:14px}
+
+  /* code */
+  pre.py{font-family:var(--mono);font-size:12.7px;line-height:1.62;background:#0a0e14;border:1px solid var(--line2);
+    border-radius:11px;padding:15px 16px;overflow-x:auto;color:#c7d3e1;margin:10px 0;tab-size:4}
+  pre.py .k{color:#ff9ec4} pre.py .s{color:#a6e88f} pre.py .c{color:#5c6e84;font-style:italic}
+  pre.py .b{color:#7fb4ff} pre.py .f{color:#ffd479}
+  .codecap{font-family:var(--mono);font-size:11px;color:var(--faint);margin:-2px 0 12px;display:flex;justify-content:space-between;gap:10px}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--accent);font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase}
+  td.col{font-family:var(--mono);color:#cabfff;white-space:nowrap}
+  td.mono{font-family:var(--mono);color:#9fb4c9}
+
+  /* details */
+  details{border:1px solid var(--line);border-radius:12px;background:var(--panel2);margin:10px 0;overflow:hidden}
+  details[open]{border-color:var(--line2)}
+  summary{cursor:pointer;padding:13px 16px;font-weight:600;font-size:14.5px;list-style:none;display:flex;align-items:center;gap:10px;user-select:none}
+  summary::-webkit-details-marker{display:none}
+  summary .tw{font-family:var(--mono);font-size:11px;color:var(--accent);transition:.2s;display:inline-block;width:14px}
+  details[open] summary .tw{transform:rotate(90deg)}
+  summary .tag{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+  details .body{padding:0 16px 16px;border-top:1px solid var(--line)}
+  details .body p:first-child{margin-top:12px}
+
+  /* steps */
+  .flow{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .frow{display:flex;gap:12px;align-items:stretch}
+  .fnode{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;display:flex;gap:12px;align-items:flex-start}
+  .fnode .k{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--bg);background:var(--accent2);border-radius:7px;padding:3px 8px;white-space:nowrap}
+  .fnode .t{font-weight:600;font-size:14px;margin-bottom:2px}
+  .fnode .d{font-size:12.7px;color:var(--muted);line-height:1.45}
+  .farrow{align-self:center;color:var(--faint);font-size:18px}
+
+  .badges{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px}
+  .badge{font-family:var(--mono);font-size:11.5px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}
+  .badge b{color:var(--ink)}
+  .badge.pass{border-color:rgba(94,224,138,.4);color:var(--good)} .badge.drop{border-color:rgba(255,93,108,.5);color:var(--danger)}
 
   /* playground */
-  .pg{display:grid;grid-template-columns:300px 1fr;gap:20px}
+  .pg{display:grid;grid-template-columns:288px 1fr;gap:18px}
   @media(max-width:980px){.pg{grid-template-columns:1fr}}
-  .scenarios{display:flex;flex-direction:column;gap:8px}
-  .scn{
-    text-align:left;cursor:pointer;border:1px solid var(--line);background:var(--panel2);
-    color:var(--ink);border-radius:11px;padding:11px 13px;font-family:var(--sans);transition:.15s;
-    display:flex;gap:11px;align-items:flex-start;
-  }
+  .scenarios{display:flex;flex-direction:column;gap:7px}
+  .scn{text-align:left;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--ink);
+    border-radius:11px;padding:10px 12px;font-family:var(--sans);transition:.15s;display:flex;gap:10px;align-items:flex-start}
   .scn:hover{border-color:var(--accent2);transform:translateX(2px)}
   .scn.active{border-color:var(--accent);background:linear-gradient(120deg,rgba(255,176,0,.1),rgba(255,176,0,.03))}
-  .scn .ix{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600;min-width:18px}
-  .scn .label{font-size:13px;font-weight:500;line-height:1.25}
-  .scn .tag{display:block;font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:3px}
-
-  .stage{display:flex;flex-direction:column;gap:16px}
-  .plots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .scn .ix{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:600;min-width:16px}
+  .scn .label{font-size:12.7px;font-weight:500;line-height:1.25}
+  .scn .tag{display:block;font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:3px}
+  .stage{display:flex;flex-direction:column;gap:15px}
+  .plots{display:grid;grid-template-columns:1fr 1fr;gap:15px}
   @media(max-width:760px){.plots{grid-template-columns:1fr}}
-  .plotbox{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px 14px 8px}
-  .plotbox .ttl{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.08em;margin-bottom:6px;display:flex;justify-content:space-between}
+  .plotbox{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:13px 13px 7px}
+  .plotbox .ttl{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:6px;display:flex;justify-content:space-between}
   canvas{width:100%;display:block;border-radius:8px}
-
-  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;font-family:var(--mono);color:var(--muted);margin-top:4px}
-  .legend i{display:inline-block;width:22px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
-  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin-right:6px}
-
-  .controls{display:flex;gap:22px;flex-wrap:wrap;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
-  .ctl{display:flex;flex-direction:column;gap:5px;min-width:180px}
-  .ctl label{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.04em;display:flex;justify-content:space-between}
+  .legend{display:flex;gap:15px;flex-wrap:wrap;font-size:12px;font-family:var(--mono);color:var(--muted);margin-top:4px}
+  .legend i{display:inline-block;width:20px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin-right:5px}
+  .controls{display:flex;gap:20px;flex-wrap:wrap;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px 17px}
+  .ctl{display:flex;flex-direction:column;gap:5px;min-width:175px}
+  .ctl label{font-family:var(--mono);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between}
   .ctl label b{color:var(--accent)}
   input[type=range]{width:100%;accent-color:var(--accent)}
-  .toggle{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .toggle{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+  .explain{background:linear-gradient(120deg,rgba(157,140,255,.07),transparent);border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:0 12px 12px 0;padding:15px 19px}
+  .explain h4{margin:0 0 5px;color:var(--violet)} .explain p{margin:5px 0;font-size:13.8px}
 
-  .explain{background:linear-gradient(120deg,rgba(157,140,255,.07),transparent);border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:0 12px 12px 0;padding:16px 20px}
-  .explain h4{margin:0 0 6px;font-size:15px;color:var(--violet)}
-  .explain p{margin:6px 0;font-size:14px}
-  .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .badge{font-family:var(--mono);font-size:11.5px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);background:var(--panel)}
-  .badge b{color:var(--ink)}
-  .badge.pass{border-color:rgba(94,224,138,.4);color:var(--good)}
-  .badge.drop{border-color:rgba(255,93,108,.5);color:var(--danger)}
-
+  footer{margin-top:42px;color:var(--faint);font-size:12px;font-family:var(--mono);text-align:center;border-top:1px solid var(--line);padding-top:18px}
   .note{font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;margin-top:14px}
-  ul.tight{margin:6px 0 0;padding-left:20px}
-  ul.tight li{margin:4px 0;color:#cdd9e6;font-size:14px}
-  .kbd{font-family:var(--mono);font-size:12px;color:var(--accent2)}
-  footer{margin-top:46px;color:var(--muted);font-size:12.5px;font-family:var(--mono);text-align:center}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header class="hero">
-    <p class="eyebrow">Wayve · zoo · augmentations</p>
+    <p class="eyebrow">Wayve · zoo · augmentations · deep dive</p>
     <h1>Pre-Intervention <span class="hl">Trajectory Correction</span></h1>
-    <p class="sub">When a safety driver <b>disengages</b> the autonomous vehicle, the few seconds <em>before</em> the takeover are gold: they show the model heading toward a mistake. This augmentation rewrites those pre-intervention labels so the model learns the expert's correction — <b>earlier and smoother</b> — instead of the behaviour that triggered the takeover.</p>
-    <span class="filechip">wayve/ai/zoo/augmentations/pre_intervention.py</span>
+    <p class="sub">When a safety driver <b>disengages</b> the autonomous vehicle, the seconds just <em>before</em> the takeover capture the model heading toward a mistake. This data-pipeline augmentation rewrites those training labels — the path and the speed — so the policy learns the expert's correction <b>earlier and smoother</b>, instead of the behaviour that caused the disengagement.</p>
+    <div class="chips">
+      <span class="chip">wayve/ai/zoo/augmentations/pre_intervention.py</span>
+      <span class="chip b">branch · boris/pudo_generic_materialization</span>
+      <span class="chip b">.augment_vehicle_preintervention</span>
+    </div>
   </header>
 
-  <!-- ============ DATA SOURCE ============ -->
-  <section>
-    <h2><span class="num">1</span> Where the data comes from</h2>
-    <div class="card">
-      <p>The augmentor is a <code>functional_datapipe("augment_vehicle_preintervention")</code> that sits in the data pipeline and rewrites labels on the fly. It only touches <b>real autonomous-vehicle (AV) fleet logs</b> — frames where the car was driving itself and a human then took over.</p>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="overview"><span class="n">01</span> Overview</button>
+    <button class="tab" data-tab="data"><span class="n">02</span> Data Source</button>
+    <button class="tab" data-tab="algo"><span class="n">03</span> Algorithm</button>
+    <button class="tab" data-tab="code"><span class="n">04</span> Code Walkthrough</button>
+    <button class="tab" data-tab="edge"><span class="n">05</span> Edge Cases</button>
+    <button class="tab" data-tab="examples"><span class="n">06</span> Interactive Examples</button>
+    <button class="tab" data-tab="ref"><span class="n">07</span> Reference</button>
+  </nav>
 
-      <h3>The trigger: an intervention = automation going OFF</h3>
-      <p>Every frame carries an <code>automation_active</code> boolean. An <b>intervention</b> is the index where it flips <code>True → False</code> — that's the safety-driver disengagement. <code>get_intervention_offsets()</code> finds it with <code>np.diff(...) &lt; 0</code>.
-        <a class="ref" href="#" >utils.py:38</a></p>
+  <!-- ============================== OVERVIEW ============================== -->
+  <section class="panel active" id="overview">
+    <div class="card">
+      <h2><span class="num">1</span> The big picture</h2>
+      <p class="lead">A safety-driver <b>disengagement</b> is a free supervision signal: the human only grabs the controls because the car was about to do the wrong thing. The recorded trajectory <em>after</em> the takeover is the expert's fix. This augmentor reaches <b>backward in time</b> and rewrites the pre-takeover labels so they smoothly flow into that fix.</p>
+
+      <div class="grid3" style="margin-top:16px">
+        <div class="callout teal" style="margin:0">
+          <h4>What it reads</h4>
+          <p>Real on-road AV logs: the <code>automation_active</code> flag, vehicle <code>speed</code>, the geometric <code>path</code>, and the policy targets (<code>policy_*</code>).</p>
+        </div>
+        <div class="callout amber" style="margin:0">
+          <h4>What it writes</h4>
+          <p>New <code>policy_speed / curvature / pose / waypoints</code> + a re-fitted <code>path</code>, keeping the originals under <code>original_*</code> keys.</p>
+        </div>
+        <div class="callout" style="margin:0">
+          <h4>What it teaches</h4>
+          <p>Begin braking / accelerating / steering <b>before</b> the point where the human had to intervene — anticipation, not reaction.</p>
+        </div>
+      </div>
+
+      <h3>The one-sentence mental model</h3>
+      <div class="callout amber">
+        <p style="font-size:15px;margin:0">Draw a <b>smooth clothoid arc</b> from where the car is <em>now</em> to a rejoin point <code>2·d + 3</code> metres down the recorded (expert) path, and <b>re-time the speed</b> with a linear ramp that reaches the expert's eventual speed by the moment of intervention — then resample everything into the policy's target slots.</p>
+      </div>
+
+      <h3>End-to-end flow</h3>
+      <div class="flow">
+        <div class="frow">
+          <div class="fnode"><span class="k">GATE</span><div><div class="t">Is this a pre-intervention frame?</div><div class="d">AV in control, exactly one upcoming disengagement, within the time window, path fully valid, no mitigation pending.</div></div></div>
+        </div>
+        <div class="frow"><div class="farrow">↓</div></div>
+        <div class="frow">
+          <div class="fnode"><span class="k">PATH</span><div><div class="t">Re-fit geometry</div><div class="d">Clothoid from now → rejoin point, then continue along the recorded path. Forward/reverse aware.</div></div></div>
+          <div class="fnode"><span class="k">SPEED</span><div><div class="t">Re-shape timing</div><div class="d">Linear ramp v₀ → v₂ reaching the future/expert speed by <code>t1 = ix+offset</code>.</div></div></div>
+        </div>
+        <div class="frow"><div class="farrow">↓</div></div>
+        <div class="frow">
+          <div class="fnode"><span class="k">CHECK</span><div><div class="t">Safety gate</div><div class="d">Drop the sample if a slow-down intervention is paired with a speed-up heuristic, or if clothoid geometry disagrees with the speed sign.</div></div></div>
+          <div class="fnode"><span class="k">WRITE</span><div><div class="t">Resample → policy labels</div><div class="d">Interpolate poses + curvature along the new path at the new cumulative distances; store as <code>policy_*</code>, keep <code>original_*</code>.</div></div></div>
+        </div>
+      </div>
+
+      <h3>Two related augmentors</h3>
+      <table>
+        <tr><th>Augmentor</th><th>datapipe</th><th>Purpose</th></tr>
+        <tr><td class="col">VehiclePreInterventionAugementor</td><td class="mono">.augment_vehicle_preintervention</td><td>This file. Corrects the window <b>before</b> a disengagement so labels lead into the expert fix.</td></tr>
+        <tr><td class="col">VehicleOffsetInterventionAugementor</td><td class="mono">.intervention_offset</td><td>Sibling in <code>intervention_offset.py</code>: also handles a <b>post</b>-intervention window and a torque/Stanley-based fit. Shares the same base class.</td></tr>
+      </table>
+      <p class="muted" style="font-size:13px;margin-top:8px">Both subclass <code>VehicleInterventionAugmentor</code> <span class="ref">intervention.py:31</span>, which owns the iteration loop, error accounting, gating helpers and the <code>add_results_to_data</code> writer.</p>
+    </div>
+  </section>
+
+  <!-- ============================== DATA SOURCE ============================== -->
+  <section class="panel" id="data">
+    <div class="card">
+      <h2><span class="num">2</span> Where the data comes from</h2>
+      <p>The augmentor is a <code>functional_datapipe("augment_vehicle_preintervention")</code> spliced into the data pipeline. Each item flowing through is a <code>(table, data)</code> pair: <code>table</code> is the raw per-frame run log (numpy arrays), <code>data</code> holds the model's labels for the sampled frame.</p>
+
+      <h3>The trigger: a disengagement = automation turning OFF</h3>
+      <p>Every frame carries <code>automation_active</code>. An <b>intervention</b> is the index where it flips <code>True → False</code>. That's the safety-driver takeover.</p>
+      <pre class="py">def get_intervention_offsets(automation_active):
+    # index where automation_active goes True -> False (a disengagement)
+    a = automation_active.astype(np.float32)
+    (intervention_start,) = np.where(np.diff(a) &lt; 0)
+    return intervention_start + 1</pre>
+      <div class="codecap"><span>utils.py:38 — also detects multiple disengagements, which are later rejected</span><span class="ref">utils.py:38</span></div>
 
       <h3>Columns requested from the data tables</h3>
-      <table class="src">
-        <tr><th>Source</th><th>Field</th><th>Role in the augmentation</th></tr>
-        <tr><td class="col">request_columns<br><span class="muted">intervention.py:85</span></td><td class="col">automation_active</td><td>Per-frame "AV in control" flag — locates the disengagement.</td></tr>
-        <tr><td></td><td class="col">odometry · speed_kmh</td><td>Speed series (÷3.6 → m/s). Drives distance + speed correction.</td></tr>
-        <tr><td></td><td class="col">run_id / timestamp_unixus</td><td>Identify the example for logging dropped/bad samples.</td></tr>
-        <tr><td class="col">table</td><td class="col">time_until_next_disengagement_sec</td><td>Gates which frames count as "pre-intervention" (must be &lt; safeguard offset).</td></tr>
-        <tr><td></td><td class="col">inferred__intervention__what</td><td>Intervention <b>reason</b> label (e.g. <code>failed_to_slow</code>, <code>failed_to_remain_stopped</code>) — drives a safety check.</td></tr>
-        <tr><td class="col">data</td><td class="col">path_pose / path_curvature / path_valid</td><td>The geometric path (the recorded future trajectory) that gets re-fitted.</td></tr>
-        <tr><td></td><td class="col">policy_pose / speed / curvature / time_delta</td><td>The model's <b>training targets</b>. These are the labels we overwrite.</td></tr>
-        <tr><td></td><td class="col">mitigation_request</td><td>If a mitigation is already requested, the augmentor bails out untouched.</td></tr>
+      <p class="muted" style="font-size:13.5px">Declared up-front via <code>request_columns(...)</code> so the pipeline materialises them <span class="ref">intervention.py:85</span>:</p>
+      <table>
+        <tr><th>Where</th><th>Field</th><th>Role</th></tr>
+        <tr><td class="mono">request_columns</td><td class="col">automation_active</td><td>Per-frame "AV in control" flag — locates the disengagement.</td></tr>
+        <tr><td></td><td class="col">odometry · speed_kmh</td><td>Speed series (÷3.6 → m/s). Drives distance integration + speed correction.</td></tr>
+        <tr><td></td><td class="col">run_id · timestamp_unixus</td><td>Identify the example when logging dropped / bad samples.</td></tr>
+        <tr><td class="mono">table</td><td class="col">time_until_next_disengagement_sec</td><td>Gates which frames count as "pre-intervention".</td></tr>
+        <tr><td></td><td class="col">inferred__intervention__what</td><td>Intervention <b>reason</b> label (taxonomy) — drives the acceleration safety gate.</td></tr>
+        <tr><td class="mono">data</td><td class="col">path_pose · path_curvature · path_valid</td><td>The geometric path (recorded future trajectory) that gets re-fitted.</td></tr>
+        <tr><td></td><td class="col">policy_pose / speed / curvature / time_delta</td><td>The model's <b>training targets</b> — the labels we overwrite.</td></tr>
+        <tr><td></td><td class="col">mitigation_request</td><td>If a mitigation is already requested, bail out untouched.</td></tr>
       </table>
 
-      <h3>What is filtered out</h3>
-      <ul class="tight">
-        <li><b>Novel-view-synthesis & data-collection</b> (non-AV) frames — skipped (<code>is_nvs</code>, no <code>automation_active</code>).</li>
-        <li>Frames that are <b>not pre-intervention</b>: needs <code>automation_active[origin]</code> AND <code>time_until_intervention &lt; safeguard_clean_av_offset_sec</code>. <a class="ref">pre_intervention.py:129</a></li>
-        <li>Examples with <b>0 or &gt;1</b> interventions in the window, or the intervention beyond <code>max_pre_intervention_offset</code>. <a class="ref">intervention.py:177</a></li>
-        <li>Paths that aren't fully valid, or where geometry/speed direction disagree → <code>BadPreInterventionException</code>, sample dropped.</li>
-      </ul>
-      <p class="note"><b>Key idea on the path data:</b> <code>path_pose</code> is the <em>recorded</em> future trajectory. After the disengagement those points are what the <b>human</b> actually drove. So the "rejoin target" already encodes the expert outcome — the augmentation just builds a smooth, physically-consistent label that reaches it.</p>
+      <div class="callout teal">
+        <h4>Key insight — the path already contains the expert fix</h4>
+        <p><code>path_pose</code> is the <em>recorded</em> future trajectory. After the disengagement, those points are what the <b>human actually drove</b>. So the "rejoin target" downstream already encodes the expert outcome — the augmentation only needs to build a smooth, physically-consistent label that reaches it.</p>
+      </div>
+
+      <h3>What gets filtered out (and why)</h3>
+      <details>
+        <summary><span class="tw">▶</span> Not real AV data <span class="tag">is_nvs / no automation</span></summary>
+        <div class="body">
+          <p>The base loop skips novel-view-synthesis frames, safety-GT frames, and anything where <code>automation_active</code> is never true. These aren't genuine disengagements. <span class="ref">intervention.py:116</span></p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="tw">▶</span> Not a pre-intervention frame <span class="tag">safeguard offset</span></summary>
+        <div class="body">
+          <p>A frame only qualifies if the AV is currently driving <b>and</b> the disengagement is close enough in time:</p>
+          <pre class="py">pre_ca_candidate = automation_active[origin] and (
+    time_until_intervention_sec[origin] &lt; self.safeguard_clean_av_offset_sec
+)
+if not pre_ca_candidate:
+    return data   # leave labels untouched</pre>
+          <div class="codecap"><span>pre_intervention.py:129 — strict &lt; matches how AV-DiLC buckets are generated</span><span class="ref">pre_intervention.py:129</span></div>
+          <p class="muted" style="font-size:13px"><code>SAFEGUARD_CLEAN_AV_OFFSET_SEC = MIN_AV_SEGMENT_INTERVENTION_OFFSET_SEC − INDICATOR_CHANGEPOINT_WINDOW_SEC = 20.0 − 0.0 = 20.0 s</code> <span class="ref">sampling/constants.py:140</span>. Frames more than this far from a disengagement are treated as "clean AV" and left alone.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="tw">▶</span> Zero or more-than-one intervention, or too far ahead <span class="tag">InterventionException</span></summary>
+        <div class="body">
+          <pre class="py">def validate_intervention(self, origin, max_pre_intervention_offset, intervention_offsets):
+    if len(intervention_offsets) == 0:
+        raise InterventionException("no_intervention")
+    if len(intervention_offsets) &gt; 1:
+        raise InterventionException("more_than_one_intervention")
+    if intervention_offsets[0] - origin &gt; max_pre_intervention_offset:
+        raise InterventionException("intervention_beyond_max_pre_offset")</pre>
+          <div class="codecap"><span>intervention.py:177 — default max_pre_intervention_offset_sec = 1.2 s</span><span class="ref">intervention.py:177</span></div>
+          <p>Each raised <code>InterventionException</code> increments a per-reason <code>dropped</code> counter; the sample is skipped, not crashed.</p>
+        </div>
+      </details>
+      <details>
+        <summary><span class="tw">▶</span> Path not fully valid <span class="tag">BadPreInterventionException</span></summary>
+        <div class="body">
+          <p>The clothoid re-fit needs a full-length path; partial paths are dropped.</p>
+          <pre class="py">if not np.all(path_valid):
+    raise BadPreInterventionException(
+        f"Path has only {valid_count}/{len(path_valid)} valid points; "
+        f"pre_intervention augmentation requires a full-length path.")</pre>
+          <div class="codecap"><span>pre_intervention.py:146</span><span class="ref">pre_intervention.py:146</span></div>
+        </div>
+      </details>
+      <details>
+        <summary><span class="tw">▶</span> Mitigation already requested <span class="tag">early return</span></summary>
+        <div class="body">
+          <p>If the frame already has a mitigation request (e.g. <code>PULL_OVER</code>), the augmentor returns the data unchanged — verified by <code>test_pre_intervention_skipped_when_mitigation_request_set</code>.</p>
+          <pre class="py">mitigation = data.get(DataKeys.MITIGATION_REQUEST)
+if mitigation is not None and int(mitigation[0]) != MitigationRequest.NO_MITIGATION:
+    return data</pre>
+          <div class="codecap"><span>pre_intervention.py:111</span><span class="ref">pre_intervention.py:111</span></div>
+        </div>
+      </details>
     </div>
   </section>
 
-  <!-- ============ HOW IT WORKS ============ -->
-  <section>
-    <h2><span class="num">2</span> How the correction works</h2>
+  <!-- ============================== ALGORITHM ============================== -->
+  <section class="panel" id="algo">
     <div class="card">
-      <p>The heart is <code>correct_trajectory()</code> <a class="ref">pre_intervention.py:257</a>. Two things are rewritten in lock-step: <b>the path</b> (geometry) and <b>the speed</b> (timing). Then poses are re-interpolated along the new path at the new speeds.</p>
+      <h2><span class="num">3</span> How the correction works</h2>
+      <p>The engine is <code>correct_trajectory()</code> <span class="ref">pre_intervention.py:257</span>. It rewrites <b>geometry</b> and <b>timing</b> in lock-step, then resamples poses along the new path. Here is the whole thing as readable pseudocode:</p>
 
-      <div class="steps">
-        <div class="step"><div class="k">STEP A</div><div class="t">Distance to intervention</div><div class="d"><code>cumdist_from_speed</code> integrates |speed|·dt. Read off the distance at the disengagement index.</div></div>
-        <div class="step"><div class="k">STEP B</div><div class="t">Pick a rejoin point</div><div class="d"><code>2·dist + 3</code> metres ahead → <code>correction_end_index</code>. The corrected path must merge back to the recorded (expert) path here.</div></div>
-        <div class="step"><div class="k">STEP C</div><div class="t">Clamp at direction change</div><div class="d"><code>_clamp_at_direction_change</code> stops the clothoid ironing out a genuine stop-and-reverse cusp (parking!). Speed is zeroed at the cusp.</div></div>
-        <div class="step"><div class="k">STEP D</div><div class="t">Re-fit the path</div><div class="d"><code>correct_path(method="clothoid")</code> fits a G1-Hermite clothoid from now → rejoin, with forward/reverse aware tangents.</div></div>
-        <div class="step"><div class="k">STEP E</div><div class="t">Re-shape the speed</div><div class="d"><code>correct_speed</code> ramps linearly from current speed v₀ to a <em>future</em> speed v₂, reaching it by the intervention time + offset.</div></div>
-        <div class="step"><div class="k">STEP F</div><div class="t">Safety gate</div><div class="d"><code>validate_pre_intervention_accelerations</code> drops the sample if a slow-down intervention is paired with a speed-up heuristic.</div></div>
-        <div class="step"><div class="k">STEP G</div><div class="t">Re-interpolate poses</div><div class="d">Poses + curvature are sampled along the new path at the new cumulative distances, then written back as <code>policy_*</code> targets.</div></div>
-      </div>
+      <pre class="py">def correct_trajectory(path, path_curvature, intervention_index, speed, ...):
+    # --- A. how far does the car travel before the human takes over? ---
+    original_distances = cumdist_from_speed(speed, time_step)   # trapezoid of |speed|
+    distance_to_intervention = original_distances[intervention_index]
 
-      <div class="grid2" style="margin-top:20px">
+    # --- B. choose a rejoin point on the recorded (expert) path ---
+    distance_to_correction_end = 2 * distance_to_intervention + 3   # metres
+    correction_end_index = round(distance_to_correction_end / path_step)
+
+    # --- C. don't iron out a genuine stop-and-reverse cusp (parking!) ---
+    correction_end_index, clamped, first_opposite = _clamp_at_direction_change(...)
+
+    # --- D. re-fit the path as a clothoid from now -> rejoin point ---
+    if interpolate_path:
+        is_reverse = _is_reverse_from_speed(speed)        # sign of first non-zero speed
+        _validate_clothoid_direction(...)                 # geometry must agree with speed
+        corrected_path, corrected_curv, valid = correct_path(
+            path, path_curvature, start=0, end=correction_end_index,
+            method="clothoid", reverse=is_reverse)
+
+    # --- E. zero speed past a clamped direction change (decelerate to the cusp) ---
+    if clamped:
+        speed_for_correction = speed.copy(); speed_for_correction[first_opposite:] = 0.0
+
+    # --- F. re-shape the speed: linear ramp v0 -> v2 ---
+    new_speed, _, _, acc_pre = correct_speed(speed_for_correction,
+                                             intervention_offset=intervention_index,
+                                             offset=speed_offset)
+    acc_pre /= time_step                                  # delta-v/step -> m/s^2
+    acc_int = compute_window_accel(speed, intervention_index, window_s=1.0)
+
+    # --- G. crop, then fit ego-poses to the new speed along the new path ---
+    new_distances = cumdist_from_speed(new_speed, time_step)
+    new_poses, new_curvature = interpolate_pose_and_curvature_along_path(
+        new_distances, corrected_path, corrected_curv)
+
+    # --- H. safety gate: slow-down intervention must not pair with speed-up heuristic ---
+    validate_pre_intervention_accelerations(intervention_what, acc_int, acc_pre)
+    return corrected_path, corrected_curv, valid, new_poses, new_speed, new_curvature, new_time_deltas</pre>
+      <div class="codecap"><span>simplified from pre_intervention.py:257–376</span><span class="ref">pre_intervention.py:257</span></div>
+
+      <div class="grid2" style="margin-top:18px">
         <div>
-          <h3>The speed law — <code>correct_speed</code> <a class="ref">intervention.py:251</a></h3>
-          <p class="muted" style="font-size:13.5px">With <code>t1 = ix + offset</code> and <code>t2 = 2·ix + offset</code>:</p>
-          <div style="font-family:var(--mono);font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;color:#cdd9e6">
-            v₀ = speed[0]&nbsp;&nbsp;(now)<br>
-            v₂ = speed[t2]&nbsp;(future / expert outcome)<br>
-            a&nbsp; = (v₂ − v₀) / t1<br>
-            v[0..t1] = v₀ + a·k<br>
-            v = [ ramp ‖ original speed from t2 on ]
+          <h3>The speed law — <code>correct_speed</code></h3>
+          <p class="muted" style="font-size:13.5px">A single linear ramp replaces the pre-intervention speed. With <code>t1 = ix + offset</code> and <code>t2 = 2·ix + offset</code>:</p>
+          <pre class="py">t0, t1, t2 = 0, ix + offset, 2*ix + offset
+v0, v2 = speed[t0], speed[t2]        # now, and the future/expert speed
+a01 = (v2 - v0) / (t1 - t0)          # constant accel
+v01 = v0 + a01 * arange(t1)          # the ramp
+v = concat([v01, speed[t2:]])        # ramp, then original tail</pre>
+          <div class="codecap"><span>intervention.py:251</span><span class="ref">intervention.py:251</span></div>
+          <div class="callout amber">
+            <p style="margin:0;font-size:13.5px"><b>Invariants</b> (proven by <code>test_speed_correction</code>): <code>new_speed[0] == speed[0]</code> and <code>new_speed[t1] == speed[t2]</code>, and the tail from <code>t2</code> on is copied verbatim. So the car is told to start matching the expert's eventual speed <b>now</b>.</p>
           </div>
-          <p class="muted" style="font-size:13px">Result: the car is told to start matching the expert's eventual speed <b>now</b>, rather than waiting for the human to grab the controls.</p>
         </div>
         <div>
-          <h3>The path law — <code>correct_path</code> <a class="ref">trajectory.py:72</a></h3>
-          <p class="muted" style="font-size:13.5px">A clothoid (curvature linear in arc-length) is fit between two boundary poses:</p>
-          <div style="font-family:var(--mono);font-size:13px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;color:#cdd9e6">
-            start = pose[0]&nbsp;&nbsp;&nbsp;(θ₀)<br>
-            end &nbsp;= pose[correction_end] (θ₁)<br>
-            Clothoid.G1Hermite(x₀,y₀,θ₀, x₁,y₁,θ₁)<br>
-            reverse → θ + π, curvature negated<br>
-            then continue original spacing
+          <h3>The path law — <code>correct_path</code></h3>
+          <p class="muted" style="font-size:13.5px">A <b>clothoid</b> (curvature linear in arc-length — the curve your steering wheel traces at constant turn rate) is fit between two boundary poses:</p>
+          <pre class="py"># boundary poses: start = pose[0], end = pose[correction_end]
+fit_theta0 = theta0 + pi if reverse else theta0
+fit_theta1 = theta1 + pi if reverse else theta1
+clothoid = Clothoid.G1Hermite(x0,y0,fit_theta0, x1,y1,fit_theta1)
+# sample evenly along arc-length, negate curvature/heading if reverse
+# then continue original spacing past the rejoin point</pre>
+          <div class="codecap"><span>trajectory.py:72 — also supports bezier / straight</span><span class="ref">trajectory.py:72</span></div>
+          <div class="callout teal">
+            <p style="margin:0;font-size:13.5px">The first <code>start</code> points are copied unchanged, the boundary poses are matched exactly, and waypoints stay ≈<code>0.25 m</code> apart (proven by <code>test_correct_path</code>). One smooth arc replaces the late, jerky human takeover.</p>
           </div>
-          <p class="muted" style="font-size:13px">Result: a single smooth arc replaces the late, jerky human takeover — and it begins the manoeuvre earlier.</p>
         </div>
       </div>
+
+      <h3>Why <code>2·d + 3</code>?</h3>
+      <div class="callout">
+        <p style="margin:0">The rejoin distance scales with how far the car travels before the takeover (<code>d</code>), giving the clothoid room to ease in proportionally, plus a <code>+3 m</code> floor so even a near-stationary car has a sane arc. The corrected path must merge back to the recorded path by this point — beyond it, the label <em>is</em> the recorded expert trajectory.</p>
+      </div>
+
+      <h3>The acceleration safety gate</h3>
+      <p>Some interventions are unambiguous slow-downs (braking for a red light). If the heuristic instead produced an <em>acceleration</em>, the label would be nonsense — so the sample is dropped.</p>
+      <pre class="py">def classify_acceleration(a, threshold=0.2):     # -> -1 / 0 / +1
+    if a &lt; -threshold: return -1                  # decelerating
+    if a &lt;= threshold: return 0                   # roughly steady
+    return 1                                       # accelerating
+
+def validate_pre_intervention_accelerations(what, acc_intervention, acc_pre):
+    if what not in ["failed_to_remain_stopped", "failed_to_slow"]:
+        return                                     # gate only applies to slow-downs
+    if classify_acceleration(acc_intervention) == -1 and classify_acceleration(acc_pre) == 1:
+        raise BadPreInterventionException("Intervention slowing down but heuristic speeding up.")</pre>
+      <div class="codecap"><span>pre_intervention.py:22 / 61</span><span class="ref">pre_intervention.py:61</span></div>
     </div>
   </section>
 
-  <!-- ============ PLAYGROUND ============ -->
-  <section>
-    <h2><span class="num">3</span> Interactive examples</h2>
-    <p class="muted" style="margin-top:-2px">Pick a disengagement scenario. <span style="color:var(--accent2)">Teal</span> is the <b>original recorded</b> trajectory (the human's late takeover); <span style="color:var(--accent)">amber</span> is the <b>corrected label</b> the model is trained on. Drag the sliders to see how the intervention timing and speed offset reshape the correction.</p>
+  <!-- ============================== CODE WALKTHROUGH ============================== -->
+  <section class="panel" id="code">
+    <div class="card">
+      <h2><span class="num">4</span> Code walkthrough — <code>augment()</code></h2>
+      <p>The per-sample entry point. Read top-to-bottom, it is exactly the gate → correct → write flow.</p>
+      <pre class="py">def augment(self, data, table):
+    # 0. bail if a mitigation is already requested
+    mitigation = data.get(MITIGATION_REQUEST)
+    if mitigation is not None and int(mitigation[0]) != NO_MITIGATION:
+        return data
 
-    <div class="card pg">
-      <div class="scenarios" id="scenarios"></div>
+    origin = self.get_origin(table)
+    time_step = self.get_time_step(table)
+    speed_offset = round(self.speed_offset_sec / time_step)
+    max_pre_offset = round(self.max_pre_intervention_offset_sec / time_step)
 
-      <div class="stage">
-        <div class="controls">
-          <div class="ctl">
-            <label>Intervention time <b><span id="ixv">1.00</span> s</b></label>
-            <input type="range" id="ixSlider" min="12" max="34" value="25" step="1">
-          </div>
-          <div class="ctl">
-            <label>Speed offset <b><span id="offv">1.00</span> s</b></label>
-            <input type="range" id="offSlider" min="10" max="40" value="25" step="1">
-          </div>
-          <div class="ctl" style="justify-content:center">
-            <label class="toggle"><input type="checkbox" id="showOrig" checked> show original path kink</label>
-            <label class="toggle"><input type="checkbox" id="showRejoin" checked> show rejoin point (2·d+3)</label>
-          </div>
-        </div>
+    # 1. limit search so we don't pick up a distant future disengagement
+    search_limit = origin + max_pre_offset + round(1.0 / time_step)
+    automation_active = table[AUTOMATION_ACTIVE][:search_limit]
 
-        <div class="plots">
-          <div class="plotbox">
-            <div class="ttl"><span>BIRD'S-EYE PATH — top-down (m)</span><span id="bevsub"></span></div>
-            <canvas id="bev" width="520" height="360"></canvas>
-            <div class="legend">
-              <span><i style="background:var(--accent2)"></i>original path</span>
-              <span><i style="background:var(--accent)"></i>corrected (clothoid)</span>
-              <span><span class="dot" style="background:var(--danger)"></span>disengage</span>
-              <span><span class="dot" style="background:var(--good)"></span>rejoin</span>
-            </div>
-          </div>
-          <div class="plotbox">
-            <div class="ttl"><span>SPEED PROFILE — speed vs time</span><span id="spdsub"></span></div>
-            <canvas id="spd" width="520" height="360"></canvas>
-            <div class="legend">
-              <span><i style="background:var(--accent2)"></i>original speed</span>
-              <span><i style="background:var(--accent)"></i>corrected speed</span>
-              <span><span class="dot" style="background:var(--danger)"></span>t₀ disengage</span>
-              <span><span class="dot" style="background:var(--violet)"></span>t1 / t2</span>
-            </div>
-          </div>
-        </div>
+    # 2. is this actually a pre-intervention frame?
+    pre_ca_candidate = automation_active[origin] and (
+        time_until_intervention_sec[origin] &lt; self.safeguard_clean_av_offset_sec)
+    if not pre_ca_candidate:
+        return data
 
-        <div class="explain" id="explain">
-          <h4>—</h4>
-          <p>—</p>
-          <div class="badges" id="badges"></div>
-        </div>
+    intervention_what = first_nonempty(table.get("inferred__intervention__what", "")) or "not in binaries"
+    intervention_offsets = get_intervention_offsets(automation_active)
+
+    # 3. validate pose / intervention / required keys / full path
+    self.validate_vehicle_pose(data)
+    self.validate_intervention(origin, max_pre_offset, intervention_offsets)
+    self.check_data_keys(data)
+    if not np.all(data[PATH_VALID]):
+        raise BadPreInterventionException("...requires a full-length path.")
+
+    speed = table[speed_kmh][origin:] / 3.6           # m/s, from the current frame on
+
+    # 4. the actual correction
+    (results[PATH_POSE], results[PATH_CURVATURE], results[PATH_VALID],
+     future_pose, future_speed, future_curvature, future_time_delta) = correct_trajectory(
+        path=data[PATH_POSE], path_curvature=data[PATH_CURVATURE], speed=speed,
+        time_step=time_step, intervention_index=intervention_offsets[0] - origin,
+        speed_offset=speed_offset, interpolate_path=self.interpolate_path,
+        path_length=self.path_length, path_step=self.path_step,
+        intervention_what=intervention_what)
+
+    # 5. resample to the policy's query times & store labels (keeps original_* copies)
+    data = self.add_results_to_data(data, future_speed, future_pose, future_curvature,
+                                    future_time_delta, results,
+                                    allow_future_reinterpolation=self.allow_future_reinterpolation)
+    return data</pre>
+      <div class="codecap"><span>condensed from pre_intervention.py:110–188</span><span class="ref">pre_intervention.py:110</span></div>
+
+      <h3>How labels are written back — <code>add_results_to_data</code></h3>
+      <p>The corrected future series are at <code>future_time_delta</code> spacing. The policy wants values at its own <code>policy_time_delta</code> query times, so they're either looked up (tolerance 0.01 s) or re-interpolated.</p>
+      <pre class="py">def add_results_to_data(data, future_speed, future_pose, future_curvature, future_time_delta, results, ...):
+    time_delta = data[POLICY_TIME_DELTA]
+    if np.any(time_delta &lt; -1e-3):
+        raise RuntimeError("policy has negative time deltas — past data not supported")
+
+    if allow_future_reinterpolation and needs_interpolation:
+        results[POLICY_SPEED]     = np.interp(time_delta, future_time_delta, future_speed)
+        results[POLICY_CURVATURE] = np.interp(time_delta, future_time_delta, future_curvature)
+        results[POLICY_POSE]      = interpolate_poses_and_curvature(time_delta, future_time_delta, future_pose)
+    else:
+        results[POLICY_SPEED]     = extract(future_speed,     k=future_time_delta, q=time_delta, atol=0.01)
+        results[POLICY_CURVATURE] = extract(future_curvature, k=future_time_delta, q=time_delta, atol=0.01)
+        results[POLICY_POSE]      = extract(future_pose,      k=future_time_delta, q=time_delta, atol=0.01)
+
+    results[POLICY_WAYPOINTS] = results[POLICY_POSE][:, :2, -1].copy()
+    data.update({f"original_{k}": data[k] for k in results})   # keep originals!
+    data.update(results)
+    data["is_pre_intervention_corrected"] = np.array(True)
+    return data</pre>
+      <div class="codecap"><span>intervention.py:203</span><span class="ref">intervention.py:203</span></div>
+
+      <div class="callout amber">
+        <h4>Two breadcrumbs every corrected sample carries</h4>
+        <p>① every overwritten key <code>k</code> is preserved as <code>original_k</code> (so you can always recover the raw label); ② a boolean flag <code>is_pre_intervention_corrected = True</code> marks the sample. Great for debugging and for downstream filtering.</p>
       </div>
+
+      <h3>The iteration loop &amp; error budget</h3>
+      <p>The base class <code>__iter__</code> wraps every sample in try/except, converting expected failures into <b>dropped-sample counters</b> rather than crashes — but trips a <code>RuntimeError</code> if too many consecutive errors occur (default <code>max_errors=10</code>), so a broken pipeline still fails loudly.</p>
+      <table>
+        <tr><th>Exception</th><th>Meaning</th><th>Effect</th></tr>
+        <tr><td class="mono">InterventionException</td><td>0/&gt;1 interventions, or beyond max offset</td><td>warn + drop, count by reason</td></tr>
+        <tr><td class="mono">BadPreInterventionException</td><td>bad path / accel-gate / geometry mismatch</td><td>warn + drop</td></tr>
+        <tr><td class="mono">DistanceOutOfRangeException</td><td>correction distance off the path</td><td>drop</td></tr>
+        <tr><td class="mono">AssertionError</td><td>invariant broken</td><td><b>re-raised</b> (hard fail)</td></tr>
+      </table>
     </div>
-    <p class="note">⚠︎ <b>What is faithful vs. illustrative.</b> The speed correction (<code>correct_speed</code>), the distance integration (<code>cumdist_from_speed</code>, trapezoidal on |speed|), the <code>2·d+3</code> rejoin point, the acceleration-bucket safety gate and the direction-change clamp are <b>faithful JS ports</b> of the Python. The clothoid path fit is approximated here by a G1 cubic-Hermite spline (matching endpoint position + heading) — visually clothoid-like; the real code uses <code>pyclothoids.Clothoid.G1Hermite</code>. The per-scenario raw paths/speeds are <b>synthetic</b> stand-ins for real fleet logs, constructed to make each disengagement legible.</p>
   </section>
 
-  <footer>pre_intervention.py · interactive explainer · generated for Boris — served on :3006</footer>
+  <!-- ============================== EDGE CASES ============================== -->
+  <section class="panel" id="edge">
+    <div class="card">
+      <h2><span class="num">5</span> Edge cases &amp; safety logic</h2>
+      <p>This is where most of the file's complexity lives — reverse driving and parking manoeuvres break naïve assumptions. Each case below is backed by a test in <code>test_pre_intervention.py</code>.</p>
+
+      <details open>
+        <summary><span class="tw">▶</span> Reverse &amp; mixed-direction driving <span class="tag">|speed| for distance</span></summary>
+        <div class="body">
+          <p>Speed can be <b>negative</b> (reverse). Distances are integrated on the <b>absolute</b> speed so they stay monotonically increasing, while the <em>signed</em> speed is preserved in the output so the policy still knows it's reversing.</p>
+          <pre class="py">def cumdist_from_speed(speed, dt):
+    avg = 0.5 * (speed[1:] + speed[:-1])
+    return cumsum(abs(avg) * dt)   # abs -> distance, not signed displacement</pre>
+          <p class="muted" style="font-size:13px">Tests: <code>test_correct_trajectory_with_negative_speed</code> (all-reverse stays ≤0), <code>test_correct_trajectory_with_mixed_speeds</code> (distance still monotone), <code>test_reverse_only_correct_trajectory</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tw">▶</span> Direction-change clamp — don't iron out a stop-and-reverse cusp <span class="tag">parking</span></summary>
+        <div class="body">
+          <p>If the car goes forward then reverses (or vice-versa) <b>after</b> the intervention, a clothoid spanning that cusp would smooth away a real, intended inflection. The clamp shortens the rejoin point to the cusp and forces the speed to <b>decelerate to zero</b> there.</p>
+          <pre class="py">def _clamp_at_direction_change(speed, intervention_index, correction_end_index, original_distances, path_step):
+    nonzero = np.nonzero(speed)[0]
+    initial_sign = np.sign(speed[nonzero[0]])                 # NB: first *non-zero*, not speed[0]
+    opposite = np.sign(speed[intervention_index:]) == -initial_sign
+    if not np.any(opposite):
+        return correction_end_index, False, None              # no reversal -> no clamp
+    first_opposite_idx = intervention_index + argmax(opposite)
+    max_path_idx = round(original_distances[first_opposite_idx] / path_step)
+    if max_path_idx &lt; correction_end_index:
+        return max(max_path_idx, 1), True, first_opposite_idx  # clamp + zero speed past cusp</pre>
+          <div class="codecap"><span>pre_intervention.py:191</span><span class="ref">pre_intervention.py:191</span></div>
+          <ul class="tight">
+            <li><b>Post-intervention reversal → clamps</b> (<code>test_mixed_speeds_clamps_at_post_intervention_direction_change</code>): final speeds become exactly 0.</li>
+            <li><b>Leading zeros then forward then reverse → still clamps</b> (<code>test_leading_zeros_with_post_intervention_reversal_clamps</code>): the sign reference is the first <em>non-zero</em> speed, so a standstill start doesn't fool it.</li>
+            <li><b>Pre-intervention-only direction change → does NOT clamp</b> (<code>test_mixed_speeds_pre_intervention_direction_change_not_clamped</code>): if post-intervention speeds match the initial direction, nothing is zeroed.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tw">▶</span> Clothoid-vs-speed direction consistency check <span class="tag">drop on mismatch</span></summary>
+        <div class="body">
+          <p>The travel direction is inferred two ways: from the <b>speed sign</b> and from the <b>clothoid geometry</b> (which of forward/reverse tangents gives the shorter arc). If they disagree, the data is inconsistent and the sample is dropped.</p>
+          <pre class="py">def _validate_clothoid_direction(path, correction_end_index, is_reverse, speed):
+    clothoid_fwd = Clothoid.G1Hermite(x0,y0,theta0,        x1,y1,theta1)
+    clothoid_rev = Clothoid.G1Hermite(x0,y0,theta0 + pi,   x1,y1,theta1 + pi)
+    geometry_says_reverse = clothoid_rev.length &lt; clothoid_fwd.length
+    if geometry_says_reverse != is_reverse:
+        raise BadPreInterventionException("Clothoid direction disagrees with speed sign.")</pre>
+          <div class="codecap"><span>pre_intervention.py:230 — only runs when interpolate_path=True</span><span class="ref">pre_intervention.py:230</span></div>
+          <p class="muted" style="font-size:13px">Tests: <code>test_clothoid_speed_consistency_check_raises</code> (forward path + reverse speed → raises) and <code>..._not_raised_without_interpolation</code> (skipped when <code>interpolate_path=False</code>).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tw">▶</span> Zero speed (fully stationary) <span class="tag">stays zero</span></summary>
+        <div class="body">
+          <p>An all-zero speed series yields an all-zero corrected speed (no spurious motion). <code>_is_reverse_from_speed</code> would raise on all-zeros, so this path is only safe with <code>interpolate_path=False</code> — see <code>test_correct_trajectory_with_zero_speed</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tw">▶</span> Variable frequency &amp; future re-interpolation <span class="tag">gen1/gen2</span></summary>
+        <div class="body">
+          <p>Underlying data may be 25 Hz (<code>0.04 s</code>) or 20 Hz (<code>0.05 s</code>). If the policy's query times don't line up with the corrected series, you must opt into <code>allow_future_reinterpolation=True</code> — otherwise a strict lookup (tol 0.01 s) raises <code>RuntimeError</code>. See <code>test_pre_intervention_no_interp</code>.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tw">▶</span> Past data in the policy window is unsupported <span class="tag">RuntimeError</span></summary>
+        <div class="body">
+          <p>The augmentation only models the <em>future</em>; negative policy time deltas raise immediately (<code>test_pre_intervention_corrector_with_past_in_policy_raises</code>). Past <b>vehicle</b> data (separate from policy) is fine and preserved (<code>..._with_past_in_vehicle</code>).</p>
+        </div>
+      </details>
+
+      <details>
+        <summary><span class="tw">▶</span> Numerical regression lock <span class="tag">drive_only_reference.json</span></summary>
+        <div class="body">
+          <p>For forward-only driving, outputs are pinned to a captured reference (<code>test_drive_only_numerical_regression</code>) — the reverse-driving logic must not perturb the original forward code path by even 1e-7.</p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============================== EXAMPLES ============================== -->
+  <section class="panel" id="examples">
+    <div class="card">
+      <h2><span class="num">6</span> Interactive examples</h2>
+      <p class="muted" style="margin-top:-2px">Pick a disengagement scenario. <span style="color:var(--accent2)">Teal</span> = the <b>original recorded</b> trajectory (the human's late takeover); <span style="color:var(--accent)">amber</span> = the <b>corrected label</b> the model trains on. Drag the sliders to see how intervention timing and speed offset reshape the correction; the badges show the live computed values and the safety-gate verdict.</p>
+
+      <div class="pg">
+        <div class="scenarios" id="scenarios"></div>
+        <div class="stage">
+          <div class="controls">
+            <div class="ctl"><label>Intervention time <b><span id="ixv">1.00</span> s</b></label><input type="range" id="ixSlider" min="12" max="34" value="25" step="1"></div>
+            <div class="ctl"><label>Speed offset <b><span id="offv">1.00</span> s</b></label><input type="range" id="offSlider" min="10" max="40" value="25" step="1"></div>
+            <div class="ctl" style="justify-content:center">
+              <label class="toggle"><input type="checkbox" id="showOrig" checked> show original path kink</label>
+              <label class="toggle"><input type="checkbox" id="showRejoin" checked> show rejoin point (2·d+3)</label>
+            </div>
+          </div>
+          <div class="plots">
+            <div class="plotbox">
+              <div class="ttl"><span>BIRD'S-EYE PATH — top-down (m)</span><span id="bevsub"></span></div>
+              <canvas id="bev" width="520" height="360"></canvas>
+              <div class="legend">
+                <span><i style="background:var(--accent2)"></i>original</span>
+                <span><i style="background:var(--accent)"></i>corrected (clothoid)</span>
+                <span><span class="dot" style="background:var(--danger)"></span>disengage</span>
+                <span><span class="dot" style="background:var(--good)"></span>rejoin</span>
+              </div>
+            </div>
+            <div class="plotbox">
+              <div class="ttl"><span>SPEED PROFILE — speed vs time</span><span id="spdsub"></span></div>
+              <canvas id="spd" width="520" height="360"></canvas>
+              <div class="legend">
+                <span><i style="background:var(--accent2)"></i>original</span>
+                <span><i style="background:var(--accent)"></i>corrected</span>
+                <span><span class="dot" style="background:var(--danger)"></span>t₀</span>
+                <span><span class="dot" style="background:var(--violet)"></span>t1 / t2</span>
+              </div>
+            </div>
+          </div>
+          <div class="explain" id="explain"><h4>—</h4><p>—</p><div class="badges" id="badges"></div></div>
+        </div>
+      </div>
+      <p class="note">⚠︎ <b>Faithful vs. illustrative.</b> Faithful JS ports of the Python: <code>correct_speed</code>, <code>cumdist_from_speed</code> (trapezoid on |speed|), the <code>2·d+3</code> rejoin, <code>classify_acceleration</code> + the accel safety gate, and the direction-change clamp. The clothoid path fit is approximated by a G1 cubic-Hermite spline (matching endpoint position + heading) — visually clothoid-like; production uses <code>pyclothoids.Clothoid.G1Hermite</code>. The per-scenario raw paths/speeds are <b>synthetic stand-ins</b> for real fleet logs, shaped to make each disengagement legible.</p>
+    </div>
+  </section>
+
+  <!-- ============================== REFERENCE ============================== -->
+  <section class="panel" id="ref">
+    <div class="card">
+      <h2><span class="num">7</span> Reference</h2>
+
+      <h3>Constructor parameters — <code>VehicleInterventionAugmentor.__init__</code></h3>
+      <table>
+        <tr><th>Param</th><th>Default</th><th>Meaning</th></tr>
+        <tr><td class="col">origin</td><td class="mono">int | str</td><td>Index of the current frame, or a column name to resolve it from.</td></tr>
+        <tr><td class="col">max_pre_intervention_offset_sec</td><td class="mono">1.2</td><td>Max time from now to the disengagement, else drop.</td></tr>
+        <tr><td class="col">speed_offset_sec</td><td class="mono">1.0</td><td>Offset used to pick the future/expert target speed v₂.</td></tr>
+        <tr><td class="col">interpolate_path</td><td class="mono">True</td><td>Fit the clothoid (vs. speed-only correction).</td></tr>
+        <tr><td class="col">time_step</td><td class="mono">0.04</td><td>Seconds per frame (25 Hz Gen2); <code>None</code> → infer from frequency.</td></tr>
+        <tr><td class="col">path_length</td><td class="mono">300</td><td>Number of path waypoints (≈75 m at 0.25 m).</td></tr>
+        <tr><td class="col">path_step</td><td class="mono">0.25</td><td>Metres between waypoints.</td></tr>
+        <tr><td class="col">allow_future_reinterpolation</td><td class="mono">False</td><td>Re-interp labels to policy times if frequencies differ.</td></tr>
+        <tr><td class="col">safeguard_clean_av_offset_sec</td><td class="mono">20.0</td><td>Frames farther than this from a disengagement are "clean AV".</td></tr>
+        <tr><td class="col">max_errors</td><td class="mono">10</td><td>Consecutive-error budget before a hard RuntimeError.</td></tr>
+      </table>
+
+      <h3>Intervention <code>what</code> taxonomy (selected)</h3>
+      <p class="muted" style="font-size:13px">From <code>wayve/core/data/interventions_taxonomy/frontend/v17.py</code>. Only the two highlighted ones trigger the acceleration safety gate.</p>
+      <table>
+        <tr><th>Label</th><th>Plain meaning</th><th>Gated?</th></tr>
+        <tr><td class="col" style="color:var(--accent)">failed_to_slow</td><td>Carried too much speed; human braked.</td><td style="color:var(--good)">✓</td></tr>
+        <tr><td class="col" style="color:var(--accent)">failed_to_remain_stopped</td><td>Crept/accelerated when it should have stayed stopped.</td><td style="color:var(--good)">✓</td></tr>
+        <tr><td class="col">failed_to_accelerate</td><td>Too hesitant; human accelerated.</td><td class="faint">—</td></tr>
+        <tr><td class="col">failed_to_maintain_speed</td><td>Drifted off target speed.</td><td class="faint">—</td></tr>
+        <tr><td class="col">failed_to_initiate / failed_to_complete_lane_change</td><td>Didn't start / finish a lane change.</td><td class="faint">—</td></tr>
+        <tr><td class="col">failed_to_suppress_silc</td><td>Made an unwanted system-initiated lane change.</td><td class="faint">—</td></tr>
+        <tr><td class="col">failed_to_park / failed_to_unpark / failed_to_pudo</td><td>Parking / pick-up-drop-off manoeuvre errors.</td><td class="faint">—</td></tr>
+      </table>
+
+      <h3>Function index</h3>
+      <table>
+        <tr><th>Function</th><th>File:line</th><th>Role</th></tr>
+        <tr><td class="col">VehiclePreInterventionAugementor.augment</td><td class="mono">pre_intervention.py:110</td><td>Per-sample entry: gate → correct → write.</td></tr>
+        <tr><td class="col">correct_trajectory</td><td class="mono">pre_intervention.py:257</td><td>Orchestrates path + speed correction.</td></tr>
+        <tr><td class="col">correct_speed</td><td class="mono">intervention.py:251</td><td>Linear speed ramp v₀→v₂.</td></tr>
+        <tr><td class="col">correct_path</td><td class="mono">trajectory.py:72</td><td>Clothoid / bezier / straight path re-fit.</td></tr>
+        <tr><td class="col">_clamp_at_direction_change</td><td class="mono">pre_intervention.py:191</td><td>Preserve stop-and-reverse cusps.</td></tr>
+        <tr><td class="col">_validate_clothoid_direction</td><td class="mono">pre_intervention.py:230</td><td>Geometry ↔ speed-sign consistency.</td></tr>
+        <tr><td class="col">classify_acceleration</td><td class="mono">pre_intervention.py:22</td><td>Bucket accel into −1/0/+1.</td></tr>
+        <tr><td class="col">validate_pre_intervention_accelerations</td><td class="mono">pre_intervention.py:61</td><td>Drop slow-down+speed-up conflicts.</td></tr>
+        <tr><td class="col">get_intervention_offsets</td><td class="mono">utils.py:38</td><td>Find True→False disengagement index.</td></tr>
+        <tr><td class="col">add_results_to_data</td><td class="mono">intervention.py:203</td><td>Resample to policy times, store labels + originals.</td></tr>
+        <tr><td class="col">cumdist_from_speed</td><td class="mono">lib/trajectory.py:201</td><td>Trapezoidal distance on |speed|.</td></tr>
+      </table>
+
+      <h3>Glossary</h3>
+      <table>
+        <tr><th>Term</th><th>Definition</th></tr>
+        <tr><td class="col">intervention / disengagement</td><td>Safety driver takes over; <code>automation_active</code> goes True→False.</td></tr>
+        <tr><td class="col">origin</td><td>The "current frame" being labelled in the table.</td></tr>
+        <tr><td class="col">intervention_index (ix)</td><td>Frames from origin to the disengagement.</td></tr>
+        <tr><td class="col">rejoin point</td><td>Distance <code>2·d+3</code> m down the recorded path where the corrected path merges back.</td></tr>
+        <tr><td class="col">clothoid</td><td>Curve whose curvature is linear in arc-length — natural steering path.</td></tr>
+        <tr><td class="col">policy_* vs path_*</td><td><code>policy_*</code> = time-indexed targets (speed/pose/curv at query times); <code>path_*</code> = distance-indexed geometry.</td></tr>
+        <tr><td class="col">v₀ / v₂</td><td>Speed now / future-expert speed at <code>2·ix+offset</code>.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer>pre_intervention.py · interactive deep-dive · boris/pudo_generic_materialization · served on :3006</footer>
 </div>
 
 <script>
-/* ============================================================
-   Faithful-ish JS ports of the core math
-   ============================================================ */
-const DT = 0.04;          // time_step (25 Hz Gen2)
-const PATH_STEP = 0.25;   // metres between waypoints
-const THRESH = 0.2;       // classify_acceleration threshold
+/* ============================================================ TABS */
+const tabs=document.getElementById("tabs");
+tabs.addEventListener("click",e=>{
+  const b=e.target.closest(".tab"); if(!b) return;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
+  const id=b.dataset.tab;
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id));
+  if(id==="examples") requestAnimationFrame(update);
+  window.scrollTo({top:0,behavior:"instant"});
+});
 
-function cumdistFromSpeed(speed, dt=DT){
-  // trapezoidal integration of |speed|, matches wayve/ai/lib/trajectory.py:201
-  const d = [0];
-  for(let i=1;i<speed.length;i++){
-    const avg = 0.5*(speed[i]+speed[i-1]);
-    d.push(d[i-1] + Math.abs(avg)*dt);
-  }
-  return d;
+/* ============================================================ PY HIGHLIGHTER */
+function highlightPy(code){
+  code=code.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">");
+  code=code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const store=[];
+  code=code.replace(/(#[^\n]*)/g,m=>{store.push(["c",m]);return ""+(store.length-1)+"";});
+  code=code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,m=>{store.push(["s",m]);return ""+(store.length-1)+"";});
+  code=code.replace(/\b(def|return|if|elif|else|for|in|while|raise|import|from|not|and|or|None|True|False|with|as|lambda|assert)\b/g,'<span class="k">$1</span>');
+  code=code.replace(/\b(self|np)\b/g,'<span class="b">$1</span>');
+  code=code.replace(/\b(correct_trajectory|correct_speed|correct_path|cumdist_from_speed|classify_acceleration|get_intervention_offsets|Clothoid)\b/g,'<span class="f">$1</span>');
+  code=code.replace(/(\d+)/g,(_,i)=>'<span class="'+store[i][0]+'">'+store[i][1]+'</span>');
+  return code;
 }
+document.querySelectorAll("pre.py").forEach(p=>{p.innerHTML=highlightPy(p.textContent);});
 
-function correctSpeed(speed, ix, offset){
-  // wayve/ai/zoo/augmentations/intervention.py:251
-  const t0=0, t1=ix+offset, t2=ix+offset+ix;
-  const v0=speed[t0], v2=speed[Math.min(t2, speed.length-1)];
-  const a01=(v2-v0)/(t1-t0);
-  const v01=[]; for(let k=0;k<t1-t0;k++) v01.push(v0+a01*k);
-  const tail = speed.slice(t2);
-  const v = v01.concat(tail);
-  return {v, t1, t2, a01, v0, v2};
-}
+/* ============================================================ CORE MATH (faithful ports) */
+const DT=0.04, PATH_STEP=0.25, THRESH=0.2;
+function cumdistFromSpeed(speed,dt=DT){const d=[0];for(let i=1;i<speed.length;i++)d.push(d[i-1]+Math.abs(0.5*(speed[i]+speed[i-1]))*dt);return d;}
+function correctSpeed(speed,ix,offset){const t0=0,t1=ix+offset,t2=ix+offset+ix;const v0=speed[t0],v2=speed[Math.min(t2,speed.length-1)];const a01=(v2-v0)/(t1-t0);const v01=[];for(let k=0;k<t1-t0;k++)v01.push(v0+a01*k);return{v:v01.concat(speed.slice(t2)),t1,t2,a01,v0,v2};}
+function classifyAccel(a,th=THRESH){if(a<-th)return -1;if(a<=th)return 0;return 1;}
+function windowAccel(speed,idx,dt=DT,w=1.0){const j=idx+Math.round(w/dt);return j<speed.length?(Math.abs(speed[j])-Math.abs(speed[idx]))/w:NaN;}
+function hermite(p0,t0,p1,t1,n){const chord=Math.max(Math.hypot(p1[0]-p0[0],p1[1]-p0[1]),1e-3);const m0=[t0[0]*chord,t0[1]*chord],m1=[t1[0]*chord,t1[1]*chord];const pts=[];for(let i=0;i<n;i++){const u=i/(n-1),h00=2*u*u*u-3*u*u+1,h10=u*u*u-2*u*u+u,h01=-2*u*u*u+3*u*u,h11=u*u*u-u*u;pts.push([h00*p0[0]+h10*m0[0]+h01*p1[0]+h11*m1[0],h00*p0[1]+h10*m0[1]+h01*p1[1]+h11*m1[1]]);}return pts;}
 
-function classifyAccel(a, th=THRESH){ if(a<-th) return -1; if(a<=th) return 0; return 1; }
+/* ============================================================ SCENARIOS */
+const N_FRAMES=170, PATH_M=60;
+function smoothstep(e0,e1,x){const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0)));return t*t*(3-2*t);}
+function speedRamp(vPre,vPost,ix,react=14,delay=4){return f=>{const c=ix+delay;return vPre+(vPost-vPre)*smoothstep(c-react/2,c+react/2,f);};}
 
-function windowAccel(speed, idx, dt=DT, windowS=1.0){
-  const j = idx + Math.round(windowS/dt);
-  if(j<speed.length) return (Math.abs(speed[j])-Math.abs(speed[idx]))/windowS;
-  return NaN;
-}
-
-/* G1 cubic-Hermite spline approximating the clothoid path fit (illustrative) */
-function hermite(p0, t0, p1, t1, n){
-  // p0,p1 = [x,y]; t0,t1 = unit tangent dirs; returns n points
-  const chord = Math.hypot(p1[0]-p0[0], p1[1]-p0[1]);
-  const s = Math.max(chord, 1e-3) * 1.0;
-  const m0=[t0[0]*s, t0[1]*s], m1=[t1[0]*s, t1[1]*s];
-  const pts=[];
-  for(let i=0;i<n;i++){
-    const u=i/(n-1);
-    const h00=2*u*u*u-3*u*u+1, h10=u*u*u-2*u*u+u, h01=-2*u*u*u+3*u*u, h11=u*u*u-u*u;
-    pts.push([
-      h00*p0[0]+h10*m0[0]+h01*p1[0]+h11*m1[0],
-      h00*p0[1]+h10*m0[1]+h01*p1[1]+h11*m1[1]
-    ]);
-  }
-  return pts;
-}
-
-/* ============================================================
-   Scenario library — synthetic stand-ins for real fleet logs
-   Each defines:
-     speed(frame) -> m/s   (recorded; post-intervention = human)
-     lateral(distance_m) -> m   (recorded path lateral offset; late human kink)
-     startHeadingDeg : heading at origin (drift cases start angled)
-     what : intervention reason label
-   ============================================================ */
-const N_FRAMES = 170;     // 6.8 s of speed @ 25Hz
-const PATH_M   = 60;      // metres of path generated
-
-function smoothstep(e0,e1,x){ const t=Math.min(1,Math.max(0,(x-e0)/(e1-e0))); return t*t*(3-2*t); }
-
-function speedRamp(vPre,vPost,ix,reactFrames=14,delay=4){
-  return f=>{
-    const c=ix+delay;
-    return vPre + (vPost-vPre)*smoothstep(c-reactFrames/2, c+reactFrames/2, f);
-  };
-}
-
-const SCENARIOS = [
-  {
-    id:1, label:"Disengagement of braking", tag:"failed_to_slow",
-    what:"failed_to_slow",
-    speed: speedRamp(12, 3, 25),
-    lateral: d=>0, head:0,
-    desc:"The AV was carrying too much speed; the safety driver <b>braked</b>. The original label keeps speed high right up to the takeover. The correction ramps speed <b>down early</b> toward the human's eventual low speed (v₂) — teaching the model to ease off sooner. Path stays straight.",
-    focus:"speed"
-  },
-  {
-    id:2, label:"Disengagement of speeding up", tag:"too hesitant",
-    what:"failed_to_progress",
-    speed: speedRamp(2, 9, 25),
-    lateral: d=>0, head:0,
-    desc:"The AV was over-cautious and crawling; the driver <b>accelerated</b>. The correction ramps speed <b>up early</b> to meet the human's target speed (v₂), so the model learns to commit rather than dawdle.",
-    focus:"speed"
-  },
-  {
-    id:3, label:"Disengagement of lane-change initiation", tag:"failed_to_change_lane",
-    what:"failed_to_change_lane",
-    speed: f=>10, head:0,
-    lateral: d=>{ const dInt=10; return 3.6*smoothstep(dInt, dInt+4, d); }, // late, sharp move left
-    desc:"The AV failed to start a needed lane change; the driver <b>initiated it</b>. The original path jerks left at the takeover. The clothoid correction begins the lane change <b>from the current pose</b>, producing one smooth arc into the new lane that rejoins the human's line.",
-    focus:"path"
-  },
-  {
-    id:4, label:"Disengagement of WRONG lane-change initiation", tag:"unsafe_lane_change",
-    what:"unsafe_lane_change",
-    speed: f=>9, head:8, // already drifting → start angled
-    lateral: d=>{ const peak=12; const up=1.6*smoothstep(0,peak,d); const back=1.6*smoothstep(peak,peak+8,d); return up-back; },
-    desc:"The AV <b>wrongly drifted</b> toward the next lane; the driver yanked it <b>back</b>. The original path bulges out then snaps back. Because the rejoin point sits back in the correct lane, the clothoid correction <b>stays in lane</b> — the model is taught to abort the bad drift.",
-    focus:"path"
-  },
-  {
-    id:5, label:"Disengagement: not speeding up at green light", tag:"failed_to_progress",
-    what:"failed_to_progress",
-    speed: speedRamp(0.0, 8, 25, 16, 3),
-    lateral: d=>0, head:0,
-    desc:"Light turned green but the AV stayed put; the driver <b>pulled away</b>. v₀≈0. The correction ramps the car up from a standstill to the human's cruise speed, teaching it to <b>go on green</b>. Note the acceleration gate is happy here (speeding up, not down).",
-    focus:"speed"
-  },
-  {
-    id:6, label:"Disengagement: speeding up at red light", tag:"failed_to_remain_stopped",
-    what:"failed_to_remain_stopped",
-    speed: speedRamp(6, 0.0, 25, 14, 3),
-    lateral: d=>0, head:0,
-    desc:"The AV accelerated toward a red light; the driver <b>braked to a stop</b>. v₂≈0. The correction decelerates to a halt early. The <b>safety gate</b> checks this is consistent: intervention slows down (−1) and the heuristic also slows/neutral — so the sample is kept. (If the heuristic had said 'speed up', it would be dropped.)",
-    focus:"speed"
-  },
-  {
-    id:7, label:"Disengagement: started parking in wrong place", tag:"continue_drive",
-    what:"unsafe_manoeuvre",
-    speed: f=>4.5, head:-10, // nosing toward kerb
-    lateral: d=>{ const peak=9; const into=-2.4*smoothstep(0,peak,d); const out=-2.4*smoothstep(peak,peak+7,d); return into-out; },
-    desc:"The AV began pulling over to park in the wrong spot; the driver <b>continued driving</b>. The original path noses toward the kerb then straightens. The clothoid correction <b>keeps driving straight</b> (rejoin point is down the road), cancelling the premature park.",
-    focus:"path"
-  },
-  {
-    id:8, label:"Disengagement: unparking → brake (unsafe)", tag:"failed_to_slow",
-    what:"failed_to_slow",
-    speed: speedRamp(3.0, 0.0, 25, 12, 2),
-    lateral: d=>{ return 2.6*smoothstep(0,7,d); }, // pulling out of bay to the lane
-    desc:"The AV pulled out of a parking bay into traffic; the driver <b>braked</b> because it was unsafe. Speed (rising as it emerges) is corrected <b>down to a stop</b>, while the path still curves out of the bay toward the lane and then merges back. Slow-down intervention + slow-down heuristic ⇒ gate passes.",
-    focus:"both"
-  },
-  {
-    id:9, label:"Disengagement: unparking but not speeding up", tag:"failed_to_progress",
-    what:"failed_to_progress",
-    speed: speedRamp(1.5, 6.5, 25, 16, 3),
-    lateral: d=>{ return 2.6*smoothstep(0,8,d); },
-    desc:"The AV crept out of the bay too slowly and stalled the merge; the driver <b>accelerated</b> to take the gap. The correction ramps speed <b>up early</b> while following the pull-out curve, teaching a decisive merge.",
-    focus:"both"
-  },
+const SCENARIOS=[
+  {id:1,label:"Disengagement of braking",what:"failed_to_slow",speed:speedRamp(12,3,25),lateral:d=>0,head:0,focus:"speed",
+   desc:"The AV carried too much speed; the safety driver <b>braked</b>. The original label keeps speed high to the takeover; the correction ramps speed <b>down early</b> toward the human's eventual low speed (v₂). Path stays straight. <b>Gated</b> what."},
+  {id:2,label:"Disengagement of speeding up",what:"failed_to_accelerate",speed:speedRamp(2,9,25),lateral:d=>0,head:0,focus:"speed",
+   desc:"The AV was over-cautious and crawling; the driver <b>accelerated</b>. The correction ramps speed <b>up early</b> to meet the human's target speed — teaching the model to commit."},
+  {id:3,label:"Disengagement of lane-change initiation",what:"failed_to_initiate (lane change)",speed:f=>10,head:0,lateral:d=>3.6*smoothstep(10,14,d),focus:"path",
+   desc:"The AV failed to start a needed lane change; the driver <b>initiated it</b>. The original path jerks left at takeover; the clothoid begins the change <b>from the current pose</b>, one smooth arc into the new lane."},
+  {id:4,label:"Disengagement of WRONG lane-change initiation",what:"failed_to_suppress_silc",speed:f=>9,head:8,lateral:d=>1.6*smoothstep(0,12,d)-1.6*smoothstep(12,20,d),focus:"path",
+   desc:"The AV <b>wrongly drifted</b> toward the next lane; the driver pulled it <b>back</b>. The original bulges out then snaps back. Because the rejoin point sits in the correct lane, the clothoid <b>stays in lane</b> — abort the bad drift."},
+  {id:5,label:"Disengagement: not speeding up at green",what:"failed_to_initiate",speed:speedRamp(0.0,8,25,16,3),lateral:d=>0,head:0,focus:"speed",
+   desc:"Light turned green but the AV stayed put; the driver <b>pulled away</b>. v₀≈0; the correction ramps up from standstill to cruise. The accel gate is happy (speeding up, not down)."},
+  {id:6,label:"Disengagement: speeding up at red",what:"failed_to_remain_stopped",speed:speedRamp(6,0.0,25,14,3),lateral:d=>0,head:0,focus:"speed",
+   desc:"The AV accelerated toward a red light; the driver <b>braked to a stop</b>. v₂≈0; the correction decelerates early. <b>Gate</b>: intervention slows (−1) and heuristic slows/neutral → sample kept. If the heuristic had said 'speed up', it would be dropped."},
+  {id:7,label:"Disengagement: started parking in wrong place",what:"failed_to_pudo (continue drive)",speed:f=>4.5,head:-10,lateral:d=>-2.4*smoothstep(0,9,d)+2.4*smoothstep(9,16,d),focus:"path",
+   desc:"The AV began pulling over to the wrong spot; the driver <b>continued driving</b>. The original noses toward the kerb then straightens; the clothoid <b>keeps driving straight</b>, cancelling the premature park."},
+  {id:8,label:"Disengagement: unparking → brake (unsafe)",what:"failed_to_slow",speed:speedRamp(3.0,0.0,25,12,2),lateral:d=>2.6*smoothstep(0,7,d),head:0,focus:"both",
+   desc:"The AV pulled out of a bay into traffic; the driver <b>braked</b> (unsafe). Speed (rising as it emerges) is corrected <b>down to a stop</b> while the path curves out of the bay and merges back. Slow-down + slow-down → <b>gate passes</b>."},
+  {id:9,label:"Disengagement: unparking but not speeding up",what:"failed_to_accelerate",speed:speedRamp(1.5,6.5,25,16,3),lateral:d=>2.6*smoothstep(0,8,d),head:0,focus:"both",
+   desc:"The AV crept out of the bay too slowly and stalled the merge; the driver <b>accelerated</b> to take the gap. The correction ramps speed <b>up early</b> while following the pull-out curve — a decisive merge."},
 ];
 
-/* ============================================================
-   Build full trajectory for a scenario at given ix, offset
-   ============================================================ */
-function build(scn, ix, offset){
-  // --- speed series ---
-  const speed=[]; for(let f=0; f<N_FRAMES; f++) speed.push(scn.speed(f));
-
-  // --- distances & rejoin point ---
-  const dist = cumdistFromSpeed(speed);
-  const dInt = dist[ix];
-  const dEnd = 2*dInt + 3;
-  let endIdx = Math.round(dEnd / PATH_STEP);
-
-  // --- original recorded path from lateral profile ---
-  const nPath = Math.round(PATH_M / PATH_STEP);
-  const head0 = (scn.head||0)*Math.PI/180;
-  const origPath=[];
-  for(let i=0;i<nPath;i++){
-    const s=i*PATH_STEP;                 // along-track distance
-    const y=scn.lateral(s);
-    // x advances along heading-ish; keep simple forward-x with lateral y
-    origPath.push([s, y]);
+function build(scn,ix,offset){
+  const speed=[];for(let f=0;f<N_FRAMES;f++)speed.push(scn.speed(f));
+  const dist=cumdistFromSpeed(speed);const dInt=dist[ix];const dEnd=2*dInt+3;
+  let endIdx=Math.round(dEnd/PATH_STEP);
+  const nPath=Math.round(PATH_M/PATH_STEP);
+  const origPath=[];for(let i=0;i<nPath;i++){const s=i*PATH_STEP;origPath.push([s,scn.lateral(s)]);}
+  endIdx=Math.min(endIdx,nPath-2);
+  const tan=(p,i)=>{const a=p[Math.max(0,i-1)],b=p[Math.min(p.length-1,i+1)];const dx=b[0]-a[0],dy=b[1]-a[1],n=Math.hypot(dx,dy)||1;return[dx/n,dy/n];};
+  let tStart=tan(origPath,0);if(scn.head){const a=scn.head*Math.PI/180;tStart=[Math.cos(a),Math.sin(a)];}
+  const tEnd=tan(origPath,endIdx);
+  const corrPath=hermite(origPath[0],tStart,origPath[endIdx],tEnd,endIdx+1).concat(origPath.slice(endIdx+1));
+  const cs=correctSpeed(speed,ix,offset);
+  const accInt=windowAccel(speed,ix),accPre=cs.a01/DT;
+  let gate={drop:false,reason:""};
+  if(scn.what.startsWith("failed_to_remain_stopped")||scn.what.startsWith("failed_to_slow")){
+    if(classifyAccel(accInt)===-1&&classifyAccel(accPre)===1){gate.drop=true;gate.reason="intervention slows but heuristic speeds up";}
   }
-  // apply a start heading rotation so drift cases visibly start angled
-  // (rotate whole synthetic path slightly — purely cosmetic for the origin tangent)
-
-  endIdx = Math.min(endIdx, nPath-2);
-
-  // --- tangents for clothoid (numeric) ---
-  function tangentAt(path, i){
-    const a=path[Math.max(0,i-1)], b=path[Math.min(path.length-1,i+1)];
-    const dx=b[0]-a[0], dy=b[1]-a[1]; const n=Math.hypot(dx,dy)||1; return [dx/n,dy/n];
-  }
-  let tStart=tangentAt(origPath,0);
-  if(scn.head){ const a=head0; tStart=[Math.cos(a),Math.sin(a)]; }
-  const tEnd=tangentAt(origPath,endIdx);
-
-  // --- corrected (clothoid≈hermite) from origin to rejoin, then follow original ---
-  const arc = hermite(origPath[0], tStart, origPath[endIdx], tEnd, endIdx+1);
-  const corrPath = arc.concat(origPath.slice(endIdx+1));
-
-  // --- corrected speed ---
-  const cs = correctSpeed(speed, ix, offset);
-
-  // --- safety gate ---
-  const accInt = windowAccel(speed, ix);
-  const accPre = cs.a01 / DT; // m/s^2
-  let gate = {drop:false, reason:""};
-  if(scn.what==="failed_to_remain_stopped" || scn.what==="failed_to_slow"){
-    const ci=classifyAccel(accInt), cp=classifyAccel(accPre);
-    if(ci===-1 && cp===1){ gate.drop=true; gate.reason="intervention slows but heuristic speeds up"; }
-  }
-
-  return {speed, dist, dInt, dEnd, endIdx, origPath, corrPath, cs, ix, offset, accInt, accPre, gate};
+  return{speed,dist,dInt,dEnd,endIdx,origPath,corrPath,cs,ix,offset,accInt,accPre,gate};
 }
 
-/* ============================================================
-   Lightweight canvas plotting
-   ============================================================ */
-function setupCanvas(cv){
-  const ratio=window.devicePixelRatio||1;
-  const w=cv.clientWidth||520, h=360;
-  cv.width=w*ratio; cv.height=h*ratio; cv.style.height=h+"px";
-  const ctx=cv.getContext("2d"); ctx.setTransform(ratio,0,0,ratio,0,0);
-  return {ctx,w,h};
-}
-function clear(ctx,w,h){ ctx.clearRect(0,0,w,h); }
-function gridBox(ctx,w,h,pad){
-  ctx.strokeStyle="#243042"; ctx.lineWidth=1;
-  ctx.strokeRect(pad.l,pad.t,w-pad.l-pad.r,h-pad.t-pad.b);
-}
+/* ============================================================ PLOTTING */
+function setupCanvas(cv){const r=window.devicePixelRatio||1,w=cv.clientWidth||520,h=360;cv.width=w*r;cv.height=h*r;cv.style.height=h+"px";const ctx=cv.getContext("2d");ctx.setTransform(r,0,0,r,0,0);return{ctx,w,h};}
+function gridBox(ctx,w,h,p){ctx.strokeStyle="#243042";ctx.lineWidth=1;ctx.strokeRect(p.l,p.t,w-p.l-p.r,h-p.t-p.b);}
 
-function drawBEV(cv, st, opts){
-  const {ctx,w,h}=setupCanvas(cv);
-  clear(ctx,w,h);
-  const pad={l:42,r:14,t:14,b:34};
-  // bounds across both paths
-  const all=st.origPath.concat(st.corrPath);
-  let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
-  all.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1]);});
-  // pad lateral a bit, keep some symmetry
-  const padY=Math.max(1.0,(maxY-minY)*0.15); minY-=padY; maxY+=padY;
-  const padX=(maxX-minX)*0.04; minX-=padX; maxX+=padX;
-  // equal-ish aspect: don't over-distort
-  const sx=(w-pad.l-pad.r)/(maxX-minX);
-  const sy=(h-pad.t-pad.b)/(maxY-minY);
-  const X=x=>pad.l+(x-minX)*sx;
-  const Y=y=>h-pad.b-(y-minY)*sy;
-
-  // grid
-  ctx.strokeStyle="#1c2636"; ctx.lineWidth=1; ctx.fillStyle="#5a6b80"; ctx.font="10px IBM Plex Mono";
-  for(let gx=Math.ceil(minX/10)*10; gx<maxX; gx+=10){ ctx.beginPath();ctx.moveTo(X(gx),pad.t);ctx.lineTo(X(gx),h-pad.b);ctx.stroke(); ctx.fillText(gx+"m",X(gx)-6,h-pad.b+14); }
-  for(let gy=Math.ceil(minY/2)*2; gy<maxY; gy+=2){ ctx.beginPath();ctx.moveTo(pad.l,Y(gy));ctx.lineTo(w-pad.r,Y(gy));ctx.stroke(); ctx.fillText(gy.toFixed(0),6,Y(gy)+3); }
-  gridBox(ctx,w,h,pad);
-  ctx.fillStyle="#5a6b80"; ctx.fillText("forward →", w-86, h-4);
-  ctx.save(); ctx.translate(12,h/2); ctx.rotate(-Math.PI/2); ctx.fillText("lateral (m)",0,0); ctx.restore();
-
-  function poly(path, color, width, dash){
-    ctx.strokeStyle=color; ctx.lineWidth=width; ctx.setLineDash(dash||[]);
-    ctx.beginPath(); path.forEach((p,i)=> i? ctx.lineTo(X(p[0]),Y(p[1])):ctx.moveTo(X(p[0]),Y(p[1]))); ctx.stroke(); ctx.setLineDash([]);
-  }
-  if(opts.showOrig) poly(st.origPath, "#3fd0c9", 2.4);
-  poly(st.corrPath, "#ffb000", 2.8);
-
-  // disengage marker — at distance dInt along original path
-  const di=Math.min(Math.round(st.dInt/PATH_STEP), st.origPath.length-1);
-  const dp=st.origPath[di];
-  ctx.fillStyle="#ff5d6c"; ctx.beginPath(); ctx.arc(X(dp[0]),Y(dp[1]),5,0,7); ctx.fill();
-  // rejoin marker
-  if(opts.showRejoin){
-    const rp=st.origPath[st.endIdx];
-    ctx.fillStyle="#5ee08a"; ctx.beginPath(); ctx.arc(X(rp[0]),Y(rp[1]),5,0,7); ctx.fill();
-  }
-  // origin
-  ctx.fillStyle="#e8eef6"; ctx.beginPath(); ctx.arc(X(0),Y(0),3.5,0,7); ctx.fill();
+function drawBEV(cv,st,opts){
+  const {ctx,w,h}=setupCanvas(cv);ctx.clearRect(0,0,w,h);
+  const pad={l:42,r:14,t:14,b:34};const all=st.origPath.concat(st.corrPath);
+  let minX=1/0,maxX=-1/0,minY=1/0,maxY=-1/0;all.forEach(p=>{minX=Math.min(minX,p[0]);maxX=Math.max(maxX,p[0]);minY=Math.min(minY,p[1]);maxY=Math.max(maxY,p[1]);});
+  const padY=Math.max(1,(maxY-minY)*0.15);minY-=padY;maxY+=padY;const padX=(maxX-minX)*0.04;minX-=padX;maxX+=padX;
+  const sx=(w-pad.l-pad.r)/(maxX-minX),sy=(h-pad.t-pad.b)/(maxY-minY);
+  const X=x=>pad.l+(x-minX)*sx,Y=y=>h-pad.b-(y-minY)*sy;
+  ctx.strokeStyle="#1c2636";ctx.fillStyle="#5a6b80";ctx.font="10px IBM Plex Mono";ctx.lineWidth=1;
+  for(let gx=Math.ceil(minX/10)*10;gx<maxX;gx+=10){ctx.beginPath();ctx.moveTo(X(gx),pad.t);ctx.lineTo(X(gx),h-pad.b);ctx.stroke();ctx.fillText(gx+"m",X(gx)-6,h-pad.b+14);}
+  for(let gy=Math.ceil(minY/2)*2;gy<maxY;gy+=2){ctx.beginPath();ctx.moveTo(pad.l,Y(gy));ctx.lineTo(w-pad.r,Y(gy));ctx.stroke();ctx.fillText(gy.toFixed(0),6,Y(gy)+3);}
+  gridBox(ctx,w,h,pad);ctx.fillStyle="#5a6b80";ctx.fillText("forward →",w-78,h-4);
+  ctx.save();ctx.translate(12,h/2);ctx.rotate(-Math.PI/2);ctx.fillText("lateral (m)",0,0);ctx.restore();
+  const poly=(p,c,wd)=>{ctx.strokeStyle=c;ctx.lineWidth=wd;ctx.beginPath();p.forEach((q,i)=>i?ctx.lineTo(X(q[0]),Y(q[1])):ctx.moveTo(X(q[0]),Y(q[1])));ctx.stroke();};
+  if(opts.showOrig)poly(st.origPath,"#3fd0c9",2.4);
+  poly(st.corrPath,"#ffb000",2.8);
+  const di=Math.min(Math.round(st.dInt/PATH_STEP),st.origPath.length-1),dp=st.origPath[di];
+  ctx.fillStyle="#ff5d6c";ctx.beginPath();ctx.arc(X(dp[0]),Y(dp[1]),5,0,7);ctx.fill();
+  if(opts.showRejoin){const rp=st.origPath[st.endIdx];ctx.fillStyle="#5ee08a";ctx.beginPath();ctx.arc(X(rp[0]),Y(rp[1]),5,0,7);ctx.fill();}
+  ctx.fillStyle="#e8eef6";ctx.beginPath();ctx.arc(X(0),Y(0),3.5,0,7);ctx.fill();
 }
 
-function drawSpeed(cv, st){
-  const {ctx,w,h}=setupCanvas(cv);
-  clear(ctx,w,h);
-  const pad={l:44,r:14,t:14,b:34};
-  const orig=st.speed;
-  const corr=st.cs.v;
-  const tOrig=orig.map((_,i)=>i*DT);
-  const tCorr=corr.map((_,i)=>i*DT);
-  const maxT=Math.max(tOrig[tOrig.length-1], tCorr[tCorr.length-1]);
-  let maxV=0,minV=0; orig.concat(corr).forEach(v=>{maxV=Math.max(maxV,v);minV=Math.min(minV,v);});
-  maxV=Math.max(maxV*1.12, 1); minV=Math.min(minV,0)*1.1 - 0.2;
-  const X=t=>pad.l+(t/maxT)*(w-pad.l-pad.r);
-  const Y=v=>h-pad.b-((v-minV)/(maxV-minV))*(h-pad.t-pad.b);
-
-  // grid
-  ctx.strokeStyle="#1c2636"; ctx.fillStyle="#5a6b80"; ctx.font="10px IBM Plex Mono"; ctx.lineWidth=1;
-  for(let gt=0;gt<=maxT;gt+=1){ ctx.beginPath();ctx.moveTo(X(gt),pad.t);ctx.lineTo(X(gt),h-pad.b);ctx.stroke(); ctx.fillText(gt+"s",X(gt)-5,h-pad.b+14);}
-  for(let gv=Math.ceil(minV/2)*2; gv<=maxV; gv+=2){ ctx.beginPath();ctx.moveTo(pad.l,Y(gv));ctx.lineTo(w-pad.r,Y(gv));ctx.stroke(); ctx.fillText(gv.toFixed(0),8,Y(gv)+3);}
-  // zero line
-  ctx.strokeStyle="#33415a"; ctx.setLineDash([3,3]); ctx.beginPath();ctx.moveTo(pad.l,Y(0));ctx.lineTo(w-pad.r,Y(0));ctx.stroke(); ctx.setLineDash([]);
-  gridBox(ctx,w,h,pad);
-  ctx.save(); ctx.translate(12,h/2); ctx.rotate(-Math.PI/2); ctx.fillStyle="#5a6b80"; ctx.fillText("speed (m/s)",0,0); ctx.restore();
-
-  function line(t,v,color,width){
-    ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();
-    for(let i=0;i<v.length;i++){ const x=X(t[i]),y=Y(v[i]); i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
-  }
-  line(tOrig,orig,"#3fd0c9",2.4);
-  line(tCorr,corr,"#ffb000",2.8);
-
-  // markers t0, t1, t2
-  const mark=(frame,color,lbl)=>{
-    const x=X(frame*DT);
-    ctx.strokeStyle=color;ctx.setLineDash([4,4]);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,h-pad.b);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle=color;ctx.fillText(lbl,x-4,pad.t+10);
-  };
-  mark(st.ix,"#ff5d6c","t₀");
-  mark(st.cs.t1,"#9d8cff","t1");
-  mark(st.cs.t2,"#9d8cff","t2");
+function drawSpeed(cv,st){
+  const {ctx,w,h}=setupCanvas(cv);ctx.clearRect(0,0,w,h);
+  const pad={l:44,r:14,t:14,b:34};const orig=st.speed,corr=st.cs.v;
+  const tO=orig.map((_,i)=>i*DT),tC=corr.map((_,i)=>i*DT);const maxT=Math.max(tO[tO.length-1],tC[tC.length-1]);
+  let maxV=0,minV=0;orig.concat(corr).forEach(v=>{maxV=Math.max(maxV,v);minV=Math.min(minV,v);});maxV=Math.max(maxV*1.12,1);minV=Math.min(minV,0)*1.1-0.2;
+  const X=t=>pad.l+(t/maxT)*(w-pad.l-pad.r),Y=v=>h-pad.b-((v-minV)/(maxV-minV))*(h-pad.t-pad.b);
+  ctx.strokeStyle="#1c2636";ctx.fillStyle="#5a6b80";ctx.font="10px IBM Plex Mono";ctx.lineWidth=1;
+  for(let gt=0;gt<=maxT;gt+=1){ctx.beginPath();ctx.moveTo(X(gt),pad.t);ctx.lineTo(X(gt),h-pad.b);ctx.stroke();ctx.fillText(gt+"s",X(gt)-5,h-pad.b+14);}
+  for(let gv=Math.ceil(minV/2)*2;gv<=maxV;gv+=2){ctx.beginPath();ctx.moveTo(pad.l,Y(gv));ctx.lineTo(w-pad.r,Y(gv));ctx.stroke();ctx.fillText(gv.toFixed(0),8,Y(gv)+3);}
+  ctx.strokeStyle="#33415a";ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(pad.l,Y(0));ctx.lineTo(w-pad.r,Y(0));ctx.stroke();ctx.setLineDash([]);
+  gridBox(ctx,w,h,pad);ctx.save();ctx.translate(12,h/2);ctx.rotate(-Math.PI/2);ctx.fillStyle="#5a6b80";ctx.fillText("speed (m/s)",0,0);ctx.restore();
+  const line=(t,v,c,wd)=>{ctx.strokeStyle=c;ctx.lineWidth=wd;ctx.beginPath();for(let i=0;i<v.length;i++){const x=X(t[i]),y=Y(v[i]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();};
+  line(tO,orig,"#3fd0c9",2.4);line(tC,corr,"#ffb000",2.8);
+  const mark=(f,c,l)=>{const x=X(f*DT);ctx.strokeStyle=c;ctx.setLineDash([4,4]);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,h-pad.b);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=c;ctx.fillText(l,x-4,pad.t+10);};
+  mark(st.ix,"#ff5d6c","t₀");mark(st.cs.t1,"#9d8cff","t1");mark(st.cs.t2,"#9d8cff","t2");
 }
 
-/* ============================================================
-   UI wiring
-   ============================================================ */
+/* ============================================================ UI */
 let current=SCENARIOS[0];
-const ixSlider=document.getElementById("ixSlider");
-const offSlider=document.getElementById("offSlider");
-const showOrig=document.getElementById("showOrig");
-const showRejoin=document.getElementById("showRejoin");
-
+const ixSlider=document.getElementById("ixSlider"),offSlider=document.getElementById("offSlider"),showOrig=document.getElementById("showOrig"),showRejoin=document.getElementById("showRejoin");
 function renderScenarioList(){
-  const box=document.getElementById("scenarios"); box.innerHTML="";
-  SCENARIOS.forEach(s=>{
-    const b=document.createElement("button");
-    b.className="scn"+(s.id===current.id?" active":"");
-    b.innerHTML=`<span class="ix">${s.id}</span><span><span class="label">${s.label}</span><span class="tag">what · ${s.what}</span></span>`;
-    b.onclick=()=>{current=s; renderScenarioList(); update();};
-    box.appendChild(b);
-  });
+  const box=document.getElementById("scenarios");box.innerHTML="";
+  SCENARIOS.forEach(s=>{const b=document.createElement("button");b.className="scn"+(s.id===current.id?" active":"");
+    b.innerHTML='<span class="ix">'+s.id+'</span><span><span class="label">'+s.label+'</span><span class="tag">what · '+s.what+'</span></span>';
+    b.onclick=()=>{current=s;renderScenarioList();update();};box.appendChild(b);});
 }
-
 function update(){
-  const ix=+ixSlider.value, offset=+offSlider.value;
+  const ix=+ixSlider.value,offset=+offSlider.value;
   document.getElementById("ixv").textContent=(ix*DT).toFixed(2);
   document.getElementById("offv").textContent=(offset*DT).toFixed(2);
-  const st=build(current, ix, offset);
-
-  document.getElementById("bevsub").textContent = current.focus==="speed" ? "(straight — speed scenario)" : "";
-  document.getElementById("spdsub").textContent = current.focus==="path" ? "(≈const — path scenario)" : "";
-
-  drawBEV(document.getElementById("bev"), st, {showOrig:showOrig.checked, showRejoin:showRejoin.checked});
-  drawSpeed(document.getElementById("spd"), st);
-
-  // explanation
-  document.querySelector("#explain h4").textContent = `${current.id}. ${current.label}`;
-  document.querySelector("#explain p").innerHTML = current.desc;
-
-  const badges=document.getElementById("badges"); badges.innerHTML="";
+  const st=build(current,ix,offset);
+  document.getElementById("bevsub").textContent=current.focus==="speed"?"(straight — speed scenario)":"";
+  document.getElementById("spdsub").textContent=current.focus==="path"?"(≈const — path scenario)":"";
+  drawBEV(document.getElementById("bev"),st,{showOrig:showOrig.checked,showRejoin:showRejoin.checked});
+  drawSpeed(document.getElementById("spd"),st);
+  document.querySelector("#explain h4").textContent=current.id+". "+current.label;
+  document.querySelector("#explain p").innerHTML=current.desc;
+  const badges=document.getElementById("badges");badges.innerHTML="";
   const add=(html,cls="")=>{const d=document.createElement("span");d.className="badge "+cls;d.innerHTML=html;badges.appendChild(d);};
-  add(`v₀ <b>${st.cs.v0.toFixed(1)}</b> → v₂ <b>${st.cs.v2.toFixed(1)}</b> m/s`);
-  add(`dist→intervention <b>${st.dInt.toFixed(1)} m</b>`);
-  add(`rejoin = 2·d+3 = <b>${st.dEnd.toFixed(1)} m</b>`);
-  add(`heuristic accel <b>${st.accPre.toFixed(2)}</b> m/s²`);
-  add(`intervention accel <b>${isNaN(st.accInt)?"–":st.accInt.toFixed(2)}</b> m/s²`);
-  if(current.what==="failed_to_slow"||current.what==="failed_to_remain_stopped"){
-    if(st.gate.drop) add(`SAFETY GATE: DROP — ${st.gate.reason}`,"drop");
-    else add(`SAFETY GATE: PASS ✓`,"pass");
-  } else {
-    add(`safety gate: n/a (not a slow-down what)`);
-  }
+  add("v₀ <b>"+st.cs.v0.toFixed(1)+"</b> → v₂ <b>"+st.cs.v2.toFixed(1)+"</b> m/s");
+  add("dist→intervention <b>"+st.dInt.toFixed(1)+" m</b>");
+  add("rejoin 2·d+3 = <b>"+st.dEnd.toFixed(1)+" m</b>");
+  add("heuristic accel <b>"+st.accPre.toFixed(2)+"</b> m/s²");
+  add("intervention accel <b>"+(isNaN(st.accInt)?"–":st.accInt.toFixed(2))+"</b> m/s²");
+  if(current.what.startsWith("failed_to_slow")||current.what.startsWith("failed_to_remain_stopped")){
+    st.gate.drop?add("SAFETY GATE: DROP — "+st.gate.reason,"drop"):add("SAFETY GATE: PASS ✓","pass");
+  } else add("safety gate: n/a");
 }
-
 [ixSlider,offSlider,showOrig,showRejoin].forEach(el=>el.addEventListener("input",update));
-window.addEventListener("resize",update);
-renderScenarioList();
-update();
+window.addEventListener("resize",()=>{if(document.getElementById("examples").classList.contains("active"))update();});
+renderScenarioList();update();
 </script>
 </body>
 </html>
