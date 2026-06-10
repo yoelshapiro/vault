@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-branch-correction.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-event-clip-viewer-browser-preload.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-dataset-split.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-parking-hub-static-landing.md",
@@ -525,7 +526,6 @@
     "html_summaries/__pycache__/render_zak_pudo_buckets.cpython-310.pyc",
     "html_summaries/__pycache__",
     "agent_tasks/2026/06/Week-1/2026-06-05-zak-pudo-bucket-reimplementation-notes.md",
-    "agent_tasks/2026/06/Week-1/2026-06-04-pudo-gear-fix-root-training.md",
     "agent_tasks/2026/06/Week-1",
     "agent_tasks/2026/06",
     "agent_tasks/2026/05/Week-5",
