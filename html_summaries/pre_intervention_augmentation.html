@@ -732,12 +732,13 @@ function highlightPy(code){
   code=code.replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">");
   code=code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   const store=[];
-  code=code.replace(/(#[^\n]*)/g,m=>{store.push(["c",m]);return ""+(store.length-1)+"";});
-  code=code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,m=>{store.push(["s",m]);return ""+(store.length-1)+"";});
+  const put=(t,m)=>{store.push([t,m]);return "\u0001"+(store.length-1)+"\u0001";};
+  code=code.replace(/(#[^\n]*)/g,m=>put("c",m));
+  code=code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,m=>put("s",m));
   code=code.replace(/\b(def|return|if|elif|else|for|in|while|raise|import|from|not|and|or|None|True|False|with|as|lambda|assert)\b/g,'<span class="k">$1</span>');
   code=code.replace(/\b(self|np)\b/g,'<span class="b">$1</span>');
   code=code.replace(/\b(correct_trajectory|correct_speed|correct_path|cumdist_from_speed|classify_acceleration|get_intervention_offsets|Clothoid)\b/g,'<span class="f">$1</span>');
-  code=code.replace(/(\d+)/g,(_,i)=>'<span class="'+store[i][0]+'">'+store[i][1]+'</span>');
+  code=code.replace(/\u0001(\d+)\u0001/g,(_,i)=>'<span class="'+store[i][0]+'">'+store[i][1]+'</span>');
   return code;
 }
 document.querySelectorAll("pre.py").forEach(p=>{p.innerHTML=highlightPy(p.textContent);});
