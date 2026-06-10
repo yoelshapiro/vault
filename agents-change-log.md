@@ -1757,3 +1757,18 @@
   - Moved the remaining generic interleave constants used by scripted methods to initialized attributes/buffers, covering handover speed, forward-drive position, and valid drive-position values.
   - Deployed `gorilla-tan-splendid` as `teal-elk-amused` with parking interleave control, verified Gen2 radar config, added Console lifecycle note, created the Notion model-card row, and triggered Model CI build `75365`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-interleave-route-end-hazard|2026-06-09 Parking Interleave Route-End Hazard]]
+
+## 2026-06-10 - Parking/PUDO PUDO Filter Tightening
+
+- Topic: Restore full geofence and selected data-quality filters for PUDO/UnPUDO generic materialization.
+- Labels: parking, pudo, materialization, filters, geofence.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`, `wayve/ai/services/sampling/test/datasets/parking_pudo`.
+- Changes:
+  - Switched PUDO/UnPUDO exclusions back to the shared full `exclude_geofenced` filter instead of event-notebook office-only geofencing.
+  - Made PUDO hazard/trip context suppression use the full sampling geofence list.
+  - Re-enabled `exclude_low_steering_bias_confidence` and `exclude_mache_without_wheel_odometery` for PUDO/UnPUDO bucket families.
+  - Updated focused parking_pudo filter tests and verified the parking_pudo slice.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-pudo-filter-tightening|2026-06-10 Parking/PUDO PUDO Filter Tightening]]
