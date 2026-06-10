@@ -220,6 +220,7 @@
 - New HARI default `--user-group Wildflower` fails with `403 You can only make a dataset available to groups you belong to.`
 - Retried blob-backed upload with `--user-group okta-team-parking`, then `--user-group okta-fte-all`. Both passed group authorization, prepared all 2030 videos, and failed at `POST /datasets` with `400 Failed to save the specified external_media_source.`
 - No partial dataset named `UnPUDO Anchor Standstill 2026-06-05` exists in new HARI after the failures. The failure is server-side while saving the Azure SAS external media source credentials/lookup, before media rows are uploaded. Grafana/Loki MCP was not available in this workspace to inspect the backend exception.
+- Follow-up no-user-group retry after Philipp Renner's new-HARI guidance: temporarily changed the local uploader/client to omit `user_group`, ran with explicit prod Auth0/API env and no `HARI_PASSWORD`, then reverted the temporary patch. The API reached `POST /datasets` with no `user_group` field and failed with `400 User group is required when using an external media source for the dataset.` No partial dataset was created.
 
 
 ## 2026-06-05 Event Viewer Model-Catalogue Video Source
