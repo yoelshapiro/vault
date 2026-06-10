@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-10 - Parking/PUDO Dataset Split
+
+- Topic: Split generic Parking/PUDO dataset assembly into park/unpark and PUDO/UnPUDO bucket modules.
+- Labels: parking, pudo, generic-materialization, refactor.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Refactor.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added shared country-split bucket builder helper.
+  - Added `parking_pudo/parking/dataset.py` for non-PUDO park/unpark bucket lists.
+  - Added `parking_pudo/pudo/dataset.py` for PUDO/UnPUDO bucket lists.
+  - Simplified default and anchors datasets to concatenate the semantic bucket lists.
+  - Verified focused `parking_pudo` sampling test passes.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-dataset-split|2026-06-10 Parking/PUDO Dataset Split]]
+
 ## 2026-06-10 - Parking Hub static landing page
 
 - Topic: New lightweight landing page to discover/open parking HTML reports and tools, hosted behind the SSO ingress like data_insights.
