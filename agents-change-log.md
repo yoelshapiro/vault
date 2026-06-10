@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-10 - Main Event Viewer Browser Preload PR
+
+- Topic: Add browser-side selected-clip preloading to the `main` event clip viewer.
+- Labels: parking, pudo, streamlit, event-viewer, video-preload.
+- Branch: `codex/event-viewer-browser-preload`.
+- PR: #117834 (draft) — https://github.com/wayveai/WayveCode/pull/117834
+- Change type: Tool UI/runtime fix.
+- Areas: `/workspace/event_viewer_preload_pr/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Created a clean main-based worktree and branch for the PR.
+  - Removed selected-clip use of the Python `VideoUrlWarmer` background thread.
+  - Reused the existing preload slider to compute nearby selected-clip URLs.
+  - Added hidden browser `<video preload="auto">` elements for live, model-catalogue, and generated MP4 selected clips.
+  - Verified `git diff --check`, `py_compile`, and `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-main-event-viewer-preload-pr|2026-06-10 Main Event Viewer Preload PR]]
+
 ## 2026-06-10 - Event Viewer Console Link
 
 - Topic: Restore a Console link for selected event viewer rows.
