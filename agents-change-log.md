@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-10 - Parking/PUDO Context Signal Flyte Runs
+
+- Topic: Submit anchors and default materialisation sample runs after parking/PUDO context signal updates.
+- Labels: parking, pudo, generic-materialization, flyte, anchors.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context.
+- Change type: Image publish / Flyte run.
+- Areas: `/workspace/WayveCode/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Published sampling image from clean commit `b2f7351b05892e1f899e9b53554e05ae2bb5959a`.
+  - Submitted `parking_pudo/anchors` full `sample` workflow as execution `a9wgjls2rgpc4wx96d8v`.
+  - Submitted `parking_pudo/default` full `sample` workflow as execution `anfd4jj2d4d9ztjdxq8q`.
+  - Used dataset binary `3.0.68` and date range `2025-12-01` to `2026-06-07`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-context-signal-flyte-runs|2026-06-10 Parking/PUDO Context Signal Flyte Runs]]
+
 ## 2026-06-10 - Event Viewer Materialization Segments
 
 - Topic: Support materialization bucket events with continuous timestamp windows in the event clip viewer.
