@@ -5,9 +5,9 @@
 - Topic: New lightweight landing page to discover/open parking HTML reports and tools, hosted behind the SSO ingress like data_insights.
 - Labels: parking, tooling, streamlit, aks, frontend, brand.
 - Branch: `boris/parking-hub` (forked from `origin/main`).
-- PR: N/A (not committed yet).
+- PR: #117733 (draft) — https://github.com/wayveai/WayveCode/pull/117733
 - Change type: new tool / service scaffold.
-- Areas: `wayve/ai/parking/tools/parking_hub/**`.
+- Areas: `wayve/ai/parking/tools/parking_hub/**`, `build_support/docker/autopublish_yaml_image_dirs.bzl`.
 - Changes:
   - Added a FastAPI + uvicorn static hub that auto-discovers HTML reports in `content/` and lists apps from `registry.yaml` (link-out model).
   - Branded landing page with Wayve press-kit palette + Karla/Work Sans + white wordmark.

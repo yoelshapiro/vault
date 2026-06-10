@@ -44,9 +44,16 @@ Create a single home page to discover and open parking **HTML reports** and **to
 - `kubectl kustomize` dev/prod overlays render correct hosts, namespace `ai--parking`, port 8501,
   `traefik-external` + `letsencrypt-cloudflare`.
 
-## Branch
+## Branch / PR
 - `boris/parking-hub` (forked from `origin/main`, isolated git worktree at `/workspace/parking_hub`).
-- Not committed yet (awaiting go-ahead).
+- Pushed; draft PR #117733 — https://github.com/wayveai/WayveCode/pull/117733.
+
+## External file touched (only one)
+- `build_support/docker/autopublish_yaml_image_dirs.bzl`: added `wayve/ai/parking/tools/parking_hub`.
+  Required because the BUILD uses `base_image_from_autopublish_yaml()` (a static check enforces the list).
+  Verified `@wayve__ai__parking__tools__parking_hub__base_image//:base_image` resolves.
+  Everything else (autopublish.yaml + __autodeploy_aks.bash) is auto-discovered by CI glob — no other
+  central file needed. Note: CODEOWNERS routes `wayve/ai/parking` review to `@wayveai/parking-owners`.
 
 ## Gating follow-up (infra)
 - `ai--parking` namespace does not exist in the repo and parking has no AKS services yet. Before
