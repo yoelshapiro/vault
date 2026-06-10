@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-10 - Event Viewer Console Link
+
+- Topic: Restore a Console link for selected event viewer rows.
+- Labels: parking, pudo, streamlit, event-viewer.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool UI fix.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added a Console URL helper based on `runID` and `timestamp_unixus`.
+  - Added an always-present `Open Console` button to the selected event info panel.
+  - Kept source-table `URL` as a separate optional source link.
+  - Verified `git diff --check`, `py_compile`, `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`, and HTTP `200 OK` on port `3001`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-console-link|2026-06-10 Event Viewer Console Link]]
+
 ## 2026-06-10 - Event Clip Viewer Branch Correction
 
 - Topic: Apply event clip viewer date-filter removal and browser-side selected-clip preloading to `boris/pudo_generic_materialization`.
