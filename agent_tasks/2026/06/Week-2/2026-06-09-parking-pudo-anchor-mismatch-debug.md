@@ -127,3 +127,34 @@ The March 30s sample does not point to one broad missing-hazard bug. The sampled
 - notebook PUDO timestamps where generic deliberately selects a different PUDO anchor, or classifies the exact timestamp as `park`/gear-change;
 - generic extra anchors that are not represented by the notebook event table at the same timestamp;
 - comparison artifacts from multiple nearby generic anchors competing for a single notebook event.
+
+## March Extra-Anchor Duplicate Check
+
+Checked all `1,275` March `dc_pudo_uk` rows that Streamlit reports as
+"missing in event table" / extra anchors.
+
+Inputs:
+- Anchor cache: `/tmp/event_clip_viewer_anchor_cache/a09ba8e909e1d367/anchors.parquet`
+- Nearest event query: `/tmp/dc_pudo_uk_march_all_extra_nearest_events.csv`
+- Duplicate check output: `/tmp/dc_pudo_uk_march_all_extra_duplicate_check.csv`
+
+Results:
+- `891 / 1,275` extra anchors have a nearest non-AV GBR PUDO event-table row
+  within `900s`.
+- `384 / 1,275` have no such event-table row within `900s`.
+- Of the `891` with a different nearest event-table timestamp, `875`
+  (`98.2%`) also have an exact `dc_pudo_uk` anchor at that event-table
+  timestamp.
+- `879 / 891` have another `dc_pudo_uk` anchor within `120s` of the nearest
+  event-table timestamp.
+
+Interpretation:
+- The extra anchors are usually not exact duplicate rows at the same timestamp;
+  each sampled extra anchor had one row at its own timestamp.
+- Most are duplicate/extra generic anchors in the same run near an event-table
+  PUDO that already has a generic anchor. The one-way event-to-nearest-anchor
+  comparison matches the event to the closest anchor and leaves the other nearby
+  anchors as "extra".
+- This suggests the remaining large "extra anchors" count is mostly generic
+  over-segmentation / repeated anchors around the same notebook event, not a
+  missing-table join issue.
