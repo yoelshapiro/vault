@@ -272,7 +272,7 @@
       <details>
         <summary><span class="tw">▶</span> Not real AV data <span class="tag">is_nvs / no automation</span></summary>
         <div class="body">
-          <p>The base loop skips novel-view-synthesis frames, safety-GT frames, and anything where <code>automation_active</code> is never true. These aren't genuine disengagements. <span class="ref">intervention.py:116</span></p>
+          <p>The base loop skips novel-view-synthesis frames, safety-GT frames, and anything where <code>automation_active</code> is never true. These aren't genuine disengagements. <span class="ref">intervention.py:117</span></p>
         </div>
       </details>
       <details>
@@ -499,7 +499,7 @@ def validate_pre_intervention_accelerations(what, acc_intervention, acc_pre):
     data.update(results)
     data["is_pre_intervention_corrected"] = np.array(True)
     return data</pre>
-      <div class="codecap"><span>intervention.py:203</span><span class="ref">intervention.py:203</span></div>
+      <div class="codecap"><span>intervention.py:204</span><span class="ref">intervention.py:204</span></div>
 
       <div class="callout amber">
         <h4>Two breadcrumbs every corrected sample carries</h4>
@@ -694,7 +694,7 @@ def validate_pre_intervention_accelerations(what, acc_intervention, acc_pre):
         <tr><td class="col">classify_acceleration</td><td class="mono">pre_intervention.py:22</td><td>Bucket accel into −1/0/+1.</td></tr>
         <tr><td class="col">validate_pre_intervention_accelerations</td><td class="mono">pre_intervention.py:61</td><td>Drop slow-down+speed-up conflicts.</td></tr>
         <tr><td class="col">get_intervention_offsets</td><td class="mono">utils.py:38</td><td>Find True→False disengagement index.</td></tr>
-        <tr><td class="col">add_results_to_data</td><td class="mono">intervention.py:203</td><td>Resample to policy times, store labels + originals.</td></tr>
+        <tr><td class="col">add_results_to_data</td><td class="mono">intervention.py:204</td><td>Resample to policy times, store labels + originals.</td></tr>
         <tr><td class="col">cumdist_from_speed</td><td class="mono">lib/trajectory.py:201</td><td>Trapezoidal distance on |speed|.</td></tr>
       </table>
 
