@@ -493,6 +493,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-2/2026-06-11-generic-pudo-8node-training.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-training-main-cherrypick-generic-data-pr.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-departure-gear-change-buckets.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-09-parking-interleave-route-end-hazard.md",
     "html_summaries/pre_intervention_augmentation.html",
     "agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-comparison-rerun.md",
-    "agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchors-current-rerun.md",
     "agent_tasks/2026/06/Week-2",
     "html_summaries/zak-pudo-buckets.html",
     "html_summaries/render_zak_pudo_buckets.py",
