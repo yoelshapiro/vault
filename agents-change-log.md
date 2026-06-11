@@ -30,6 +30,7 @@
   - Documented the new `parking_bc_datamodule_cfg` PUDO materialization root.
   - Captured the requested 50% driving and 50% PUDO/UNPUDO bucket mix in the PR description.
   - Included manual verification from py-compile, `git diff --check`, and bucket-name validation against the supplied stats.
+  - Follow-up local update: moved to the no-low-steering materialization, added DC UnPUDO gear-change buckets, and split CA/pre-CA PUDO/UNPUDO into flat weighted groups.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-training-main-cherrypick-generic-data-pr|2026-06-11 Training Main Cherrypick Generic Data PR]]
 
 ## 2026-06-11 - Departure Gear Change Buckets
