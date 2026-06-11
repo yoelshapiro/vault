@@ -1950,4 +1950,5 @@
   - Kept the same filter active for stricter park/unpark buckets.
   - Added the filter to the disabled/future PUDO/UnPUDO data-quality exclusion list and updated README wording.
   - Updated the focused filter-policy test and reran the parking_pudo sampling test slice.
+  - Published a branch sampling image and submitted sample Flyte runs for `parking_pudo/default` and `parking_pudo/anchors`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window|2026-06-11 UnPUDO 15s Window]]

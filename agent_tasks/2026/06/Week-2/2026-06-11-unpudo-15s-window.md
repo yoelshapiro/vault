@@ -27,3 +27,15 @@ WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel test //wayve/ai/services/
 ```
 
 Result: passed.
+
+## Flyte Runs
+
+- Published sampling image:
+  `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`
+  (`sha256:ff9affc5c67b498e213a9444e9bcfa65e793c696adc6d999025accf2684ef492`).
+- `parking_pudo/default` sample run:
+  `acbxxgcvxqqmxvnsctkb`, job name
+  `parking_pudo_default_no_low_steering_20260611`.
+- `parking_pudo/anchors` sample run:
+  `ac9x9nd4shpqlk4db9p5`, job name
+  `parking_pudo_anchors_no_low_steering_20260611`.
