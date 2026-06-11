@@ -47,6 +47,22 @@
   - Verified `git diff --check` and `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window|2026-06-11 UnPUDO 15s Window]]
 
+## 2026-06-11 - HARI UnPUDO Split-Native Video Batch
+
+- Topic: Launch corrected train/validation UnPUDO clip generation in Flyte.
+- Labels: parking, pudo, unpudo, hari, run-clips, flyte.
+- Branch: `boris/hari_pudo`.
+- PR: N/A.
+- Change type: Workflow run.
+- Areas: `/workspace/classifiers`, `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`, `prod_data_pipeline.inferred__metadata.dataset_split`.
+- Changes:
+  - Corrected sampling to use canonical run-level `dataset_split` instead of assigning train/validation after random sampling.
+  - Sampled 500 `speed_at_event` and 500 disjoint `duration_gt_10s` UnPUDO events, split as 400 train + 100 validation per bucket from existing split labels.
+  - Generated corrected `run_clips_input.parquet` files under `trainval_splitnative_20260611_194255_UTC`.
+  - Aborted wrong-split Flyte executions `aj6qf6s8ffmqlc7mn429` and `apvz2vlnrlbvl4vgrx5t`.
+  - Launched corrected train Flyte execution `a7zj4hn9x7cqd4kfjzg2` and corrected validation Flyte execution `a6szfdb4jlhpvvtps2cs`.
+- Task note: [[projects/hari-pudo-classifiers|HARI PUDO classifiers]]
+
 ## 2026-06-11 - Training Main Cherrypick Generic Data PR
 
 - Topic: Open a draft PR for the parking training main-cherrypick generic data branch.
