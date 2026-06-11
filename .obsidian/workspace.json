@@ -493,6 +493,7 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-mp4-frame-snap.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-context-signal-flyte-runs.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-materialization-segments.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-main-event-viewer-preload-pr.md",
@@ -521,7 +522,6 @@
     "agent_tasks/2026/06/Week-1/2026-06-07-bazel-cache-cleanup-script.md",
     "agent_tasks/2026/06/Week-1/2026-06-07-event-clip-viewer-rebase-reset.md",
     "agent_tasks/2026/06/Week-1/2026-06-07-gear-aware-controller-x-validation.md",
-    "agent_tasks/2026/06/Week-1/2026-06-07-mercurial-interleave-redeploy.md",
     "html_summaries/zak-pudo-buckets.html",
     "html_summaries/render_zak_pudo_buckets.py",
     "html_summaries/__pycache__/render_zak_pudo_buckets.cpython-310.pyc",
