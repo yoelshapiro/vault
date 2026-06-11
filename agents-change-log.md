@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-11 - Event Viewer Comparison Bucket Event Type Controls
+
+- Topic: Let anchor comparison choose discovered materialization buckets and independent event-table event types.
+- Labels: parking, pudo, streamlit, event-viewer, anchor-comparison.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool UI/query control change.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Replaced the hardcoded `KNOWN_ANCHOR_BUCKETS` compare selectbox with materialization-root bucket discovery.
+  - Added a `Refresh bucket list` control for bucket discovery cache invalidation.
+  - Added an independent `Event table event_type` selector with inferred, all-types, and table-backed event-type options.
+  - Updated comparison event loading to use the selected event type instead of deriving it only from the bucket name.
+  - Added focused regression tests for selected event-type and all-event-type comparison SQL filters.
+  - Verified `git diff --check`, `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`, and HTTP `200 OK` on port `3001`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-comparison-bucket-event-type-controls|2026-06-11 Event Viewer Comparison Bucket Event Type Controls]]
+
 ## 2026-06-11 - Event Viewer MP4 Frame Snap
 
 - Topic: Default event viewer media-handler URLs to MP4 with `frame_snap=auto`.
