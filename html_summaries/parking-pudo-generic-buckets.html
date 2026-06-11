@@ -135,6 +135,8 @@
     .pill-ctx { background: #fde9d6; color: #8a3d05; }
     .pill-non { background: #d8f0eb; color: #0a554d; }
     .pill-dbg { background: #e7e7ef; color: #4a4a63; }
+    .pill-strict { background: #fde2ea; color: #8a1538; }
+    .pill-relax { background: #dfeafc; color: #1b3f86; }
     .note {
       border-left: 4px solid var(--warn); background: #fdf4e8;
       padding: 12px 16px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 14px;
@@ -178,6 +180,7 @@
     <h2>parking_pudo<br>generic materialisation</h2>
     <nav>
       <a href="#overview">Overview</a>
+      <a href="#datasets">Datasets &amp; entry points</a>
       <a href="#pipeline">Shared signal pipeline</a>
       <a href="#explorer">Bucket explorer</a>
       <a href="#g-event" class="level-3">① Park / PUDO event</a>
@@ -195,15 +198,15 @@
 
   <main>
     <header class="page">
-      <p class="eyebrow">Dataset summary</p>
+      <p class="eyebrow">Dataset summary · re-synced 2026-06-11</p>
       <h1>Parking / PUDO bucket groups</h1>
-      <p>How each bucket group in the new <code>parking_pudo</code> generic-materialisation dataset is
+      <p>How each bucket group in the <code>parking_pudo</code> generic-materialisation dataset is
       <b>calculated</b> from the raw corpus frame stream and how it is <b>filtered</b>. Materialised directly
       from <code>wayve_corpus.all_data</code> via <code>services/sampling</code> — no parking notebooks, no
       pre-built PUDO event table.</p>
       <div class="meta-grid">
-        <span class="chip">dataset <code>parking_pudo/default</code></span>
-        <span class="chip">anchors <code>parking_pudo/anchors</code></span>
+        <span class="chip">datasets <code>parking_pudo</code> · <code>_parking</code> · <code>_pudo</code> · <code>_anchors</code></span>
+        <span class="chip">binary <code>driving 3.0.68</code></span>
         <span class="chip">platform Gen2 Mache (+ Alpha3 / Alpha3-Lidar)</span>
         <span class="chip">dates 2025-12-01 → 2026-06-07</span>
         <span class="chip">suffixes uk · usa · deu · jpn · global</span>
@@ -215,62 +218,97 @@
       <h2>Overview</h2>
       <p class="lead">Every bucket is <code>combine(exclusions, platform filter, country suffix, event filter)</code>.
       The <b>event filter</b> is the interesting part — it recomputes parking events per run from gear, speed,
-      indicator and trip-table signals, then selects a frame window. There are five families of event filters and
-      they are crossed with the five country suffixes to produce the final bucket set.</p>
+      indicator and trip-table signals, then selects a frame window. Five families of event filters are crossed
+      with the five country suffixes, and the exclusion set is chosen per-bucket by whether the bucket is a strict
+      <b>park/unpark</b> bucket or a relaxed <b>PUDO/UnPUDO</b> bucket.</p>
 
       <table>
-        <thead><tr><th>Family</th><th>Filter source</th><th>Exclusion set</th><th>What anchors it</th></tr></thead>
+        <thead><tr><th>Family</th><th>Filter source</th><th>Anchor</th><th>New event gate</th></tr></thead>
         <tbody>
-          <tr><td><b>Park / PUDO event</b></td><td><code>select_park_pudo_event</code></td><td>EVENT</td><td>smoothed gear → Park</td></tr>
-          <tr><td><b>Unpark / UnPUDO + pre-departure</b></td><td><code>select_unpark_unpudo_event</code> · <code>select_pre_departure_event</code></td><td>EVENT</td><td>first movement after Park</td></tr>
-          <tr><td><b>Gear change</b></td><td><code>select_gear_change_event</code></td><td>EVENT</td><td>smoothed gear change</td></tr>
-          <tr><td><b>Pre-CA</b></td><td><code>select_intervention_near_*</code> · <code>select_failed_to_intervention</code></td><td>PRE-CA</td><td>AV→DC intervention</td></tr>
-          <tr><td><b>CA short / long</b></td><td>same intervention selectors (post window)</td><td>CA</td><td>AV→DC intervention</td></tr>
+          <tr><td><b>Park / PUDO event</b></td><td><code>select_park_pudo_event</code></td><td>smoothed gear → Park</td><td>approach displacement &gt; 5m within 30s</td></tr>
+          <tr><td><b>Unpark / UnPUDO + pre-departure</b></td><td><code>select_unpark_unpudo_event</code> · <code>select_pre_departure_event</code></td><td>first movement after Park</td><td>departure displacement &gt; 5m within 60s</td></tr>
+          <tr><td><b>Gear change</b></td><td><code>select_gear_change_event</code></td><td>smoothed gear change</td><td>—</td></tr>
+          <tr><td><b>Pre-CA / CA</b></td><td><code>select_intervention_near_gear_change</code> · <code>select_intervention_near_departure_event</code></td><td>AV→DC intervention near a gear-change / departure anchor (±30s)</td><td>remain-stopped guard</td></tr>
+          <tr><td><b>Failed-to CA</b></td><td><code>select_failed_to_intervention</code></td><td>AV→DC intervention by <code>__what</code> label</td><td>remain-stopped guard</td></tr>
         </tbody>
       </table>
       <p class="kv"><b>Sources:</b>
         <a class="src" href="#">datasets/parking_pudo/default/dataset.py</a> ·
+        <a class="src" href="#">parking/buckets.py</a> · <a class="src" href="#">pudo/buckets.py</a> ·
         <a class="src" href="#">common.py</a> ·
         <a class="src" href="#">filters.py</a> ·
         <a class="src" href="#">intervention_filters.py</a> ·
         <a class="src" href="#">signals.py</a></p>
+
+      <div class="note"><strong>Re-sync note:</strong> this page was rebuilt against the post-feature fix commits
+      (geofence quality filters restored, context signals updated, departure look-ahead and indicator look-back
+      extended, anchors keep stopped frames). The earlier draft described an in-signal hazard-cleanup + office-geofence
+      mask that <b>no longer exists</b> — geofencing now happens at the exclusion layer.</p></div>
+    </section>
+
+    <!-- DATASETS -->
+    <section class="card" id="datasets">
+      <h2>Datasets &amp; entry points</h2>
+      <p class="lead">Four registered <code>BucketedDataset</code>s, all on <code>driving</code> binary
+      <code>3.0.68</code>, <code>platforms=["gen2"]</code>, <code>2025-12-01 → 2026-06-07</code>, base table
+      <code>wayve_corpus.all_data</code>, <code>COMMON_ATTRIBUTES</code>.</p>
+      <table>
+        <thead><tr><th>Dataset name</th><th>Module</th><th>Buckets</th></tr></thead>
+        <tbody>
+          <tr><td><code>parking_pudo</code></td><td><code>default/dataset.py</code></td><td><code>PARKING_BUCKETS + PUDO_BUCKETS</code> (everything, window form)</td></tr>
+          <tr><td><code>parking_pudo_parking</code></td><td><code>parking/dataset.py</code></td><td><code>PARKING_BUCKETS</code> only (non-PUDO park / unpark)</td></tr>
+          <tr><td><code>parking_pudo_pudo</code></td><td><code>pudo/dataset.py</code></td><td><code>PUDO_BUCKETS</code> only (PUDO / UnPUDO)</td></tr>
+          <tr><td><code>parking_pudo_anchors</code></td><td><code>anchors/dataset.py</code></td><td><code>PARKING_ANCHOR_BUCKETS + PUDO_ANCHOR_BUCKETS</code> (single triggering frame each)</td></tr>
+        </tbody>
+      </table>
+      <p>Mache scope = <code>gen2-av-mache</code>, <code>gen2-av-mache-alpha3</code>, <code>gen2-av-mache-alpha3-lidar</code>
+      (<code>select_platform_parking_pudo_mache</code> = GEN2 platform &amp; one of those models).</p>
     </section>
 
     <!-- PIPELINE -->
     <section class="card" id="pipeline">
       <h2>Shared signal pipeline</h2>
       <p class="lead">Before any bucket is selected, <code>_signals()</code> in <code>signals.py</code> normalises
-      one run into the arrays every selector consumes. This is where parking events are actually "detected".</p>
+      one run into the arrays every selector consumes. This is where parking events are actually "detected".
+      Two scalar knobs are threaded through: <code>min_gear_segment_sec</code> (gear smoothing, default 2.0s) and
+      <code>hazard_window_sec</code> (hazard/trip dilation, default 10s, 30s for the PUDO gear-change &amp; CA buckets).</p>
 
       <div class="pipeline">
-        <div class="step"><b>Timestamps &amp; speed.</b> <code>timestamps_s = TIMESTAMP_UNIXUS / 1e6</code>; <code>speed_mps = get_speed(df)</code>; frame rate from <code>get_frequency</code>.</div>
-        <div class="step"><b>Gear smoothing.</b> <code>get_gear</code> → integer gear, then <code>_smooth_short_gear_segments</code> replaces any gear segment shorter than <code>min_gear_segment_sec</code> (default <b>2.0s</b>) with the previous stable gear. Park = gear&nbsp;<code>0</code>.</div>
-        <div class="step"><b>Indicator cleanup.</b> <code>indicator_light</code> normalised to enum IDs, then <code>_cleanup_hazard</code> rewrites the fast approach part of a hazard segment to a directional indicator (left/right by drive-side country GBR/JPN) and the fast departure part to OFF — so only the genuinely-stopped portion stays HAZARD.</div>
-        <div class="step"><b>Geofence mask.</b> <code>non_geofenced = ~excluded_geofence_mask(df)</code> removes the four office geofences before any PUDO evidence counts.</div>
-        <div class="step"><b>Hazard evidence.</b> <code>real_pudo_hazard = (indicator == HAZARD) &amp; non_geofenced</code>, then time-dilated by ±<code>hazard_window_sec</code>.</div>
-        <div class="step"><b>Trip evidence.</b> <code>_trip_pudo_context</code>: completed pickup/dropoff locations from <code>inferred__robotaxi.trip_events</code> matched to a gear-to-park anchor within <b>100m</b> (haversine); the whole parked segment becomes synthetic hazard context, dilated and masked by <code>non_geofenced</code>.</div>
-        <div class="step"><b>PUDO context.</b> <code>pudo_hazard = real_pudo_hazard | pudo_trip</code>. Selectors pick the source with <code>context_source ∈ {all, hazard, trip}</code> (<code>all</code> = union). A frame is "PUDO" if this mask is true, "parking" if false.</div>
+        <div class="step"><b>Timestamps, speed, distance.</b> <code>timestamps_s = TIMESTAMP_UNIXUS / 1e6</code>; <code>speed_mps = get_speed(df)</code>; <code>cumulative_distances_m = get_cumdist(df)</code>; frame rate from <code>get_frequency</code>.</div>
+        <div class="step"><b>Gear smoothing.</b> <code>get_gear</code> → integer gear, then <code>_smooth_short_gear_segments</code> replaces any gear segment shorter than <code>min_gear_segment_sec</code> with the <em>previous</em> stable gear (only when that segment isn't the first in the run). Park = gear&nbsp;<code>0</code>.</div>
+        <div class="step"><b>Indicator → enum.</b> <code>indicator_light</code> is normalised to enum IDs via <code>indicator_to_enum</code>. <em>(No hazard cleanup / drive-side rewrite — that step was removed.)</em></div>
+        <div class="step"><b>Hazard evidence.</b> <code>pudo_hazard_context = (indicator == HAZARD)</code>, time-dilated by ±<code>hazard_window_sec</code>. <b>No geofence masking here.</b></div>
+        <div class="step"><b>Trip evidence.</b> <code>_trip_pudo_context</code>: for each Park (gear 0) segment, the frame just before Park (<code>start − 1</code>) is matched by haversine to the nearest trip-event location; if within <b>100m</b> the whole <code>[start−1, end)</code> interval is marked, then dilated ±<code>hazard_window_sec</code>. Trip events include completed pickup/dropoff <em>and</em> task-started rows. <b>No geofence masking here.</b></div>
+        <div class="step"><b>PUDO context.</b> <code>_pudo_context</code> returns <code>hazard | trip</code> for <code>context_source="all"</code> (or just one source for <code>"hazard"</code> / <code>"trip"</code>). A frame is "PUDO" if this mask is true, "parking" if false.</div>
       </div>
 
       <h3>Park segments &amp; the parking window</h3>
       <p><code>_parking_segments</code> keeps Park (gear 0) runs whose smoothed duration ≥ <code>min_parking_duration_sec</code>
       (default <b>2.0s</b>). For each such segment the <b>approach-to-stop window</b> (<code>_parking_window</code>) is:</p>
       <ul>
-        <li>start = earlier of "30m before stop" (cumulative distance) and "12s before stop" (time);</li>
-        <li>extended back to a nearby directional-indicator onset (−3s) if that indicator is within 30m of the park anchor;</li>
+        <li><code>dist_start</code> = "30m before stop" (cumulative distance), <code>time_start</code> = "12s before stop"; the window starts at the <em>later</em> (<code>max</code>) of the two;</li>
+        <li><code>_directional_indicator_start</code> may move the start back to a left/right indicator onset (−3s) found within <code>indicator_lookback_sec = 30s</code> before the park anchor — but never earlier than the 30m distance cap;</li>
         <li>end = 1s after the gear-to-park frame;</li>
         <li>intersected with <code>|speed| &gt; 0.01</code> dilated ±2s, so only the moving-nearby part is kept.</li>
       </ul>
       <p>A segment is classified <b>park vs PUDO</b> by the PUDO-context value at the frame just before Park starts
-      (<code>_park_context_index = park_start − 1</code>).</p>
+      (<code>_park_context_index = max(park_start − 1, 0)</code>).</p>
+
+      <h3>Event displacement gates <span class="pill pill-relax">added by the fix commits</span></h3>
+      <p>Two checks suppress duplicate anchors around the same physical stop:</p>
+      <ul>
+        <li><b>Approach</b> (<code>_has_pre_park_approach_displacement</code>, <code>select_park_pudo_event</code>): the gear-to-park anchor is dropped unless the car moved <b>&gt; 5m</b> point-to-point from its position <code>approach_lookback_sec = 30s</code> earlier. If a previous valid park anchor lies inside that window, the check starts from that anchor instead.</li>
+        <li><b>Departure</b> (<code>_has_post_departure_displacement</code>, departure selectors): the first-movement anchor is dropped unless the car reaches <b>&gt; 5m</b> from the gear-change point within <code>departure_lookahead_sec = 60s</code>, clipped at the next valid park anchor.</li>
+      </ul>
     </section>
 
     <!-- EXPLORER -->
     <section class="card" id="explorer">
       <h2>Bucket explorer</h2>
       <p class="lead">Every concrete bucket name (before the country suffix). Filter by name or by family. Each window
-      bucket has a matching <code>_anchor</code> variant in <code>parking_pudo/anchors</code> that keeps only the
-      triggering frame.</p>
+      bucket has a matching variant in <code>parking_pudo_anchors</code> that keeps only the triggering frame
+      (<code>anchor_only=True</code>). Note <code>dc_park</code> has no <code>_trip</code> debug twin — only the PUDO/UnPUDO
+      side carries <code>_trip</code> overlap buckets.</p>
       <div class="filterbar">
         <input id="bucketSearch" type="text" placeholder="Filter buckets — try 'pudo', 'unpark', 'long', 'failed'…">
         <button class="fbtn active" data-fam="all">all</button>
@@ -316,6 +354,10 @@
         </tbody>
       </table>
       </div>
+      <p class="kv" style="margin-top:10px"><b>Exclusion routing:</b> a bucket whose name contains <code>park</code> but not <code>pudo</code>
+      (e.g. <code>dc_park</code>, <code>dc_unpark</code>, <code>pre_ca_parking</code>, <code>*_failed_to_park</code>) gets the
+      <span class="pill pill-strict">strict</span> <code>PARK_UNPARK_*</code> set; all PUDO/UnPUDO buckets get the
+      <span class="pill pill-relax">relaxed</span> <code>PARKING_PUDO_*</code> set. See <a class="src" href="#exclusions">Exclusion policy</a>.</p>
     </section>
 
     <!-- GROUP 1: EVENT -->
@@ -325,19 +367,25 @@
         <summary><code>dc_park</code> · <code>dc_pudo</code> · <code>dc_pudo_trip</code> <span class="tag t-park">PARK</span></summary>
         <div class="body">
           <h3>How it's calculated</h3>
-          <p><code>select_park_pudo_event</code> builds signals, finds valid park segments, and for each computes the
-          approach-to-stop window. Windows are assigned greedily so earlier segments claim frames first
-          (<code>unassigned_window = window &amp; ~assigned</code>). A segment is emitted into the bucket when its
-          PUDO-context value at <code>park_start − 1</code> matches the requested <code>event_type</code>:</p>
-          <pre><code>is_pudo = pudo_context[park_start - 1]
+          <p><code>select_park_pudo_event</code> builds signals, finds valid park segments, and for each that passes the
+          <b>approach-displacement gate</b> (&gt; 5m over a 30s lookback) computes the approach-to-stop window.
+          Windows are assigned greedily so earlier segments claim frames first
+          (<code>unassigned_window = window &amp; ~assigned</code>). A segment is emitted when its PUDO-context value at
+          <code>park_start − 1</code> matches the requested <code>event_type</code>:</p>
+          <pre><code>if not _has_pre_park_approach_displacement(...):  # &gt; 5m in last 30s
+    continue
+window = _parking_window(signals, start)
+unassigned_window = window &amp; ~assigned
+assigned |= window
+is_pudo = pudo_context[_park_context_index(start)]
 if (event_type == "pudo") == is_pudo:
-    mask |= unassigned_window      # window bucket
-    # or mask[start] = window.any()  (anchor_only)</code></pre>
+    mask |= unassigned_window                      # window bucket
+    # or mask[start] = unassigned_window.any()     # anchor_only</code></pre>
           <h3>How it's filtered</h3>
           <ul>
             <li><b>Context:</b> <code>dc_park</code> = non-PUDO; <code>dc_pudo</code> = PUDO with <code>ctx=all</code> (hazard ∪ trip); <code>dc_pudo_trip</code> = debug overlap, <code>ctx=trip</code> only.</li>
-            <li><b>Params:</b> <code>min_parking_duration_sec=2.0</code>, <code>min_gear_segment_sec=2.0</code>, <code>hazard_window_sec=10.0</code>.</li>
-            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code> = DC base (no intervention-label filter) + <code>exclude_autonomous</code> (DC = driver-controlled frames only).</li>
+            <li><b>Params:</b> <code>min_parking_duration_sec=2.0</code>, <code>min_gear_segment_sec=2.0</code>, <code>hazard_window_sec=10.0</code>, <code>approach_lookback_sec=30.0</code>, <code>min_approach_displacement_m=5.0</code>.</li>
+            <li><b>Exclusions:</b> <code>dc_park</code> → strict <code>PARK_UNPARK_EVENT</code>; <code>dc_pudo</code>/<code>dc_pudo_trip</code> → relaxed <code>PARKING_PUDO_EVENT</code> (= DC base + <code>exclude_autonomous</code>).</li>
           </ul>
         </div>
       </details>
@@ -350,16 +398,17 @@ if (event_type == "pudo") == is_pudo:
         <summary><code>dc_unpark</code> · <code>dc_unpudo</code> · <code>dc_unpudo_trip</code> <span class="tag t-depart">DEPART</span></summary>
         <div class="body">
           <h3>How it's calculated</h3>
-          <p><code>_departure_events</code> walks every valid park segment, finds the first frame with
-          <code>|speed| &gt; 0.01</code> after the segment ends (the <b>movement anchor</b>, not crossing into the
-          next park segment), and classifies it as UnPUDO if the PUDO context is true anywhere across the parked
-          + pre-movement interval (<code>park_start−1 … max(end, anchor)+1</code>).
-          <code>select_unpark_unpudo_event</code> then selects <code>anchor → anchor + 10s</code>.</p>
+          <p><code>_departure_events</code> walks every valid park segment and, via <code>_departure_anchor</code>, finds the
+          first frame with <code>|speed| &gt; 0.01</code> at/after the gear-leaves-park frame — but only if
+          <code>_has_post_departure_displacement</code> confirms the car reaches <b>&gt; 5m</b> from the gear-change point
+          within <b>60s</b> (clipped at the next park segment). It classifies the event as UnPUDO if the PUDO context is
+          true anywhere across <code>[park_start−1 … max(end, anchor)+1)</code>. <code>select_unpark_unpudo_event</code>
+          then selects <code>anchor → anchor + 10s</code>.</p>
           <h3>How it's filtered</h3>
           <ul>
             <li><b>Context:</b> <code>dc_unpark</code> = parked interval not PUDO; <code>dc_unpudo</code> = parked interval is PUDO (<code>ctx=all</code>); <code>dc_unpudo_trip</code> = debug, <code>ctx=trip</code>.</li>
-            <li><b>Params:</b> <code>movement_speed_threshold_mps=0.01</code>, <code>after_movement_sec=10.0</code>; same min-duration / smoothing defaults.</li>
-            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code> (DC base + <code>exclude_autonomous</code>).</li>
+            <li><b>Params:</b> <code>movement_speed_threshold_mps=0.01</code>, <code>after_movement_sec=10.0</code>, <code>departure_lookahead_sec=60.0</code>, <code>min_departure_displacement_m=5.0</code>; same min-duration / smoothing defaults.</li>
+            <li><b>Exclusions:</b> <code>dc_unpark</code> → strict <code>PARK_UNPARK_EVENT</code>; <code>dc_unpudo</code>/<code>_trip</code> → relaxed <code>PARKING_PUDO_EVENT</code>.</li>
           </ul>
         </div>
       </details>
@@ -372,14 +421,14 @@ if (event_type == "pudo") == is_pudo:
         <summary><code>dc_pre_unpark</code> · <code>dc_pre_unpudo</code> · <code>dc_pre_unpudo_trip</code> <span class="tag t-depart">DEPART</span></summary>
         <div class="body">
           <h3>How it's calculated</h3>
-          <p>Same movement anchors and same UnPUDO classification as group ②, but
+          <p>Same movement anchors and same UnPUDO classification as group ② (including the 5m/60s departure gate), but
           <code>select_pre_departure_event</code> selects the <code>0.9s</code> immediately <b>before</b> the anchor:
           <code>mask[searchsorted(t, t[anchor] − 0.9) : anchor] = True</code>.</p>
           <h3>How it's filtered</h3>
           <ul>
             <li><b>Context:</b> identical unpark/UnPUDO split to group ②; <code>_trip</code> is the debug overlap.</li>
             <li><b>Params:</b> <code>before_movement_sec=0.9</code>.</li>
-            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code>.</li>
+            <li><b>Exclusions:</b> <code>dc_pre_unpark</code> → strict <code>PARK_UNPARK_EVENT</code>; <code>dc_pre_unpudo</code>/<code>_trip</code> → relaxed <code>PARKING_PUDO_EVENT</code>.</li>
           </ul>
         </div>
       </details>
@@ -397,8 +446,8 @@ if (event_type == "pudo") == is_pudo:
           <code>after_sec=0.5s</code> around frames whose context matches.</p>
           <h3>How it's filtered</h3>
           <ul>
-            <li><b>Context:</b> <code>dc_parking_gear_change</code> = non-PUDO at the gear-change frame; <code>dc_pudo_gear_change</code> = PUDO, with a wider <code>hazard_window_sec=30.0</code> so the cleaned hazard reaches the gear change.</li>
-            <li><b>Exclusions:</b> <code>PARKING_PUDO_EVENT_EXCLUSIONS</code>.</li>
+            <li><b>Context:</b> <code>dc_parking_gear_change</code> = non-PUDO at the gear-change frame; <code>dc_pudo_gear_change</code> = PUDO, with a wider <code>hazard_window_sec=30.0</code> so the dilated hazard reaches the gear change.</li>
+            <li><b>Exclusions:</b> <code>dc_parking_gear_change</code> → strict <code>PARK_UNPARK_EVENT</code>; <code>dc_pudo_gear_change</code> → relaxed <code>PARKING_PUDO_EVENT</code>.</li>
           </ul>
         </div>
       </details>
@@ -414,14 +463,15 @@ if (event_type == "pudo") == is_pudo:
           <p>Interventions are AV→DC transitions: <code>auto[:-1]==1 &amp; auto[1:]==0</code>. The pre-CA window is the
           <code>1.2s</code> before each qualifying intervention frame.</p>
           <p><b>Gear-change variant</b> (<code>select_intervention_near_gear_change</code>): keep interventions within
-          ±<code>30s</code> of a smoothed gear change whose context matches (<code>parking</code> / <code>pudo</code>,
-          PUDO uses <code>hazard_window=30s</code>).<br>
+          ±<code>30s</code> (<code>gear_window_sec</code>) of a smoothed gear change whose context matches
+          (<code>parking</code> / <code>pudo</code>; PUDO uses <code>hazard_window=30s</code>).<br>
           <b>Departure variant</b> (<code>select_intervention_near_departure_event</code>): keep interventions within
-          ±<code>30s</code> of a matching unpark/UnPUDO movement anchor.</p>
+          ±<code>30s</code> (<code>departure_window_sec</code>) of a matching unpark/UnPUDO movement anchor (which itself
+          passed the 5m/60s departure gate).</p>
           <h3>How it's filtered</h3>
           <ul>
-            <li><b>Remain-stopped guard:</b> drop handovers where the vehicle is stopped (<code>|speed| ≤ 0.01</code>) at the intervention <em>and</em> still stopped 1s later.</li>
-            <li><b>Exclusions:</b> <code>PARKING_PUDO_PRE_CA_EXCLUSIONS</code> = full base set <em>without</em> <code>exclude_autonomous</code> — pre-CA frames are expected to still be AV before handover.</li>
+            <li><b>Remain-stopped guard:</b> drop handovers where the vehicle is stopped (<code>|speed| ≤ 0.01</code>) at the intervention <em>and</em> still stopped 1s later (also dropped if there is no frame 1s later).</li>
+            <li><b>Exclusions:</b> <code>pre_ca_parking</code>/<code>pre_ca_unpark</code> → strict <code>PARK_UNPARK_PRE_CA</code> (full base + <code>exclude_out_of_scope_intervention</code>, no <code>exclude_autonomous</code>); <code>pre_ca_pudo</code>/<code>pre_ca_unpudo</code> → relaxed <code>PARKING_PUDO_PRE_CA</code> (base only, no <code>exclude_autonomous</code>). Pre-CA frames are expected to still be AV before handover.</li>
           </ul>
         </div>
       </details>
@@ -444,7 +494,7 @@ if (event_type == "pudo") == is_pudo:
           <ul>
             <li><b>Context / proximity:</b> identical to the matching pre-CA bucket (gear-change ±30s, or departure-anchor ±30s; same context split).</li>
             <li><b>Remain-stopped guard:</b> same as pre-CA.</li>
-            <li><b>Exclusions:</b> <code>PARKING_PUDO_CA_EXCLUSIONS</code> = full base set + <code>exclude_autonomous</code> (post-CA frames are DC).</li>
+            <li><b>Exclusions:</b> <code>ca_parking_*</code>/<code>ca_unpark_*</code> → strict <code>PARK_UNPARK_CA</code>; <code>ca_pudo_*</code>/<code>ca_unpudo_*</code> → relaxed <code>PARKING_PUDO_CA</code>. Both add <code>exclude_autonomous</code> (post-CA frames are DC).</li>
           </ul>
         </div>
       </details>
@@ -459,14 +509,14 @@ if (event_type == "pudo") == is_pudo:
           <h3>How it's calculated</h3>
           <p><code>select_failed_to_intervention</code> selects intervention frames directly by the
           <code>inferred__intervention__what</code> label ∈ {<code>failed_to_park</code>, <code>failed_to_pudo</code>,
-          <code>failed_to_unpark</code>, <code>failed_to_unpudo</code>}. Same pre (1.2s) / post (short 1.48s, long 5.0s)
-          windows.</p>
+          <code>failed_to_unpark</code>, <code>failed_to_unpudo</code>} (an unsupported label raises <code>ValueError</code>).
+          Same pre (1.2s) / post (short 1.48s, long 5.0s) windows.</p>
           <h3>How it's filtered</h3>
           <ul>
             <li><b>No gear / departure proximity check</b> — the label alone qualifies the intervention.</li>
             <li><b>Remain-stopped guard</b> still applies (rejects stopped-and-stays-stopped handovers).</li>
             <li>Hazard context is not used (<code>hazard_window_sec=0.0</code>); gear is only smoothed to keep the shared signal derivation consistent.</li>
-            <li><b>Exclusions:</b> pre-CA → <code>PRE_CA</code> set; short/long → <code>CA</code> set.</li>
+            <li><b>Exclusions:</b> routed like the others — <code>*_failed_to_park</code>/<code>*_failed_to_unpark</code> → strict <code>PARK_UNPARK_*</code>; <code>*_failed_to_pudo</code>/<code>*_failed_to_unpudo</code> → relaxed <code>PARKING_PUDO_*</code> (pre-CA set for <code>pre_ca_*</code>, CA set for <code>*_short</code>/<code>*_long</code>).</li>
           </ul>
         </div>
       </details>
@@ -475,61 +525,88 @@ if (event_type == "pudo") == is_pudo:
     <!-- EXCLUSIONS -->
     <section class="card" id="exclusions">
       <h2>Exclusion policy</h2>
-      <p class="lead">This dataset <b>owns</b> its exclusion policy rather than importing
-      <code>datasets.parking.common</code>. Three sets are derived from one base.</p>
+      <p class="lead">This dataset <b>owns</b> its exclusion policy (in <code>common.py</code>) rather than importing
+      <code>datasets.parking.common</code>. There are now <b>two families</b> of exclusion sets, chosen per bucket by
+      <code>is_park_unpark_bucket(name) = "park" in name and "pudo" not in name</code>.</p>
+
+      <h3>Strict — <code>PARK_UNPARK_*</code> (park / unpark buckets)</h3>
+      <h3>Relaxed — <code>PARKING_PUDO_*</code> (PUDO / UnPUDO buckets)</h3>
       <table>
-        <thead><tr><th>Set</th><th>Applied to</th><th>Composition</th></tr></thead>
+        <thead><tr><th>Window</th><th>Strict <code>PARK_UNPARK_*</code></th><th>Relaxed <code>PARKING_PUDO_*</code></th></tr></thead>
         <tbody>
-          <tr><td><code>EVENT</code></td><td>DC park/pudo, departure, gear-change buckets</td><td>DC base (= base minus the out-of-scope intervention filter) <b>+ exclude_autonomous</b></td></tr>
-          <tr><td><code>PRE_CA</code></td><td>all pre-CA buckets</td><td>full base set, <b>no exclude_autonomous</b></td></tr>
-          <tr><td><code>CA</code></td><td>all short/long CA buckets</td><td>full base set <b>+ exclude_autonomous</b></td></tr>
+          <tr><td><b>EVENT</b><br>(park/pudo, departure, gear-change)</td><td>strict base <b>+ exclude_autonomous</b></td><td>DC base (relaxed base minus the out-of-scope intervention filter) <b>+ exclude_autonomous</b></td></tr>
+          <tr><td><b>PRE_CA</b></td><td>strict base <b>+ exclude_out_of_scope_intervention</b> (no autonomous)</td><td>relaxed base only (no autonomous)</td></tr>
+          <tr><td><b>CA</b> (short/long)</td><td>strict base <b>+ exclude_autonomous</b></td><td>relaxed base <b>+ exclude_autonomous</b></td></tr>
         </tbody>
       </table>
-      <h3>Base exclusions (always on)</h3>
+
+      <h3>Relaxed base (<code>PARKING_PUDO_BASE_EXCLUSIONS</code>)</h3>
       <p><code>exclude_runs_not_in_filtered_corpus</code>, <code>exclude_gen1_without_back_cameras</code>,
-      <code>exclude_runs_that_are_too_short</code>, <code>exclude_gen2_missing_steering_bias</code>,
-      <code>exclude_parking_pudo_event_notebook_office_geofenced</code>, <code>exclude_known_bad_runs_and_windows</code>,
+      <code>exclude_gen2_missing_steering_bias</code>, <code>exclude_mache_without_wheel_odometery</code>,
+      <code>exclude_geofenced</code>, <code>exclude_known_bad_runs_and_windows</code>,
       <code>exclude_none_contiguous</code>, <code>exclude_invalid_video_file_name</code>,
       <code>exclude_constant_speed_run_ids</code>, <code>exclude_runs_before_vehicle_cutoff_dates_nissan_alpha3</code>,
+      <code>exclude_low_steering_bias_confidence</code>, <code>exclude_out_of_scope_except_parking_pudo_allowed</code>,
       <code>exclude_speed_greater_than_threshold</code>, <code>exclude_quarantined_runs</code>,
-      <code>exclude_quarantined_segments</code>, and (everywhere except DC buckets)
+      <code>exclude_quarantined_segments</code>. The <b>DC base</b> is this set minus
       <code>exclude_out_of_scope_except_parking_pudo_allowed</code>.</p>
 
+      <h3>Strict base (<code>PARK_UNPARK_BASE_EXCLUSIONS</code>)</h3>
+      <p>Everything the relaxed base has (with <code>exclude_runs_that_are_too_short</code>) plus the restored stricter
+      filters: <code>select_allowed_run_tags</code>, <code>exclude_stopped_segments</code>,
+      <code>exclude_first_or_last_indices_parking_pudo</code> (<code>pad_start=400</code>, <code>pad_end=10</code>),
+      and <code>exclude_diversion_and_lens_obscured_interventions</code>. It uses <code>exclude_out_of_scope_intervention</code>
+      (full) instead of the parking-allowed relaxation.</p>
+
+      <h3>Restored data-quality filters <span class="pill pill-relax">fix commit</span></h3>
+      <p><code>exclude_low_steering_bias_confidence</code> and <code>exclude_mache_without_wheel_odometery</code> are now applied to
+      <b>both</b> families (the earlier draft listed them as deliberately disabled — they were restored by
+      “restore parking pudo geofence quality filters”).</p>
+
       <h3>Out-of-scope intervention handling</h3>
-      <p><code>diversion</code>, <code>lens_obscured</code> and <code>uncategorised</code> are <b>kept</b> (allow-listed)
-      for parity with the event notebook; all other out-of-scope whats stay excluded — but only on CA / pre-CA
-      buckets. DC buckets do not filter on <code>inferred__intervention__what</code> at all (event-table comparison mode).</p>
+      <p>Relaxed family: <code>diversion</code>, <code>lens_obscured</code> and <code>uncategorised</code> are
+      <b>kept</b> (allow-listed via <code>PARKING_PUDO_ALLOWED_OUT_OF_SCOPE_INTERVENTION_WHATS</code>); all other
+      out-of-scope whats stay excluded on CA / pre-CA, and DC event buckets do not filter on
+      <code>inferred__intervention__what</code> at all. Strict family applies the full
+      <code>exclude_out_of_scope_intervention</code> on pre-CA and <code>exclude_diversion_and_lens_obscured_interventions</code>.</p>
 
-      <h3>Deliberately disabled (kept for a future stricter variant)</h3>
-      <p><code>select_allowed_run_tags</code>, <code>exclude_low_steering_bias_confidence</code>,
-      <code>exclude_mache_without_wheel_odometery</code>, <code>exclude_diversion_and_lens_obscured_interventions</code>.
-      Also not applied: stopped-segment, first/last-index, run-level autonomous masks.</p>
+      <h3>Disabled only for the relaxed family (<code>PARKING_PUDO_DISABLED_DATA_QUALITY_EXCLUSIONS</code>)</h3>
+      <p><code>select_allowed_run_tags</code>, <code>exclude_runs_that_are_too_short</code>,
+      <code>exclude_diversion_and_lens_obscured_interventions</code> — kept available for a stricter future variant but
+      not applied to the Zak-parity PUDO buckets (they <em>are</em> applied to the strict park/unpark family).</p>
 
-      <div class="note"><strong>Temporary:</strong> the event-notebook-only geofence list and the relaxed DC
-      <code>inferred__intervention__what</code> filtering are comparison choices for notebook parity. Both should be
-      revisited before this becomes the production parking/PUDO materialisation policy.</div>
+      <h3>Anchor-safe exclusions</h3>
+      <p>Anchor-only buckets run through <code>_anchor_safe_exclusions</code>, which strips
+      <code>exclude_stopped_segments</code> so a gear-to-park or intervention anchor that happens to be stopped at that
+      exact frame still survives (“keep stopped frames in parking pudo anchors”).</p>
     </section>
 
     <!-- CONTEXT -->
     <section class="card" id="context">
       <h2>PUDO context &amp; geofences</h2>
       <h3>What counts as PUDO</h3>
-      <p>PUDO context is the union of two evidence sources, both masked to exclude office geofences:</p>
+      <p>PUDO context is the union of two evidence sources (no geofence masking applied at this stage):</p>
       <ul>
-        <li><b>Hazard</b> — cleaned hazard-light frames (approach/departure rewritten away), time-dilated.</li>
-        <li><b>Trip</b> — completed pickup/dropoff locations from <code>inferred__robotaxi.trip_events</code>
-        (<code>event_type = TRIP_EVENT_TASK_COMPLETED</code>, pickup/dropoff waypoints) matched to a gear-to-park
-        anchor within <b>100m</b>. The raw indicator column is never modified — the synthetic hazard lives only in
-        the derived mask. Trip rows are aggregated to one row per run (list columns) before the join so corpus
-        frames can't be duplicated.</li>
+        <li><b>Hazard</b> — frames where the enum indicator equals <code>HAZARD</code>, time-dilated ±<code>hazard_window_sec</code>. There is no longer any approach/departure hazard rewrite.</li>
+        <li><b>Trip</b> — locations from <code>inferred__robotaxi.trip_events</code> where
+        <code>event_type = TRIP_EVENT_TASK_COMPLETED</code> with a pickup/dropoff waypoint, <b>or</b>
+        <code>event_type = TRIP_EVENT_TASK_STARTED</code> — matched to a gear-to-park context frame within <b>100m</b>
+        (haversine). Trip rows are deduped by <code>(trip_id, event_kind, rounded lat/lon)</code> and aggregated to one
+        row per run (list columns) before the join, so corpus frames can't be duplicated. The raw indicator column is
+        never modified — the synthetic hazard lives only in the derived mask.</li>
       </ul>
       <p>The <code>*_trip_*</code> buckets isolate only the trip-table contribution for debugging.</p>
 
-      <h3>Office geofences ignored for classification</h3>
-      <p><code>london_office</code>, <code>sunnyvale_office</code>, <code>germany_leonberg</code>,
-      <code>yokohama_office</code> — matching <code>EXCLUDE_GEOFENCE_KEYS</code> in the PUDO/UnPUDO event-detection
-      notebook. Hazard/trip evidence inside these is dropped before the park/PUDO split (in <code>signals.py</code>),
-      and the same names are also used as a run exclusion in the base set.</p>
+      <h3>Geofences — applied at the exclusion layer, not in classification</h3>
+      <p>PUDO/UnPUDO classification uses hazard and trip evidence <b>wherever it appears in the run</b>. Geofencing is now
+      done by the ordinary run/sample filter <code>exclude_geofenced</code> (in every base set) over the full sampling
+      list <code>EXCLUDE_GEOFENCES</code>: <code>DE_BEAUVOIR_TOWN</code>, <code>LONDON_OFFICE</code>,
+      <code>SOMERS_TOWN</code>, <code>YOKOHAMA_OFFICE</code>, <code>SUNNYVALE_OFFICE</code>,
+      <code>MOUNTAIN_VIEW_OFFICE</code>, <code>TOKYO_PRINCE_HOTEL_A/B</code>, <code>TOKYO_TRC_OFFICE</code>
+      + <code>TEST_TRACK_GEOFENCES</code>.</p>
+      <div class="note"><strong>Heads-up:</strong> <code>signals.excluded_geofence_mask</code> still exists but is now
+      <b>unused</b> (dead code) — the old in-signal office-geofence mask was removed. The earlier draft’s
+      “Geofence mask” pipeline step and <code>real_pudo_hazard &amp; non_geofenced</code> no longer reflect the code.</div>
 
       <h3>Country suffixes</h3>
       <p>Each event filter is crossed with <code>uk</code>, <code>usa</code>, <code>deu</code>, <code>jpn</code>,
@@ -538,23 +615,24 @@ if (event_type == "pudo") == is_pudo:
 
     <!-- ANCHORS -->
     <section class="card" id="anchors">
-      <h2>Anchor-only variant (<code>parking_pudo/anchors</code>)</h2>
-      <p class="lead">Mirrors <code>parking_pudo/default</code> bucket-for-bucket, but each bucket keeps only the single
-      triggering frame instead of the expanded training window (<code>anchor_only=True</code>).</p>
+      <h2>Anchor-only variant (<code>parking_pudo_anchors</code>)</h2>
+      <p class="lead">Mirrors <code>parking_pudo</code> bucket-for-bucket, but each bucket keeps only the single
+      triggering frame instead of the expanded training window (<code>anchor_only=True</code>), and runs the
+      anchor-safe exclusion set (no <code>exclude_stopped_segments</code>).</p>
       <table>
         <thead><tr><th>Bucket family</th><th>Anchor frame</th></tr></thead>
         <tbody>
-          <tr><td>park / PUDO</td><td>smoothed gear-to-park frame (if its window has any unassigned frame)</td></tr>
-          <tr><td>unpark / UnPUDO &amp; pre-departure</td><td>first movement after leaving park</td></tr>
+          <tr><td>park / PUDO</td><td>smoothed gear-to-park frame (if its window has any unassigned frame, after the 5m/30s approach gate)</td></tr>
+          <tr><td>unpark / UnPUDO &amp; pre-departure</td><td>first movement after leaving park (after the 5m/60s departure gate)</td></tr>
           <tr><td>gear change</td><td>smoothed gear-change frame</td></tr>
-          <tr><td>pre-CA / short-CA / long-CA / failed-to</td><td>AV→DC intervention frame, after the same context, proximity and remain-stopped filters pass</td></tr>
+          <tr><td>pre-CA / short-CA / long-CA / failed-to</td><td>AV→DC intervention frame, marked only if the corresponding window would contain frames (<code>_intervention_window_has_frames</code>), after the same context, proximity and remain-stopped filters pass</td></tr>
         </tbody>
       </table>
       <p>Useful when you want the small anchor table behind every bucket rather than the materialised windows.</p>
     </section>
 
-    <footer>Generated from branch <code>boris/pudo_generic_materialization</code> ·
-      <code>wayve/ai/services/sampling/datasets/parking_pudo/</code></footer>
+    <footer>Re-synced from branch <code>boris/pudo_generic_materialization</code> ·
+      <code>wayve/ai/services/sampling/datasets/parking_pudo/</code> · 2026-06-11</footer>
   </main>
 </div>
 
