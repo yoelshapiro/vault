@@ -493,6 +493,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-2/2026-06-11-training-main-cherrypick-generic-data-pr.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-departure-gear-change-buckets.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-parking-pudo-departure-60s-rerun.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-fast-bucket-discovery.md",
@@ -520,7 +521,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-comparison-rerun.md",
     "agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchors-current-rerun.md",
     "agent_tasks/2026/06/Week-2/2026-06-08-event-creation-gear-dedup.md",
-    "agent_tasks/2026/06/Week-2/2026-06-08-event-clip-viewer-anchor-comparison.md",
     "agent_tasks/2026/06/Week-2",
     "html_summaries/zak-pudo-buckets.html",
     "html_summaries/render_zak_pudo_buckets.py",
