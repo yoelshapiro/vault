@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-11 - Generic PUDO 8-node Training
+
+- Topic: Submit a 100K-step 8-node Parking/PUDO training run from the generic data branch.
+- Labels: parking, pudo, training, surfboard.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: #118072 draft context.
+- Change type: Training submission.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Submitted Surfboard job `178473` / `intricate-hatchetfish-crimson`.
+  - Used mode `parking_bc_train_release_2026_5_21`, datamodule `pudo_bc_datamodule`, `num_steps=100000`, 8 H100 nodes, `P1`.
+  - Overrode the generated long session tag to `genpudo8n100k`.
+  - Final observed status in this task was `Dispatched`; Model Catalogue indexing had not populated yet.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-generic-pudo-8node-training|2026-06-11 Generic PUDO 8-node Training]]
+
 ## 2026-06-11 - UnPUDO 15s Window
 
 - Topic: Extend UnPUDO DC windows to 15s after first movement.
