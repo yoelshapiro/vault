@@ -14,6 +14,12 @@ Changed `dc_unpudo_*` and `dc_unpudo_trip_*` to select 15s after the
 first-movement anchor. `dc_unpark_*` still uses the shared selector default of
 10s. Pre-departure and gear-change buckets are unchanged.
 
+Follow-up: removed `exclude_low_steering_bias_confidence` from the PUDO/UnPUDO
+exclusion family after the `dc_unpudo_uk` mismatch check showed that this filter
+explained most event-table rows missing from anchors. Park/unpark buckets still
+keep the stricter low steering-bias exclusion. The low steering-bias filter is
+kept in the disabled/future data-quality exclusion list for PUDO/UnPUDO.
+
 ## Verification
 
 ```bash

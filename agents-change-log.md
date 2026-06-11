@@ -1936,3 +1936,18 @@
   - Removed the obsolete event-notebook office-only geofence constant and filter, then moved the remaining geofence helper into `signals.py`.
   - Updated focused parking_pudo filter tests and verified the parking_pudo slice.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-pudo-filter-tightening|2026-06-10 Parking/PUDO PUDO Filter Tightening]]
+
+## 2026-06-11 - Parking/PUDO Low Steering Filter Relaxation
+
+- Topic: Remove low steering-bias confidence exclusion from PUDO/UnPUDO buckets after mismatch analysis.
+- Labels: parking, pudo, materialization, filters, anchors.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`, `wayve/ai/services/sampling/test/datasets/parking_pudo`.
+- Changes:
+  - Removed `exclude_low_steering_bias_confidence` from the PUDO/UnPUDO base exclusion family.
+  - Kept the same filter active for stricter park/unpark buckets.
+  - Added the filter to the disabled/future PUDO/UnPUDO data-quality exclusion list and updated README wording.
+  - Updated the focused filter-policy test and reran the parking_pudo sampling test slice.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window|2026-06-11 UnPUDO 15s Window]]
