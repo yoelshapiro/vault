@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-11 - Event Viewer Fast Bucket Discovery
+
+- Topic: Make anchor-comparison bucket discovery list folders instead of scanning parquet files.
+- Labels: parking, pudo, streamlit, event-viewer, performance.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool performance/UI fix.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Replaced recursive parquet traversal in `discover_anchor_buckets` with non-recursive directory listing.
+  - Scoped bucket discovery by selected split and anchor source.
+  - Preserved fallback to known buckets if root discovery fails.
+  - Added a regression test proving bucket names are discovered from folder names without parquet files.
+  - Verified `git diff --check`, `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`, and HTTP `200 OK` on port `3001`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-fast-bucket-discovery|2026-06-11 Event Viewer Fast Bucket Discovery]]
+
 ## 2026-06-11 - Event Viewer Comparison Bucket Event Type Controls
 
 - Topic: Let anchor comparison choose discovered materialization buckets and independent event-table event types.
