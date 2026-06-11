@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-11 - Departure Gear Change Buckets
+
+- Topic: Add departure-side gear-change buckets for UnPUDO and unpark.
+- Labels: parking, pudo, generic-materialization, buckets.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: #117075 draft context; not pushed in this task.
+- Change type: Materialisation bucket update.
+- Areas: `/workspace/pudo_materialization_buckets/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added `dc_unpudo_gear_change_*` and `dc_unpark_gear_change_*` bucket families.
+  - Added a shared departure gear-change selector that anchors on smoothed gear-leaves-park frames.
+  - Reused the existing first-movement and 5m departure displacement validation before emitting gear-change anchors.
+  - Split unpark vs UnPUDO using the same parked-interval PUDO context as `dc_unpark_*` and `dc_unpudo_*`.
+  - Added focused regression coverage and updated bucket docs.
+  - Verified `git diff --check` and `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-departure-gear-change-buckets|2026-06-11 Departure Gear Change Buckets]]
+
 ## 2026-06-11 - Event Viewer Fast Bucket Discovery
 
 - Topic: Make anchor-comparison bucket discovery list folders instead of scanning parquet files.
