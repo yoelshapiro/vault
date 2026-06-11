@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-11 - Event Viewer MP4 Frame Snap
+
+- Topic: Default event viewer media-handler URLs to MP4 with `frame_snap=auto`.
+- Labels: parking, pudo, streamlit, event-viewer, media-handler.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR branch context; not pushed in this task.
+- Change type: Tool runtime/video URL change.
+- Areas: `/workspace/WayveCode/wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added `video_format` and `frame_snap` parameters to the shared event-viewer `media_url` helper.
+  - Defaulted media-handler URLs to `.mp4?frame_snap=auto`, matching the materialization segment visualizer pattern from PR #117577.
+  - Added a focused regression test for the default URL shape.
+  - Verified `git diff --check`, `bazel test //wayve/ai/parking/tools/event_clip_viewer:py_checks`, and HTTP `200 OK` on port `3001`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-mp4-frame-snap|2026-06-11 Event Viewer MP4 Frame Snap]]
+
 ## 2026-06-10 - Parking/PUDO Context Signal Flyte Runs
 
 - Topic: Submit anchors and default materialisation sample runs after parking/PUDO context signal updates.
