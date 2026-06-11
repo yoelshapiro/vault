@@ -225,6 +225,22 @@
 - New HARI upload succeeded on `2026-06-10`: dataset `24e2b3f9-4aa1-4d6c-8a2a-5edf1b2ac4f1`, URL `https://hari.azr.internal.wayve.ai/main/media/24e2b3f9-4aa1-4d6c-8a2a-5edf1b2ac4f1/main_dataset`; registered 2030 blob-backed MP4 references from `blob/wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/anchors_20260605_201515_UTC/gen2/...`; created `all_videos` subset `1ff74929-453c-416c-a48f-06480ee719e0`.
 
 
+## 2026-06-11 Train/Validation UnPUDO Resample
+- Goal: regenerate UnPUDO clips with a clean 80/20 train/validation split before upload/annotation.
+- Source table: `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`.
+- Source event sampling: `event_type = 'unpudo'`, deduped by `(runID, timestamp_unixus)`.
+- Buckets: 500 random `event_startOrEnd_method = 'distance_and_speed'` events for the "speed at event" bucket, plus 500 random disjoint events where `timestamp_unixus - gearchange_timestamp > 10000000`.
+- Split: each bucket split 400 train / 100 validation using deterministic `rand(2026061101)` and `rand(2026061102)` ordering. Long-duration bucket excludes already-selected speed-bucket events to avoid leakage.
+- Anchor expansion: exact `gearchange_timestamp`, then every +5s, plus exact `timestamp_unixus` event endpoint.
+- Pre-corpus-match anchor counts: train speed bucket 1110 anchors, train duration bucket 2101 anchors, val speed bucket 280 anchors, val duration bucket 532 anchors.
+- Generated train input parquet: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/trainval_20260611_191717_UTC/train/run_clips_input.parquet` with 3221 matched rows.
+- Generated validation input parquet: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/borisindelman/unpudo_standstill/trainval_20260611_191717_UTC/val/run_clips_input.parquet` with 782 matched rows.
+- Flyte config for both splits: `clip_length_sec=20`, `highlight_middle_seconds=1.0`, `video_speed=3`, `drop_rows_with_missing_camera_video_files=true`, `chunk_size=1`, `num_concurrent_tasks=50`, `overwrite_outputs=true`.
+- ACR auth initially failed while listing `wayveacrprodflyte.azurecr.io/datasets_flyte_workflow` tags; fixed with `az acr login -n wayveacrprodflyte`.
+- Train Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/aj6qf6s8ffmqlc7mn429. Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/trainval_20260611_191717_UTC/train/gen2/`.
+- Validation Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/apvz2vlnrlbvl4vgrx5t. Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/trainval_20260611_191717_UTC/val/gen2/`.
+
+
 ## 2026-06-05 Event Viewer Model-Catalogue Video Source
 - Worktree/branch: `/workspace/event_clip_viewer` on `boris/event_clip_viewer`.
 - Added a model-catalogue-backed video source to `wayve/ai/parking/tools/event_clip_viewer`, based on Tom Boehling's `get_camera_video` helper from classifier studio.
