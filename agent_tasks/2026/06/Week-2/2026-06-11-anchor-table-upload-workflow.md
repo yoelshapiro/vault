@@ -28,11 +28,27 @@ Delta table for inspection/debugging.
   - all-bucket parquet read with `basePath`
   - target table validation
   - `bucket_name` / `train_val_split` aliasing
+- Added Databricks-notebook backed upload automation after the Spark permission
+  failure:
+  - `upload_anchor_buckets_to_databricks_via_notebook` imports a generated
+    Python notebook into the workspace.
+  - The task resolves the running Databricks cluster by name (`shared_2.3.231`)
+    unless a cluster id is passed explicitly.
+  - The task submits a one-time Databricks notebook run and polls it to terminal
+    state, returning the Databricks run URL.
+  - The task maps Flyte's `AZURE_CLIENT_*` env vars to the Databricks SDK's
+    `ARM_*` env vars for Azure service-principal auth.
+- Added `filter_bucket_and_upload_anchor_table_stage` so anchor bucket creation
+  and Databricks upload can run in a single Flyte execution without the
+  balance/compare/distribution stages.
+- Switched `upload_anchor_table_stage` and optional `sample --upload_anchor_table`
+  to the Databricks-notebook upload path instead of direct Flyte Spark writes.
 
 ## Verification
 
 - `WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel test //wayve/ai/services/sampling:test_spark_tasks_py_test --test_arg=-k --test_arg='anchor_table or delta_table_target or read_all_bucket' --test_arg=--no-cov`
 - `WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel build //wayve/ai/services/sampling:workflow`
+- `WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel test //wayve/ai/services/sampling:test_spark_tasks_py_test //wayve/ai/services/sampling:test_tasks_py_test --test_arg=-k --test_arg='databricks or anchor_table or filter_bucket_and_upload_anchor_table' --test_arg=--no-cov`
 
 ## 2026-06-11 Upload Run
 

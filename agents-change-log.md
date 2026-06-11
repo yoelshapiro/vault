@@ -2,17 +2,19 @@
 
 ## 2026-06-11 - Anchor Table Upload Workflow
 
-- Topic: Add a Flyte/Spark path to upload anchor buckets to a Databricks table.
+- Topic: Add a Flyte path to upload anchor buckets to a Databricks table.
 - Labels: parking, pudo, generic-materialization, flyte, databricks.
 - Branch: `boris/pudo_generic_materialization`.
 - PR: #117075 draft context; not pushed in this task.
 - Change type: Workflow utility.
 - Areas: `/workspace/pudo_materialization_buckets/wayve/ai/services/sampling/common`, `/workspace/pudo_materialization_buckets/wayve/ai/services/sampling/datasets/parking_pudo`.
 - Changes:
-  - Added a Spark task that reads anchor `buckets/`, preserves bucket parquet rows, and writes an external Delta table.
+  - Added a Spark helper path that reads anchor `buckets/`, preserves bucket parquet rows, and prepares an external Delta table payload.
+  - Added a Databricks-notebook upload task that imports a generated notebook, submits a one-time Databricks run, polls it, and returns the run URL.
+  - Added `filter_bucket_and_upload_anchor_table_stage` so anchor bucket creation and table upload run in one Flyte execution.
   - Added `bucket_name` and `train_val_split` aliases from `dataset_bucket` and `dataset_split`.
   - Added validation to reject hyphenated table identifiers such as `parking.parking-pudo-anchors`.
-  - Exposed a standalone `upload_anchor_table_stage` workflow and optional `sample` workflow inputs for inline upload.
+  - Exposed a standalone `upload_anchor_table_stage` workflow and optional `sample` workflow inputs using the Databricks upload path.
   - Documented usage in the Parking/PUDO dataset README and added focused tests.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-anchor-table-upload-workflow|2026-06-11 Anchor Table Upload Workflow]]
 
