@@ -6,7 +6,7 @@
 
 ## Summary
 
-Submitted a Parking BC training run from the generic PUDO training branch.
+Submitted a Parking BC training run from the generic PUDO training branch, fixed an early multi-odometry path-loader failure, and resubmitted the run.
 
 ## Command Shape
 
@@ -26,7 +26,7 @@ bazel run //wayve/ai/si/cli:cli -- \
   --priority P1
 ```
 
-## Run
+## Run 1
 
 - Surfboard job: `178473`
 - Surfboard nickname: `intricate-hatchetfish-crimson`
@@ -36,7 +36,7 @@ bazel run //wayve/ai/si/cli:cli -- \
 - Nodes: 8 H100 nodes (`num_gpus=64`)
 - Priority: `P1`
 - Max restarts: `0`
-- Final observed status in this task: `Dispatched`
+- Final status: `Failed` before W&B/global-step metrics
 
 ## Links
 
@@ -48,3 +48,27 @@ bazel run //wayve/ai/si/cli:cli -- \
 
 - The CLI-generated tag included the mode name; it was overridden to `genpudo8n100k`.
 - Model Catalogue lookup by session id returned no rows immediately after submission.
+- Failure root cause: `PathTableLoader` received `odometry_source=np.array(["wheel_imu"])` and used it directly as a dict key, causing `TypeError: unhashable type: 'numpy.ndarray'`.
+
+## Fix
+
+- Commit: `4e50a883a74cfe047844793c4c5eef695dcec342`
+- Change: normalized the selected odometry source in `wayve/ai/lib/data/pipes/paths.py` before indexing the multi-odometry path map.
+- Regression: added `test_load_paths_data_async_uses_numpy_array_odometry_source`.
+- Checks:
+  - `bazel test //wayve/ai/lib:test_data_pipes_lib_py_lint_ruff //wayve/ai/lib:test_data_pipes_lib_ty`
+  - `bazel test //wayve/ai/lib:test_data_pipes_lib_py_lint_flake8`
+  - `bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=wayve/ai/lib/test/data/pipes/test_load_paths.py --test_arg='-k=test_load_paths_data_async_uses_numpy_array_odometry_source' --test_arg=--no-cov`
+
+## Run 2
+
+- Surfboard job: `178475`
+- Surfboard nickname: `heron-harlequin-fortunate`
+- Session: `session_2026_06_11_20_07_34_genpudo8n100k2`
+- Image: `wayvetraining.azurecr.io/scaled-intelligence:4e50a883a74cfe047844793c4c5eef695dcec342`
+- Nodes: 8 H100 nodes (`num_gpus=64`)
+- Priority: `P1`
+- Max restarts: `0`
+- Initial observed status: `Dispatched`
+- W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_11_20_07_34_genpudo8n100k2
+- Datadog logs: https://app.datadoghq.eu/logs?query=job_name%3Aheron-harlequin-fortunate-178475&from_ts=1779998854721&cols=job_name%2Cnode_rank&live=true
