@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-11 - UnPUDO 15s Window
+
+- Topic: Extend UnPUDO DC windows to 15s after first movement.
+- Labels: parking, pudo, generic-materialization, buckets.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: #117075 draft context; not pushed in this task.
+- Change type: Materialisation bucket tuning.
+- Areas: `/workspace/pudo_materialization_buckets/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Set `dc_unpudo_*` and `dc_unpudo_trip_*` to use `after_movement_sec=15.0`.
+  - Kept `dc_unpark_*` on the shared 10s default.
+  - Left pre-departure and gear-change buckets unchanged.
+  - Added a regression test checking the actual `dc_unpudo` bucket emits the 15s post-movement window.
+  - Verified `git diff --check` and `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window|2026-06-11 UnPUDO 15s Window]]
+
 ## 2026-06-11 - Training Main Cherrypick Generic Data PR
 
 - Topic: Open a draft PR for the parking training main-cherrypick generic data branch.
