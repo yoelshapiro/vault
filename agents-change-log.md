@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-11 - Training Main Cherrypick Generic Data PR
+
+- Topic: Open a draft PR for the parking training main-cherrypick generic data branch.
+- Labels: parking, pudo, training, config, pr.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: #118072 (draft) — https://github.com/wayveai/WayveCode/pull/118072
+- Change type: PR creation / training config update.
+- Areas: `/workspace/WayveCode/wayve/ai/si/configs/parking/parking_config.py` plus existing branch changes.
+- Changes:
+  - Pushed `boris/training/main_cherrypick_generic_data` to origin.
+  - Created a draft PR targeting `main`.
+  - Documented the new `parking_bc_datamodule_cfg` PUDO materialization root.
+  - Captured the requested 50% driving and 50% PUDO/UNPUDO bucket mix in the PR description.
+  - Included manual verification from py-compile, `git diff --check`, and bucket-name validation against the supplied stats.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-training-main-cherrypick-generic-data-pr|2026-06-11 Training Main Cherrypick Generic Data PR]]
+
 ## 2026-06-11 - Departure Gear Change Buckets
 
 - Topic: Add departure-side gear-change buckets for UnPUDO and unpark.
