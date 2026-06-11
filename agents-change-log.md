@@ -47,6 +47,23 @@
   - Verified `git diff --check` and `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window|2026-06-11 UnPUDO 15s Window]]
 
+## 2026-06-11 - Generic PUDO 8-node Training Monitor
+
+- Topic: Submit and monitor the generic PUDO 8-node 100K train through the 1K-step smoke gate.
+- Labels: parking, pudo, training, surfboard, wandb, notion.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code fixes, training run, monitoring, Notion update.
+- Areas: `wayve/ai/lib/data/pipes/paths.py`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/zoo/deployment/deployment_wrapper.py`.
+- Changes:
+  - Fixed array-like `odometry_source` handling after the first train failed in the path loader.
+  - Added the missing `/dataset` suffix to the new PUDO materialization root after the next retry failed to find parquet files.
+  - Fixed TorchScript export by using the initialized `forward_drive_position` wrapper attribute.
+  - Cancelled a long-tag queued job before start and resubmitted with short session tag `gp8n100k4`.
+  - Confirmed `amaranth-kestrel-charming` / job `178491` passed the 1K monitor gate at `trainer/global_step=1096`.
+  - Created the Notion model-card row and posted Slack status updates for each fix/retrain milestone.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-generic-pudo-8node-training|2026-06-11 Generic PUDO 8-node Training]]
+
 ## 2026-06-11 - HARI UnPUDO Split-Native Video Batch
 
 - Topic: Launch corrected train/validation UnPUDO clip generation in Flyte.

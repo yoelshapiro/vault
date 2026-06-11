@@ -1,7 +1,7 @@
 # 2026-06-11 Generic PUDO 8-node Training
 
 - Branch: `boris/training/main_cherrypick_generic_data`
-- Commit: `4926993aefa80d1df1edbc1d5a10769ed274e86a`
+- Latest commit: `209d1fc69c404d47129c5e38b71f01fa00f0cc3a`
 - Workspace: `/workspace/WayveCode`
 
 ## Summary
@@ -72,3 +72,53 @@ bazel run //wayve/ai/si/cli:cli -- \
 - Initial observed status: `Dispatched`
 - W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_11_20_07_34_genpudo8n100k2
 - Datadog logs: https://app.datadoghq.eu/logs?query=job_name%3Aheron-harlequin-fortunate-178475&from_ts=1779998854721&cols=job_name%2Cnode_rank&live=true
+
+## Later Retries
+
+### Root Suffix Fix
+
+- Run `178475` failed before training because PUDO bucket paths were missing the `dataset/` segment under the new materialization root.
+- Commit: `5048bad220eadbce0df4d6b2a5ce3ebaccfc3f37`
+- Change: appended `/dataset` to `PARKING_BC_PUDO_BUCKETS_ROOT` in `parking_config.py`.
+
+### TorchScript Export Fix
+
+- Retry job: `178483`
+- Surfboard nickname: `blue-scintillating-salmon`
+- Session: `session_2026_06_11_20_26_41_genpudo8n100k3`
+- Failure: TorchScript export failed because the generated wrapper could not resolve `FORWARD_DRIVE_POSITION` from `ParkingDeploymentWrapperWithRadarWithInterleaveControl`.
+- Commit: `209d1fc69c404d47129c5e38b71f01fa00f0cc3a`
+- Change: use the initialized `self.forward_drive_position` attribute in `_clamp_waypoints_for_forward_drive`.
+- Checks:
+  - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/zoo/deployment:test_deployment_ty`
+  - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py --test_arg=-k --test_arg=test_interleave_codegen_scripts_with_gear_output_deployment_wrapper`
+
+### Short Tag Correction
+
+- Submitted job `178488` / `tomato-wren-mustachioed`, then cancelled it before start.
+- Reason: the accepted CLI tag expanded to `si_parking_bc_train_release_2026_5_21_genpudo8n100k4`, which reintroduced artifact-name risk.
+- Cancellation reason recorded in Surfboard: `Incorrect configuration`.
+
+## Passing Run
+
+- Surfboard job: `178491`
+- Surfboard nickname: `amaranth-kestrel-charming`
+- Session: `session_2026_06_11_20_44_02_gp8n100k4`
+- Image: `wayvetraining.azurecr.io/scaled-intelligence:209d1fc69c404d47129c5e38b71f01fa00f0cc3a`
+- Accepted tag: `gp8n100k4`
+- Nodes: 8 H100 nodes (`num_gpus=64`)
+- Priority: `P1`
+- Max restarts: `0`
+- W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_11_20_44_02_gp8n100k4
+- Notion row: https://app.notion.com/p/37c03da5d69a813d8328ce56ff8e0dc8
+
+## 1K Monitor Result
+
+- Result: passed.
+- W&B state: `running`
+- Checked at: `2026-06-11T21:04:07Z`
+- Heartbeat: `2026-06-11T21:03:54Z`
+- `trainer/global_step`: `1096`
+- `trainer/samples_seen`: `140288`
+- Throughput: `347.6888158463423` samples/sec world
+- Loss: `4.38987922668457`
