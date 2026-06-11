@@ -1802,6 +1802,22 @@
   - Found sampled missing-in-event-table rows are current generic PUDO anchors, while notebook rows are absent, shifted outside 120s, or classified as another event type.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-09-parking-pudo-anchor-mismatch-debug|2026-06-09 Parking/PUDO Anchor Mismatch Debug]]
 
+## 2026-06-11 - Parking/PUDO Departure 60s Rerun
+
+- Topic: Align generic unpark/UnPUDO movement verification with the event notebook's 60s transition search.
+- Labels: parking, pudo, materialization, flyte, anchors.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: Draft PR to main exists for the branch.
+- Change type: Code change, Flyte run.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Changed the shared departure lookahead default from 30s to 60s for unpark/UnPUDO, pre-departure, and departure-near-CA bucket selection.
+  - Updated Parking/PUDO dataset docs to describe the 60s displacement verification.
+  - Published sampling image digest `sha256:765b61967577da92917bee3741704275d3002befe49cfbde27b53f91a9b81a57` for commit `5f0b1777890e`.
+  - Terminated stale anchors execution `ar5nx4qnxxrgm7vtm9sm` after it resolved to released image `0.1.125`.
+  - Submitted branch-image sample executions `armqrmh7847nbmxv7f9z` (`parking_pudo/anchors`) and `ahp8gvv9z4v2tjcd4qqr` (`parking_pudo/default`).
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-parking-pudo-departure-60s-rerun|2026-06-11 Parking/PUDO Departure 60s Rerun]]
+
 ## 2026-06-09 - Event Viewer Reverse Anchor Mismatches
 
 - Topic: Make event-viewer anchor rows missing from the event table visible and inspect one missing PUDO example.
