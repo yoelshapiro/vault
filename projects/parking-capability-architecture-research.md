@@ -7,11 +7,17 @@
 - **Branch context:** `boris/training/main_cherrypick_generic_data` (WayveCode)
 
 ## Status
-- **Phase:** Phase 0 — task acknowledged, problem framed, awaiting clarifications
+- **Phase:** Phase 0 complete — task framed, scope decisions captured (§7)
 - **Status:** active
 - **Last updated:** 2026-06-12
-- **Done so far:** grounding sweep over code (release model, `parking_config.py`, `zmurez/pudo`, AR-approach fragments) and Notion (architecture + parking roadmap docs). Findings below.
-- **Next:** answer clarification questions (§7) → literature research → novel solution proposals (§8).
+- **Done so far:** grounding sweep over code (release model, `parking_config.py`, `zmurez/pudo`, AR-approach fragments) and Notion (architecture + parking roadmap docs); Boris answered the four key scoping questions.
+- **Next:** Phase 1 (sibling-branch + design-doc deep dive) → Phase 2 literature research → Phase 3 novel solution proposals (§8).
+
+## Decisions (Boris, 2026-06-12)
+- **Scope:** all 6 requirement tiers, prioritized by roadmap order (street/lots in depth; memory parking as forward-looking design).
+- **Architecture freedom:** solutions live in the parking head/branch, but WFM-pretrain changes (parking-aware latent actions, etc.) may be proposed when the payoff is clear.
+- **Memory/ICL:** **external memory only** — the network stays stateless; memory may enter only as inputs (e.g. search-coverage raster, stored-spot conditioning) maintained outside the model (map layer / deployment wrapper / retrieval). Internal recurrence and cross-tick memory tokens are out of scope.
+- **Deployability:** soft filter — every proposal needs a credible production path, but parking mode (low speed) may tolerate higher latency or staged optimization.
 
 ---
 
@@ -110,15 +116,13 @@ The release model is a **stateless, fixed-window (1 s in / 2 s out) feed-forward
 
 ---
 
-## 7. Open clarification questions
+## 7. Clarification questions
 
-1. **Scope/priority:** Which tiers are the target of *this* research — roadmap-aligned R1–R4, or also R5/R6? (Notion has MPA out of 2026 scope, reassess end-Q2 — is this research the reassessment?)
-2. **Architecture freedom:** must solutions fit the frozen-backbone + parking-head paradigm, or can they touch WFM pretraining (e.g. parking-aware latent-action pretraining, memory tokens trained in pretrain)? Anything off-limits?
-3. **Memory/ICL mandate:** May 5 weekly records guidance to avoid ICL research, but the task explicitly asks for memory / in-context learning solutions. Confirm memory IS in scope here, and whether network-internal state (recurrence/memory tokens) is acceptable for production vs only external memory (map layer, deployment wrapper, retrieval inputs).
-4. **Deployment constraints as hard filters:** must every proposal run on current on-car compute at the current tick rate and be TorchScript/JIT-compatible from day one, or can parking mode tolerate higher latency (low-speed regime) / a phased path?
-5. **Horizon interface:** is the 2 s executable-trajectory contract with the controller fixed (so longer horizons must be model-internal, like POLICY_PATH), or can the controller consume longer/sparser plans?
-6. **Data leverage:** can we commission new data (multi-story lots, gates, spot-level labels / PSD campaigns), and is the VLM annotation pipeline available for spot candidates? Is sim/WFM-generated data admissible for rare cases (gates, multi-story)?
-7. **Deliverable:** vault doc only, or also a Notion page for the parking team? Coordinate with Soham/Wonjoon's ongoing diffusion work?
+Q1–Q4 answered 2026-06-12 → see **Decisions** section above. Still open (proceeding with stated defaults until answered):
+
+5. **Horizon interface:** is the 2 s executable-trajectory contract with the controller fixed (so longer horizons must be model-internal, like POLICY_PATH), or can the controller consume longer/sparser plans? *Default assumption: fixed — longer horizons stay model-internal, following the POLICY_PATH precedent.*
+6. **Data leverage:** can we commission new data (multi-story lots, gates, spot-level labels / PSD campaigns), and is the VLM annotation pipeline available for spot candidates? Is sim/WFM-generated data admissible for rare cases (gates, multi-story)? *Default assumption: PSD labeling campaigns are roadmap-committed (MS3) and usable; new collection limited; sim admissible for rare cases if validated.*
+7. **Deliverable:** vault doc only, or also a Notion page for the parking team? Coordinate with Soham/Wonjoon's ongoing diffusion work? *Default assumption: vault first, Notion after Boris reviews Phase 3.*
 
 ---
 
@@ -130,9 +134,9 @@ Seed directions captured during grounding (to be developed, not yet vetted):
 - Parking-native latent-action space: gear-aware / maneuver-class-aware discretization replacing the forward-driving radial grid (fixes A1's geometry; unifies with A4 conditioning).
 - Promote A3's AR discrete-goal-grid idea into the SI stack as the spot/maneuver chooser feeding A2's diffusion path (A3 ⊕ A2 = concrete A4).
 - Candidate-spot set prediction + ranking head over PSD/VLM labels, with affinity-guided diffusion as the conditioning mechanism already prototyped.
-- Memory as input, not state: rolling egocentric "search coverage / rules" raster layer composited into the existing 512² route-map channel (reuses a trained pathway; deployment-wrapper-maintained → stateless network preserved).
-- Token-register memory: small set of read/write memory tokens carried across ticks in the ST transformer (cheap, but breaks statelessness — needs Q3 answer).
-- Sign/rule persistence via the nav-instruction channel: inject lot rules as synthetic nav steps.
+- Memory as input, not state: rolling egocentric "search coverage / rules" raster layer composited into the existing 512² route-map channel (reuses a trained pathway; deployment-wrapper-maintained → stateless network preserved). **Primary memory direction per the §Decisions external-memory-only mandate.**
+- Sign/rule persistence via the nav-instruction channel: inject lot rules / stored-spot goals as synthetic nav steps (also external-memory-compatible).
+- ~~Token-register memory (cross-tick state in the ST transformer)~~ — ruled out by the external-memory-only decision; revisit only if that mandate changes.
 
 ---
 
