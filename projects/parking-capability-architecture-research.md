@@ -116,11 +116,11 @@ The release model is a **stateless, fixed-window (1 s in / 2 s out) feed-forward
 
 ## 6. Research plan
 
-1. **Phase 0 — framing & clarifications** ← this doc.
-2. **Phase 1 — deep knowledge consolidation:** finish tracing sibling branches (`soham/affinity-guided-diffusion`, `wonjoongoo/diffusion-v4-parking-path-pred`, annotation pipeline); pull the Google-Docs design artifacts (System Design Overview, Multiple Driving Heads pre-read, Parking_SW_tech_DRAFT_3) if shared.
-3. **Phase 2 — literature research:** goal-conditioned & long-horizon planning (diffusion planners, hierarchical policies), multimodal trajectory prediction (anchor/goal-based, WTA/EWTA, GMM heads), memory for embodied agents (recurrent state spaces, token-memory/registers, retrieval, episodic maps), parking-specific E2E literature.
-4. **Phase 3 — novel solutions:** concrete proposals per gap with: integration point in current code, training-data requirements, latency cost, deployment path (interleave → multi-head merge), and eval plan. Production-first filter.
-5. **Phase 4 — review with Boris**, then socialize (Notion/newsletter per vault conventions).
+1. **Phase 0 — framing & clarifications** ✅ (this doc, §1–§5, §7).
+2. **Phase 1 — deep knowledge consolidation** ✅ — sibling branches + WTA archaeology + VLM pipeline + all 4 Google-Drive design docs traced (§3.5).
+3. **Phase 2 — literature research** ✅ — six-topic sweep digested in [[parking-capability-literature]].
+4. **Phase 3 — novel solutions** ✅ — proposed, adversarially reviewed ([[parking-capability-critique-2026-06-12]]), revised (§8).
+5. **Phase 4 — review with Boris** ← next, then socialize (Notion page for the parking team / newsletter per vault conventions, pending Q7).
 
 ---
 
