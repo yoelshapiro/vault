@@ -6,4 +6,5 @@ Interactive HTML reports served from the vault.
 | ------------------------ | ---------------------------------------------------- | ------------------------ |
 | Parking model comparison | `html_summaries/parking-model-comparison/index.html` | `http://localhost:3005/` |
 | Parking/PUDO generic materialisation bucket groups | `html_summaries/parking-pudo-generic-buckets.html` | open file directly |
+| Parking capability architecture research | `html_summaries/parking-capability-architecture-research.html` | open file directly |
 

@@ -1550,6 +1550,219 @@ loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(fea
 
 </div>
 <div id="tipbox"></div>
-<!-- SCRIPT -->
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- scroll reveal (motion moment #1) ---------- */
+  var reveals = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+  if (reduced || !("IntersectionObserver" in window)) {
+    reveals.forEach(function(el){ el.classList.add("in"); });
+  } else {
+    // stagger within each section: 80ms per element
+    var bySection = new Map();
+    reveals.forEach(function(el){
+      var sec = el.closest("section") || document.body;
+      if (!bySection.has(sec)) bySection.set(sec, 0);
+      var i = bySection.get(sec);
+      el.style.transitionDelay = Math.min(i * 80, 480) + "ms";
+      bySection.set(sec, i + 1);
+    });
+    var ro = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add("in"); ro.unobserve(e.target); }
+      });
+    }, {rootMargin: "0px 0px -8% 0px", threshold: 0.05});
+    reveals.forEach(function(el){ ro.observe(el); });
+  }
+
+  /* ---------- scroll-spy nav ---------- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll("nav#topnav a.nl"));
+  var sections = navLinks.map(function(a){ return document.getElementById(a.getAttribute("href").slice(1)); }).filter(Boolean);
+  function setActive(id){
+    navLinks.forEach(function(a){ a.classList.toggle("active", a.getAttribute("href") === "#" + id); });
+  }
+  if ("IntersectionObserver" in window) {
+    var current = {};
+    var so = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ current[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestV = 0;
+      sections.forEach(function(s){ if ((current[s.id]||0) > bestV) { bestV = current[s.id]; best = s.id; } });
+      if (best) setActive(best);
+    }, {rootMargin: "-15% 0px -55% 0px", threshold: [0, 0.05, 0.2, 0.5]});
+    sections.forEach(function(s){ so.observe(s); });
+  }
+
+  /* ---------- solution tabs ---------- */
+  var stabs = Array.prototype.slice.call(document.querySelectorAll("#stabs .stab"));
+  function activateTab(key, scroll){
+    stabs.forEach(function(t){ t.classList.toggle("active", t.dataset.s === key); });
+    Array.prototype.slice.call(document.querySelectorAll(".spanel")).forEach(function(p){
+      p.classList.toggle("active", p.id === "sp-" + key);
+    });
+    if (scroll) {
+      var sol = document.getElementById("solutions");
+      if (sol) sol.scrollIntoView({behavior: reduced ? "auto" : "smooth", block: "start"});
+    }
+  }
+  stabs.forEach(function(t){ t.addEventListener("click", function(){ activateTab(t.dataset.s, false); }); });
+
+  /* ---------- TLDR cards jump to tab ---------- */
+  Array.prototype.slice.call(document.querySelectorAll(".tcard[data-jump]")).forEach(function(c){
+    c.addEventListener("click", function(){ activateTab(c.dataset.jump, true); });
+  });
+
+  /* ---------- SVG tooltips ---------- */
+  var tip = document.getElementById("tipbox");
+  function showTip(ev, el){
+    var raw = el.getAttribute("data-tip") || "";
+    var parts = raw.split("|");
+    var html = "<div class='tip-t'>DETAIL</div>" + parts[0];
+    if (parts[1] && parts[1].trim() !== "—") html += "<span class='tip-ref'>" + parts[1] + "</span>";
+    tip.innerHTML = html;
+    tip.style.display = "block";
+    moveTip(ev);
+  }
+  function moveTip(ev){
+    var x = ev.clientX + 16, y = ev.clientY + 14;
+    var r = tip.getBoundingClientRect();
+    if (x + r.width > window.innerWidth - 12) x = ev.clientX - r.width - 14;
+    if (y + r.height > window.innerHeight - 12) y = ev.clientY - r.height - 12;
+    tip.style.left = x + "px"; tip.style.top = y + "px";
+  }
+  Array.prototype.slice.call(document.querySelectorAll("g[data-tip]")).forEach(function(g){
+    g.addEventListener("mouseenter", function(ev){ showTip(ev, g); });
+    g.addEventListener("mousemove", moveTip);
+    g.addEventListener("mouseleave", function(){ tip.style.display = "none"; });
+  });
+
+  /* ---------- requirements ladder ---------- */
+  var SOLMETA = {
+    "S1": {cls:"solchip",   tab:"s1", label:"S1 PRX head"},
+    "S2": {cls:"solchip",   tab:"s2", label:"S2 leg codebook"},
+    "S3": {cls:"solchip te",tab:"s3", label:"S3 memory"},
+    "S4": {cls:"solchip te",tab:"s4", label:"S4 data engine"},
+    "S5": {cls:"solchip",   tab:"s5", label:"S5 ranker+commit"},
+    "S6": {cls:"solchip vi",tab:"s6", label:"S6 riders+gyms"}
+  };
+  var RDATA = {
+    R1: {title:"R1 · Street parking", gaps:["G1","G2"],
+      sols:["S1","S3","S4"],
+      text:"Search for a free spot along the street, then park. Stresses horizon (search + maneuver beyond 2 s) and multimodality (which gap is actually a spot, where to begin). The coverage layer (S3) and fleet priors (S4) make search efficient; S1 proposes and ranks the candidates.",
+      cav:"Caveats that stay true: legality = mapped zones only; search runs at driving latency, not parking-mode slack."},
+    R2: {title:"R2 · Parking lot parking", gaps:["G1","G2"],
+      sols:["S1","S3","S4","S5","S6"],
+      text:"Everything R1 needs, plus the commitment/abort loop (S5): spots get taken on approach, scores jitter, and a stateless network would churn targets every tick. The 3DGS gym (S6) carries the search-behavior learning bet — fleet imitation data is contradictory on coverage.",
+      cav:"Caveats: organic search data scarce in chauffeur-style logs → 3DGS gym + directed collection."},
+    R3: {title:"R3 · Multi-story lots", gaps:["G3","G1"],
+      sols:["S3","S6"],
+      text:"Ramps, level changes, GPS-denied. Per-floor coverage on a fused floor estimate (barometer + ramp counting + pillar OCR — never integrated VIO z), ramp-segment mining (S6: tight steep spirals are OOD for a forward-driving trunk), and the re-anchoring stack.",
+      cav:"Caveats: gated on re-anchoring (MS5+); low-confidence floor estimate ⇒ conservative abort."},
+    R4: {title:"R4 · Parking lot gates", gaps:["G3","G1"],
+      sols:["S2","S4","S5","S6"],
+      text:"Industry evidence is unanimous: nobody's robot pulls a ticket. A thin barrier-state head (S6), creep-wait behavior data (S4), HOLD legs with release=BARRIER_OPEN (P0/S2) — the wait state lives in the commitment layer (S5) because a 1 s context window cannot observe a barrier rising slowly — plus the operator ANPR track (business development).",
+      cav:"Caveats: ticket-pulling explicitly descoped — no technical fallback claimed."},
+    R5: {title:"R5 · Preferred parking", gaps:["G2"],
+      sols:["S1","S3","S4"],
+      text:"Near elevator / handicapped / EV charger. A preference token enters S1's Rank stage; rule attributes come from the S3 rule layer; spot types from the S4 VLM attribute pipeline + PSD label schema. The roadmap already plans a parking-preference input adaptor.",
+      cav:"Caveats: EV/handicap marking legibility at range unproven."},
+    R6: {title:"R6 · Memory parking", gaps:["G3"],
+      sols:["S3","S1"],
+      text:"Park at a specific stored spot (home / office / mall). Demoted to a one-page input to the end-Q2 MPA reassessment — this research is that input. Design that would be proposed: Valeo/Xpeng pattern — one demo run stores {trajectory, semantic BEV landmarks, spot pose}, keyed semantically, refreshed on every replay; runtime re-anchoring via AVP-SLAM-class localization where the PSD head doubles as the localizer; the stored route renders as a normal nav route + S1 goal token.",
+      cav:"Caveats: the unpark return leg lacks goal-conditioned data (goal_distance=NaN on unparking); barometer availability TBD."}
+  };
+  var rdetail = document.getElementById("rdetail");
+  var rsteps = Array.prototype.slice.call(document.querySelectorAll("#rsteps .rstep"));
+  function renderR(key){
+    var d = RDATA[key]; if (!d || !rdetail) return;
+    var gapAll = ["G1","G2","G3"];
+    var gh = gapAll.map(function(g){
+      var names = {G1:"G1 horizon", G2:"G2 multimodality", G3:"G3 memory"};
+      return "<span class='gapchip" + (d.gaps.indexOf(g) >= 0 ? " on" : "") + "'>" + names[g] + "</span>";
+    }).join("");
+    var sh = d.sols.map(function(s){
+      var m = SOLMETA[s];
+      return "<span class='" + m.cls + "' data-tab='" + m.tab + "'>" + m.label + "</span>";
+    }).join("");
+    rdetail.innerHTML =
+      "<h3 style='margin-top:0'>" + d.title + "</h3>" +
+      "<p style='font-size:14.2px'>" + d.text + "</p>" +
+      "<h4>gaps stressed</h4><div>" + gh + "</div>" +
+      "<h4>covered by</h4><div>" + sh + "</div>" +
+      "<p class='muted' style='font-size:12.8px;margin-top:14px;border-top:1px dashed var(--line);padding-top:10px'>" + d.cav + "</p>";
+    Array.prototype.slice.call(rdetail.querySelectorAll(".solchip")).forEach(function(ch){
+      ch.addEventListener("click", function(){ activateTab(ch.dataset.tab, true); });
+    });
+    // cross-highlight matrix row
+    Array.prototype.slice.call(document.querySelectorAll("#mxtable tr.mxrow")).forEach(function(tr){
+      tr.classList.toggle("flash", tr.dataset.r === key);
+    });
+  }
+  rsteps.forEach(function(b){
+    b.addEventListener("click", function(){
+      rsteps.forEach(function(x){ x.classList.remove("active"); });
+      b.classList.add("active");
+      renderR(b.dataset.r);
+    });
+  });
+  renderR("R1");
+
+  /* ---------- coverage matrix ---------- */
+  var mx = document.getElementById("mxtable");
+  if (mx) {
+    var rows = Array.prototype.slice.call(mx.querySelectorAll("tr.mxrow"));
+    rows.forEach(function(tr){
+      var cells = Array.prototype.slice.call(tr.querySelectorAll("td"));
+      cells.forEach(function(td, idx){
+        td.addEventListener("mouseenter", function(){
+          tr.classList.add("rowhl");
+          if (idx > 0) {
+            var head = mx.querySelectorAll("thead th")[idx];
+            if (head) head.classList.add("hl");
+            rows.forEach(function(r2){
+              var c2 = r2.querySelectorAll("td")[idx];
+              if (c2) c2.classList.add("hl");
+            });
+          }
+        });
+        td.addEventListener("mouseleave", function(){
+          tr.classList.remove("rowhl");
+          Array.prototype.slice.call(mx.querySelectorAll(".hl")).forEach(function(x){ x.classList.remove("hl"); });
+        });
+      });
+      var rq = tr.querySelector("td.rq");
+      if (rq) rq.addEventListener("click", function(){
+        var cav = tr.nextElementSibling;
+        if (cav && cav.classList.contains("cav")) cav.classList.toggle("open");
+      });
+    });
+  }
+
+  /* ---------- risk filter ---------- */
+  Array.prototype.slice.call(document.querySelectorAll("#rfilter .rf")).forEach(function(btn){
+    btn.addEventListener("click", function(){
+      Array.prototype.slice.call(document.querySelectorAll("#rfilter .rf")).forEach(function(x){ x.classList.remove("active"); });
+      btn.classList.add("active");
+      var f = btn.dataset.f;
+      Array.prototype.slice.call(document.querySelectorAll(".risk")).forEach(function(card){
+        card.classList.toggle("hidden", f !== "all" && card.dataset.cat !== f);
+      });
+    });
+  });
+
+  /* ---------- literature filter ---------- */
+  Array.prototype.slice.call(document.querySelectorAll("#litchips .lc")).forEach(function(btn){
+    btn.addEventListener("click", function(){
+      Array.prototype.slice.call(document.querySelectorAll("#litchips .lc")).forEach(function(x){ x.classList.remove("active"); });
+      btn.classList.add("active");
+      var t = btn.dataset.t;
+      Array.prototype.slice.call(document.querySelectorAll("#litlist .li")).forEach(function(item){
+        item.classList.toggle("hidden", t !== "all" && item.dataset.t !== t);
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
