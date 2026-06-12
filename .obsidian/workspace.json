@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "todo-list.md",
+                "file": "projects/parking-capability-architecture-research.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "todo-list"
+              "title": "parking-capability-architecture-research"
             }
           }
         ],
@@ -475,8 +475,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -491,10 +490,11 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "421689602b4afc34",
+  "active": "117f440063e12be8",
   "lastOpenFiles": [
-    "projects/parking-capability-architecture-research.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-kickoff.md",
+    "todo-list.md",
+    "projects/parking-capability-architecture-research.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-amaranth-green-pudo-experiments.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-anchor-table-upload-workflow.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-generic-pudo-8node-training.md",
@@ -513,7 +513,6 @@
     "agents-change-log.md",
     "projects.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
-    "todo-list.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-branch-correction.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-event-clip-viewer-browser-preload.md",
     "agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-dataset-split.md",
