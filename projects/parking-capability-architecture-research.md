@@ -138,14 +138,91 @@ Q1–Q4 answered 2026-06-12 → see **Decisions** section above. Still open (pro
 
 **How to read this.** These are mostly disciplined adoptions of production-proven mechanisms wired for our stack — by design: the brief is production, not publication. The defensible novel elements are (a) a single **gear-aware leg-code action vocabulary** designed to work under the frozen-trunk multi-head constraint, and (b) the **memory-as-input wiring with an explicit commitment layer**. A first draft was stress-tested by a 4-lens adversarial review (production/deployment, data realism, novelty/coherence, org fit) with repo verification; the fixes are folded in below and the surviving risks are in §8.10. Critique log: [[parking-capability-critique-2026-06-12]] · literature basis: [[parking-capability-literature]].
 
+**The system at a glance.** Six solution families compose into one architecture. The network itself stays a stateless parking head on the frozen trunk; everything that must persist (search coverage, seen spots, rules, the committed plan) lives in an external Parking Memory Service and re-enters the network as tokens each tick. A slow ~1 Hz strategic loop chooses *where to park and via which legs*; the fast tick loop only executes the committed leg.
+
+```mermaid
+flowchart LR
+    subgraph EXT["External - outside the network"]
+        PMS["Parking Memory Service (S3)<br/>coverage / spots / rules / stored spots<br/>+ committed plan"]
+        DATA["Fleet Data Engine (S4)<br/>HER relabels, spot priors,<br/>contrast pairs, VLM attributes"]
+        GYM["3DGS lot gyms (S6)<br/>search-behavior RL + closed-loop eval"]
+    end
+
+    subgraph NET["Stateless network"]
+        TRUNK["Frozen shared trunk<br/>ViT + ST transformer"]
+        subgraph HEAD["Parking head (S1 PRX)"]
+            P["Propose<br/>spot candidates"]
+            R["Rank<br/>rules + preference + critic"]
+            X["eXecute<br/>anchored-truncated diffusion"]
+        end
+        CRITIC["C51 critic (S5)<br/>plan ranking, shadow-first"]
+    end
+
+    CAMS["6 cameras, 1s video"] --> TRUNK
+    PMS -- "memory tokens" --> HEAD
+    TRUNK --> P --> R --> X
+    R <--> CRITIC
+    X --> LEGS["POLICY_PARKING_LEGS (S2)<br/>+ parking pose w/ real confidence"]
+    LEGS --> PMS
+    DATA -. "training data" .-> HEAD
+    GYM -. "RL + eval" .-> HEAD
+```
+
+Reading order: §8.0 fixes the representations everything else stands on → S1/S2 are the model → S3 is the memory → S4 is the data → S5 is the decision layer → S6 is what rides other teams' trains.
+
 ### 8.0 P0 — representation decisions & diagnostics that gate everything else
 
-The three recorded street-PUDO failure modes (reverse/gear instability, end-of-route degeneracy, standstill-in-drive) are prerequisites, not afterthoughts:
+**Why this section exists.** The adversarial review's strongest structural finding was that the three failure modes already *recorded* during street PUDO — reverse/gear instability, end-of-route degeneracy, and standstill-in-drive — are not bugs to fix later; they are symptoms of representation choices that every solution below inherits. Building S1/S2 on the current representations would reproduce them at larger scale. Four decisions/diagnostics come first.
 
-1. **Time/dwell semantics.** Distance-parameterized `POLICY_PATH` cannot express "stop and hold N seconds" (gear-shift dwell, gate creep-wait, mid-maneuver yield) — at standstill the target degenerates to a point; plausibly the root of standstill-in-drive. Pick one: (a) **HOLD leg type with a duration scalar** in the leg representation (recommended — legs need first-class dwell at gear switches anyway); (b) a speed-profile output alongside the geometric path; (c) an intent=hold head + controller-side hold state.
-2. **Termination semantics.** Parking is *always* end-of-route. Define what the path does after the goal pose (validity mask vs terminal-pose pinning + padding policy — today points beyond goal repeat the goal pose) as an explicit controller contract and a first-class eval slice. **Pre-req found in review:** end-of-route detection keys on route-raster pixel sums and auto-triggers `PARKING_MODE` (`deployment_wrapper.py:3452-3469`) — migrate it to nav-instruction distance inputs before anything else touches conditioning.
-3. **Reverse diagnostic (~1 week).** Establish *why* reverse is unstable before building: probe frozen-trunk features on reverse segments (if the trunk never represented rearward motion, no head-side fix recovers it and the plan changes); replay recorded reverse failures against controller-only hypotheses (rear-axle-frame tracking); check signed-arc ambiguity at gear cusps. Output: a verdict memo assigning head- vs trunk- vs controller-side ownership.
-4. **One action vocabulary.** A single **leg-code = (gear ∈ {F, R, HOLD}, endpoint cell, side)** is the unit everywhere: S1's maneuver mode is the first leg-code; S2 decodes sequences of them; any future WFM pretraining (S6) targets the same codebook. Facts to respect: the 961 radial grid cannot encode reverse (uncentered longitudinal axis, `autoregressive.py:430`), and `enable_latent_action=False` in every production parking config — re-enabling the latent-action pathway in the parking head is *scheduled work, not an assumption*.
+#### 8.0.1 Time & dwell semantics — paths must be able to say "wait"
+
+Today's `POLICY_PATH` is pure geometry: 50 poses sampled every 0.5 m of arc length. Arc length carries no time, so the representation *cannot express* "stop here and hold for N seconds" — yet parking is full of mandatory waits: the dwell while shifting D→R, creeping up to a gate and waiting for the barrier, yielding mid-maneuver to a pedestrian. Worse, at standstill the distance-parameterized target degenerates: zero distance traveled means the next 0.5 m sample point doesn't move, and a deterministic head must still emit *some* path — which is plausibly the root cause of the recorded standstill-in-drive failures.
+
+Three candidate fixes, with a recommendation:
+
+| Option | Mechanism | Verdict |
+|---|---|---|
+| **(a) HOLD leg type + duration scalar** | The leg representation (§8.2) gets a third gear value `HOLD` with a `duration_s` field; a maneuver is e.g. `[FWD 8m] → [HOLD 1.5s] → [REV 6m]` | **Recommended** — legs need first-class dwell at gear switches anyway, so waiting becomes a *plannable, supervisable* object |
+| (b) Speed profile output | Emit `v(s)` alongside the geometric path; v=0 segments encode waits | Works, but adds a second continuous output to validate, and "wait until X happens" still isn't expressible |
+| (c) intent=hold head | Classification head + controller-side hold state | Cheapest, but pushes semantics into the controller and splits the maneuver across two owners |
+
+```python
+@dataclass
+class LegCode:
+    """The single action-vocabulary unit used by S1, S2, S5, and any future S6 pretraining."""
+    gear: Literal["FWD", "REV", "HOLD"]
+    endpoint_cell: int          # discretized leg-endpoint pose in ego frame (gear-aware grid)
+    side: Literal["L", "R", "C"]  # approach side, disambiguates symmetric maneuvers
+    duration_s: float | None = None   # HOLD legs only: minimum dwell; release is event-gated
+    release: Literal["TIMER", "BARRIER_OPEN", "PATH_CLEAR"] | None = None  # HOLD release condition
+```
+
+#### 8.0.2 Termination semantics — parking is *always* end-of-route
+
+Every park ends with the route exhausted, so the end-of-route edge case is the parking *common* case. Two contracts must be made explicit: (1) **what the path means past the goal** — today points beyond the goal repeat the goal pose (clamping in `datamodules/parking.py:443-516`); that convention must become a documented controller contract (validity mask vs terminal-pose pinning + padding policy) with its own eval slice, not an accident of the datamodule. (2) **How end-of-route is detected.** The review found that detection currently *sums route-raster pixels* against a threshold and auto-triggers `PARKING_MODE` (`deployment_wrapper.py:3452-3469`, `END_OF_ROUTE_THRESHOLD`). Any future change to what gets rendered into conditioning rasters silently shifts this control signal. **Migrate detection to the nav-instruction distance inputs** (`step_info_distance_to_reach`, already in the wrapper signature) before anything else in this plan touches conditioning.
+
+#### 8.0.3 Reverse diagnostic — one week, before anything is built
+
+Reverse/gear instability has three candidate root causes living in three different components, and they imply three different plans:
+
+```mermaid
+flowchart TD
+    Q["Why is reverse unstable?"] --> H1["H1: Trunk features<br/>frozen trunk never trained on<br/>meaningful rearward motion"]
+    Q --> H2["H2: Representation<br/>signed-arc ambiguity at gear cusps;<br/>yaw flip conventions"]
+    Q --> H3["H3: Controller<br/>rear-axle-frame tracking of<br/>reverse trajectories"]
+    H1 --> T1["Probe: linear-probe trunk features on<br/>reverse segments vs forward; compare<br/>reconstruction quality of rearward motion"]
+    H2 --> T2["Probe: replay recorded reverse failures;<br/>check decoded path vs GT at cusps"]
+    H3 --> T3["Probe: feed GT reverse paths to the<br/>controller in replay - does tracking fail<br/>even with perfect plans?"]
+    T1 --> V["Verdict memo:<br/>head-side vs trunk-side vs controller-side ownership"]
+    T2 --> V
+    T3 --> V
+```
+
+If H1 holds — the trunk simply never represented rearward motion — then **no head-side fix recovers it**, every solution below acquires a trunk-release dependency, and that changes the negotiation with the trunk owners (§8.6). This is why the diagnostic is first: it is one week that can redirect two quarters.
+
+#### 8.0.4 One action vocabulary
+
+The draft plan implicitly contained *three* action vocabularies (S1 maneuver modes, S2 leg codes, S6 pretraining codes). They are unified into the single `LegCode` above: S1's "maneuver mode" **is** the first leg-code of the plan; S2 decodes *sequences* of leg-codes; any future WFM-stage pretraining (S6) targets the *same* codebook, otherwise "BC inherits the action structure" is void. Two repo facts to respect when implementing it: the current 961-way radial grid **cannot encode reverse** (its longitudinal axis is uncentered — `autoregressive.py:430`), and `enable_latent_action=False` in every production parking config — re-enabling the latent-action conditioning pathway in the parking head is *scheduled work in MS4, not an assumption*.
 
 ### 8.1 S1 — PRX parking head: Propose → Rank → eXecute
 
