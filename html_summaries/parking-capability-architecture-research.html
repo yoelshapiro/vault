@@ -1143,7 +1143,136 @@ loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(fea
         </div>
       </div>
 
-<!-- NEXT-PANEL -->
+      <!-- ============ S5 ============ -->
+      <div class="spanel" id="sp-s5">
+        <div class="card">
+          <div class="soltitle"><span class="sid am">S5</span><h3>Critic-as-ranker + commitment layer — shadow first</h3></div>
+          <p class="lead" style="margin-top:12px"><b>What it is.</b> Two decision-layer mechanisms that make the multimodal head <em>usable</em>: the existing C51 distributional RL critic re-deployed as a plan <b>ranker</b> (the V-GPS pattern: a frozen value function re-ranks K samples from any policy, no policy retraining), and a <b>commitment layer</b> that stops a stateless network from changing its mind every tick.</p>
+          <p><b>Why the critic, and why carefully.</b> The RL stage already trains a critic that consumes waypoints as action input — it is the one component in the stack whose job is “how well does this plan end”. Its distributional (C51) head additionally supports risk-aware (CVaR-style) ranking — rank plans by their bad-tail outcome, not their mean. But the review added two hard qualifiers: <b>symmetric critic head only</b> (the asymmetric config carries its own perception encoder — a second full trunk forward per tick on Orin), and <b>parking-reward training is a prerequisite</b> — today's critic is forward-driving-trained; its distribution tails on reverse multi-point maneuvers are exactly the offline-RL OOD-overestimation regime, and CVaR over a miscalibrated distribution is <em>confidently wrong</em> risk aversion.</p>
+
+          <h3>Rollout ladder — each rung gates the next</h3>
+          <div class="tblwrap"><table>
+            <thead><tr><th>Rung</th><th>What</th><th>Gate / exit criterion</th></tr></thead>
+            <tbody>
+              <tr><td class="key">1 · offline, now</td><td>Rank the existing top-K diffusion samples against logged PUDO outcomes. Zero deployment risk; immediately replaces the <code>confidence=1.0</code> placeholder in offline eval</td><td class="mono">produces the rank-vs-outcome calibration data the next rung needs</td></tr>
+              <tr><td class="key">2 · shadow on-car</td><td>The ranker runs and logs but does not steer</td><td class="mono">rank correlates with outcomes on held-out interventions</td></tr>
+              <tr><td class="key">3 · gate behavior</td><td>Ranker feeds S1's Rank stage</td><td class="mono">—</td></tr>
+              <tr><td class="key">4 · (later) multi-leg</td><td>Ranking leg <em>sequences</em> requires a (state, leg-chunk) critic (Q-chunking) — <b>don't change the action vocabulary before its critic exists</b></td><td class="mono">until then the critic ranks first-leg / in-horizon proposals only</td></tr>
+            </tbody>
+          </table></div>
+
+          <h3>Commitment layer — the glue the first draft lacked</h3>
+          <p>K proposals re-ranked every tick over a detection-noisy candidate set (spots flicker, scores jitter) means the target spot churns and the trajectory oscillates. A stateless network cannot hold a decision, so the decision lives in PMS and re-enters as a token:</p>
+          <pre class="py"><span class="k">def</span> <span class="f">choose</span>(candidates, committed: Commitment | <span class="b">None</span>) -&gt; Candidate:
+    scored = {c: <span class="f">score</span>(c) <span class="k">for</span> c <span class="k">in</span> candidates}           <span class="c"># S1 Rank</span>
+    <span class="k">if</span> committed <span class="k">is not</span> <span class="b">None</span> <span class="k">and</span> committed.id <span class="k">in</span> scored:
+        scored[committed.id] += HYSTERESIS_BONUS         <span class="c"># stickiness</span>
+        best = <span class="b">max</span>(scored, key=scored.get)
+        <span class="k">if</span> best.id != committed.id <span class="k">and</span> \
+           scored[best] - scored[committed.id] &lt; SWITCH_MARGIN:
+            <span class="k">return</span> committed.candidate                   <span class="c"># not better enough: keep the plan</span>
+    <span class="k">return</span> <span class="b">max</span>(scored, key=scored.get)                   <span class="c"># commit (PMS stores it)</span></pre>
+          <p class="codecap"><span>S5 — hysteresis + switch margin; the decision lives in PMS, not the network</span></p>
+
+          <h3>Abort/recovery state machine</h3>
+          <p>Specified with the arbitration owner, because “deterministic mode switching” (the multi-head paradigm) meets an inherently fuzzy search↔park boundary here:</p>
+          <div class="diag">
+            <svg viewBox="0 0 1140 390" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Abort and recovery state machine">
+              <defs><marker id="m-s5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f5a524"/></marker>
+              <marker id="m-s5r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff5d6c"/></marker>
+              <marker id="m-s5g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/></marker></defs>
+              <circle cx="50" cy="84" r="7" fill="#8ba0b6"/>
+              <rect class="nb am" x="120" y="56" width="170" height="56" rx="14"/>
+              <text class="tt" x="160" y="90">SEARCH</text>
+              <rect class="nb am" x="430" y="56" width="180" height="56" rx="14"/>
+              <text class="tt" x="466" y="90">APPROACH</text>
+              <rect class="nb am" x="730" y="56" width="180" height="56" rx="14"/>
+              <text class="tt" x="764" y="90">MANEUVER</text>
+              <rect class="nb te" x="966" y="56" width="150" height="56" rx="14"/>
+              <text class="tt" x="1000" y="90">PARKED</text>
+              <rect class="nb rd" x="730" y="250" width="180" height="56" rx="14"/>
+              <text class="tt" x="772" y="284">REPLAN</text>
+              <circle cx="1041" cy="160" r="7" fill="none" stroke="#8ba0b6" stroke-width="2"/>
+              <circle cx="1041" cy="160" r="3.2" fill="#8ba0b6"/>
+              <path class="ar" d="M57,84 H120" marker-end="url(#m-s5g)"/>
+              <text class="tl" x="20" y="130">PARKING_MODE on /</text>
+              <text class="tl" x="20" y="144">end-of-route (nav-distance based)</text>
+              <path class="ar am" d="M290,74 H430" marker-end="url(#m-s5)"/>
+              <text class="td" x="300" y="50">candidate committed</text>
+              <text class="tl" x="300" y="66">(rank + hysteresis)</text>
+              <path class="ar am" d="M610,74 H730" marker-end="url(#m-s5)"/>
+              <text class="td" x="618" y="50">spot confirmed free</text>
+              <text class="tl" x="618" y="66">at close range</text>
+              <path class="ar" d="M470,112 C420,170 320,170 280,118" marker-end="url(#m-s5g)"/>
+              <text class="tl" x="318" y="166">spot occupied on approach → re-rank, coverage updated</text>
+              <path class="ar am" d="M910,74 H966" marker-end="url(#m-s5)"/>
+              <text class="tl" x="906" y="44">final pose reached, gear P</text>
+              <path class="ar rd" d="M800,112 V250" marker-end="url(#m-s5r)"/>
+              <text class="tl" x="556" y="190">USS shell veto →</text>
+              <text class="tl" x="556" y="204">leg replan semantics</text>
+              <path class="ar" d="M850,250 V112" marker-end="url(#m-s5g)"/>
+              <text class="tl" x="862" y="190">new leg sequence</text>
+              <path class="ar rd" d="M730,290 C480,340 240,260 200,118" marker-end="url(#m-s5r)"/>
+              <text class="tl" x="330" y="312">maneuver infeasible → abandon spot</text>
+              <path class="ar" d="M1041,112 V152" marker-end="url(#m-s5g)"/>
+            </svg>
+          </div>
+
+          <div class="callout amber"><h4>USS shell &amp; disagreement fallback</h4><p>The USS interim safety shell (an MS4 roadmap deliverable owned outside the parking team) bounds <em>all</em> of S2's execution: a veto must map to defined leg-replan semantics, not an undefined stop. Disagreement-gated fallback (Centaur-style: high disagreement among the K proposals ⇒ slow down / request assist) is added only <b>after</b> hysteresis, and calibrated against held-out intervention data — near ties, raw disagreement oscillates the fallback, and the anchor set itself controls the diversity that generates the “uncertainty”.</p></div>
+        </div>
+      </div>
+
+      <!-- ============ S6 ============ -->
+      <div class="spanel" id="sp-s6">
+        <div class="card">
+          <div class="soltitle"><span class="sid vi">S6</span><h3>Trunk/WFM riders + sim gyms (re-scoped)</h3></div>
+          <p class="lead" style="margin-top:12px"><b>What it is.</b> The pieces that depend on <em>other teams' release trains</em> — kept separate so their dependencies are visible instead of hidden inside S1–S5.</p>
+
+          <h3>Gear-aware latent-action pretraining: off the 2026 critical path</h3>
+          <p>The idea (add LAPA/LAPO-style latent-action prediction to the WFM stage, semi-supervised with ego odometry so traffic distractors don't collapse it, with the <code>LegCode</code> gear axis in the vocabulary) is sound — but it forks the WFM→BC→RL chain for <em>every</em> capability and forces all-head revalidation under the frozen-trunk paradigm. It rides a named trunk release train with trunk-owners' buy-in, or it doesn't happen. The leg codebook (S2) is deliberately designed to work as BC-head output decomposition <em>without</em> it — and whether it does is the honest test of the design. (One exception can force the issue: if the §8.0.3 reverse diagnostic returns “trunk-bound”, a trunk conversation happens anyway, and parking-aware pretraining joins it.)</p>
+
+          <h3>3DGS lot gyms: promoted, not demoted</h3>
+          <p>Reconstructing real lots from fleet logs (ParkingWorld pattern) serves three roles at once:</p>
+          <div class="diag">
+            <svg viewBox="0 0 1140 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3DGS gym roles">
+              <defs><marker id="m-s6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9d8cff"/></marker></defs>
+              <rect class="nb" x="40" y="110" width="240" height="80" rx="10"/>
+              <text class="tt" x="56" y="138">fleet logs</text>
+              <text class="td" x="56" y="158">(lots we actually serve)</text>
+              <rect class="nb vi" x="400" y="110" width="280" height="80" rx="10"/>
+              <text class="tt" x="416" y="138">3DGS reconstruction</text>
+              <text class="td" x="416" y="158">per-lot interactive gym</text>
+              <rect class="nb te" x="820" y="20" width="290" height="72" rx="10"/>
+              <text class="tt" x="836" y="44">search-behavior RL</text>
+              <text class="td" x="836" y="62">exploration reward consuming</text>
+              <text class="td" x="836" y="78">the S3 coverage input</text>
+              <rect class="nb am" x="820" y="114" width="290" height="72" rx="10"/>
+              <text class="tt" x="836" y="138">closed-loop eval gates</text>
+              <text class="td" x="836" y="156">time-to-park · re-search rate ·</text>
+              <text class="td" x="836" y="172">leg-count match · abort-recovery</text>
+              <rect class="nb" x="820" y="208" width="290" height="72" rx="10"/>
+              <text class="tt" x="836" y="232">rare-case data</text>
+              <text class="td" x="836" y="250">gates · multi-story ramps ·</text>
+              <text class="td" x="836" y="266">contested spots</text>
+              <path class="ar vi" d="M280,150 H400" marker-end="url(#m-s6)"/>
+              <path class="ar vi" d="M680,134 C740,110 770,76 820,58" marker-end="url(#m-s6)"/>
+              <path class="ar vi" d="M680,150 H820" marker-end="url(#m-s6)"/>
+              <path class="ar vi" d="M680,166 C740,190 770,224 820,242" marker-end="url(#m-s6)"/>
+            </svg>
+          </div>
+          <p>The RL role is load-bearing: it is the only credible source of the search-behavior learning signal (S3 — fleet imitation data is contradictory on coverage). The eval role gives the phasing its measurable exit criteria. Also mine <em>real</em> ramp segments — tight steep spirals are OOD for a forward-driving trunk, and no amount of sim fixes a feature gap.</p>
+
+          <h3>Gates (R4): a behavior + ops problem, with one small head</h3>
+          <p>Industry evidence is unanimous — nobody's robot pulls a ticket. Li Auto ships barrier handling as perception + creep-and-wait; Bosch/Mercedes (ISO 23374 Type 2) dissolve tickets via the operator backend. The plan:</p>
+          <ul class="tight">
+            <li>A thin <b>barrier-state head</b> — present + state ∈ {closed, moving, open} — specified here as real work with its own labels, not a coverage-table token.</li>
+            <li><b>Creep-wait behavior data</b> + <code>HOLD</code> legs with <code>release=BARRIER_OPEN</code> (§8.0.1) — note a 1 s context window cannot <em>observe</em> “barrier rising slowly”; the wait state lives in the commitment layer, the model only needs to classify the current barrier state.</li>
+            <li>The <b>operator ANPR track</b> (business development, not engineering) removes ticket machines for fleet-served lots.</li>
+          </ul>
+          <div class="callout red"><h4>Descoped</h4><p><b>Ticket-pulling is explicitly descoped</b> — no technical fallback is claimed.</p></div>
+        </div>
+      </div>
+
     </div>
 
     <div class="card reveal" style="margin-top:18px">
