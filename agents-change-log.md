@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-12 - Parking Capability Research Kickoff
+
+- Topic: Frame the parking-capability architecture research (longer horizon, multimodality, memory/ICL) and write the starting-point document.
+- Labels: parking, pudo, research, architecture, latent-actions, diffusion, memory.
+- Branch: `boris/training/main_cherrypick_generic_data` (read-only grounding; no code changes).
+- PR: N/A.
+- Change type: Research / documentation.
+- Areas: vault project doc + grounding over `wayve/ai/si`, `wayve/ai/zoo`, `zmurez/pudo`, Notion parking docs.
+- Changes:
+  - Created project doc [[projects/parking-capability-architecture-research|Parking Capability — Architecture Research]]: problem definition, grounded release-model summary, status of the 4 existing approaches (latent actions, diffusion planner, zmurez WTA, AR spot-conditioning), production constraints from Notion, research plan, seed solution directions.
+  - Established that latent actions are disabled in the parking adaptor, the diffusion path is distance-based (24.5 m) with single-proposal on-car inference, the WTA branch is really AR discrete-goal grids in the experimental stack, and no multi-candidate spot labels exist anywhere.
+  - Asked Boris 7 clarification questions (scope tiers, architecture freedom, memory/ICL mandate, latency filters, controller contract, data leverage, deliverable home).
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-kickoff|2026-06-12 Parking Capability Research Kickoff]]
+
 ## 2026-06-12 - Amaranth/Green PUDO Experiments
 
 - Topic: Create amaranth-kestrel-charming Console note plus green-control UK PUDO licensing and Drift/PUDO experiments.

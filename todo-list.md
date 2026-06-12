@@ -1,3 +1,8 @@
+- [ ] parking capability architecture research ([[projects/parking-capability-architecture-research]])
+	- [x] phase 0: framing doc + clarification questions
+	- [ ] phase 1: deep-dive sibling branches + design docs
+	- [ ] phase 2: literature research
+	- [ ] phase 3: novel solution proposals
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance
