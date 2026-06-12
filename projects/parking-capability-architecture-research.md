@@ -363,13 +363,59 @@ The in-graph alternative, if a single-graph design is mandated, is a fixed-width
 
 ### 8.3 S3 — Parking memory as inputs (head-side tokens, not raster repainting)
 
-- **Route-raster repainting is dead** — review killed it three independent ways: the raster doubles as a control signal (end-of-route trigger sums its pixels); the route adaptor is a frozen `Conv2d(3,…)` upstream of the frozen trunk, so new semantics are either invisible or cost a trunk retrain + all-head revalidation; and a frozen trunk reads a coverage trail with *route* semantics — a re-search **attractor**, the exact opposite of the goal. Plus dual Python/C++ renderer-parity engineering priced as "free labels".
-- **Memory enters via parking-head-side cross-attention over dedicated tokens** (fixed max-N + count, the existing `lane_info`/`step_info` deployment pattern): coverage tokens or a small head-side raster encoder, spot-entity tokens, rule tokens, committed-target token. Where a trunk-input is genuinely required, **reserve channels/token slots in the trunk training recipe before the MS4 freeze** (cheap with dropout) — a per-input decision logged against the freeze date.
-- **Coverage layer (v0, in-process):** ego-anchored visited/observation-count raster computed in the deployment wrapper from **recent odometry only (~500 m window ≈ ≤7 m drift)**, drift-noise injected in training, **soft prior — never a hard "searched" bit** (5–30 m drift over a long search misregisters whole aisles). **The learning signal is the hard part, not the plumbing:** hindsight rendering from the run's own *past* odometry (strictly causal; never whole-run — that leaks the expert's future loop) validates plumbing only. Real search behavior comes from (a) **paired-contrast mining** (same lot, first-lap empty raster vs second-lap covered raster, divergent expert actions) and (b) **closed-loop RL in 3DGS lot gyms with an exploration reward consuming the coverage input** (§8.6) — fleet data alone is contradictory (drivers re-enter covered areas). Graduation gate: coverage on/off must move a closed-loop re-search metric; counterfactual eval (flip the raster → search direction must flip). Also fix the conditioning mismatch: search segments currently train with `parking_mode=False` (50 s/30 m window) but deploy with it ON.
-- **Spot inventory (MS5):** decoded entities (id, pose, type, occupancy-at-last-sight, score, last-seen) maintained outside the net — decoded-outputs-not-latents (MapTracker/PrevPredMap lesson); entities survive retrains, score calibration doesn't (re-tune per release). Enables "go back to the spot we passed 80 m ago".
-- **Rule layer:** offline VLM sign→rule extraction (MapDR schema; published online F1 ~0.65 / arrows 0.44 rules out unsupervised online parsing) + human QA, compiled per-zone. **Runtime semantics defined:** conservative veto — a detected restriction marking excludes the spot unless the cache affirms it AND cache age < threshold; unknown-rule areas = no-park. Consequence stated honestly: **R1 street-parking legality is scoped to mapped zones** until an online legality story exists.
-- **Stored spots (R6):** demoted to a **one-page input to the end-Q2 MPA reassessment** (which is ~now; this research is that input). Design: Valeo/Xpeng production pattern — one demo run stores trajectory + semantic BEV landmarks + spot pose, keyed semantically (floor estimate + spot-number OCR + local geometry), refreshed per successful replay (Aptiv); runtime semantic re-anchoring (AVP-SLAM-class; VIPS-Odom couples slot detections into odometry — the PSD head doubles as the localizer); the stored route renders as a nav route + goal token. Honest gaps: **unparking has no goal-conditioned training data** (`goal_distance=NaN` on unparking samples) — the return leg of stored-spot replay needs new data; barometer availability on platform unverified; floor-estimate-low-confidence behavior = conservative abort.
-- **PMS scoping:** v0 is **in-process wrapper state (coverage + commitment)** — the honest scale precedent is the navigation/route-renderer stack, not the 4-scalar in-graph indicator-memory buffer. The full service (inventory, rules, stored spots) is a vehicle-software workstream needing an owner and degraded-mode semantics (a stateless net cannot detect PMS outage — behavior changes silently). Deployment shape: **single multi-head engine with `PARKING_MODE`-flag head selection**; engine-swap interleaving is ruled out for MS5 (dual-engine warmup at the lot entrance; cold trunk cache on abort, in reverse, near pedestrians).
+**What it is.** All persistence — where we've searched, which spots we've seen, what the signs said, where the stored home spot is, and what plan we committed to — lives in an external **Parking Memory Service (PMS)** maintained outside the network, and re-enters the *parking head* (not the trunk) as tokens every tick. The network stays exactly as stateless as the multi-head architecture requires; memory becomes data, which means it is inspectable, replayable in training, and survives model retrains.
+
+**Why head-side tokens and not the route raster.** The original draft proposed painting coverage/spots into the existing 512² route-map raster ("the most-trained conditioning pathway"). The review killed that three independent ways, and the post-mortem is instructive: (1) the raster doubles as a **control signal** — end-of-route detection literally sums its pixels and auto-triggers `PARKING_MODE` (§8.0.2); (2) the route adaptor is a frozen `Conv2d(3,…)` upstream of the frozen trunk — new channel semantics are either invisible to it or cost a trunk retrain plus *all-head* revalidation; (3) semantics collide — a frozen trunk reads any rendered trail with *route* semantics, so a coverage trail becomes a **re-search attractor**, the exact opposite of its purpose. Plus every painted semantic must be implemented twice (Python training renderer + on-car C++ renderer) and kept pixel-equivalent. Head-side cross-attention tokens have none of these problems, and the deployment pattern for variable-count token inputs already exists (`lane_info`/`step_info`: fixed max-N + count). Where a trunk-input is ever genuinely required, the cheap insurance is to **reserve channels/token slots in the trunk training recipe before the MS4 freeze** (trained with dropout, content arrives later) — a per-input decision logged against the freeze date.
+
+```mermaid
+flowchart TD
+    subgraph PMS["Parking Memory Service - deployment-side, outside the network"]
+        COV["Coverage layer v0<br/>visited raster, ~500m window,<br/>odometry-integrated"]
+        SPOTS["Spot inventory (MS5)<br/>decoded entities: id, pose, type,<br/>occupancy-at-last-sight, score, age"]
+        RULES["Rule layer<br/>offline VLM + QA, per-zone,<br/>conservative veto at runtime"]
+        STORED["Stored spots (R6, gated)<br/>demo trajectory + semantic landmarks,<br/>semantically keyed"]
+        COMMIT["Commitment state (S5)<br/>target spot id + leg sequence<br/>+ leg progress"]
+    end
+    ODOM["odometry / floor estimate"] --> COV
+    DET["PSD detections (S1)"] --> SPOTS
+    SPOTS -. "slots as SLAM landmarks<br/>(VIPS-Odom)" .-> ODOM
+    PMS --> TOK["token adaptors: fixed max-N + count<br/>(lane_info / step_info pattern)"]
+    TOK --> HEAD["parking head cross-attention<br/>(trunk untouched)"]
+    HEAD --> OUT["legs / pose / confidence"]
+    OUT --> COMMIT
+```
+
+```python
+class ParkingMemoryService:
+    """v0 lives in-process in the deployment wrapper. NOT a TRT plugin, NOT the network."""
+
+    def tick(self, odom, detections, head_outputs) -> MemoryTokens:
+        self.coverage.integrate(odom.pose, window_m=500)          # bounded: <=7m drift
+        self.spots.update(detections, ego_pose=odom.pose)         # track decoded entities
+        self.commitment.update_progress(odom, head_outputs)       # leg done? spot reached?
+        return MemoryTokens(
+            coverage = self.coverage.as_tokens(),                 # soft prior, never a hard bit
+            spots    = self.spots.top_k(16),                      # max-N + count, fixed shape
+            rules    = self.rules.lookup(odom.pose),              # affirmed + fresh, else veto
+            committed= self.commitment.token(),                   # target lock for Rank
+        )
+```
+
+**Coverage layer — the learning signal is the hard part, not the plumbing.** The plumbing is easy: an ego-anchored visited/observation-count raster integrated from **recent odometry only (~500 m window ≈ ≤7 m drift)**, drift-noise injected at training time, consumed as a **soft prior** (5–30 m drift over a long search misregisters whole aisles — never a hard "searched" bit). The trap the review exposed: rendering the raster in hindsight from the run's own past odometry and training BC on it teaches *nothing* — the raster is just the expert's trail (a shortcut feature), there is no counterfactual pressure, and real drivers happily re-enter covered areas, so the empirical coverage→behavior mapping is contradictory. And the whole-run rendering variant outright *leaks the expert's future loop*. So:
+
+- **Plumbing validation:** strictly-causal hindsight rasters, only to verify the channel flows.
+- **Behavior, source 1 — paired-contrast mining:** same lot geometry, first-lap (empty raster) vs second-lap (covered raster) samples where the expert's action *diverged* — the only fleet samples that carry signal.
+- **Behavior, source 2 — closed-loop RL in 3DGS lot gyms** with an exploration reward that consumes the coverage input (§8.6). This is the load-bearing bet for search behavior.
+- **Graduation gate:** coverage on/off must move a closed-loop re-search metric, and the counterfactual eval must pass — flip the raster, the search direction must flip.
+- **Conditioning fix:** search segments currently train with `parking_mode=False` (the 50 s/30 m detector window) but will deploy with it ON — extend the mode labeling for mined search segments.
+
+**Spot inventory (MS5).** Decoded entities, not latents (the MapTracker/PrevPredMap lesson): `{id, pose, type, occupancy_at_last_sight, score, last_seen}`. Entities survive model retrains (score calibration doesn't — re-tune per release), they are human-inspectable, and RL can replay/perturb them. This is what makes "go back to the spot we passed 80 m ago" a rankable candidate in S1 rather than a memory the network is supposed to have.
+
+**Rule layer.** Offline pipeline: fleet imagery → sign detector → VLM rule extraction into MapDR-schema structured rules (`{restriction, vehicle class, time window, spatial scope, confidence}`) → **human QA** (published online extraction tops out at F1 ≈ 0.65 overall and 0.44 on arrows/scope — not production-grade unsupervised) → compiled per-zone attributes. **Runtime semantics, defined:** conservative veto — a detected restriction marking excludes a spot unless the cache affirms it AND the cache is fresh; unknown-rule areas = no-park. Stated honestly: **R1 street-parking legality is therefore scoped to mapped zones** until an online legality story exists.
+
+**Stored spots (R6).** Demoted to a **one-page input to the end-Q2 MPA reassessment** (≈ now — this research is that input). The design that would be proposed: the Valeo/Xpeng production pattern — one demo run stores `{trajectory, semantic BEV landmarks, spot pose}`, keyed *semantically* (floor estimate + spot-number OCR + local geometry, never raw global coordinates), refreshed on every successful replay (Aptiv). Runtime: semantic re-anchoring (AVP-SLAM-class, cm-level once mapped; VIPS-Odom couples slot detections into odometry, so **the PSD head doubles as the localizer**); the stored route renders as a normal nav route + S1 goal token — no new network pathway. Honest gaps: **unparking has no goal-conditioned training data** (`goal_distance=NaN` on unparking samples), so the *return* leg of stored-spot replay needs new data; barometer availability on the platform is unverified; low-confidence floor estimate ⇒ conservative abort.
+
+**PMS scoping & deployment shape.** v0 = **in-process wrapper state (coverage + commitment only)**. The honest scale precedent is the navigation/route-renderer stack, not the 4-scalar in-graph indicator-memory buffer the draft originally cited. The full service (inventory, rules, stored spots) is a vehicle-software workstream that needs an owner and **degraded-mode semantics** — a stateless net cannot detect a PMS outage; behavior would change silently. Deployment is a **single multi-head engine with `PARKING_MODE`-flag head selection**; engine-swap interleaving is explicitly ruled out for MS5 (dual-engine warmup at the lot entrance; cold trunk cache on abort — in reverse, near pedestrians).
 
 ### 8.4 S4 — Fleet data engine (scoped to what survives scrutiny)
 
