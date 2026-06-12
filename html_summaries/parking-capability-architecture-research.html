@@ -1324,6 +1324,121 @@ loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(fea
     </div>
   </section>
 
+  <!-- ============================== PHASING ============================== -->
+  <section id="phasing">
+    <div class="shead reveal"><span class="num">07</span><h2>Phasing vs roadmap — rebuilt after the org-fit review</h2></div>
+    <p class="sdesc reveal">The first draft was off by ~1 milestone everywhere and triple-booked “Now” against MS2 delivery. This version sequences against the real roadmap. Hover a milestone for the why-this-order note.</p>
+
+    <div class="tline reveal">
+      <div class="ms">
+        <div class="mst">NOW · Jun</div><div class="msd">alongside MS2 delivery</div>
+        <div class="msitem">P→D detector fix + re-materialize<span class="dur">~14d · cheapest item, do first</span></div>
+        <div class="msitem">gc per-bucket count audit<span class="dur">~3d · Databricks</span></div>
+        <div class="msitem">Reverse-capability diagnostic memo<span class="dur">~7d · §8.0.3</span></div>
+        <div class="msitem">Critic offline-ranking prototype<span class="dur">~14d · replaces confidence=1.0</span></div>
+        <div class="msitem">End-of-route migration off raster sums<span class="dur">~10d · control-signal fix</span></div>
+        <div class="msitem">Trunk slot-reservation decision<span class="dur">~7d · vs MS4 freeze</span></div>
+        <div class="msitem">Support Soham PR #114772 merge<span class="dur">coordination</span></div>
+        <div class="msitem">Wonjoon goal-cond reproduction spike<span class="dur">~10d · timeboxed</span></div>
+        <div class="why"><b>Why first:</b> cheap, independent, de-risking — a detector fix, an audit, a diagnostic, an offline prototype, a control-signal migration, one decision, two coordination items. Nothing competes with the team's MS2 delivery.</div>
+      </div>
+      <div class="ms t2">
+        <div class="mst">MS3 · Jul</div><div class="msd">multi-leg + PSD + rear cam</div>
+        <div class="msitem">HOLD + termination semantics landed<span class="dur">~21d</span></div>
+        <div class="msitem">Consume PSD head I/Os<span class="dur">~21d · roadmap-owned</span></div>
+        <div class="msitem">One labeling schema agreed<span class="dur">~14d · one queue</span></div>
+        <div class="msitem">Leg-label pipeline prototype<span class="dur">~18d</span></div>
+        <div class="why"><b>Why here:</b> MS3 lands the representation contracts the retrains depend on. S1's proposer consumes the roadmap's PSD head instead of being scheduled a milestone after it.</div>
+      </div>
+      <div class="ms t3">
+        <div class="mst">MS4 · Aug–Oct</div><div class="msd">the heavy training quarter</div>
+        <div class="msitem">Anchored-truncation retrain<span class="dur">~40d</span></div>
+        <div class="msitem">POLICY_PARKING_LEGS in parking head<span class="dur">~35d</span></div>
+        <div class="msitem">Coverage v0 + contrast pairs<span class="dur">~30d</span></div>
+        <div class="msitem">GPS-resolution fleet priors<span class="dur">~21d</span></div>
+        <div class="msitem">Conditioning-dropout matrix<span class="dur">~14d · before the retrain</span></div>
+        <div class="msitem">DRAM budget + critic ownership<span class="dur">~14d</span></div>
+        <div class="msitem">Shadow-mode critic on-car<span class="dur">~18d</span></div>
+        <div class="why"><b>Why here:</b> all retrains wait for the MS3 contracts; the conditioning-dropout matrix is an early MS4 artifact so half the gradient budget doesn't train a pathway deployment barely uses.</div>
+      </div>
+      <div class="ms t4">
+        <div class="mst">MS5 · Oct–Jan 27</div><div class="msd">multi-spot APA E2E — assembly</div>
+        <div class="msitem">PRX complete + commitment + 1 Hz loop<span class="dur">~60d</span></div>
+        <div class="msitem">Spot inventory in PMS<span class="dur">~40d</span></div>
+        <div class="msitem">Single-engine multi-head merge<span class="dur">~45d · the productization gate</span></div>
+        <div class="msitem">3DGS closed-loop eval gates<span class="dur">~50d</span></div>
+        <div class="why"><b>Why here:</b> MS5 assembles — “parking merged into driving baseline via multi-head architecture” is the MS5 exit; the eval gates give it measurable criteria.</div>
+      </div>
+      <div class="ms t5">
+        <div class="mst">2027 · MPA-gated</div><div class="msd">explicitly deferred</div>
+        <div class="msitem">Stored spots (R6) implementation</div>
+        <div class="msitem">Rule layer at scale</div>
+        <div class="msitem">Multi-story beyond F1</div>
+        <div class="why"><b>Why deferred:</b> stored spots must not pre-decide the end-Q2 MPA reassessment (this research is its one-page input); the rule layer is a mapping operation needing an ops owner; multi-story is gated on the re-anchoring stack.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CRITIQUE ============================== -->
+  <section id="critique">
+    <div class="shead reveal"><span class="num">08</span><h2>Adversarial critique — what attacked the draft</h2></div>
+    <p class="sdesc reveal">A first draft of the solutions was attacked by <b>four adversarial critics with read-only repo access</b> — production/deployment, training &amp; data realism, novelty &amp; coherence, organizational fit. Everything above is the post-fix version; this section preserves the findings for traceability. <span class="bdg blocker">blocker</span> = would have failed in integration or training · <span class="bdg major">major</span> = significant rework folded in.</p>
+
+    <details class="reveal" open>
+      <summary><span class="tw">▸</span> Production / deployment lens <span class="tag">4 blockers · 7 majors</span></summary>
+      <div class="body"><ul class="tight crit">
+        <li><span class="bdg blocker">blocker</span> <b>Route-raster compositing corrupts a control signal:</b> end-of-route detection sums route-raster pixels (channels 0–1 vs threshold, <span class="ref">deployment_wrapper.py:3452-3469</span>) and auto-triggers <code>PARKING_MODE</code>; painting coverage/spots/stored routes into the raster shifts the sums → suppressed or spurious parking-mode flips.<span class="fix">migrate end-of-route to nav-instruction distance inputs first (P0)</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>Frozen trunk can't read new raster semantics:</b> <code>RouteInputAdaptor</code> is a frozen <code>Conv2d(3,…)</code> upstream of the trunk; parking-head gradients can't teach it.<span class="fix">parking-head-side tokens/cross-attention, or pre-freeze trunk channel reservation (S3)</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>PMS precedent claim wrong:</b> indicator memory is an in-graph TRT buffer of a few scalars (<span class="ref">persistent_state.py:156</span>), not an external service; PMS as specced is a new safety-relevant on-car subsystem + a relocalization stack that doesn't exist in the repo.<span class="fix">v0 = in-process wrapper state; full PMS needs a vehicle-software owner + degraded-mode semantics</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>Mode switch vs trunk temporal cache:</b> interleaved engine swap needs both engines warm — peak load at the lot entrance; cold cache on abort, in reverse, near pedestrians.<span class="fix">single multi-head engine + PARKING_MODE flag selection</span></li>
+        <li><span class="bdg major">major</span> K-proposal re-ranking every tick churns plans — no commitment mechanism existed in the draft.<span class="fix">S5 commitment layer with hysteresis + switch margin</span></li>
+        <li><span class="bdg major">major</span> Data-dependent beam search doesn't compile to TRT.<span class="fix">1 Hz strategic loop, or fixed-width unrolled beam</span></li>
+        <li><span class="bdg major">major</span> Critic may be asymmetric (second perception trunk on-car) and is forward-driving-calibrated.<span class="fix">symmetric head only; parking-reward training prerequisite</span></li>
+        <li><span class="bdg major">major</span> Localization drift (5–30 m over 1–2 km) misregisters coverage by 1–2 aisles.<span class="fix">~500 m window, drift injection, soft prior</span></li>
+        <li><span class="bdg major">major</span> GPS circularity across S3/S4 in garages.<span class="fix">GPS-resolution priors only; spot-level association waits for re-anchoring (MS5+)</span></li>
+        <li><span class="bdg major">major</span> Dual Python/C++ renderer parity priced as free in the draft.<span class="fix">head-side tokens avoid painted semantics entirely</span></li>
+        <li><span class="bdg major">major</span> Rule-cache staleness undefined at runtime.<span class="fix">conservative-veto semantics: affirmed + fresh, else no-park</span></li>
+      </ul></div>
+    </details>
+
+    <details class="reveal">
+      <summary><span class="tw">▸</span> Training &amp; data realism lens <span class="tag">3 blockers · 5 majors</span></summary>
+      <div class="body"><ul class="tight crit">
+        <li><span class="bdg blocker">blocker</span> <b>Coverage “free labels” was the weakest claim in the doc:</b> causal hindsight rasters are just the ego's past trail — a shortcut feature with no counterfactual pressure (drivers re-enter covered areas, so the empirical mapping is contradictory); the whole-run variant leaks the expert's future loop; search segments train with <code>parking_mode=False</code> (<span class="ref">parking.py:295-396</span>) but deploy with it ON.<span class="fix">plumbing-validation only; behavior from paired-contrast mining + 3DGS-gym RL; on/off ablation gate</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>Cross-run spot aggregation assumed pose association that doesn't exist:</b> GNSS 5–20 m vs ~2.5 m spot pitch, absent in garages — contradicting the draft's own localization budget; counterfactual positives need cross-run pose &lt;0.5 m AND knowledge the spot is free now (circular with the perception being trained).<span class="fix">GPS-resolution priors only; recall-only candidate supervision with free-space gating</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>gc buckets ≠ leg labels:</b> gen2 gear is reconstructed from speed (0.5 km/h threshold, dwell heuristics — <span class="ref">filters.py:130-200</span>) exactly at leg boundaries; windows clip at 25 s/30 m truncating gc3plus; buckets are frame indices, not leg structures; volumes unverified; three reconstruction implementations disagree.<span class="fix">canonical gear reconstruction + human-audited leg-label validation; count audit; extended windows</span></li>
+        <li><span class="bdg major">major</span> <b>P→D forward-unparking detector gap poisons <code>unparking_window_gc1</code></b> (weight 0.3, the heaviest parking bucket) — fix sketched in a code comment, unscheduled in the draft.<span class="fix">scheduled as the first “Now” item</span></li>
+        <li><span class="bdg major">major</span> Goal-dropout story partly fictional on main (CFG is a TODO; the 50% dropout lives on a branch) and <b>unparking carries <code>goal_distance=NaN</code></b> → no goal-conditioned unparking data, breaking “R6 needs no new pathway”.<span class="fix">stated as an honest R6 gap; new data for the return leg</span></li>
+        <li><span class="bdg major">major</span> Factorized vocabulary imbalance (rare cells empty; hindsight hard assignment → confident garbage) + <code>enable_latent_action=False</code> everywhere — the conditioning pathway the draft assumed is disabled today.<span class="fix">hierarchical cell fallback; LA re-enable is scheduled MS4 work, not an assumption</span></li>
+        <li><span class="bdg major">major</span> VLM BEV-polygon grounding is the PSD failure mode restated (and redundant with the PSD campaign).<span class="fix">VLM pipeline scoped to attributes only, never geometry</span></li>
+        <li><span class="bdg major">major</span> PUDO contamination: no unparking <code>nopudo</code> variant; 2 s parked-duration threshold admits lane stops.<span class="fix">anchor hygiene fixes at the source (S4)</span></li>
+      </ul></div>
+    </details>
+
+    <details class="reveal">
+      <summary><span class="tw">▸</span> Novelty &amp; coherence lens <span class="tag">claims trimmed · conflicts resolved</span></summary>
+      <div class="body"><ul class="tight crit">
+        <li><span class="bdg major">major</span> <b>Novelty claims trimmed:</b> CVaR/distributional plan ranking is established academically (“unpublished in production” is unfalsifiable — claim deleted); counterfactual fleet positives = standard fleet auto-labeling; PRX = TNT/DenseTNT + Hydra-MDP + DiffusionDrive + MultiPark glued; leg-AR <em>is</em> MultiPark; stored-route-as-conditioning is Valeo/Xpeng/RT-Trajectory prior art.<span class="fix">sold as integration; surviving novel bits: gear-aware unified leg-code vocabulary under the frozen-trunk constraint + memory-as-input wiring with commitment layer</span></li>
+        <li><span class="bdg major">major</span> <b>Composition conflicts:</b> three competing goal-injection mechanisms (anchor-init needs a retrain; affinity guidance has no schedule room at 2 steps and fights anchors); aWTA and anchored diffusion are the same multimodality device twice; three latent-action vocabularies.<span class="fix">ordered goal-injection stack; affinity → offline tool; aWTA → contingency gate; one LegCode vocabulary</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>The recorded failure modes were the least-served part of the draft:</b> standstill-in-drive ⇒ distance-parameterized paths can't express “wait” (the draft cited gates' creep-and-wait while proposing a representation that cannot encode waiting); end-of-route fires on every park (termination semantics undefined); reverse instability got tokens, not a diagnosis.<span class="fix">P0: HOLD/dwell semantics, termination contracts, the one-week reverse diagnostic</span></li>
+        <li><span class="bdg major">major</span> <b>Missing entirely from the draft:</b> un-park cold start; near-field safety case (&lt;30 cm, sub-FOV obstacles); mode-switch/abort state machine; controller co-design (2 s extraction at gear cusps, reverse tracking); eval metrics + volumes; ramp driving; lot etiquette.<span class="fix">state machine specified (S5); safety + controller items escalated as risks; ramps mined (S6)</span></li>
+      </ul></div>
+    </details>
+
+    <details class="reveal">
+      <summary><span class="tw">▸</span> Organizational fit lens <span class="tag">phasing rebuilt · scope policed</span></summary>
+      <div class="body"><ul class="tight crit">
+        <li><span class="bdg blocker">blocker</span> <b>Trunk-input gating:</b> every draft memory pathway entered through trunk inputs while coverage training was phased <em>at</em> the MS4 freeze — exactly backwards.<span class="fix">per-input freeze-boundary decision; head-side conditioning by default</span></li>
+        <li><span class="bdg blocker">blocker</span> <b>S6.1 can't fit 2026</b> and S2 secretly leaned on it.<span class="fix">leg codebook redesigned as BC-head output decomposition; pretraining rides a named trunk train or dies</span></li>
+        <li><span class="bdg major">major</span> Phasing off by ~1 milestone everywhere; “Now–MS3” triple-booked against MS2 delivery; S1's proposer scheduled a milestone <em>after</em> the roadmap's PSD head.<span class="fix">phasing rebuilt (§8.9); proposer consumes the PSD head</span></li>
+        <li><span class="bdg major">major</span> Resource collisions: three annotation campaigns; unstated rear-camera dependency; no DRAM/parameter budget vs the ~25%-per-head limit; critic ownership undefined.<span class="fix">one schema/queue; dependencies named; DRAM budget + critic ownership = MS4 items</span></li>
+        <li><span class="bdg major">major</span> Branch revival risk: Wonjoon's code survives only under <code>origin/aa/wonjoon_*</code> (author off-project, unreproduced result); <code>AnnealedWTALoss</code> port is a workstream; Soham's PR is live.<span class="fix">reproduction spike, not merge; aWTA behind a gate; coordinate with Soham, don't annex</span></li>
+        <li><span class="bdg major">major</span> MPA scope creep: the stored-spot layer pre-decided the end-Q2 reassessment; the USS safety shell (the one roadmap item with explicit safety scope) was absent.<span class="fix">stored spots demoted to a one-pager; USS veto added as execution bound + leg-replan semantics</span></li>
+        <li><span class="bdg major">major</span> No minimal “do now” set existed.<span class="fix">adopted: P→D fix, count audit, reverse diagnostic, critic offline prototype, end-of-route migration, trunk-slot decision, support #114772, timeboxed Wonjoon spike</span></li>
+      </ul></div>
+    </details>
+  </section>
+
 <!-- NEXT-SECTION -->
 
 </div>
