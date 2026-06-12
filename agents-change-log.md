@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-12 - Amaranth/Green PUDO Experiments
+
+- Topic: Create amaranth-kestrel-charming Console note plus green-control UK PUDO licensing and Drift/PUDO experiments.
+- Labels: parking, pudo, model-catalogue, on-road-experiment, licensing.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: N/A.
+- Change type: Model Catalogue operations.
+- Areas: Model Catalogue model notes and on-road experiments.
+- Changes:
+  - Created model note `b7a72ce4-610d-461a-860f-dd5af35dd5b2` on `amaranth-kestrel-charming`.
+  - Created pending UK PUDO licensing interleave `e701b80e-e179-41e9-830c-3f59f74940e0` with `green-stegosaurus-brave` control and `amaranth-kestrel-charming` variant.
+  - Created pending UK Drift/PUDO interleave `a971f51e-d490-49f1-a624-02392781be9d` by copying the requested reference shape with default controller and PUDO/SBW config.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-12-amaranth-green-pudo-experiments|2026-06-12 Amaranth/Green PUDO Experiments]]
+
 ## 2026-06-11 - Anchor Table Upload Workflow
 
 - Topic: Add a Flyte path to upload anchor buckets to a Databricks table.
