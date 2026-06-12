@@ -1295,6 +1295,35 @@ loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(fea
     </div>
   </section>
 
+  <!-- ============================== COVERAGE MATRIX ============================== -->
+  <section id="coverage">
+    <div class="shead reveal"><span class="num">06</span><h2>Requirement coverage — the honest version</h2></div>
+    <p class="sdesc reveal">Hover a cell to cross-highlight its row and column. Click a requirement to expand the caveats that stay true even after everything above ships. ● = core mechanism · ◐ = partial / gated contribution.</p>
+
+    <div class="card reveal">
+      <div class="tblwrap"><table class="mx" id="mxtable">
+        <thead><tr>
+          <th>Requirement</th><th class="mono">S1<br>PRX</th><th class="mono">S2<br>legs</th><th class="mono">S3<br>memory</th><th class="mono">S4<br>data</th><th class="mono">S5<br>ranker</th><th class="mono">S6<br>riders</th>
+        </tr></thead>
+        <tbody>
+          <tr class="mxrow" data-r="R1"><td class="rq">R1 · street<span class="ex">▸ caveats</span></td><td class="cell full">●</td><td class="cell"></td><td class="cell full">●</td><td class="cell full">●</td><td class="cell"></td><td class="cell"></td></tr>
+          <tr class="cav"><td colspan="7"><b>Mechanisms:</b> S1 + S3 coverage + S4 priors. <b>Caveats that stay true:</b> legality = mapped zones only (until an online legality story exists); search runs at <em>driving</em> latency, not parking-mode slack.</td></tr>
+          <tr class="mxrow" data-r="R2"><td class="rq">R2 · lots<span class="ex">▸ caveats</span></td><td class="cell full">●</td><td class="cell"></td><td class="cell full">●</td><td class="cell full">●</td><td class="cell full">●</td><td class="cell part">◐</td></tr>
+          <tr class="cav"><td colspan="7"><b>Mechanisms:</b> R1's set + the commitment/abort loop (S5); the 3DGS gym (S6) carries the search-behavior bet. <b>Caveats:</b> organic search data scarce → 3DGS gym + directed collection.</td></tr>
+          <tr class="mxrow" data-r="R3"><td class="rq">R3 · multi-story<span class="ex">▸ caveats</span></td><td class="cell"></td><td class="cell"></td><td class="cell full">●</td><td class="cell"></td><td class="cell"></td><td class="cell part">◐</td></tr>
+          <tr class="cav"><td colspan="7"><b>Mechanisms:</b> per-floor coverage on a fused floor estimate (S3); ramp mining (S6); re-anchoring. <b>Caveats:</b> gated on the re-anchoring stack (MS5+); low-confidence floor estimate ⇒ conservative abort.</td></tr>
+          <tr class="mxrow" data-r="R4"><td class="rq">R4 · gates<span class="ex">▸ caveats</span></td><td class="cell"></td><td class="cell full">●</td><td class="cell"></td><td class="cell part">◐</td><td class="cell part">◐</td><td class="cell full">●</td></tr>
+          <tr class="cav"><td colspan="7"><b>Mechanisms:</b> barrier-state head (S6) + creep-wait behavior data (S4) + HOLD legs w/ <code>release=BARRIER_OPEN</code> (S2/P0, wait state held by S5's commitment layer) + the ops/ANPR track. <b>Caveats:</b> ticket-pulling descoped — no technical fallback claimed.</td></tr>
+          <tr class="mxrow" data-r="R5"><td class="rq">R5 · preference<span class="ex">▸ caveats</span></td><td class="cell full">●</td><td class="cell"></td><td class="cell full">●</td><td class="cell full">●</td><td class="cell"></td><td class="cell"></td></tr>
+          <tr class="cav"><td colspan="7"><b>Mechanisms:</b> preference token in S1's Rank + rule attributes (S3) + PSD types (S4's VLM attribute pipeline). <b>Caveats:</b> EV/handicap marking legibility at range unproven.</td></tr>
+          <tr class="mxrow" data-r="R6"><td class="rq">R6 · memory<span class="ex">▸ caveats</span></td><td class="cell part">◐</td><td class="cell"></td><td class="cell part">◐</td><td class="cell"></td><td class="cell"></td><td class="cell"></td></tr>
+          <tr class="cav"><td colspan="7"><b>Mechanisms:</b> stored-spot one-pager (S3) → the end-Q2 MPA reassessment; the stored route would render as a normal nav route + S1 goal token. <b>Caveats:</b> the unpark return leg lacks goal-conditioned data (<code>goal_distance=NaN</code> on unparking); barometer availability TBD.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="mxlegend"><span><span class="full">●</span> core mechanism</span><span><span class="part">◐</span> partial / gated</span><span>click a requirement row to expand its caveats</span></div>
+    </div>
+  </section>
+
 <!-- NEXT-SECTION -->
 
 </div>
