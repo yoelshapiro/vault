@@ -516,7 +516,20 @@ The RL role is load-bearing: it is the only credible source of the search-behavi
 **Gates (R4): a behavior + ops problem, with one small head.** Industry evidence is unanimous — nobody's robot pulls a ticket. Li Auto ships barrier handling as perception + creep-and-wait; Bosch/Mercedes (ISO 23374 Type 2) dissolve tickets via the operator backend. Plan: (1) a thin **barrier-state head** — present + state ∈ {closed, moving, open} — specified here as real work with its own labels, not a coverage-table token; (2) **creep-wait behavior data** + `HOLD` legs with `release=BARRIER_OPEN` (§8.0.1) — note a 1 s context window cannot *observe* "barrier rising slowly"; the wait state lives in the commitment layer, the model only needs to classify the current barrier state; (3) the **operator ANPR track** (business development, not engineering) removes ticket machines for fleet-served lots. **Ticket-pulling is explicitly descoped** — no technical fallback is claimed.
 
 ### 8.7 Explicitly NOT building now
-WFM latent-action pretrain (S6.1) · PMS beyond in-process v0 · in-graph beam search · rule layer at scale · stored-spot/MPA implementation (one-pager only) · second/third annotation schemas · engine-swap interleaving at MS5 · remote-assist output channel (no contract exists — raise with ops) · UI-tap HMI flow (raise at MS4 planning).
+
+Each of these was considered and deliberately parked — listing them prevents scope re-creep:
+
+| Item | Why not now |
+|---|---|
+| WFM latent-action pretrain (S6.1) | forks every capability's release chain; rides a trunk train or dies |
+| PMS beyond in-process v0 | needs a vehicle-software owner + degraded-mode semantics first |
+| In-graph beam search | doesn't compile to TRT; the 1 Hz strategic loop covers the need |
+| Rule layer at scale | a mapping operation with staleness liability; needs an ops owner |
+| Stored-spot/MPA implementation | one-pager into the end-Q2 reassessment only — don't pre-decide it |
+| Second/third annotation schemas | one schema, one queue (labeling is the scarce resource) |
+| Engine-swap interleaving at MS5 | dual-engine warmup at lot entrance; cold cache on abort |
+| Remote-assist output channel | no output contract exists — raise with ops separately |
+| UI-tap HMI flow | vehicle UX team budget — raise at MS4 planning |
 
 ### 8.8 Requirement coverage (honest version)
 
@@ -531,24 +544,55 @@ WFM latent-action pretrain (S6.1) · PMS beyond in-process v0 · in-graph beam s
 
 ### 8.9 Phasing vs roadmap (rebuilt after org-fit review)
 
-- **Now (Jun, alongside MS2):** P→D detector fix + re-materialization (cheapest item, unblocks the heaviest bucket); per-bucket count audit; reverse-diagnostic memo; critic offline-ranking prototype; end-of-route detection migration off raster sums; trunk channel/token-slot reservation decision (before freeze); support Soham's #114772 to merge (his PR — coordinate, don't annex); timeboxed Wonjoon goal-conditioning reproduction spike with kill criteria.
-- **MS3 (Jul):** HOLD/termination representation decisions landed in datamodule + controller contract; consume PSD head I/Os; one labeling schema agreed across proposer/attributes/signs; leg-label pipeline prototype.
-- **MS4 (Aug–Oct):** anchored-truncation retrain; `POLICY_PARKING_LEGS` in the parking head; coverage v0 in-process + paired-contrast data; S4 GPS-resolution priors; conditioning-dropout matrix (goal × path × preference × coverage × rules — 2^k states need a stated joint schedule); DRAM/parameter budget vs the ~25%-per-head limit + critic-ownership decision (shared module with version contract vs per-head copy); shadow-mode critic on-car.
-- **MS5 (Oct–Jan 27):** multi-spot APA E2E = PRX complete with commitment layer + 1 Hz strategic loop; spot inventory; single-engine multi-head merge; 3DGS closed-loop eval gates.
-- **2027 / MPA-gated:** stored spots, rule layer at scale, multi-story beyond F1.
+```mermaid
+gantt
+    dateFormat  YYYY-MM-DD
+    title Parking research -> roadmap phasing (2026)
+    section Now (Jun, alongside MS2)
+    P-to-D detector fix + re-materialize      :a1, 2026-06-15, 14d
+    gc per-bucket count audit                 :a2, 2026-06-15, 3d
+    Reverse-capability diagnostic memo        :a3, 2026-06-15, 7d
+    Critic offline-ranking prototype          :a4, 2026-06-18, 14d
+    End-of-route migration off raster sums    :a5, 2026-06-22, 10d
+    Trunk slot-reservation decision           :a6, 2026-06-22, 7d
+    Support Soham PR 114772 merge             :a7, 2026-06-15, 14d
+    Wonjoon goal-cond reproduction spike      :a8, 2026-06-22, 10d
+    section MS3 (Jul)
+    HOLD + termination semantics landed       :b1, 2026-07-06, 21d
+    Consume PSD head I/Os                     :b2, 2026-07-06, 21d
+    One labeling schema agreed                :b3, 2026-07-06, 14d
+    Leg-label pipeline prototype              :b4, 2026-07-13, 18d
+    section MS4 (Aug-Oct)
+    Anchored-truncation retrain               :c1, 2026-08-03, 40d
+    POLICY_PARKING_LEGS in parking head       :c2, 2026-08-17, 35d
+    Coverage v0 + contrast pairs              :c3, 2026-08-03, 30d
+    GPS-resolution fleet priors               :c4, 2026-08-10, 21d
+    Conditioning-dropout matrix               :c5, 2026-08-03, 14d
+    DRAM budget + critic ownership            :c6, 2026-09-01, 14d
+    Shadow-mode critic on-car                 :c7, 2026-09-14, 18d
+    section MS5 (Oct-Jan27)
+    PRX complete + commitment + 1Hz loop      :d1, 2026-10-05, 60d
+    Spot inventory in PMS                     :d2, 2026-10-19, 40d
+    Single-engine multi-head merge            :d3, 2026-11-16, 45d
+    3DGS closed-loop eval gates               :d4, 2026-10-05, 50d
+```
+
+**Why this order:** the "Now" items are cheap, independent, and de-risking (a detector fix, an audit, a diagnostic, an offline prototype, a control-signal migration, one decision, and two coordination items — nothing competes with the team's MS2 delivery). MS3 lands the representation contracts the retrains depend on. MS4 is the heavy training quarter. MS5 assembles. Stored spots, rule layer at scale, and multi-story beyond F1 are 2027/MPA-gated.
 
 ### 8.10 Top surviving risks
 
-1. **Reverse may be trunk-bound** — if the frozen trunk never represented rearward motion, everything acquires a trunk-release dependency. The diagnostic is first for a reason.
-2. **Search behavior may not be learnable from fleet data** (expert coverage→behavior mapping is contradictory) — the 3DGS-gym RL bet becomes load-bearing for R1/R2.
-3. **Commitment/abort state machine crosses team boundaries** (arbitration ownership) — political surface area at MS4/MS5.
-4. **PSD-at-range precision from pinhole cameras unproven**; rear camera (MS3) is a hard dependency for reverse-in polygons.
-5. **Near-field safety case** (last 30 cm, low obstacles below camera FOV, reversing near pedestrians) — the certification long pole; the USS interim shell is the only mitigation and the parking team doesn't own it.
-6. **gc3plus volumes may be too small** for the rare modes that matter most (audit will tell).
-7. **Labeling/Databricks contention** with MS2/MS3 deliverables — one schema, one queue.
-8. **Goal-dropout × anchored-truncation interaction** — without the conditioning matrix, half the gradient budget can train a pathway deployment barely uses.
-9. **Localization drift in long searches** (whole aisles) — coverage stays a soft prior; multi-story slips if re-anchoring slips.
-10. **Spot-confidence calibration across domains** is an open literature gap — per-domain temperature scaling + ECE/Brier in eval is the mitigation.
+| # | Risk | Why it's real | Mitigation / early warning |
+|---|---|---|---|
+| 1 | **Reverse may be trunk-bound** | the frozen trunk may never have represented rearward motion — no head-side fix recovers that | §8.0.3 diagnostic is first; if confirmed, open the trunk-train conversation immediately |
+| 2 | **Search behavior unlearnable from fleet data** | expert coverage→behavior mapping is contradictory (drivers re-loop) | 3DGS-gym RL is the bet; gate = closed-loop re-search metric moves with coverage on/off |
+| 3 | **Commitment/abort crosses team boundaries** | arbitration ownership is not the parking team's | raise at MS4 multi-head-readiness review, with the state machine spec in hand |
+| 4 | **PSD-at-range precision unproven** (pinhole, grazing angles) | no published benchmark exists for this regime | two-tier design assumes it; rear camera (MS3) is a hard dependency for reverse-in |
+| 5 | **Near-field safety case** (last 30 cm, sub-FOV obstacles, reversing near pedestrians) | certification long pole; parking team doesn't own the USS shell | USS veto + leg-replan semantics specified (§8.5); escalate ownership early |
+| 6 | **gc3plus volumes too small** for the rare modes that matter most | config upweighting already betrays scarcity | the audit is a "Now" item; hierarchical cell fallback if confirmed |
+| 7 | **Labeling/Databricks contention** with MS2/MS3 | three campaigns collapsed into one queue, but it's still one queue | one schema decision at MS3; sequence against rear-camera enablement |
+| 8 | **Goal-dropout × anchored-truncation interaction** | half the gradient budget can train a pathway deployment barely uses | conditioning-dropout matrix is an early MS4 artifact, before the retrain |
+| 9 | **Localization drift in long searches** (whole aisles) | 0.6–1.5% of 1–2 km ≈ 5–30 m | coverage = soft prior + 500 m window; multi-story slips if re-anchoring slips |
+| 10 | **Spot-confidence calibration across domains** | open literature gap (2024–25) | per-domain temperature scaling; ECE/Brier tracked in the eval suite |
 
 ---
 
