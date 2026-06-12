@@ -26,3 +26,10 @@ Added lightweight metadata enrichment for `parking_pudo/anchors` generic materia
 ## Validation
 
 - `WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_datasets_ty //wayve/ai/services/sampling:test_datasets_py_test`
+
+## Flyte Run
+
+- Published test image `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584` from the uncommitted worktree.
+- Started `sample` for `parking_pudo/anchors` with `job_name=anchor_metadata_20260612`.
+- Execution: `acpbf99n26hsgjcgw9bv`.
+- Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/acpbf99n26hsgjcgw9bv`.
