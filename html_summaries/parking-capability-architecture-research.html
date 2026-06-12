@@ -763,6 +763,122 @@
         </div>
       </div>
 
+      <!-- ============ S1 ============ -->
+      <div class="spanel" id="sp-s1">
+        <div class="card">
+          <div class="soltitle"><span class="sid am">S1</span><h3>PRX parking head: Propose → Rank → eXecute</h3></div>
+          <p class="lead" style="margin-top:12px"><b>What it is.</b> One stateless parking head that makes the spot/maneuver choice <em>explicit, rankable, and conditionable</em> — approach A4 finally made concrete, assembled from the most production-proven component per stage: TNT/MTR-style anchor classification (Propose), Hydra-MDP-style multi-criteria scoring (Rank), DiffusionDrive-style anchored-truncated diffusion (eXecute), with MultiPark's factorized maneuver vocabulary throughout.</p>
+          <p><b>Why this shape.</b> Today's diffusion head infers the spot <em>implicitly</em> and collapses to one deterministic zero-noise sample on car (<span class="ref">diffusion.py:1457</span>), with a placeholder confidence of 1.0 (<span class="ref">diffusion.py:415</span>). That forecloses everything the requirements ladder needs: no ranked alternatives when the first spot is occupied (R1/R2), no way to condition on a preferred or stored spot (R5/R6), no abort-and-re-rank loop. Making the candidate set a first-class object fixes all of these with one structure.</p>
+
+          <div class="diag">
+            <svg viewBox="0 0 1140 790" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PRX flow">
+              <defs><marker id="m-s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f5a524"/></marker>
+              <marker id="m-s1g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/></marker></defs>
+              <rect class="grp" x="30" y="18" width="1080" height="134" rx="14"/>
+              <text class="ta" x="48" y="42">1 · PROPOSE — candidate set</text>
+              <rect class="nb" x="60" y="56" width="480" height="80" rx="10"/>
+              <text class="tt" x="76" y="80">PSD head (MS3, roadmap-owned)</text>
+              <text class="td" x="76" y="99">two-tier: coarse gap/occupancy candidates at range,</text>
+              <text class="td" x="76" y="115">precise 4-corner polygons under ~10 m</text>
+              <rect class="nb te" x="580" y="56" width="500" height="80" rx="10"/>
+              <text class="tt" x="596" y="80">External candidates — same interface</text>
+              <text class="td" x="596" y="99">UI tap · stored spot (S3) · fleet prior (S4)</text>
+              <text class="tl" x="596" y="115">one pathway to train and validate, not three</text>
+              <rect class="nb am" x="370" y="186" width="400" height="56" rx="10"/>
+              <text class="tt" x="392" y="210">candidate set</text>
+              <text class="td" x="392" y="228">spots × leg-code maneuvers</text>
+              <rect class="grp" x="30" y="280" width="1080" height="134" rx="14"/>
+              <text class="ta" x="48" y="304">2 · RANK — score every (spot × maneuver)</text>
+              <rect class="nb" x="60" y="318" width="600" height="80" rx="10"/>
+              <text class="tt" x="76" y="342">decomposed score</text>
+              <text class="td" x="76" y="361">imitation likelihood + rule compliance (distilled, S3)</text>
+              <text class="td" x="76" y="377">+ preference token (R5) + critic value (S5)</text>
+              <rect class="nb" x="700" y="318" width="380" height="80" rx="10"/>
+              <text class="tt" x="716" y="342">commitment hysteresis</text>
+              <text class="td" x="716" y="361">previously chosen target (S5) —</text>
+              <text class="td" x="716" y="377">no per-tick target churn</text>
+              <rect class="nb am" x="370" y="448" width="400" height="56" rx="10"/>
+              <text class="tt" x="392" y="472">chosen (spot, maneuver)</text>
+              <text class="td" x="392" y="490">+ calibrated confidence</text>
+              <rect class="grp" x="30" y="542" width="1080" height="134" rx="14"/>
+              <text class="ta" x="48" y="566">3 · eXECUTE — anchored-truncated diffusion</text>
+              <rect class="nb" x="60" y="580" width="480" height="80" rx="10"/>
+              <text class="tt" x="76" y="604">anchor-init</text>
+              <text class="td" x="76" y="623">init noise AROUND the chosen</text>
+              <text class="td" x="76" y="639">(spot, first-leg-code) anchor</text>
+              <rect class="nb" x="580" y="580" width="500" height="80" rx="10"/>
+              <text class="tt" x="596" y="604">~2 DDIM steps</text>
+              <text class="td" x="596" y="623">+ trained goal token (hard pinning)</text>
+              <text class="td" x="596" y="639">+ in-graph inpainting (zero-retrain pinning)</text>
+              <rect class="nb am" x="340" y="712" width="460" height="56" rx="10"/>
+              <text class="tt" x="362" y="736">POLICY_PARKING_LEGS</text>
+              <text class="td" x="362" y="754">+ POLICY_PARKING_POSE w/ real confidence</text>
+              <path class="ar" d="M300,136 C330,160 420,170 470,186" marker-end="url(#m-s1g)"/>
+              <path class="ar te" d="M830,136 C800,160 720,170 672,186" marker-end="url(#m-s1g)"/>
+              <path class="ar am" d="M560,242 C540,268 480,290 420,318" marker-end="url(#m-s1)"/>
+              <path class="ar" d="M660,358 H700" marker-end="url(#m-s1g)"/>
+              <path class="ar am" d="M880,398 C840,424 700,432 620,448" marker-end="url(#m-s1)"/>
+              <path class="ar am" d="M540,504 C500,530 380,548 310,580" marker-end="url(#m-s1)"/>
+              <path class="ar" d="M540,620 H580" marker-end="url(#m-s1g)"/>
+              <path class="ar am" d="M820,660 C780,690 680,694 620,712" marker-end="url(#m-s1)"/>
+            </svg>
+          </div>
+
+          <h3>Propose — two tiers because physics says so</h3>
+          <p>Corner-accurate slot detection at 10–25 m from pinhole cameras is unrealistic (ground markings flatten to grazing angles, occlusion by parked cars); what <em>is</em> realistic at range is gap/occupancy detection — “free space between two cars consistent with a slot” — refined into precise 4-corner polygons only inside ~10 m (the Tesla/BEV-PolyNet pattern). The head <b>consumes the MS3 PSD head</b> rather than re-proposing the labeling campaign, and the rear camera (MS3) is a hard dependency for reverse-in polygons. Crucially, externally injected candidates (a UI tap, a stored spot from S3, a fleet prior from S4) enter through the <em>same</em> candidate interface — one pathway to train and validate, not three.</p>
+
+          <h3>Rank — and how its training avoids two traps</h3>
+          <p>Each (spot × maneuver) candidate gets a decomposed score; rule compliance is <em>distilled into the head</em> from the S3 rule layer at training time (Hydra-MDP's teacher pattern), so the on-car model doesn't need the full rule DB to behave conservatively. Two training traps the review caught: <b>(1) selection bias</b> — the human picked the easiest spot, so naive “the taken spot is the positive” training entangles convenience with feasibility; the fix is a <b>listwise loss over the S4 feasible set with exposure debiasing</b>. <b>(2) Overconfidence</b> — CE mode heads are systematically overconfident; per-deployment-domain temperature scaling, with ECE/Brier tracked in eval.</p>
+          <pre class="py"><span class="k">def</span> <span class="f">rank</span>(candidates, memory_tokens, preference, committed_id):
+    scores = {}
+    <span class="k">for</span> c <span class="k">in</span> candidates:                      <span class="c"># c = (spot, first LegCode)</span>
+        s = ( w_im   * <span class="f">imitation_logit</span>(c)          <span class="c"># "would the expert pick this?"</span>
+            + w_rule * <span class="f">rule_compliance</span>(c)          <span class="c"># distilled from S3 rule layer</span>
+            + w_pref * <span class="f">preference_match</span>(c, preference)   <span class="c"># R5: elevator/EV/disabled</span>
+            + w_q    * <span class="f">critic_value</span>(c) )           <span class="c"># S5: CVaR over C51 distribution</span>
+        <span class="k">if</span> c.spot_id == committed_id:
+            s += HYSTERESIS_BONUS                  <span class="c"># S5: no per-tick target churn</span>
+        scores[c] = s
+    <span class="k">return</span> <span class="f">temperature_scaled</span>(scores)              <span class="c"># calibrated per deployment domain</span>
+
+<span class="c"># Training: listwise over the hindsight-feasible set, not single-positive CE</span>
+loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(feasible_set, ...),
+                   positive=actually_parked_spot,
+                   exposure_weights=<span class="f">debias</span>(feasible_set))   <span class="c"># easy spots are over-exposed</span></pre>
+          <p class="codecap"><span>S1 Rank — scoring + the listwise debiased training loss</span></p>
+
+          <h3>eXecute — anchored truncation is a retrain, not a flag</h3>
+          <p>DiffusionDrive's recipe requires training with anchor-centered noise on a truncated schedule; the payoff is that each of K candidates yields a <em>distinct, deterministic, replayable</em> proposal in ~2 denoise steps, restoring the on-car multimodality that today collapses to one sample:</p>
+          <pre class="py"><span class="k">def</span> <span class="f">execute</span>(chosen: <span class="b">tuple</span>[Spot, LegCode], scene_tokens, goal_pose):
+    <span class="c"># 1. Anchor-init: start from a path prior for this (spot, leg) anchor, not from pure noise</span>
+    x = <span class="f">anchor_prior</span>(chosen) + SIGMA_TRUNC * <span class="f">fixed_seed_noise</span>(chosen)   <span class="c"># deterministic per anchor</span>
+    <span class="c"># 2. Truncated denoising with the goal token in conditioning (trained, CFG-dropout)</span>
+    cond = [scene_tokens, <span class="f">goal_token</span>(goal_pose), memory_tokens]
+    <span class="k">for</span> t <span class="k">in</span> TRUNCATED_SCHEDULE:            <span class="c"># ~2 steps instead of 5-10</span>
+        v = <span class="f">denoiser</span>(x, t, cond)
+        x, x0 = ddim.<span class="f">step</span>(v, t, x)
+        x = <span class="f">inpaint</span>(x, pin_endpoint=goal_pose)   <span class="c"># existing in-graph hook, diffusion.py:738-760</span>
+    <span class="k">return</span> <span class="f">decode_legs</span>(x)                   <span class="c"># -&gt; POLICY_PARKING_LEGS (S2)</span></pre>
+          <p class="codecap"><span>S1 eXecute — anchored truncated denoising</span><span>retrain of DiffusionHead, MS4</span></p>
+          <p>The goal-injection stack is deliberately ordered, after the review found three mechanisms fighting each other in the draft: <b>anchor-init</b> selects the mode; the <b>trained early-fusion goal token</b> does hard pinning (revive Wonjoon's <code>ParkingPoseSTAdaptor</code> — early fusion beat late fusion on his branch, but that's an unreproduced result against a pre-diffusion-merge model, so a reproduction spike comes first); the <b>already-deployed in-graph inpainting hook</b> covers zero-retrain pinning experiments. <b>Affinity guidance is demoted to an offline experiment tool</b> (bev_clicker): with ~2 truncated steps there is no schedule room left for gradient guidance, and it fights anchor-init.</p>
+
+          <div class="callout amber"><h4>Latency honesty</h4><p>K anchors × 2 steps + proposer + ranker is net <em>more</em> compute than today's single pass — the benefit is controllable multimodality, not speed. Street search (R1) runs under the <em>driving</em> latency contract, not parking-mode slack. A per-mode compute budget table is an MS4 exit artifact.</p></div>
+
+          <h3>Implementation map</h3>
+          <div class="tblwrap"><table>
+            <thead><tr><th>Component</th><th>Integration point</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="key">Spot candidates</td><td>MS3 PSD head I/Os; design-doc <code>[N,4,3]</code> output</td><td class="mono">roadmap-owned, consume</td></tr>
+              <tr><td class="key">Maneuver vocabulary</td><td><code>LegCode</code> grid replacing <code>ActionsDiscretizer</code> for parking</td><td class="mono">new; needs LA pathway re-enabled</td></tr>
+              <tr><td class="key">Rank head</td><td>new queries in parking head; replaces <code>confidence=1.0</code> (diffusion.py:415)</td><td class="mono">new</td></tr>
+              <tr><td class="key">Anchored truncation</td><td>retrain of <code>DiffusionHead</code> w/ truncated schedule</td><td class="mono">retrain (MS4)</td></tr>
+              <tr><td class="key">Goal token</td><td>revive <code>ParkingPoseSTAdaptor</code> (branch <code>aa/wonjoon_*</code>)</td><td class="mono">reproduction spike first</td></tr>
+              <tr><td class="key">Inpainting pinning</td><td><code>diffusion.py:738-760</code></td><td class="mono">already deployed</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
 <!-- NEXT-PANEL -->
     </div>
 
