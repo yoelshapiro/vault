@@ -879,6 +879,110 @@ loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(fea
         </div>
       </div>
 
+      <!-- ============ S2 ============ -->
+      <div class="spanel" id="sp-s2">
+        <div class="card">
+          <div class="soltitle"><span class="sid am">S2</span><h3>Leg-codebook trajectories — multi-leg long horizon</h3></div>
+          <p class="lead" style="margin-top:12px"><b>What it is.</b> The long-horizon answer is not a longer path — it is a <em>structured</em> one. A parking maneuver becomes a <b>sequence of legs</b>, each leg a signed-arc-distance-parameterized segment delimited by gear switches, carrying its own <code>LegCode</code> (§8.0.4). This is MultiPark's production-deployed decomposition, adapted to our diffusion head and to the frozen-trunk deployment paradigm.</p>
+          <p><b>Why legs and not “just predict 8 s”.</b> Three reasons. (1) <em>Multi-leg maneuvers are sequential decisions</em> — whether leg 2 reverses left or right genuinely depends on where leg 1 ended; that is where autoregression belongs. Per-step AR decode, by contrast, buys nothing (OpenVLA-OFT: parallel chunk decode matches AR at 25–50× the speed) — so: <b>AR at the leg level only, single-shot within a leg</b>. (2) The current 24.5 m path already spans a long horizon <em>in time</em> at parking speeds; what it can't represent is gear reversals and waits — exactly what legs make first-class. (3) Horizon-scaling literature (SHARSA et al.): monolithic long-horizon nets saturate; decompose instead.</p>
+
+          <h3>Worked example — perpendicular reverse park, gc2</h3>
+          <div class="diag">
+            <svg viewBox="0 0 1140 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Leg sequence example">
+              <defs><marker id="m-s2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f5a524"/></marker></defs>
+              <rect class="nb am" x="40" y="30" width="230" height="72" rx="10"/>
+              <text class="tt" x="56" y="56">Leg 1 · FWD 8 m</text>
+              <text class="td" x="56" y="75">pull past the bay</text>
+              <text class="td" x="56" y="91">side = R</text>
+              <rect class="nb" x="312" y="30" width="230" height="72" rx="10"/>
+              <text class="tt" x="328" y="56">Leg 2 · HOLD 1.5 s</text>
+              <text class="td" x="328" y="75">gear D → R</text>
+              <text class="td" x="328" y="91">release = TIMER</text>
+              <rect class="nb am" x="584" y="30" width="230" height="72" rx="10"/>
+              <text class="tt" x="600" y="56">Leg 3 · REV 6 m</text>
+              <text class="td" x="600" y="75">arc into the bay</text>
+              <text class="td" x="600" y="91">endpoint = goal pose</text>
+              <rect class="nb" x="856" y="30" width="244" height="72" rx="10"/>
+              <text class="tt" x="872" y="56">Leg 4 · HOLD</text>
+              <text class="td" x="872" y="75">gear → P</text>
+              <text class="td" x="872" y="91">release = PARKED</text>
+              <path class="ar am" d="M270,66 H312" marker-end="url(#m-s2)"/>
+              <path class="ar am" d="M542,66 H584" marker-end="url(#m-s2)"/>
+              <path class="ar am" d="M814,66 H856" marker-end="url(#m-s2)"/>
+            </svg>
+          </div>
+
+          <pre class="py"><span class="k">def</span> <span class="f">decode_maneuver</span>(scene_tokens, memory_tokens, chosen_anchor) -&gt; ParkingLegs:
+    <span class="s">"""AR over legs, single-shot within each leg. Runs in the 1 Hz strategic loop."""</span>
+    legs: <span class="b">list</span>[<span class="b">tuple</span>[LegCode, PathSegment]] = []
+    ctx = [scene_tokens, memory_tokens, <span class="f">anchor_token</span>(chosen_anchor)]
+    <span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(MAX_LEGS):                          <span class="c"># fixed bound: TRT-compilable</span>
+        code = <span class="f">leg_code_head</span>(ctx, legs)                <span class="c"># classify next LegCode (or STOP)</span>
+        <span class="k">if</span> code <span class="k">is</span> STOP:
+            <span class="k">break</span>
+        geometry = <span class="f">execute</span>(code, ctx)                  <span class="c"># S1 eXecute, conditioned on this leg</span>
+        legs.<span class="f">append</span>((code, geometry))
+    <span class="k">return</span> <span class="f">ParkingLegs</span>(legs)                           <span class="c"># -&gt; new key POLICY_PARKING_LEGS</span></pre>
+          <p class="codecap"><span>S2 — leg-level autoregression over the unified LegCode vocabulary</span></p>
+
+          <div class="callout amber"><h4>Interface decision (review-driven)</h4><p>The legs are emitted under a <b>new output key <code>POLICY_PARKING_LEGS</code>, produced by the parking head only</b>. Baseline <code>POLICY_PATH</code> is untouched — it is a deployed output consumed by <code>deployment_wrapper.py</code>, and changing its parameterization is a cross-team interface change that would gate the MS5 baseline merge. The 2 s controller contract also survives unchanged: the tick-rate ordinary head keeps emitting 11 executable waypoints that <em>track the committed leg</em>, exactly as it tracks <code>POLICY_PATH</code> today.</p></div>
+
+          <h3>Data prerequisites — each one is real work the draft had skipped</h3>
+          <div class="tblwrap"><table>
+            <thead><tr><th>#</th><th>Problem</th><th>Fix</th></tr></thead>
+            <tbody>
+              <tr><td class="key">i</td><td><b>P→D forward-unparking detector gap:</b> the detector only accepts P/N→R (<span class="ref">parking.py:400-406</span>), so forward pull-outs get <code>unparking_mode=False</code> — and <code>unparking_window_gc1</code> (weight <b>0.3</b>, the heaviest parking bucket, mostly forward pull-outs) trains mislabeled</td><td>Accept FORWARD after a validated neutral segment (the code comment already sketches it); re-materialize; regression test. <b>Cheapest item in the plan — do first</b></td></tr>
+              <tr><td class="key">ii</td><td>Gen2 gear is <b>reconstructed from speed</b> (0.5 km/h threshold + dwell heuristics, <span class="ref">filters.py:130-200</span>) — noisiest exactly at near-zero speed where leg boundaries live; three different reconstruction implementations exist</td><td>One canonical implementation; leg-label validation pass against human-audited samples</td></tr>
+              <tr><td class="key">iii</td><td>gc3plus volumes unknown; config upweighting (0.15 vs gc1's 0.05) betrays scarcity</td><td>1-day Databricks per-bucket count audit <b>before</b> fixing vocabulary size; hierarchical fallback folds rare cells into parents</td></tr>
+              <tr><td class="key">iv</td><td>25 s / 30 m window clipping silently truncates long gc3plus maneuvers (and gc counts are window-relative)</td><td>Extend windows for leg labeling specifically</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="callout"><h4>aWTA is a contingency, not parallel work</h4><p>zmurez's <code>AnnealedWTALoss</code> (which independently reproduces the 2024 aWTA paper: K=8 head banks, an oracle-imitating mode classifier with soft targets, EMA mode smoothing at inference) is the fallback <b>behind a decision gate</b>: port it from the experimental MCV stack only if anchored diffusion demonstrably fails to separate maneuver modes (gate metric: per-anchor mode purity on held-out gc2/gc3). Anchors and WTA-hypotheses-tied-to-the-vocabulary are the <em>same</em> multimodality device — shipping both is an unscheduled 2×2 ablation.</p></div>
+
+          <h3>Multi-leg search &amp; the two-loop runtime</h3>
+          <p>Data-dependent beam search does not compile to the TensorRT path (the DDIM loop only survives because its timestep list unrolls statically). The preferred runtime is therefore <b>two loops</b>:</p>
+          <div class="diag">
+            <svg viewBox="0 0 1140 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two-loop runtime sequence diagram">
+              <defs><marker id="m-s2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/></marker>
+              <marker id="m-s2t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2dd4bf"/></marker></defs>
+              <!-- lifeline heads -->
+              <rect class="nb am" x="80" y="18" width="230" height="46" rx="10"/>
+              <text class="tt" x="96" y="46">Strategic loop · ~1 Hz</text>
+              <rect class="nb te" x="460" y="18" width="240" height="46" rx="10"/>
+              <text class="tt" x="476" y="46">Parking Memory Service</text>
+              <rect class="nb" x="850" y="18" width="250" height="46" rx="10"/>
+              <text class="tt" x="866" y="46">Tick loop · 10 Hz, in-graph</text>
+              <line x1="195" y1="64" x2="195" y2="436" stroke="#2e3d52" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <line x1="580" y1="64" x2="580" y2="436" stroke="#2e3d52" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <line x1="975" y1="64" x2="975" y2="436" stroke="#2e3d52" stroke-width="1.5" stroke-dasharray="5 5"/>
+              <!-- 1 self -->
+              <path class="ar" d="M195,96 H320 V118 H201" marker-end="url(#m-s2b)"/>
+              <text class="td" x="212" y="90">decode_maneuver() — AR over legs, K candidates, critic-scored (S5)</text>
+              <!-- 2 commit -->
+              <path class="ar" d="M195,152 H574" marker-end="url(#m-s2b)"/>
+              <text class="td" x="240" y="146">commit(target spot, leg sequence)</text>
+              <!-- loop box -->
+              <rect class="grp" x="430" y="178" width="680" height="160" rx="10"/>
+              <text class="tl" x="446" y="198">LOOP · EVERY TICK</text>
+              <path class="ar te" d="M975,224 H586" marker-end="url(#m-s2t)"/>
+              <text class="td" x="640" y="218">read committed leg + memory tokens</text>
+              <path class="ar" d="M975,262 H1080 V284 H981" marker-end="url(#m-s2b)"/>
+              <text class="td" x="690" y="258">ordinary head: 2 s waypoints tracking committed leg</text>
+              <path class="ar te" d="M975,318 H586" marker-end="url(#m-s2t)"/>
+              <text class="td" x="660" y="312">leg progress / completion events</text>
+              <!-- PMS -> S -->
+              <path class="ar te" d="M580,372 H201" marker-end="url(#m-s2t)"/>
+              <text class="td" x="240" y="366">leg done / spot occupied / USS veto</text>
+              <!-- 5 self -->
+              <path class="ar" d="M195,404 H320 V426 H201" marker-end="url(#m-s2b)"/>
+              <text class="td" x="212" y="398">re-rank or advance to next leg</text>
+            </svg>
+          </div>
+          <p>The in-graph alternative, if a single-graph design is mandated, is a fixed-width/fixed-depth unrolled beam (e.g. 4 candidates × 3 legs) — bounded, compilable, and enough for gc≤3.</p>
+        </div>
+      </div>
+
 <!-- NEXT-PANEL -->
     </div>
 
