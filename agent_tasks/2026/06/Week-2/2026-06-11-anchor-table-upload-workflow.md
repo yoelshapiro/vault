@@ -61,3 +61,19 @@ Delta table for inspection/debugging.
 - Successful upload used a Databricks notebook run on cluster `shared_2.3.231` (`0611-172359-yp81nb1e`) so it followed the same storage convention as the event notebook.
 - Databricks run: `https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/981232753790606/run/435103836940643`
 - Verification query returned `1,381,950` rows, `152` buckets, and `2` train/validation splits.
+
+## 2026-06-12 Integrated Flyte Upload Run
+
+- Published fresh sampling image after refreshing ACR auth:
+  `wayveacrprodflyte.azurecr.io/sampling@sha256:fc12d760475f81b965ea778ef665a05d8c0e76e822f239618a5f2953b93f4393`.
+- Started `filter_bucket_and_upload_anchor_table_stage`:
+  - Execution: `a2mfkm4rrwpdldtcpdl7`
+  - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a2mfkm4rrwpdldtcpdl7`
+  - Dataset: `parking_pudo/anchors`
+  - Job name: `parking_pudo_anchors_table_20260612`
+  - Table: `parking.parking_pudo_anchors`
+  - Table path: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/parking_pudo_anchors.table`
+  - Databricks cluster name: `shared_2.3.231`
+  - Notebook path: `/Shared/parking_pudo_anchor_upload`
+- Initial status at 2026-06-12 10:06 UTC: `n0` Spark partitioning task was
+  `INITIALIZING` with reason `job submitted`.
