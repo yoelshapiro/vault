@@ -419,19 +419,81 @@ class ParkingMemoryService:
 
 ### 8.4 S4 — Fleet data engine (scoped to what survives scrutiny)
 
-- **Cross-run aggregation at GPS resolution only**: lot existence, entrance heat, search-duration stats, density priors. GNSS error (5–20 m; absent in garages) exceeds spot pitch (~2.5 m) — spot-level cross-run maps come only from the stored-spot re-anchoring stack (MS5+, outdoor first). Fleet-distribution bias acknowledged: anchors cluster at depots/chargers/PUDO zones.
-- **Counterfactual positives in weakened form only:** candidate-set (recall) supervision, never ranking positives; gated on the current run's own free-space check at the matched timestamp (occupancy is time-varying; the gate is circular with the perception being trained — hence recall-only + human QA sampling); filtered through the rule layer where present (humans park illegally: feasible ≠ permitted).
-- **Anchor hygiene:** add unparking `nopudo` variants (today drop-off departures train as unparking — no PUDO exclusion exists on unparking filters); stricter park-anchor definition (parked duration ≫ 2 s, distance-from-lane checks).
-- **HER/GCSL relabeling stands:** every achieved end pose is a goal label (turns the whole fleet log into goal-conditioned parking data); aborted/multi-attempt parks become ranking negatives (GCSL-NF).
-- **VLM pipeline: attributes only.** Type/occupancy/restriction attributes + coarse existence — **geometry comes exclusively from the MS3 PSD campaign**; one schema serving proposer + attributes + adjacent signs (one labeling queue, not three — it competes with rear-camera enablement for the same people). Untaken-spot human-QA precision floor as a gate. Current pipeline reality: a 3-sample prototype, single camera, free-text fields, local JSON — the scale path is the async runner + Databricks mining + Delta keyed (run_id, ts, spot_idx).
-- **Search-behavior mining** feeds §8.3's contrastive pairs and needs long-horizon odometry materialization (training rasters must match deployment raster statistics — current windows are 30–60 s, deployment accumulates minutes). Risk: organic search may be near-zero in chauffeur-style logs (drivers go to known destinations) — budget directed collection/teleop demos.
+**What it is.** Four data pipelines that turn the fleet's existing logs into parking supervision — because the single biggest gap found in Phase 0 still stands: **no multi-candidate spot label set exists anywhere**, anchors are event *frames* not spatial spots, and `PARKING_POSE` is one hindsight pose per maneuver.
+
+```mermaid
+flowchart LR
+    CORPUS["fleet corpus<br/>(gear-to-park anchors,<br/>full trajectories)"] --> HER["HER/GCSL relabeling<br/>achieved end pose = goal label;<br/>aborts = ranking negatives"]
+    CORPUS --> PRIORS["GPS-resolution priors<br/>lot existence, entrance heat,<br/>search-duration stats"]
+    CORPUS --> CONTRAST["search-segment mining<br/>first-lap vs second-lap<br/>contrast pairs (for S3)"]
+    CORPUS --> VLMP["VLM attribute pipeline<br/>type / occupancy / restrictions<br/>(geometry from PSD campaign)"]
+    HER --> TRAIN["training tables<br/>(Delta, keyed run_id/ts/spot_idx)"]
+    PRIORS --> TRAIN
+    CONTRAST --> TRAIN
+    VLMP --> TRAIN
+```
+
+**HER/GCSL relabeling — the part that fully survives review.** Every trajectory segment in the fleet log ends *somewhere*; that achieved end pose is, by construction, a valid goal for the trajectory that reached it. This turns the entire log into goal-conditioned training data for the executor — which is also the standard fix for proposer/executor distribution shift (the executor must reach whatever spots the proposer emits, not just the spots experts chose). Aborted and multi-attempt parks become ranking *negatives* (GCSL-NF) instead of polluting BC.
+
+```python
+for segment in fleet_log.parking_segments():
+    goal = segment.final_pose                       # hindsight: what was actually achieved
+    yield GoalConditionedSample(obs=segment.obs, goal=goal, legs=segment.legs)  # BC positive
+    if segment.aborted or segment.attempt_index > 0:
+        yield RankingNegative(spot=segment.target_spot, context=segment.obs)    # GCSL-NF
+```
+
+**Cross-run aggregation — scoped down hard.** The draft's "counterfactual cross-run spot labels" idea mostly didn't survive: GNSS error in lots is 5–20 m (absent in garages) against a ~2.5 m spot pitch, so fleet-wide spot-level association is impossible without the re-anchoring stack (MS5+). What remains at MS4 is **GPS-resolution priors** — lot existence, entrance heat, search-duration statistics, density — plus an acknowledged fleet bias (anchors cluster at depots/chargers/PUDO zones). Counterfactual positives ("spots other runs used, visible but untaken now") survive only in weakened form: **candidate-set (recall) supervision, never ranking positives**, gated on the current run's own free-space check at the matched timestamp (occupancy is time-varying, and the gate is circular with the perception being trained — hence recall-only plus human QA sampling), and filtered through the rule layer where it exists (humans park illegally; feasible ≠ permitted).
+
+**Anchor hygiene.** Two contamination sources to fix at the source: unparking has **no PUDO exclusion** (drop-off departures currently train as "unparking" — add unparking `nopudo` variants), and the 2 s parked-duration threshold admits brief lane stops as parks (require parked duration ≫ 2 s + distance-from-lane checks).
+
+**VLM pipeline — attributes only.** The existing prototype (`sohamphade/parking-annotation-pipeline`) already emits multi-spot lists with the right *shape*, but free-text fields, one camera, three hardcoded samples. The upgrade asks it for what VLMs are good at — type / occupancy / restriction attributes + coarse existence — and **never geometry**: monocular→BEV polygons at grazing angles is exactly the failure mode the PSD campaign exists to solve with proper labeling. One schema serves proposer + attributes + adjacent signs (**one labeling queue, not three** — it competes with rear-camera enablement for the same people). Scale path: async runner + Databricks mining + Delta storage keyed `(run_id, ts, spot_idx)`; gate: a human-QA precision floor on *untaken* spots (the taken spot validates itself; the inventory is the point).
+
+**Search-behavior mining.** Feeds §8.3's contrast pairs, and needs long-horizon odometry materialization — current training windows load 30–60 s of history while deployed coverage accumulates minutes (a distribution shift in the channel's own statistics). Known risk: organic search may be near-zero in chauffeur-style logs (drivers go to known destinations) — budget directed collection/teleop demos rather than assuming the data exists.
 
 ### 8.5 S5 — Critic-as-ranker + commitment layer (shadow first)
 
-- **Symmetric critic head only** (the asymmetric config would put a second perception trunk on-car); **parking-reward training is a prerequisite** — today's critic is forward-driving-trained; its distribution tails on reverse multi-point maneuvers are exactly the offline-RL OOD-overestimation regime, and CVaR over a miscalibrated distribution is confidently wrong risk-aversion.
-- **Rollout ladder:** (1) offline: rank existing top-K samples against PUDO outcomes — zero deployment risk, replaces the confidence placeholder, can start now; (2) shadow mode on-car logging rank-vs-outcome; (3) only then gate behavior. Scope honesty: ranks in-horizon/first-leg proposals; multi-leg sequence ranking is gated on a (state, leg-chunk) critic (Q-chunking) — **don't change the action vocabulary before its critic exists**.
-- **Commitment layer** (the glue the first draft lacked): PMS-held current-target spot ID + chosen leg sequence + a hysteresis/switch-cost term in Rank; the previously-selected (spot, maneuver) is fed back as a token. Solves per-tick plan churn over a detection-noisy candidate set — the stateless constraint means this decision *must* live in external memory.
-- **Abort/recovery state machine,** specified with the arbitration owner: search → approach → (spot occupied on approach) → re-rank → resume search; USS-shell veto ⇒ defined leg-replan semantics (the USS interim safety shell is an MS4 roadmap deliverable that bounds all of S2's execution). Disagreement-gated fallback (Centaur-style) is added only after hysteresis and calibrated against held-out intervention data — near ties, raw disagreement oscillates the fallback.
+**What it is.** Two decision-layer mechanisms that make the multimodal head *usable*: the existing C51 distributional RL critic re-deployed as a plan **ranker** (the V-GPS pattern: a frozen value function re-ranks K samples from any policy, no policy retraining), and a **commitment layer** that stops a stateless network from changing its mind every tick.
+
+**Why the critic, and why carefully.** The RL stage already trains a critic that consumes waypoints as action input — it is the one component in the stack whose job is "how well does this plan end". Its distributional (C51) head additionally supports risk-aware (CVaR-style) ranking — rank plans by their bad-tail outcome, not their mean. But the review added two hard qualifiers: **symmetric critic head only** (the asymmetric config carries its own perception encoder — a second full trunk forward per tick on Orin), and **parking-reward training is a prerequisite** — today's critic is forward-driving-trained; its distribution tails on reverse multi-point maneuvers are exactly the offline-RL OOD-overestimation regime, and CVaR over a miscalibrated distribution is *confidently wrong* risk aversion.
+
+**Rollout ladder (each rung gates the next):**
+
+1. **Offline, now:** rank the existing top-K diffusion samples against logged PUDO outcomes. Zero deployment risk, immediately replaces the `confidence=1.0` placeholder in offline eval, and produces the rank-vs-outcome calibration data the next rung needs.
+2. **Shadow mode on-car:** the ranker runs and logs but does not steer. Exit criterion: rank correlates with outcomes on held-out interventions.
+3. **Gate behavior:** ranker feeds S1's Rank stage.
+4. **(Later) multi-leg:** ranking leg *sequences* requires a (state, leg-chunk) critic (Q-chunking) — **don't change the action vocabulary before its critic exists**; until then the critic ranks first-leg/in-horizon proposals only.
+
+**Commitment layer — the glue the first draft lacked.** K proposals re-ranked every tick over a detection-noisy candidate set (spots flicker, scores jitter) means the target spot churns and the trajectory oscillates. A stateless network cannot hold a decision, so the decision lives in PMS and re-enters as a token:
+
+```python
+def choose(candidates, committed: Commitment | None) -> Candidate:
+    scored = {c: score(c) for c in candidates}           # S1 Rank
+    if committed is not None and committed.id in scored:
+        scored[committed.id] += HYSTERESIS_BONUS         # stickiness
+        best = max(scored, key=scored.get)
+        if best.id != committed.id and \
+           scored[best] - scored[committed.id] < SWITCH_MARGIN:
+            return committed.candidate                   # not better enough: keep the plan
+    return max(scored, key=scored.get)                   # commit (PMS stores it)
+```
+
+**Abort/recovery state machine** — specified with the arbitration owner, because "deterministic mode switching" (the multi-head paradigm) meets an inherently fuzzy search↔park boundary here:
+
+```mermaid
+stateDiagram-v2
+    [*] --> SEARCH : PARKING_MODE on /<br/>end-of-route (nav-distance based)
+    SEARCH --> APPROACH : candidate committed<br/>(rank + hysteresis)
+    APPROACH --> MANEUVER : spot confirmed free<br/>at close range
+    APPROACH --> SEARCH : spot occupied on approach<br/>-> re-rank, coverage updated
+    MANEUVER --> PARKED : final pose reached,<br/>gear P
+    MANEUVER --> REPLAN : USS shell veto<br/>-> leg replan semantics
+    REPLAN --> MANEUVER : new leg sequence
+    REPLAN --> SEARCH : maneuver infeasible<br/>-> abandon spot
+    PARKED --> [*]
+```
+
+The USS interim safety shell (an MS4 roadmap deliverable owned outside the parking team) bounds *all* of S2's execution: a veto must map to defined leg-replan semantics, not an undefined stop. Disagreement-gated fallback (Centaur-style: high disagreement among the K proposals ⇒ slow down / request assist) is added only **after** hysteresis and calibrated against held-out intervention data — near ties, raw disagreement oscillates the fallback, and the anchor set itself controls the diversity that generates the "uncertainty".
 
 ### 8.6 S6 — Trunk/WFM riders + sim gyms (re-scoped)
 
