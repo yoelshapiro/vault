@@ -18,7 +18,8 @@ Added lightweight metadata enrichment for `parking_pudo/anchors` generic materia
 
 - Added `enrich_parking_pudo_anchor_metadata` as the `parking_pudo/anchors` `post_process_batch`.
 - Added nullable event metadata columns: event type, event window timestamps, anchor telemetry, gear-change timestamp, PUDO context source, intervention-in-30s context, and trip-event context.
-- Reused the existing Parking/PUDO signal helpers so metadata follows the same anchor detection logic as the buckets.
+- Added shared event-record builders in `events.py`; filters convert those records into masks and anchor metadata converts the same records into columns.
+- Reused the existing Parking/PUDO signal helpers so metadata follows the same anchor detection logic as the buckets without duplicating selector loops.
 - Kept CA anchors unchanged for now; metadata is populated for park/PUDO/unpark/UnPUDO event anchors.
 - Added focused regression coverage for hazard-source and trip-source anchor metadata.
 

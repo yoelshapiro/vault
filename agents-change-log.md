@@ -10,6 +10,7 @@
 - Areas: `/workspace/pudo_materialization_buckets/wayve/ai/services/sampling/datasets/parking_pudo`.
 - Changes:
   - Added an anchor-only post-processing hook that appends event metadata without changing bucket filters.
+  - Added shared event-record builders so filters and metadata consume one park/PUDO and unpark/UnPUDO event construction path.
   - Populated event type, materialization window timestamps, anchor telemetry, gear-change timestamp, PUDO context source, 30s intervention context, and trip-event context.
   - Reused existing Parking/PUDO signal helpers so metadata follows the same park/PUDO/unpark/UnPUDO anchor logic.
   - Added focused regression coverage for hazard-source and trip-source metadata enrichment.
