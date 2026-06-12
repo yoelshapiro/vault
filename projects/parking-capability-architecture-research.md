@@ -497,9 +497,23 @@ The USS interim safety shell (an MS4 roadmap deliverable owned outside the parki
 
 ### 8.6 S6 — Trunk/WFM riders + sim gyms (re-scoped)
 
-- **Gear-aware latent-action pretraining is OFF the 2026 critical path.** It forks the WFM→BC→RL chain for every capability and forces all-head revalidation under the frozen-trunk paradigm. It rides a named trunk release train with trunk-owners' buy-in, or it doesn't happen. The leg codebook is deliberately designed to work as BC-head output decomposition without it.
-- **3DGS lot gyms are promoted, not demoted:** they are now the *training* substrate for search behavior (exploration reward consuming the coverage input — the only credible learning signal for §8.3), the closed-loop eval gate (time-to-park, re-search rate, leg-count match, abort-recovery success), and the rare-case data source (gates, multi-story ramps — also mine real ramp segments; tight steep spirals are OOD for a forward-driving trunk).
-- **Gates (R4):** a thin **barrier-state head** (present + state ∈ {closed, moving, open}) + creep-wait behavior data + HOLD legs — specified here as real work, not a coverage-table token. A 1 s context window cannot observe "barrier rising slowly"; the wait state lives in the commitment layer. Operator ANPR agreements remove ticket machines for fleet lots (the Bosch/ISO-23374 production pattern); **ticket-pulling is explicitly descoped** — no technical fallback is claimed.
+**What it is.** The pieces that depend on *other teams' release trains* — kept separate so their dependencies are visible instead of hidden inside S1–S5.
+
+**Gear-aware latent-action pretraining: off the 2026 critical path.** The idea (add LAPA/LAPO-style latent-action prediction to the WFM stage, semi-supervised with ego odometry so traffic distractors don't collapse it, with the `LegCode` gear axis in the vocabulary) is sound — but it forks the WFM→BC→RL chain for *every* capability and forces all-head revalidation under the frozen-trunk paradigm. It rides a named trunk release train with trunk-owners' buy-in, or it doesn't happen. The leg codebook (§8.2) is deliberately designed to work as BC-head output decomposition *without* it — and whether it does is the honest test of the design. (One exception can force the issue: if the §8.0.3 reverse diagnostic returns "trunk-bound", a trunk conversation happens anyway, and parking-aware pretraining joins it.)
+
+**3DGS lot gyms: promoted, not demoted.** Reconstructing real lots from fleet logs (ParkingWorld pattern) serves three roles at once:
+
+```mermaid
+flowchart LR
+    LOGS["fleet logs<br/>(lots we actually serve)"] --> RECON["3DGS reconstruction<br/>per-lot interactive gym"]
+    RECON --> RL["search-behavior RL<br/>exploration reward consuming<br/>the S3 coverage input"]
+    RECON --> EVAL["closed-loop eval gates<br/>time-to-park, re-search rate,<br/>leg-count match, abort-recovery"]
+    RECON --> RARE["rare-case data<br/>gates, multi-story ramps,<br/>contested spots"]
+```
+
+The RL role is load-bearing: it is the only credible source of the search-behavior learning signal (§8.3 — fleet imitation data is contradictory on coverage). The eval role gives the phasing its measurable exit criteria. Also mine *real* ramp segments — tight steep spirals are OOD for a forward-driving trunk, and no amount of sim fixes a feature gap.
+
+**Gates (R4): a behavior + ops problem, with one small head.** Industry evidence is unanimous — nobody's robot pulls a ticket. Li Auto ships barrier handling as perception + creep-and-wait; Bosch/Mercedes (ISO 23374 Type 2) dissolve tickets via the operator backend. Plan: (1) a thin **barrier-state head** — present + state ∈ {closed, moving, open} — specified here as real work with its own labels, not a coverage-table token; (2) **creep-wait behavior data** + `HOLD` legs with `release=BARRIER_OPEN` (§8.0.1) — note a 1 s context window cannot *observe* "barrier rising slowly"; the wait state lives in the commitment layer, the model only needs to classify the current barrier state; (3) the **operator ANPR track** (business development, not engineering) removes ticket machines for fleet-served lots. **Ticket-pulling is explicitly descoped** — no technical fallback is claimed.
 
 ### 8.7 Explicitly NOT building now
 WFM latent-action pretrain (S6.1) · PMS beyond in-process v0 · in-graph beam search · rule layer at scale · stored-spot/MPA implementation (one-pager only) · second/third annotation schemas · engine-swap interleaving at MS5 · remote-assist output channel (no contract exists — raise with ops) · UI-tap HMI flow (raise at MS4 planning).
