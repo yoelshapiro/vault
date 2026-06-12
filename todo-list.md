@@ -1,8 +1,10 @@
 - [ ] parking capability architecture research ([[projects/parking-capability-architecture-research]])
 	- [x] phase 0: framing doc + clarification questions
-	- [ ] phase 1: deep-dive sibling branches + design docs
-	- [ ] phase 2: literature research
-	- [ ] phase 3: novel solution proposals
+	- [x] phase 1: deep-dive sibling branches + design docs
+	- [x] phase 2: literature research
+	- [x] phase 3: novel solution proposals (§8, post-adversarial-review)
+	- [ ] phase 4: Boris review of §8 → pick "Now" items (§8.9)
+	- [ ] decide: Notion page for parking team (open Q7)
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance

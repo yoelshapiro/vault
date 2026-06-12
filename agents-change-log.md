@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-12 - Parking Capability Research Phases 1-3
+
+- Topic: Execute the parking-capability research — branch/design-doc deep dive, 6-topic literature sweep, and adversarially-reviewed novel solution proposals.
+- Labels: parking, pudo, research, architecture, diffusion, latent-actions, memory, literature.
+- Branch: `boris/training/main_cherrypick_generic_data` (read-only; no code changes).
+- PR: N/A.
+- Change type: Research / documentation.
+- Areas: vault project docs; read-only archaeology over `soham/*`, `wonjoongoo/*`, `sohamphade/*`, `zmurez/pudo`; Google Drive design docs; web literature.
+- Changes:
+  - Completed Phase 1 (§3.5 of the project doc): dynamic horizon + affinity guidance maturity, Wonjoon goal-conditioning drop-on-merge, real `AnnealedWTALoss` (≡ aWTA 2024), VLM annotation pipeline status, 4 design docs incl. Multiple Driving Heads constraints.
+  - Completed Phase 2: [[projects/parking-capability-literature|literature digest]] across diffusion planners, multimodal prediction, E2E parking industry (memory-parking reference designs), external memory, hierarchy/latent actions, parking semantics.
+  - Completed Phase 3: §8 of [[projects/parking-capability-architecture-research|the project doc]] — P0 representation prerequisites, PRX head, leg-codebook trajectories, memory-as-inputs, fleet data engine, critic-as-ranker, trunk/WFM riders, honest coverage matrix, rebuilt phasing, top-10 risks.
+  - Ran a 4-lens adversarial critique (production/data/novelty/org-fit) with repo verification; all blockers folded in; log at [[projects/parking-capability-critique-2026-06-12]].
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-phases1-3|2026-06-12 Parking Capability Research Phases 1-3]]
+
 ## 2026-06-12 - Parking/PUDO Anchor Metadata
 
 - Topic: Add event-style metadata columns to `parking_pudo/anchors` output.
