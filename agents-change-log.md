@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-12 - Parking/PUDO Anchor Metadata
+
+- Topic: Add event-style metadata columns to `parking_pudo/anchors` output.
+- Labels: parking, pudo, generic-materialization, anchors, metadata.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: #117075 draft context; not pushed in this task.
+- Change type: Materialisation anchor enrichment.
+- Areas: `/workspace/pudo_materialization_buckets/wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added an anchor-only post-processing hook that appends event metadata without changing bucket filters.
+  - Populated event type, materialization window timestamps, anchor telemetry, gear-change timestamp, PUDO context source, 30s intervention context, and trip-event context.
+  - Reused existing Parking/PUDO signal helpers so metadata follows the same park/PUDO/unpark/UnPUDO anchor logic.
+  - Added focused regression coverage for hazard-source and trip-source metadata enrichment.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-12-parking-pudo-anchor-metadata|2026-06-12 Parking/PUDO Anchor Metadata]]
+
 ## 2026-06-12 - Parking Capability Research Kickoff
 
 - Topic: Frame the parking-capability architecture research (longer horizon, multimodality, memory/ICL) and write the starting-point document.
