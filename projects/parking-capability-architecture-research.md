@@ -226,12 +226,80 @@ The draft plan implicitly contained *three* action vocabularies (S1 maneuver mod
 
 ### 8.1 S1 — PRX parking head: Propose → Rank → eXecute
 
-Approach A4 made concrete from production-proven parts (TNT/MTR anchor-classification lineage + Hydra-MDP ranking + DiffusionDrive anchored truncation + MultiPark factorization), as one stateless parking head.
+**What it is.** One stateless parking head that makes the spot/maneuver choice *explicit, rankable, and conditionable* — approach A4 finally made concrete, assembled from the most production-proven component per stage: TNT/MTR-style anchor classification (Propose), Hydra-MDP-style multi-criteria scoring (Rank), DiffusionDrive-style anchored-truncated diffusion (eXecute), with MultiPark's factorized maneuver vocabulary throughout.
 
-- **Propose.** Two-tier spot-candidate head: coarse candidates at range (centroid + free/occupied + type — corner-accurate PSD at 10–25 m from pinhole cams is unrealistic) and precise 4-corner polygons <10 m. **Consumes the MS3 PSD head** (roadmap-owned) rather than re-proposing it; rear camera (MS3) is a hard dependency for reverse-in polygons. The same candidate interface accepts external sources: UI tap (Tesla pattern; HMI budget needed), stored spots (S3), fleet priors (S4). Maneuver multimodality is factorized (MultiPark): gear × approach-side × longitudinal anchor ≈ 30–60 modes, with hierarchical fallback for rare cells and per-country mixing (mode priors are heavily skewed — per-cell count audit first).
-- **Rank.** Multi-criteria scoring over (spot × maneuver) candidates: imitation likelihood + rule-compliance scores distilled from the rule layer (Hydra-MDP teacher-distillation pattern) + preference token (R5; the roadmap's parking-preference adaptor) + critic value (S5). Train with hindsight assignment but **listwise over the S4 feasible set with exposure debiasing** — the human picked the *easiest* spot; convenience entangles with feasibility. Post-hoc temperature scaling per deployment domain; ECE/Brier tracked in eval. Replaces the `confidence=1.0` placeholder on `POLICY_PARKING_POSE` (`diffusion.py:415`).
-- **eXecute.** **Anchored-truncated diffusion — a retrain, not an inference trick** (training with anchor-centered noise on a truncated schedule, per DiffusionDrive): K candidate anchors → K distinct deterministic proposals in ~2 denoise steps each, restoring on-car multimodality that today collapses to one zero-noise sample. **One goal-injection stack, deliberately ordered:** anchor-init for mode selection + a trained early-fusion goal token for hard pinning (revive Wonjoon's `ParkingPoseSTAdaptor` — early fusion won on his branch; reproduction spike first, it's an unreproduced result vs a pre-diffusion-merge model) + the **already-deployed in-graph inpainting hook** (`diffusion.py:738-760`) for zero-retrain pinning experiments. **Affinity guidance is demoted to an offline experiment tool** (bev_clicker): with ~2 truncated steps there is no schedule room for gradient guidance, and it fights anchor-init.
-- **Latency honesty.** K anchors × 2 steps + proposer + ranker is net *more* compute than today's single pass — the benefit is controllable multimodality, not speed. Street search (R1) runs under the *driving* latency contract, not parking-mode slack. A per-mode compute budget table is an MS4 exit artifact.
+**Why this shape.** Today's diffusion head infers the spot *implicitly* and collapses to one deterministic zero-noise sample on car (`diffusion.py:1457`), with a placeholder confidence of 1.0 (`diffusion.py:415`). That forecloses everything the requirements ladder needs: no ranked alternatives when the first spot is occupied (R1/R2), no way to condition on a preferred or stored spot (R5/R6), no abort-and-re-rank loop. Making the candidate set a first-class object fixes all of these with one structure.
+
+```mermaid
+flowchart TD
+    subgraph PROPOSE["1 - PROPOSE: candidate set"]
+        PSD["PSD head (MS3, roadmap-owned)<br/>two-tier: coarse candidates at range,<br/>4-corner polygons under 10 m"]
+        EXTC["External candidates via the same interface:<br/>UI tap / stored spot (S3) / fleet prior (S4)"]
+    end
+    subgraph RANK["2 - RANK: score every (spot x maneuver)"]
+        SCORES["imitation likelihood<br/>+ rule compliance (distilled, S3)<br/>+ preference token (R5)<br/>+ critic value (S5)"]
+        COMMIT["commitment hysteresis<br/>(previously chosen target, S5)"]
+    end
+    subgraph EXECUTE["3 - eXECUTE: anchored-truncated diffusion"]
+        ANCHOR["init noise AROUND the chosen<br/>(spot, first-leg-code) anchor"]
+        DENOISE["~2 DDIM steps<br/>+ trained goal token (hard pinning)<br/>+ in-graph inpainting (zero-retrain pinning)"]
+    end
+    PSD --> CAND["candidate set:<br/>spots x leg-code maneuvers"]
+    EXTC --> CAND
+    CAND --> SCORES --> COMMIT --> PICK["chosen (spot, maneuver)<br/>+ calibrated confidence"]
+    PICK --> ANCHOR --> DENOISE --> OUT["POLICY_PARKING_LEGS +<br/>POLICY_PARKING_POSE w/ real confidence"]
+```
+
+**Propose — two tiers because physics says so.** Corner-accurate slot detection at 10–25 m from pinhole cameras is unrealistic (ground markings flatten to grazing angles, occlusion by parked cars); what *is* realistic at range is gap/occupancy detection — "free space between two cars consistent with a slot" — refined into precise 4-corner polygons only inside ~10 m (the Tesla/BEV-PolyNet pattern). The head **consumes the MS3 PSD head** rather than re-proposing the labeling campaign, and the rear camera (MS3) is a hard dependency for reverse-in polygons. Crucially, externally injected candidates (a UI tap, a stored spot from S3, a fleet prior from S4) enter through the *same* candidate interface — one pathway to train and validate, not three.
+
+**Rank — and how its training avoids two traps.** Each (spot × maneuver) candidate gets a decomposed score; rule compliance is *distilled into the head* from the S3 rule layer at training time (Hydra-MDP's teacher pattern) so the on-car model doesn't need the full rule DB to behave conservatively. Two training traps the review caught: (1) *selection bias* — the human picked the easiest spot, so naive "the taken spot is the positive" training entangles convenience with feasibility; the fix is a **listwise loss over the S4 feasible set with exposure debiasing**. (2) *Overconfidence* — CE mode heads are systematically overconfident; per-deployment-domain temperature scaling with ECE/Brier tracked in eval.
+
+```python
+def rank(candidates, memory_tokens, preference, committed_id):
+    scores = {}
+    for c in candidates:                      # c = (spot, first LegCode)
+        s = ( w_im   * imitation_logit(c)          # "would the expert pick this?"
+            + w_rule * rule_compliance(c)          # distilled from S3 rule layer
+            + w_pref * preference_match(c, preference)   # R5: elevator/EV/disabled
+            + w_q    * critic_value(c) )           # S5: CVaR over C51 distribution
+        if c.spot_id == committed_id:
+            s += HYSTERESIS_BONUS                  # S5: no per-tick target churn
+        scores[c] = s
+    return temperature_scaled(scores)              # calibrated per deployment domain
+
+# Training: listwise over the hindsight-feasible set, not single-positive CE
+loss = listwise_ce(scores=rank(feasible_set, ...),
+                   positive=actually_parked_spot,
+                   exposure_weights=debias(feasible_set))   # easy spots are over-exposed
+```
+
+**eXecute — anchored truncation is a retrain, not a flag.** DiffusionDrive's recipe requires training with anchor-centered noise on a truncated schedule; the payoff is that each of K candidates yields a *distinct, deterministic, replayable* proposal in ~2 denoise steps, restoring the on-car multimodality that today collapses to one sample:
+
+```python
+def execute(chosen: tuple[Spot, LegCode], scene_tokens, goal_pose):
+    # 1. Anchor-init: start from a path prior for this (spot, leg) anchor, not from pure noise
+    x = anchor_prior(chosen) + SIGMA_TRUNC * fixed_seed_noise(chosen)   # deterministic per anchor
+    # 2. Truncated denoising with the goal token in conditioning (trained, CFG-dropout)
+    cond = [scene_tokens, goal_token(goal_pose), memory_tokens]
+    for t in TRUNCATED_SCHEDULE:            # ~2 steps instead of 5-10
+        v = denoiser(x, t, cond)
+        x, x0 = ddim.step(v, t, x)
+        x = inpaint(x, pin_endpoint=goal_pose)   # existing in-graph hook, diffusion.py:738-760
+    return decode_legs(x)                   # -> POLICY_PARKING_LEGS (S2)
+```
+
+The goal-injection stack is deliberately ordered after the review found three mechanisms fighting each other in the draft: **anchor-init** selects the mode; the **trained early-fusion goal token** does hard pinning (revive Wonjoon's `ParkingPoseSTAdaptor` — early fusion beat late fusion on his branch, but that's an unreproduced result against a pre-diffusion-merge model, so a reproduction spike comes first); the **already-deployed in-graph inpainting hook** covers zero-retrain pinning experiments. **Affinity guidance is demoted to an offline experiment tool** (bev_clicker): with ~2 truncated steps there is no schedule room left for gradient guidance, and it fights anchor-init.
+
+**Latency honesty.** K anchors × 2 steps + proposer + ranker is net *more* compute than today's single pass — the benefit is controllable multimodality, not speed. Street search (R1) runs under the *driving* latency contract, not parking-mode slack. A per-mode compute budget table is an MS4 exit artifact.
+
+| Component | Integration point | Status |
+|---|---|---|
+| Spot candidates | MS3 PSD head I/Os; design-doc `[N,4,3]` output | roadmap-owned, consume |
+| Maneuver vocabulary | `LegCode` grid replacing `ActionsDiscretizer` for parking | new; needs latent-action pathway re-enabled |
+| Rank head | new queries in parking head; replaces `confidence=1.0` (`diffusion.py:415`) | new |
+| Anchored truncation | retrain of `DiffusionHead` w/ truncated schedule | retrain (MS4) |
+| Goal token | revive `ParkingPoseSTAdaptor` (branch `aa/wonjoon_*`) | reproduction spike first |
+| Inpainting pinning | `diffusion.py:738-760` | already deployed |
 
 ### 8.2 S2 — Leg-codebook trajectories (multi-leg long horizon)
 
