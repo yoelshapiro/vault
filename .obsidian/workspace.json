@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-kickoff.md",
+                "file": "projects/parking-capability-architecture-research.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-06-12-parking-capability-research-kickoff"
+              "title": "parking-capability-architecture-research"
             }
           }
         ],
@@ -492,10 +492,10 @@
   },
   "active": "117f440063e12be8",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-kickoff.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-phases1-3.md",
     "projects/parking-capability-critique-2026-06-12.md",
     "projects.md",
-    "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-kickoff.md",
     "projects/parking-capability-architecture-research.md",
     "projects/parking-capability-literature.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-pudo-anchor-metadata.md",
