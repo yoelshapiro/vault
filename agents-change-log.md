@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-12 - Parking Research Doc Rewrite + Interactive HTML
+
+- Topic: Rewrite the parking research solutions section for readability (Mermaid + pseudo-code) and ship an interactive HTML report.
+- Labels: parking, research, documentation, html-summary.
+- Branch: `boris/training/main_cherrypick_generic_data` (vault-only changes).
+- PR: N/A.
+- Change type: Documentation / report.
+- Areas: vault `projects/parking-capability-architecture-research.md` §8; `html_summaries/`.
+- Changes:
+  - §8 rewritten with full what/why/how prose per solution, 8 Mermaid diagrams + a phasing Gantt, 7 Python pseudo-code blocks, and decision/implementation tables.
+  - New self-contained interactive report `html_summaries/parking-capability-architecture-research.html` (solution tabs, hand-authored SVG diagrams, interactive coverage matrix, requirements stepper, critique accordions, filterable risks/literature).
+  - `html_summaries/README.md` row added; project doc references updated.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-12-parking-research-doc-rewrite-html|2026-06-12 Parking Research Doc Rewrite + HTML]]
+
 ## 2026-06-12 - Parking Capability Research Phases 1-3
 
 - Topic: Execute the parking-capability research — branch/design-doc deep dive, 6-topic literature sweep, and adversarially-reviewed novel solution proposals.
