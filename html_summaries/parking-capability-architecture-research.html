@@ -983,6 +983,166 @@ loss = <span class="f">listwise_ce</span>(scores=<span class="f">rank</span>(fea
         </div>
       </div>
 
+      <!-- ============ S3 ============ -->
+      <div class="spanel" id="sp-s3">
+        <div class="card">
+          <div class="soltitle"><span class="sid te">S3</span><h3>Parking memory as inputs — head-side tokens, not raster repainting</h3></div>
+          <p class="lead" style="margin-top:12px"><b>What it is.</b> All persistence — where we've searched, which spots we've seen, what the signs said, where the stored home spot is, and what plan we committed to — lives in an external <b>Parking Memory Service (PMS)</b> maintained outside the network, and re-enters the <em>parking head</em> (not the trunk) as tokens every tick. The network stays exactly as stateless as the multi-head architecture requires; memory becomes data — inspectable, replayable in training, and it survives model retrains.</p>
+
+          <h3>Why head-side tokens and not the route raster</h3>
+          <p>The original draft proposed painting coverage/spots into the existing 512² route-map raster (“the most-trained conditioning pathway”). The review killed that three independent ways, and the post-mortem is instructive: (1) the raster doubles as a <b>control signal</b> — end-of-route detection literally sums its pixels and auto-triggers <code>PARKING_MODE</code> (§8.0.2); (2) the route adaptor is a frozen <code>Conv2d(3,…)</code> upstream of the frozen trunk — new channel semantics are either invisible to it or cost a trunk retrain plus <em>all-head</em> revalidation; (3) semantics collide — a frozen trunk reads any rendered trail with <em>route</em> semantics, so a coverage trail becomes a <b>re-search attractor</b>, the exact opposite of its purpose. Plus every painted semantic must be implemented twice (Python training renderer + on-car C++ renderer) and kept pixel-equivalent. Head-side cross-attention tokens have none of these problems, and the deployment pattern for variable-count token inputs already exists (<code>lane_info</code>/<code>step_info</code>: fixed max-N + count). Where a trunk input is ever genuinely required, the cheap insurance is to <b>reserve channels/token slots in the trunk training recipe before the MS4 freeze</b> (trained with dropout, content arrives later) — a per-input decision logged against the freeze date.</p>
+
+          <div class="diag">
+            <svg viewBox="0 0 1140 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Parking Memory Service component diagram">
+              <defs><marker id="m-s3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2dd4bf"/></marker>
+              <marker id="m-s3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/></marker></defs>
+              <rect class="grp" x="298" y="14" width="524" height="430" rx="14" style="stroke:rgba(45,212,191,.4)"/>
+              <text class="tte" x="316" y="38">PARKING MEMORY SERVICE — DEPLOYMENT-SIDE, OUTSIDE THE NETWORK</text>
+              <rect class="nb te" x="330" y="56" width="460" height="62" rx="10"/>
+              <text class="tt" x="346" y="80">Coverage layer v0</text>
+              <text class="td" x="346" y="98">visited raster · ~500 m window · odometry-integrated</text>
+              <rect class="nb te" x="330" y="132" width="460" height="62" rx="10"/>
+              <text class="tt" x="346" y="156">Spot inventory (MS5)</text>
+              <text class="td" x="346" y="174">decoded entities: id, pose, type, occupancy, score, age</text>
+              <rect class="nb te" x="330" y="208" width="460" height="62" rx="10"/>
+              <text class="tt" x="346" y="232">Rule layer</text>
+              <text class="td" x="346" y="250">offline VLM + QA · per-zone · conservative veto at runtime</text>
+              <rect class="nb te" x="330" y="284" width="460" height="62" rx="10"/>
+              <text class="tt" x="346" y="308">Stored spots (R6, gated)</text>
+              <text class="td" x="346" y="326">demo trajectory + semantic landmarks · semantically keyed</text>
+              <rect class="nb te" x="330" y="360" width="460" height="62" rx="10"/>
+              <text class="tt" x="346" y="384">Commitment state (S5)</text>
+              <text class="td" x="346" y="402">target spot id + leg sequence + leg progress</text>
+              <!-- inputs -->
+              <rect class="nb" x="40" y="56" width="212" height="56" rx="10"/>
+              <text class="tt" x="54" y="80">odometry /</text><text class="tt" x="54" y="97">floor estimate</text>
+              <rect class="nb am" x="40" y="148" width="212" height="56" rx="10"/>
+              <text class="tt" x="54" y="172">PSD detections (S1)</text>
+              <path class="ar" d="M252,84 H330" marker-end="url(#m-s3g)"/>
+              <path class="ar" d="M252,176 C290,176 300,168 330,163" marker-end="url(#m-s3g)"/>
+              <path class="ar dash" d="M330,180 C290,196 240,180 220,148 L185,112" marker-end="url(#m-s3g)"/>
+              <text class="tl" x="56" y="232">slots as SLAM landmarks</text>
+              <text class="tl" x="56" y="246">(VIPS-Odom): the PSD head</text>
+              <text class="tl" x="56" y="260">doubles as the localizer</text>
+              <!-- outputs -->
+              <rect class="nb" x="868" y="80" width="246" height="80" rx="10"/>
+              <text class="tt" x="884" y="104">token adaptors</text>
+              <text class="td" x="884" y="122">fixed max-N + count</text>
+              <text class="td" x="884" y="138">(lane_info / step_info pattern)</text>
+              <rect class="nb am" x="868" y="206" width="246" height="80" rx="10"/>
+              <text class="tt" x="884" y="230">parking head</text>
+              <text class="td" x="884" y="248">cross-attention</text>
+              <text class="td" x="884" y="264">(trunk untouched)</text>
+              <rect class="nb am" x="868" y="332" width="246" height="56" rx="10"/>
+              <text class="tt" x="884" y="356">legs / pose / confidence</text>
+              <path class="ar te" d="M822,120 H868" marker-end="url(#m-s3)"/>
+              <path class="ar te" d="M991,160 V206" marker-end="url(#m-s3)"/>
+              <path class="ar" d="M991,286 V332" marker-end="url(#m-s3g)"/>
+              <path class="ar te" d="M868,374 C840,388 820,390 790,391" marker-end="url(#m-s3)"/>
+            </svg>
+          </div>
+
+          <pre class="py t"><span class="k">class</span> <span class="f">ParkingMemoryService</span>:
+    <span class="s">"""v0 lives in-process in the deployment wrapper. NOT a TRT plugin, NOT the network."""</span>
+
+    <span class="k">def</span> <span class="f">tick</span>(<span class="b">self</span>, odom, detections, head_outputs) -&gt; MemoryTokens:
+        <span class="b">self</span>.coverage.<span class="f">integrate</span>(odom.pose, window_m=<span class="n">500</span>)          <span class="c"># bounded: &lt;=7 m drift</span>
+        <span class="b">self</span>.spots.<span class="f">update</span>(detections, ego_pose=odom.pose)         <span class="c"># track decoded entities</span>
+        <span class="b">self</span>.commitment.<span class="f">update_progress</span>(odom, head_outputs)       <span class="c"># leg done? spot reached?</span>
+        <span class="k">return</span> <span class="f">MemoryTokens</span>(
+            coverage = <span class="b">self</span>.coverage.<span class="f">as_tokens</span>(),                 <span class="c"># soft prior, never a hard bit</span>
+            spots    = <span class="b">self</span>.spots.<span class="f">top_k</span>(<span class="n">16</span>),                      <span class="c"># max-N + count, fixed shape</span>
+            rules    = <span class="b">self</span>.rules.<span class="f">lookup</span>(odom.pose),              <span class="c"># affirmed + fresh, else veto</span>
+            committed= <span class="b">self</span>.commitment.<span class="f">token</span>(),                   <span class="c"># target lock for Rank</span>
+        )</pre>
+          <p class="codecap"><span>S3 — the PMS tick, v0 = in-process wrapper state (coverage + commitment only)</span></p>
+
+          <h3>Coverage layer — the learning signal is the hard part, not the plumbing</h3>
+          <p>The plumbing is easy: an ego-anchored visited/observation-count raster integrated from <b>recent odometry only (~500 m window ≈ ≤7 m drift)</b>, drift-noise injected at training time, consumed as a <b>soft prior</b> (5–30 m drift over a long search misregisters whole aisles — never a hard “searched” bit). The trap the review exposed: rendering the raster in hindsight from the run's own past odometry and training BC on it teaches <em>nothing</em> — the raster is just the expert's trail (a shortcut feature), there is no counterfactual pressure, and real drivers happily re-enter covered areas, so the empirical coverage→behavior mapping is contradictory. And the whole-run rendering variant outright <em>leaks the expert's future loop</em>. So:</p>
+          <ul class="tight">
+            <li><b>Plumbing validation:</b> strictly-causal hindsight rasters, only to verify the channel flows.</li>
+            <li><b>Behavior, source 1 — paired-contrast mining:</b> same lot geometry, first-lap (empty raster) vs second-lap (covered raster) samples where the expert's action <em>diverged</em> — the only fleet samples that carry signal.</li>
+            <li><b>Behavior, source 2 — closed-loop RL in 3DGS lot gyms</b> with an exploration reward that consumes the coverage input (S6). This is the load-bearing bet for search behavior.</li>
+            <li><b>Graduation gate:</b> coverage on/off must move a closed-loop re-search metric, and the counterfactual eval must pass — flip the raster, the search direction must flip.</li>
+            <li><b>Conditioning fix:</b> search segments currently train with <code>parking_mode=False</code> (the 50 s/30 m detector window) but will deploy with it ON — extend the mode labeling for mined search segments.</li>
+          </ul>
+
+          <h3>Spot inventory (MS5)</h3>
+          <p>Decoded entities, not latents (the MapTracker/PrevPredMap lesson): <code>{id, pose, type, occupancy_at_last_sight, score, last_seen}</code>. Entities survive model retrains (score calibration doesn't — re-tune per release), they are human-inspectable, and RL can replay/perturb them. This is what makes “go back to the spot we passed 80 m ago” a rankable candidate in S1 rather than a memory the network is supposed to have.</p>
+
+          <h3>Rule layer</h3>
+          <p>Offline pipeline: fleet imagery → sign detector → VLM rule extraction into MapDR-schema structured rules (<code>{restriction, vehicle class, time window, spatial scope, confidence}</code>) → <b>human QA</b> (published online extraction tops out at F1 ≈ 0.65 overall and 0.44 on arrows/scope — not production-grade unsupervised) → compiled per-zone attributes. <b>Runtime semantics, defined:</b> conservative veto — a detected restriction marking excludes a spot unless the cache affirms it AND the cache is fresh; unknown-rule areas = no-park. Stated honestly: <b>R1 street-parking legality is therefore scoped to mapped zones</b> until an online legality story exists.</p>
+
+          <h3>Stored spots (R6)</h3>
+          <p>Demoted to a <b>one-page input to the end-Q2 MPA reassessment</b> (≈ now — this research is that input). The design that would be proposed: the Valeo/Xpeng production pattern — one demo run stores <code>{trajectory, semantic BEV landmarks, spot pose}</code>, keyed <em>semantically</em> (floor estimate + spot-number OCR + local geometry, never raw global coordinates), refreshed on every successful replay (Aptiv). Runtime: semantic re-anchoring (AVP-SLAM-class, cm-level once mapped; VIPS-Odom couples slot detections into odometry, so <b>the PSD head doubles as the localizer</b>); the stored route renders as a normal nav route + S1 goal token — no new network pathway. Honest gaps: <b>unparking has no goal-conditioned training data</b> (<code>goal_distance=NaN</code> on unparking samples), so the <em>return</em> leg of stored-spot replay needs new data; barometer availability on the platform is unverified; low-confidence floor estimate ⇒ conservative abort.</p>
+
+          <div class="callout teal"><h4>PMS scoping &amp; deployment shape</h4><p>v0 = <b>in-process wrapper state (coverage + commitment only)</b>. The honest scale precedent is the navigation/route-renderer stack, not the 4-scalar in-graph indicator-memory buffer the draft originally cited. The full service (inventory, rules, stored spots) is a vehicle-software workstream that needs an owner and <b>degraded-mode semantics</b> — a stateless net cannot detect a PMS outage; behavior would change silently. Deployment is a <b>single multi-head engine with <code>PARKING_MODE</code>-flag head selection</b>; engine-swap interleaving is explicitly ruled out for MS5 (dual-engine warmup at the lot entrance; cold trunk cache on abort — in reverse, near pedestrians).</p></div>
+        </div>
+      </div>
+
+      <!-- ============ S4 ============ -->
+      <div class="spanel" id="sp-s4">
+        <div class="card">
+          <div class="soltitle"><span class="sid te">S4</span><h3>Fleet data engine — scoped to what survives scrutiny</h3></div>
+          <p class="lead" style="margin-top:12px"><b>What it is.</b> Four data pipelines that turn the fleet's existing logs into parking supervision — because the single biggest gap found in Phase 0 still stands: <b>no multi-candidate spot label set exists anywhere</b>, anchors are event <em>frames</em> not spatial spots, and <code>PARKING_POSE</code> is one hindsight pose per maneuver.</p>
+
+          <div class="diag">
+            <svg viewBox="0 0 1140 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fleet data engine">
+              <defs><marker id="m-s4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2dd4bf"/></marker></defs>
+              <rect class="nb" x="40" y="118" width="225" height="92" rx="10"/>
+              <text class="tt" x="56" y="146">fleet corpus</text>
+              <text class="td" x="56" y="166">gear-to-park anchors,</text>
+              <text class="td" x="56" y="182">full trajectories</text>
+              <rect class="nb te" x="380" y="20" width="420" height="62" rx="10"/>
+              <text class="tt" x="396" y="44">HER / GCSL relabeling</text>
+              <text class="td" x="396" y="62">achieved end pose = goal label · aborts = ranking negatives</text>
+              <rect class="nb te" x="380" y="96" width="420" height="62" rx="10"/>
+              <text class="tt" x="396" y="120">GPS-resolution priors</text>
+              <text class="td" x="396" y="138">lot existence · entrance heat · search-duration stats</text>
+              <rect class="nb te" x="380" y="172" width="420" height="62" rx="10"/>
+              <text class="tt" x="396" y="196">search-segment mining</text>
+              <text class="td" x="396" y="214">first-lap vs second-lap contrast pairs (for S3)</text>
+              <rect class="nb te" x="380" y="248" width="420" height="62" rx="10"/>
+              <text class="tt" x="396" y="272">VLM attribute pipeline</text>
+              <text class="td" x="396" y="290">type / occupancy / restrictions — geometry from PSD campaign</text>
+              <rect class="nb" x="890" y="118" width="220" height="92" rx="10"/>
+              <text class="tt" x="906" y="146">training tables</text>
+              <text class="td" x="906" y="166">Delta, keyed</text>
+              <text class="td" x="906" y="182">(run_id, ts, spot_idx)</text>
+              <path class="ar te" d="M265,140 C310,120 330,80 380,56" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M265,158 C310,150 330,138 380,130" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M265,176 C310,184 330,196 380,200" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M265,194 C310,214 330,254 380,276" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M800,56 C850,80 860,118 890,134" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M800,130 C840,138 850,148 890,152" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M800,200 C840,192 850,182 890,176" marker-end="url(#m-s4)"/>
+              <path class="ar te" d="M800,276 C850,254 860,212 890,196" marker-end="url(#m-s4)"/>
+            </svg>
+          </div>
+
+          <h3>HER/GCSL relabeling — the part that fully survives review</h3>
+          <p>Every trajectory segment in the fleet log ends <em>somewhere</em>; that achieved end pose is, by construction, a valid goal for the trajectory that reached it. This turns the entire log into goal-conditioned training data for the executor — which is also the standard fix for proposer/executor distribution shift (the executor must reach whatever spots the proposer emits, not just the spots experts chose). Aborted and multi-attempt parks become ranking <em>negatives</em> (GCSL-NF) instead of polluting BC.</p>
+          <pre class="py t"><span class="k">for</span> segment <span class="k">in</span> fleet_log.<span class="f">parking_segments</span>():
+    goal = segment.final_pose                       <span class="c"># hindsight: what was actually achieved</span>
+    <span class="k">yield</span> <span class="f">GoalConditionedSample</span>(obs=segment.obs, goal=goal, legs=segment.legs)  <span class="c"># BC positive</span>
+    <span class="k">if</span> segment.aborted <span class="k">or</span> segment.attempt_index &gt; <span class="n">0</span>:
+        <span class="k">yield</span> <span class="f">RankingNegative</span>(spot=segment.target_spot, context=segment.obs)    <span class="c"># GCSL-NF</span></pre>
+          <p class="codecap"><span>S4 — hindsight goal relabeling; failures become ranking negatives</span></p>
+
+          <h3>Cross-run aggregation — scoped down hard</h3>
+          <p>The draft's “counterfactual cross-run spot labels” idea mostly didn't survive: GNSS error in lots is 5–20 m (absent in garages) against a ~2.5 m spot pitch, so fleet-wide spot-level association is impossible without the re-anchoring stack (MS5+). What remains at MS4 is <b>GPS-resolution priors</b> — lot existence, entrance heat, search-duration statistics, density — plus an acknowledged fleet bias (anchors cluster at depots/chargers/PUDO zones). Counterfactual positives (“spots other runs used, visible but untaken now”) survive only in weakened form: <b>candidate-set (recall) supervision, never ranking positives</b>, gated on the current run's own free-space check at the matched timestamp (occupancy is time-varying, and the gate is circular with the perception being trained — hence recall-only plus human QA sampling), and filtered through the rule layer where it exists (humans park illegally; feasible ≠ permitted).</p>
+
+          <h3>Anchor hygiene</h3>
+          <p>Two contamination sources to fix at the source: unparking has <b>no PUDO exclusion</b> (drop-off departures currently train as “unparking” — add unparking <code>nopudo</code> variants), and the 2 s parked-duration threshold admits brief lane stops as parks (require parked duration ≫ 2 s + distance-from-lane checks).</p>
+
+          <h3>VLM pipeline — attributes only</h3>
+          <p>The existing prototype (<code>sohamphade/parking-annotation-pipeline</code>) already emits multi-spot lists with the right <em>shape</em>, but free-text fields, one camera, three hardcoded samples. The upgrade asks it for what VLMs are good at — type / occupancy / restriction attributes + coarse existence — and <b>never geometry</b>: monocular→BEV polygons at grazing angles is exactly the failure mode the PSD campaign exists to solve with proper labeling. One schema serves proposer + attributes + adjacent signs (<b>one labeling queue, not three</b> — it competes with rear-camera enablement for the same people). Scale path: async runner + Databricks mining + Delta storage keyed <code>(run_id, ts, spot_idx)</code>; gate: a human-QA precision floor on <em>untaken</em> spots (the taken spot validates itself; the inventory is the point).</p>
+
+          <h3>Search-behavior mining</h3>
+          <p>Feeds S3's contrast pairs, and needs long-horizon odometry materialization — current training windows load 30–60 s of history while deployed coverage accumulates minutes (a distribution shift in the channel's own statistics). Known risk: organic search may be near-zero in chauffeur-style logs (drivers go to known destinations) — <b>budget directed collection/teleop demos rather than assuming the data exists</b>.</p>
+        </div>
+      </div>
+
 <!-- NEXT-PANEL -->
     </div>
 
