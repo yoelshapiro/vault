@@ -507,6 +507,87 @@
     </div>
   </section>
 
+  <!-- ============================== PROBLEM ============================== -->
+  <section id="problem">
+    <div class="shead reveal"><span class="num">03</span><h2>The problem — six requirements, three gaps</h2></div>
+    <p class="sdesc reveal">The requirements ladder is incrementally complex. Click a requirement to see which structural gaps it stresses and which solutions cover it (cross-highlighted in the <a href="#coverage">coverage matrix</a>). A fourth, implicit gap — G4 sensing/data (rear/fisheye cameras, USS, spot labels) — is tracked by the 2026 roadmap; it constrains this research but is not its focus.</p>
+
+    <div class="card reveal">
+      <div class="ladder">
+        <div class="rsteps" id="rsteps">
+          <button class="rstep active" data-r="R1"><span class="rid">R1</span><span><span class="rt">Street parking</span><span class="rs">incl. searching for an available spot</span></span></button>
+          <button class="rstep" data-r="R2"><span class="rid">R2</span><span><span class="rt">Parking lot parking</span><span class="rs">incl. searching for an available spot</span></span></button>
+          <button class="rstep" data-r="R3"><span class="rid">R3</span><span><span class="rt">Multi-story parking lots</span><span class="rs">ramps · level changes · GPS-denied</span></span></button>
+          <button class="rstep" data-r="R4"><span class="rid">R4</span><span><span class="rt">Parking lot gates</span><span class="rs">ticket/barrier interactions · stop-and-wait</span></span></button>
+          <button class="rstep" data-r="R5"><span class="rid">R5</span><span><span class="rt">Preferred parking</span><span class="rs">near elevator · handicapped · EV charger</span></span></button>
+          <button class="rstep" data-r="R6"><span class="rid">R6</span><span><span class="rt">Memory parking</span><span class="rs">park at a stored spot — home / office / mall</span></span></button>
+        </div>
+        <div class="rdetail" id="rdetail"><!-- filled by JS --></div>
+      </div>
+
+      <h3 style="margin-top:26px">The three gaps</h3>
+      <div class="grid3">
+        <div class="callout red" style="margin:0"><h4>G1 — Longer horizon</h4><p>The 2 s trajectory is too short for multi-leg maneuvers and search behavior. The 24.5 m distance-parameterized <code>POLICY_PATH</code> helps at parking speeds, but cannot represent gear reversals or waits.</p></div>
+        <div class="callout red" style="margin:0"><h4>G2 — Multimodality</h4><p>Choice of spot, type of maneuver, where to start the maneuver. The only existing device (961-way endpoint grid) is geometry-tuned for forward driving — and off in parking configs.</p></div>
+        <div class="callout red" style="margin:0"><h4>G3 — Memory / ICL</h4><p>Efficient search (don't revisit), persistent sign/rule constraints (“level 2 reserved”, height limits), stored personal spots (R6). Scope decision: <b>external memory only</b> — the network stays stateless; internal recurrence is out of scope.</p></div>
+      </div>
+
+      <div class="callout amber"><h4>Synthesis (§5 of the research doc)</h4>
+        <p>The release model is a stateless, fixed-window (1 s in / 2 s out) feed-forward policy whose only multimodality device is geometry-tuned for forward driving. Parking needs: (a) plans that span <b>multi-leg, gear-reversing maneuvers</b> well beyond 2 s; (b) an explicit, conditionable representation of <b>discrete choices</b> — which spot, which maneuver class, when to commit; and (c) <b>persistent task state</b> over minutes that no current component can carry. The four existing approaches each cover a slice: A1 (choice, wrong geometry), A2 (horizon + implicit multimodality, single proposal on car), A3 (choice + horizon, wrong stack), A4 (the unifying idea, unbuilt). <b>None addresses G3 at all.</b></p>
+        <p style="margin-top:8px">History note: the Jan-12 pivot bet “no architecture change needed — data balancing suffices” was made for <em>PUDO only</em>; this research is explicitly about where that bet stops holding. Recorded guidance to avoid in-context-learning research (May-5 weekly) is in direct tension with G3 — resolved by the scope decision: memory enters only as <em>inputs</em>, maintained outside the model.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== EXISTING APPROACHES ============================== -->
+  <section id="approaches">
+    <div class="shead reveal"><span class="num">04</span><h2>Existing approaches — actual status in code</h2></div>
+    <p class="sdesc reveal">Four lines of prior work were traced through the repo, sibling branches, Notion logs, and four Google-Drive design docs. Badges reflect what actually exists, not what READMEs claim.</p>
+
+    <div class="grid2">
+      <div class="card acard reveal">
+        <h3>A1 · Latent actions <span class="bdg merged">in release</span> <span class="bdg off">OFF for parking</span></h3>
+        <p>Implemented and on in the release baseline, but the parking output adaptor sets <code>enable_latent_action=False</code> (<span class="ref">parking_config.py:534-535</span>) — the parking README claim that it uses latent actions is stale. Notion experiment logs show the LA grid is a <b>log-polar/radial-exponent grid tuned for forward driving</b>: dense near origin, sparse at range, no reverse semantics — exactly weakest where parking lives (low speed, reverse, multi-leg).</p>
+        <p class="muted" style="font-size:13.5px">A parking-capable LA space likely needs a different parametrization — gear-aware, maneuver-aware. That becomes P0's <code>LegCode</code>.</p>
+      </div>
+      <div class="card acard reveal">
+        <h3>A2 · Diffusion path head <span class="bdg merged">merged · most mature</span></h3>
+        <p><span class="ref">wayve/ai/zoo/outputs/diffusion.py</span> (1,492 lines) + <code>parking_diffusion_datamodule</code> (<span class="ref">parking_config.py:291-514</span>). Diffuses <b><code>POLICY_PATH</code>: 50 poses @ 0.5 m = 24.5 m of distance-parameterized geometry</b> (not time!) — a long effective horizon at parking speeds; yaw π-flip encodes reverse legs. DDIM v-prediction, 2 MMDiT blocks (d=768), 5–10 denoise steps on car. Two-stage: diffusion plans the path → <code>PolicyPathConditioner</code> → cheap <code>OrdinaryHead</code> decodes the executable 11-frame trajectory + gear + indicator.</p>
+        <p><b>Multimodality exists at training/eval only:</b> 10–50 noise samples, best-of-K metrics; <b>on-car uses zero initial noise → deterministic single proposal</b> (<span class="ref">diffusion.py:1457</span>). <code>POLICY_PARKING_POSE</code> confidence is a placeholder 1.0 — “revisit when ranking multiple proposals” (<span class="ref">diffusion.py:415</span>). No spot conditioning on main: the <code>PARKING_POSE</code> goal is computed in the datamodule (with CFG-style dropout plumbing) but no input adaptor consumes it. The <code>parking_bc_diffusion</code> mode itself was removed by <code>c1069f4c73a8</code>; datamodule + zoo head remain.</p>
+      </div>
+      <div class="card acard reveal">
+        <h3>A3 · “Multi-head WTA” (zmurez/pudo) <span class="bdg branch">branch-only · experimental stack</span></h3>
+        <p>607 commits, all in the <b>experimental MCV Perceiver stack</b> (<span class="ref">wayve/ai/experimental/</span>), not the SI baseline. Not actually min-over-heads: <code>MultiStepARConv</code> does autoregressive <b>discrete goal classification over a 640×640 BEV grid</b> at horizons 8 s / 4 s / 2 s, plus a first step predicting the <b>final parking spot</b>. Hindsight CE targets, teacher forcing with a self-forcing schedule. At inference each step is <b>argmax (= the “WTA”)</b>; the winning cell's SinCos embedding is injected back as a token — the goal embeddings <em>are</em> latent actions conditioning a single regression head (40 waypoints @ 0.2 s = <b>8 s horizon</b>).</p>
+        <p class="muted" style="font-size:13.5px">Plus: “winner-takes-control” deployment interleave, park-type/stop-reason/intention/quality heads from ~230k annotations, hazard-park/PUDO samplers, OSM synthetic PUDO route generator. The <em>real</em> WTA loss on this branch is in the addenda below.</p>
+      </div>
+      <div class="card acard reveal">
+        <h3>A4 · AR spots → LA → trajectory <span class="bdg idea">idea only</span></h3>
+        <p>The full chain (predict candidate spots → condition LA on chosen spot → AR-decode trajectory) is implemented nowhere. Existing fragments: single-proposal spot prediction (A2's <code>POLICY_PARKING_POSE</code>, ranking explicitly TODO); path/goal conditioning (<code>PolicyPathConditioner</code>, goal late-fusion on Wonjoon's branch); LA conditioning of the diffusion OrdinaryHead (<code>baa3912b39c0</code> on <code>soham/affinity-guided-diffusion</code>); unused AR machinery (<code>AutoRegressiveActionHead</code>, <span class="ref">wayve/ai/zoo/autoregressive.py:13</span>, no call sites).</p>
+        <div class="callout red" style="margin:10px 0 0"><h4>Key data gap</h4><p>In all pipelines an “anchor” is an event <em>frame</em> (gear-to-park, first-movement), not a spatial spot; <code>PARKING_POSE</code> is a single hindsight GT pose. <b>No multi-candidate spot label set exists anywhere.</b> (VLM spot-availability annotation exists on <code>sohamphade/parking-annotation-pipeline</code>.)</p></div>
+      </div>
+    </div>
+
+    <details class="reveal">
+      <summary><span class="tw">▸</span> Phase-1 addenda — sibling branches, the real WTA, the VLM pipeline, the design docs <span class="tag">§3.5 · 2026-06-12</span></summary>
+      <div class="body">
+        <h4>Soham's branches</h4>
+        <p><code>soham/dynamic-horizon-path[-clean]</code>, <code>soham/affinity-guided-diffusion[-clean]</code> — clean PRs #114772/#114773 open, no reviews. <b>Dynamic horizon</b> is the most mature item: speed-bucketed path horizon 30/60/120/180/240 m with horizon-normalized diffusion targets, a <code>PathHorizonSTAdaptor</code>, deployment-side mirror, Welford scale versioning, and a trained 100k-step checkpoint (<code>…dhla1</code> — which also trains <b>latent-action conditioning of the OrdinaryHead</b>: 2 s endpoint codebook added to cond tokens after path conditioning). <b>Affinity guidance</b> is training-free DDIM steering toward <code>POLICY_AFFINITY_POINTS [B,M≤8,2]</code>: v1 (gradients on noisy iterates) produced backwards/U-turn paths; v2 fixes it (gradient only on the predicted clean sample, L2-normalized, same displacement applied to the iterate; scale 0.1–0.3). Unit-tested incl. bit-identical no-op; <b>never trained/evaluated</b>; “Option B” (learned conditioning) never implemented. The bev_clicker base tool is merged; guided-diffusion wiring is branch-only.</p>
+        <h4>Wonjoon's branch</h4>
+        <p><code>wonjoongoo/diffusion-v4-parking-path-pred</code> — the merged PR #106346 came from a separate clean re-implementation. Built and then <em>dropped on merge</em>: <code>ParkingPoseSTAdaptor</code> (Fourier (x,y,yaw) → 1 token; <b>early fusion beat late fusion</b> — late fusion turned off twice; yaw conditioning abandoned via <code>yaw_dropout=1.0</code>), data-side 50% goal dropout (the de-facto CFG), and <b>analytic TorchScript-able endpoint loss-guidance</b> (closed-form gradient through decode, √ᾱ-scaled, deployable <code>--guidance_scale</code>, default off). Goal-set/unset metric splits survived to main separately (#102692). The merged model has <b>no goal input at all</b>; the PR body confirms on-car single-proposal determinism is intentional pending ranking. Branches preserved under <code>origin/aa/wonjoon_*</code> — author off-project; revival = reproduction spike, not merge.</p>
+        <h4>The real WTA</h4>
+        <p><code>zmurez/pudo</code> only, not main: <code>AnnealedWTALoss</code> — K=8 parallel ego/indicator/gear head banks + a mode classifier on a dedicated query token, <b>annealed soft assignment</b> <code>softmax(−loss/τ)</code> with τ: 10→1e-5 (converges to hard WTA; independently reproduces the 2024 aWTA paper), classifier trained to imitate the routing oracle (soft targets), per-context-frame routing, cross-frame consistency regularizers, EMA-smoothed mode logits at inference. Config <code>mcv_new_phase2x_wta.yml</code>. <b>No quantitative results recorded anywhere</b>; the parking-hub report itself flags “branch-tip evidence, not a launched-run proof”.</p>
+        <h4>VLM annotation pipeline</h4>
+        <p><code>sohamphade/parking-annotation-pipeline</code>, PR #103667 open: 3-step CoT (Gemini 2.5 Flash) emitting per-frame <b>multi-spot lists</b> with type/availability/ego-size-fit/constraints (handicap yes, EV missing) — structurally the multi-candidate shape we need, but free-text fields, <b>no spatial grounding</b> (no box/BEV coords), single front camera, 3-sample prototype, local JSON. Built for CoT SFT text, not detector supervision.</p>
+        <h4>Design docs (Google Drive)</h4>
+        <p>The <b>System Design Overview</b> (Boris, 2026-04) sets the I/O contract — spot selection input (pixel/bbox), maneuver/destination preference enums, PSD output <code>[N,4,3]</code>, <b>8 s trajectory-horizon target</b> — and flags that long-term parking conditioning “requires adding state (memory) to the model” as an open item, with MPA sketched as an external visual path encoder + cached encodings keyed by position. The <b>Multiple Driving Heads</b> pre-read (Andrew English, May 2026) fixes the deployment paradigm: shared trunk (≈half the ST transformer) + per-mode heads (~25% capacity each; a 5-head setup fits Nissan AD2's 8 GB), one head/frame by deterministic rule, <b>heads must be stateless — caching lives in the trunk</b>; engine-swap alternatives rejected precisely because the temporal cache empties at switchover. <b>Parking_SW_tech DRAFT_3</b> (Alon, Nov 2025): unified parking head with multi-channel output tensor (slot prob / occupancy / distance), USS as a small auxiliary branch; slot detection P&gt;95% / R&gt;90%, parking success &gt;95% targets. <b>Parking 2026 plan slides</b>: scope/milestones as in the roadmap; “parking model alignment into baseline (multi-head approach)” is the MS5 exit.</p>
+      </div>
+    </details>
+
+    <div class="callout teal reveal"><h4>Production constraints that frame everything (Notion, June 2026)</h4>
+      <p><b>Multi-head shift (May-5 weekly):</b> the company moved from one unified model to freezing ~half the network and finetuning mode-specific heads; “parking merged into driving baseline via multi-head architecture” with deterministic mode switching is the MS5 productization gate — novel solutions should live inside a parking head/branch. <b>Roadmap (Parking 2026 v2.0):</b> MS2 P2P basic + Valeo demo (Jun–Jul) → MS3 multi-leg + limited PSD head + rear camera in BC/RL (Jul) → MS4 P2P F2, parking cameras, HMI, multi-level nav F1 (Aug–Oct) → MS5 multi-spot APA E2E (Oct–Jan 27). New I/O explicitly planned: rear camera, fisheye SVC, parking-preference input adaptor, PSD I/Os, 4D occupancy, USS safety shell. <b>MPA (memory parking) out of 2026 scope — reassess end-Q2, i.e. now.</b> <b>Latency:</b> diffusion head deliberately small; recurring TorchScript scriptability constraints; temporal feature caches assume a fixed sliding window. <b>Known MS2 failure modes:</b> reverse/gear-shift stability, end-of-route logic, standstill-in-drive — these three drive P0.</p>
+    </div>
+  </section>
+
 <!-- NEXT-SECTION -->
 
 </div>
