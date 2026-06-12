@@ -303,11 +303,63 @@ The goal-injection stack is deliberately ordered after the review found three me
 
 ### 8.2 S2 — Leg-codebook trajectories (multi-leg long horizon)
 
-- A maneuver = a sequence of signed-arc-distance-parameterized legs delimited by gear switches (MultiPark, production-deployed), each carrying a (gear/HOLD, duration) token. AR **at the leg level only** — OpenVLA-OFT shows per-step AR decode buys nothing; legs are genuinely sequential decisions.
-- **New output key `POLICY_PARKING_LEGS` emitted by the parking head only.** Baseline `POLICY_PATH` is untouched — changing a deployed output's parameterization would gate the MS5 merge (review finding).
-- **Data prerequisites surfaced by review:** (i) the **P→D forward-unparking detector gap poisons the heaviest unparking bucket** (`unparking_window_gc1`, weight 0.3, mostly forward pull-outs labeled `unparking_mode=False`) — fix first (the code comment at `parking.py:400-406` already sketches it), re-materialize, add a regression test; (ii) gen2 gear is *reconstructed from speed* — heuristics at near-zero speed are exactly where leg boundaries live; one canonical gear-reconstruction implementation (three exist today) + a leg-label validation pass; (iii) per-bucket gc-count audit (1 day, Databricks) before fixing vocabulary size — config upweighting (gc3plus 0.15 vs gc1 0.05) already betrays scarcity; (iv) the 25 s/30 m window clipping truncates long gc3plus maneuvers — extend for leg labeling.
-- **aWTA is a contingency, not parallel work.** zmurez's `AnnealedWTALoss` (which independently reproduces the 2024 aWTA paper: K=8 head banks, oracle-imitating mode classifier with soft targets, EMA mode smoothing) is the fallback **behind a decision gate**: port it only if anchored diffusion fails to separate modes. Anchors and WTA-hypotheses-tied-to-the-vocabulary are the same multimodality device — shipping both is an unscheduled 2×2 ablation.
-- **Multi-leg search:** preferred design is a **~1 Hz strategic loop outside the tick path** that selects the leg sequence (critic-scored), with the tick-rate head executing only the committed leg (requires §8.5 commitment state). Data-dependent beam search does not compile to the TensorRT path; the in-graph alternative is a fixed-width/depth unrolled beam.
+**What it is.** The long-horizon answer is not a longer path — it is a *structured* one. A parking maneuver becomes a **sequence of legs**, each leg a signed-arc-distance-parameterized segment delimited by gear switches, carrying its own `LegCode` (§8.0.4). This is MultiPark's production-deployed decomposition, adapted to our diffusion head and to the frozen-trunk deployment paradigm.
+
+**Why legs and not "just predict 8 s".** Three reasons. (1) *Multi-leg maneuvers are sequential decisions* — whether leg 2 reverses left or right genuinely depends on where leg 1 ended; that is where autoregression belongs. Per-step AR decode, by contrast, buys nothing (OpenVLA-OFT: parallel chunk decode matches AR at 25–50× the speed) — so: **AR at the leg level only, single-shot within a leg**. (2) The current 24.5 m path already spans a long horizon *in time* at parking speeds; what it can't represent is gear reversals and waits — exactly what legs make first-class. (3) Horizon-scaling literature (SHARSA et al.) says monolithic long-horizon nets saturate; decompose instead.
+
+**Worked example — perpendicular reverse park, gc2:**
+
+```mermaid
+flowchart LR
+    L1["Leg 1: FWD 8m<br/>pull past the bay,<br/>side=R"] --> L2["Leg 2: HOLD 1.5s<br/>gear D to R,<br/>release=TIMER"] --> L3["Leg 3: REV 6m<br/>arc into bay,<br/>endpoint = goal pose"] --> L4["Leg 4: HOLD<br/>gear to P<br/>release=PARKED"]
+```
+
+```python
+def decode_maneuver(scene_tokens, memory_tokens, chosen_anchor) -> ParkingLegs:
+    """AR over legs, single-shot within each leg. Runs in the 1 Hz strategic loop."""
+    legs: list[tuple[LegCode, PathSegment]] = []
+    ctx = [scene_tokens, memory_tokens, anchor_token(chosen_anchor)]
+    for i in range(MAX_LEGS):                          # fixed bound: TRT-compilable
+        code = leg_code_head(ctx, legs)                # classify next LegCode (or STOP)
+        if code is STOP:
+            break
+        geometry = execute(code, ctx)                  # S1 eXecute, conditioned on this leg
+        legs.append((code, geometry))
+    return ParkingLegs(legs)                           # -> new key POLICY_PARKING_LEGS
+```
+
+**Interface decision (review-driven).** The legs are emitted under a **new output key `POLICY_PARKING_LEGS`, produced by the parking head only**. Baseline `POLICY_PATH` is untouched — it is a deployed output consumed by `deployment_wrapper.py`, and changing its parameterization is a cross-team interface change that would gate the MS5 baseline merge. The 2 s controller contract also survives unchanged: the tick-rate ordinary head keeps emitting 11 executable waypoints that *track the committed leg*, exactly as it tracks `POLICY_PATH` today.
+
+**Data prerequisites (each one is real work the draft had skipped):**
+
+| # | Problem | Fix |
+|---|---|---|
+| i | **P→D forward-unparking detector gap**: the detector only accepts P/N→R (`parking.py:400-406`), so forward pull-outs get `unparking_mode=False` — and `unparking_window_gc1` (weight **0.3**, the heaviest parking bucket, mostly forward pull-outs) trains mislabeled | Accept FORWARD after a validated neutral segment (the code comment already sketches it); re-materialize; regression test. Cheapest item in the plan, do first |
+| ii | Gen2 gear is **reconstructed from speed** (0.5 km/h threshold + dwell heuristics, `filters.py:130-200`) — noisiest exactly at near-zero speed where leg boundaries live; three different reconstruction implementations exist | One canonical implementation; leg-label validation pass against human-audited samples |
+| iii | gc3plus volumes unknown; config upweighting (0.15 vs gc1's 0.05) betrays scarcity | 1-day Databricks per-bucket count audit **before** fixing vocabulary size; hierarchical fallback folds rare cells into parents |
+| iv | 25 s/30 m window clipping silently truncates long gc3plus maneuvers (and gc counts are window-relative) | Extend windows for leg labeling specifically |
+
+**aWTA is a contingency, not parallel work.** zmurez's `AnnealedWTALoss` (which independently reproduces the 2024 aWTA paper: K=8 head banks, an oracle-imitating mode classifier with soft targets, EMA mode smoothing at inference) is the fallback **behind a decision gate**: port it from the experimental MCV stack only if anchored diffusion demonstrably fails to separate maneuver modes (gate metric: per-anchor mode purity on held-out gc2/gc3). Anchors and WTA-hypotheses-tied-to-the-vocabulary are the *same* multimodality device — shipping both is an unscheduled 2×2 ablation.
+
+**Multi-leg search & the two-loop runtime.** Data-dependent beam search does not compile to the TensorRT path (the DDIM loop only survives because its timestep list unrolls statically). The preferred runtime is therefore **two loops**:
+
+```mermaid
+sequenceDiagram
+    participant S as Strategic loop (~1 Hz)
+    participant PMS as Parking Memory Service
+    participant T as Tick loop (10 Hz, in-graph)
+    S->>S: decode_maneuver() - AR over legs,<br/>K candidates, critic-scored (S5)
+    S->>PMS: commit(target spot, leg sequence)
+    loop every tick
+        T->>PMS: read committed leg + memory tokens
+        T->>T: ordinary head: 2s waypoints tracking committed leg
+        T->>PMS: leg progress / completion events
+    end
+    PMS->>S: leg done / spot occupied / USS veto
+    S->>S: re-rank or advance to next leg
+```
+
+The in-graph alternative, if a single-graph design is mandated, is a fixed-width/fixed-depth unrolled beam (e.g. 4 candidates × 3 legs) — bounded, compilable, and enough for gc≤3.
 
 ### 8.3 S3 — Parking memory as inputs (head-side tokens, not raster repainting)
 
