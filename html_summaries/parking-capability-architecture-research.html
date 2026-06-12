@@ -588,6 +588,204 @@
     </div>
   </section>
 
+  <!-- ============================== SOLUTIONS ============================== -->
+  <section id="solutions">
+    <div class="shead reveal"><span class="num">05</span><h2>Proposed solutions (v1, post-adversarial review)</h2></div>
+    <p class="sdesc reveal"><b>How to read this.</b> These are mostly disciplined adoptions of production-proven mechanisms wired for our stack — by design: the brief is production, not publication. The defensible novel elements are (a) a single <b>gear-aware leg-code action vocabulary</b> designed to work under the frozen-trunk multi-head constraint, and (b) the <b>memory-as-input wiring with an explicit commitment layer</b>. A first draft was stress-tested by a 4-lens adversarial review with repo verification; the fixes are folded in below and the surviving risks are in the <a href="#risks">risk register</a>. Reading order: P0 fixes the representations everything else stands on → S1/S2 are the model → S3 is the memory → S4 is the data → S5 is the decision layer → S6 is what rides other teams' trains.</p>
+
+    <div class="card reveal">
+      <h3>The system at a glance</h3>
+      <div class="diag">
+        <svg viewBox="0 0 1140 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="System overview">
+          <defs>
+            <marker id="m-sys" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/></marker>
+            <marker id="m-sys-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2dd4bf"/></marker>
+            <marker id="m-sys-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#f5a524"/></marker>
+          </defs>
+          <!-- network group -->
+          <rect class="grp" x="200" y="30" width="572" height="406" rx="14"/>
+          <text class="tl" x="218" y="52">STATELESS NETWORK</text>
+          <!-- external group -->
+          <rect class="grp" x="816" y="30" width="304" height="406" rx="14"/>
+          <text class="tl" x="834" y="52">EXTERNAL — OUTSIDE THE NETWORK</text>
+          <!-- cams -->
+          <rect class="nb" x="20" y="64" width="150" height="56" rx="10"/>
+          <text class="tt" x="32" y="88">6 cameras</text><text class="td" x="32" y="105">1 s video</text>
+          <!-- trunk -->
+          <rect class="nb" x="232" y="64" width="230" height="62" rx="10"/>
+          <text class="tt" x="246" y="88">Frozen shared trunk</text><text class="td" x="246" y="106">ViT + ST transformer</text>
+          <!-- head group -->
+          <rect class="grp" x="226" y="158" width="520" height="128" rx="12" style="stroke:rgba(245,165,36,.4)"/>
+          <text class="ta" x="242" y="180">PARKING HEAD — S1 PRX</text>
+          <rect class="nb am" x="248" y="196" width="130" height="62" rx="10"/>
+          <text class="tt" x="262" y="220">Propose</text><text class="td" x="262" y="238">spot candidates</text>
+          <rect class="nb am" x="424" y="196" width="150" height="62" rx="10"/>
+          <text class="tt" x="438" y="216">Rank</text><text class="td" x="438" y="232">rules + preference</text><text class="td" x="438" y="246">+ critic</text>
+          <rect class="nb am" x="616" y="196" width="116" height="62" rx="10"/>
+          <text class="tt" x="630" y="216">eXecute</text><text class="td" x="630" y="232">anchored-trunc.</text><text class="td" x="630" y="246">diffusion</text>
+          <!-- critic -->
+          <rect class="nb am" x="424" y="330" width="200" height="62" rx="10"/>
+          <text class="tt" x="438" y="354">C51 critic (S5)</text><text class="td" x="438" y="372">plan ranking · shadow-first</text>
+          <!-- legs out -->
+          <rect class="nb am" x="232" y="330" width="160" height="74" rx="10"/>
+          <text class="tt" x="244" y="352">POLICY_</text><text class="tt" x="244" y="367">PARKING_LEGS</text><text class="td" x="244" y="384">(S2) + pose w/</text><text class="td" x="244" y="397">real confidence</text>
+          <!-- PMS -->
+          <rect class="nb te" x="836" y="64" width="264" height="88" rx="10"/>
+          <text class="tt" x="850" y="88">Parking Memory Service (S3)</text>
+          <text class="td" x="850" y="106">coverage / spots / rules /</text>
+          <text class="td" x="850" y="121">stored spots + committed plan</text>
+          <!-- DATA -->
+          <rect class="nb te" x="836" y="188" width="264" height="80" rx="10"/>
+          <text class="tt" x="850" y="212">Fleet Data Engine (S4)</text>
+          <text class="td" x="850" y="230">HER relabels · spot priors ·</text>
+          <text class="td" x="850" y="245">contrast pairs · VLM attributes</text>
+          <!-- GYM -->
+          <rect class="nb vi" x="836" y="300" width="264" height="74" rx="10"/>
+          <text class="tt" x="850" y="324">3DGS lot gyms (S6)</text>
+          <text class="td" x="850" y="342">search-behavior RL +</text>
+          <text class="td" x="850" y="357">closed-loop eval</text>
+          <!-- arrows -->
+          <path class="ar" d="M170,92 H232" marker-end="url(#m-sys)"/>
+          <path class="ar" d="M330,126 L313,196" marker-end="url(#m-sys)"/>
+          <path class="ar am" d="M378,227 H424" marker-end="url(#m-sys-a)"/>
+          <path class="ar am" d="M574,227 H616" marker-end="url(#m-sys-a)"/>
+          <path class="ar am" d="M505,258 V330" marker-end="url(#m-sys-a)"/>
+          <path class="ar am" d="M525,330 V258" marker-end="url(#m-sys-a)"/>
+          <path class="ar am" d="M660,258 C640,310 480,330 392,352" marker-end="url(#m-sys-a)"/>
+          <path class="ar te dash" d="M836,118 C790,140 770,170 746,196" marker-end="url(#m-sys-t)"/>
+          <text class="tte" x="762" y="148">memory tokens</text>
+          <path class="ar te" d="M312,404 C320,452 700,452 900,378" marker-end="url(#m-sys-t)" style="opacity:.8"/>
+          <text class="tte" x="520" y="462">legs / progress → PMS</text>
+          <path class="ar te dash" d="M836,232 C800,232 770,240 746,244" marker-end="url(#m-sys-t)"/>
+          <text class="tte" x="754" y="278">training data</text>
+          <path class="ar vi dash" d="M836,330 C800,316 770,290 748,268" marker-end="url(#m-sys)"/>
+          <text class="tv" x="756" y="312">RL + eval</text>
+        </svg>
+      </div>
+      <p class="diagcap">Six solution families compose into one architecture. The network stays a stateless parking head on the frozen trunk; everything that persists lives in the PMS and re-enters as tokens each tick. A slow ~1 Hz strategic loop chooses where to park and via which legs; the fast tick loop only executes the committed leg.</p>
+    </div>
+
+    <div class="stabs reveal" id="stabs">
+      <button class="stab c-ne active" data-s="p0">P0 · prerequisites</button>
+      <button class="stab c-am" data-s="s1">S1 · PRX head</button>
+      <button class="stab c-am" data-s="s2">S2 · leg codebook</button>
+      <button class="stab c-te" data-s="s3">S3 · memory</button>
+      <button class="stab c-te" data-s="s4">S4 · data engine</button>
+      <button class="stab c-am" data-s="s5">S5 · ranker + commit</button>
+      <button class="stab c-vi" data-s="s6">S6 · riders + gyms</button>
+    </div>
+
+    <div id="solpanels">
+
+      <!-- ============ P0 ============ -->
+      <div class="spanel active" id="sp-p0">
+        <div class="card">
+          <div class="soltitle"><span class="sid ne">P0</span><h3>Representation decisions &amp; diagnostics that gate everything else</h3></div>
+          <p class="lead" style="margin-top:12px"><b>Why this section exists.</b> The adversarial review's strongest structural finding: the three failure modes already <em>recorded</em> during street PUDO — reverse/gear instability, end-of-route degeneracy, and standstill-in-drive — are not bugs to fix later; they are symptoms of representation choices that every solution below inherits. Building S1/S2 on the current representations would reproduce them at larger scale. Four decisions/diagnostics come first.</p>
+
+          <h3>8.0.1 · Time &amp; dwell semantics — paths must be able to say “wait”</h3>
+          <p>Today's <code>POLICY_PATH</code> is pure geometry: 50 poses sampled every 0.5 m of arc length. Arc length carries no time, so the representation <em>cannot express</em> “stop here and hold for N seconds” — yet parking is full of mandatory waits: the dwell while shifting D→R, creeping up to a gate and waiting for the barrier, yielding mid-maneuver to a pedestrian. Worse, at standstill the distance-parameterized target degenerates: zero distance traveled means the next 0.5 m sample point doesn't move, and a deterministic head must still emit <em>some</em> path — which is plausibly the root cause of the recorded standstill-in-drive failures.</p>
+          <div class="tblwrap"><table>
+            <thead><tr><th>Option</th><th>Mechanism</th><th>Verdict</th></tr></thead>
+            <tbody>
+              <tr><td class="key">(a) HOLD leg type + duration</td><td>The leg representation gets a third gear value <code>HOLD</code> with a <code>duration_s</code> field; a maneuver is e.g. <code>[FWD 8m] → [HOLD 1.5s] → [REV 6m]</code></td><td><b style="color:var(--good)">Recommended</b> — legs need first-class dwell at gear switches anyway, so waiting becomes a <em>plannable, supervisable</em> object</td></tr>
+              <tr><td class="key">(b) Speed profile output</td><td>Emit <code>v(s)</code> alongside the geometric path; v=0 segments encode waits</td><td>Works, but adds a second continuous output to validate, and “wait until X happens” still isn't expressible</td></tr>
+              <tr><td class="key">(c) intent=hold head</td><td>Classification head + controller-side hold state</td><td>Cheapest, but pushes semantics into the controller and splits the maneuver across two owners</td></tr>
+            </tbody>
+          </table></div>
+          <pre class="py"><span class="n">@dataclass</span>
+<span class="k">class</span> <span class="f">LegCode</span>:
+    <span class="s">"""The single action-vocabulary unit used by S1, S2, S5, and any future S6 pretraining."""</span>
+    gear: <span class="b">Literal</span>[<span class="s">"FWD"</span>, <span class="s">"REV"</span>, <span class="s">"HOLD"</span>]
+    endpoint_cell: <span class="b">int</span>          <span class="c"># discretized leg-endpoint pose in ego frame (gear-aware grid)</span>
+    side: <span class="b">Literal</span>[<span class="s">"L"</span>, <span class="s">"R"</span>, <span class="s">"C"</span>]  <span class="c"># approach side, disambiguates symmetric maneuvers</span>
+    duration_s: <span class="b">float</span> | <span class="b">None</span> = <span class="b">None</span>   <span class="c"># HOLD legs only: minimum dwell; release is event-gated</span>
+    release: <span class="b">Literal</span>[<span class="s">"TIMER"</span>, <span class="s">"BARRIER_OPEN"</span>, <span class="s">"PATH_CLEAR"</span>] | <span class="b">None</span> = <span class="b">None</span>  <span class="c"># HOLD release condition</span></pre>
+          <p class="codecap"><span>the unified action-vocabulary unit (§8.0.4)</span><span>used by S1 · S2 · S5 · future S6</span></p>
+
+          <h3>8.0.2 · Termination semantics — parking is <em>always</em> end-of-route</h3>
+          <p>Every park ends with the route exhausted, so the end-of-route edge case is the parking <em>common</em> case. Two contracts must be made explicit:</p>
+          <ul class="tight">
+            <li><b>What the path means past the goal.</b> Today points beyond the goal repeat the goal pose (clamping in <span class="ref">datamodules/parking.py:443-516</span>); that convention must become a documented controller contract (validity mask vs terminal-pose pinning + padding policy) with its own eval slice — not an accident of the datamodule.</li>
+            <li><b>How end-of-route is detected.</b> Detection currently <em>sums route-raster pixels</em> against a threshold and auto-triggers <code>PARKING_MODE</code> (<span class="ref">deployment_wrapper.py:3452-3469</span>, <code>END_OF_ROUTE_THRESHOLD</code>). Any future change to what gets rendered into conditioning rasters silently shifts this control signal. <b>Migrate detection to the nav-instruction distance inputs</b> (<code>step_info_distance_to_reach</code>, already in the wrapper signature) before anything else in this plan touches conditioning.</li>
+          </ul>
+
+          <h3>8.0.3 · Reverse diagnostic — one week, before anything is built</h3>
+          <p>Reverse/gear instability has three candidate root causes living in three different components, and they imply three different plans:</p>
+          <div class="diag">
+            <svg viewBox="0 0 1140 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reverse diagnostic decision tree">
+              <defs><marker id="m-p0" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/></marker></defs>
+              <rect class="nb rd" x="420" y="18" width="300" height="48" rx="10"/>
+              <text class="tt" x="448" y="47">Why is reverse unstable?</text>
+              <rect class="nb" x="40" y="118" width="330" height="80" rx="10"/>
+              <text class="tt" x="56" y="142">H1 · Trunk features</text>
+              <text class="td" x="56" y="161">frozen trunk never trained on</text>
+              <text class="td" x="56" y="177">meaningful rearward motion</text>
+              <rect class="nb" x="406" y="118" width="330" height="80" rx="10"/>
+              <text class="tt" x="422" y="142">H2 · Representation</text>
+              <text class="td" x="422" y="161">signed-arc ambiguity at gear cusps;</text>
+              <text class="td" x="422" y="177">yaw flip conventions</text>
+              <rect class="nb" x="772" y="118" width="330" height="80" rx="10"/>
+              <text class="tt" x="788" y="142">H3 · Controller</text>
+              <text class="td" x="788" y="161">rear-axle-frame tracking of</text>
+              <text class="td" x="788" y="177">reverse trajectories</text>
+              <rect class="nb te" x="40" y="232" width="330" height="92" rx="10"/>
+              <text class="tt" x="56" y="256">Probe</text>
+              <text class="td" x="56" y="274">linear-probe trunk features on reverse</text>
+              <text class="td" x="56" y="290">vs forward segments; compare recon</text>
+              <text class="td" x="56" y="306">quality of rearward motion</text>
+              <rect class="nb te" x="406" y="232" width="330" height="92" rx="10"/>
+              <text class="tt" x="422" y="256">Probe</text>
+              <text class="td" x="422" y="274">replay recorded reverse failures;</text>
+              <text class="td" x="422" y="290">check decoded path vs GT at cusps</text>
+              <rect class="nb te" x="772" y="232" width="330" height="92" rx="10"/>
+              <text class="tt" x="788" y="256">Probe</text>
+              <text class="td" x="788" y="274">feed GT reverse paths to the controller</text>
+              <text class="td" x="788" y="290">in replay — does tracking fail even</text>
+              <text class="td" x="788" y="306">with perfect plans?</text>
+              <rect class="nb am" x="370" y="356" width="400" height="44" rx="10"/>
+              <text class="tt" x="392" y="383">Verdict memo: head- vs trunk- vs controller-side</text>
+              <path class="ar" d="M500,66 C380,86 280,96 215,118" marker-end="url(#m-p0)"/>
+              <path class="ar" d="M570,66 V118" marker-end="url(#m-p0)"/>
+              <path class="ar" d="M640,66 C760,86 860,96 925,118" marker-end="url(#m-p0)"/>
+              <path class="ar" d="M205,198 V232" marker-end="url(#m-p0)"/>
+              <path class="ar" d="M571,198 V232" marker-end="url(#m-p0)"/>
+              <path class="ar" d="M937,198 V232" marker-end="url(#m-p0)"/>
+              <path class="ar te" d="M205,324 C260,352 330,360 370,370" marker-end="url(#m-p0)"/>
+              <path class="ar te" d="M571,324 V356" marker-end="url(#m-p0)"/>
+              <path class="ar te" d="M937,324 C880,352 810,360 770,370" marker-end="url(#m-p0)"/>
+            </svg>
+          </div>
+          <div class="callout red"><h4>Why the diagnostic is first</h4><p>If H1 holds — the trunk simply never represented rearward motion — then <b>no head-side fix recovers it</b>, every solution below acquires a trunk-release dependency, and that changes the negotiation with the trunk owners (S6). It is one week that can redirect two quarters.</p></div>
+
+          <h3>8.0.4 · One action vocabulary</h3>
+          <p>The draft plan implicitly contained <em>three</em> action vocabularies (S1 maneuver modes, S2 leg codes, S6 pretraining codes). They are unified into the single <code>LegCode</code> above: S1's “maneuver mode” <b>is</b> the first leg-code of the plan; S2 decodes <em>sequences</em> of leg-codes; any future WFM-stage pretraining (S6) targets the <em>same</em> codebook — otherwise “BC inherits the action structure” is void. Two repo facts to respect when implementing it: the current 961-way radial grid <b>cannot encode reverse</b> (its longitudinal axis is uncentered — <span class="ref">autoregressive.py:430</span>), and <code>enable_latent_action=False</code> in every production parking config — re-enabling the latent-action conditioning pathway in the parking head is <em>scheduled work in MS4, not an assumption</em>.</p>
+        </div>
+      </div>
+
+<!-- NEXT-PANEL -->
+    </div>
+
+    <div class="card reveal" style="margin-top:18px">
+      <h3>8.7 · Explicitly NOT building now</h3>
+      <p class="muted" style="font-size:14px">Each of these was considered and deliberately parked — listing them prevents scope re-creep.</p>
+      <div class="tblwrap"><table>
+        <thead><tr><th>Item</th><th>Why not now</th></tr></thead>
+        <tbody>
+          <tr><td class="key">WFM latent-action pretrain (S6.1)</td><td>forks every capability's release chain; rides a trunk train or dies</td></tr>
+          <tr><td class="key">PMS beyond in-process v0</td><td>needs a vehicle-software owner + degraded-mode semantics first</td></tr>
+          <tr><td class="key">In-graph beam search</td><td>doesn't compile to TRT; the 1 Hz strategic loop covers the need</td></tr>
+          <tr><td class="key">Rule layer at scale</td><td>a mapping operation with staleness liability; needs an ops owner</td></tr>
+          <tr><td class="key">Stored-spot / MPA implementation</td><td>one-pager into the end-Q2 reassessment only — don't pre-decide it</td></tr>
+          <tr><td class="key">Second/third annotation schemas</td><td>one schema, one queue (labeling is the scarce resource)</td></tr>
+          <tr><td class="key">Engine-swap interleaving at MS5</td><td>dual-engine warmup at lot entrance; cold cache on abort</td></tr>
+          <tr><td class="key">Remote-assist output channel</td><td>no output contract exists — raise with ops separately</td></tr>
+          <tr><td class="key">UI-tap HMI flow</td><td>vehicle UX team budget — raise at MS4 planning</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
 <!-- NEXT-SECTION -->
 
 </div>
