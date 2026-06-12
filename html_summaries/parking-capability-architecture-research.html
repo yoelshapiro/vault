@@ -361,6 +361,152 @@
     </div>
   </section>
 
+  <!-- ============================== MODEL TODAY ============================== -->
+  <section id="model">
+    <div class="shead reveal"><span class="num">02</span><h2>The model today</h2></div>
+    <p class="sdesc reveal">Grounded in code, 2026-06-12. Entry point <span class="ref">wayve/ai/si/configs/baseline/release.py</span> — one config for BC + RL; WFM pretrain lives in <span class="ref">wayve/ai/foundation/models/world_model</span>. Hover any block for details and file references.</p>
+
+    <div class="card reveal">
+      <div class="diag">
+        <svg viewBox="0 0 1140 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Release model architecture">
+          <defs>
+            <marker id="m-mod" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#5c6e84"/>
+            </marker>
+            <marker id="m-mod-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#f5a524"/>
+            </marker>
+          </defs>
+          <!-- inputs -->
+          <g data-tip="6 cameras × 6 frames @ 0.2 s = 1.0 s of context. 630 video tokens per frame after the ViT.|—">
+            <rect class="nb te" x="20" y="22" width="190" height="62" rx="10"/>
+            <text class="tt" x="32" y="46">6 cams × 6 frames</text>
+            <text class="td" x="32" y="64">@0.2 s = 1.0 s video context</text>
+          </g>
+          <g data-tip="512² raster covering 1200 m → 64 tokens. Warning: it doubles as a control signal — end-of-route detection sums its pixels and auto-triggers PARKING_MODE.|deployment_wrapper.py:3452-3469 · END_OF_ROUTE_THRESHOLD">
+            <rect class="nb" x="20" y="100" width="190" height="46" rx="10"/>
+            <text class="tt" x="32" y="120">route raster</text>
+            <text class="td" x="32" y="136">512² / 1200 m → 64 tokens</text>
+          </g>
+          <g data-tip="Navigation instructions encoded by a perceiver into 8 tokens. step_info distances are already in the wrapper signature — P0 migrates end-of-route detection onto them.|—">
+            <rect class="nb" x="20" y="154" width="190" height="42" rx="10"/>
+            <text class="tt" x="32" y="172">nav instructions</text>
+            <text class="td" x="32" y="188">→ 8 perceiver tokens</text>
+          </g>
+          <g data-tip="Radar pillars → 16 tokens.|—">
+            <rect class="nb" x="20" y="204" width="190" height="42" rx="10"/>
+            <text class="tt" x="32" y="222">radar pillars</text>
+            <text class="td" x="32" y="238">→ 16 tokens</text>
+          </g>
+          <g data-tip="Speed, speed limit, indicator, country, driving side, automation state, pose. Gear is an OUTPUT, not an input, in release (always_dropout_gear_direction=True).|si/config.py:2203">
+            <rect class="nb" x="20" y="254" width="190" height="56" rx="10"/>
+            <text class="tt" x="32" y="274">scalars</text>
+            <text class="td" x="32" y="290">speed · limit · indicator · pose…</text>
+            <text class="ta" x="32" y="304">gear is an output, not input</text>
+          </g>
+          <!-- vit -->
+          <g data-tip="ViT video encoder: 12 self-attention layers, 448×960 → 105 tokens/camera/frame. Frozen during BC.|wayve/ai/zoo/vision/encoders/vit.py:232">
+            <rect class="nb te" x="262" y="22" width="160" height="62" rx="10"/>
+            <text class="tt" x="276" y="46">ViT encoder</text>
+            <text class="td" x="276" y="64">12 SA layers · frozen in BC</text>
+            <text class="tl" x="276" y="78">105 tok/cam/frame</text>
+          </g>
+          <!-- input adaptors -->
+          <g data-tip="Per-modality input adaptors project everything into the token stream. The route adaptor is a frozen Conv2d(3,…) upstream of the frozen trunk — parking-head gradients cannot teach it new raster semantics (why S3 uses head-side tokens).|—">
+            <rect class="nb" x="262" y="100" width="160" height="210" rx="10"/>
+            <text class="tt" x="276" y="124">input adaptors</text>
+            <text class="td" x="276" y="142">route · nav · radar</text>
+            <text class="td" x="276" y="158">· scalars</text>
+            <text class="tl" x="276" y="296">route Conv2d is frozen</text>
+          </g>
+          <!-- ST transformer -->
+          <g data-tip="MIMOSTTransformer backbone: preprocess → InputAdaptor → STTransformer → OutputAdaptor; tokens [B,T,N,1536]. Loaded from WFM release manifest WFM_v1.4.0.550M(1.5.0) 'Milano-Cortina' (550M params, 500k steps, 16 frames × 6 cams pretrain). Spatial attention per frame + causal temporal attention every 2nd layer (latency).|wayve/ai/zoo/st/models.py:49 · st_transformer.py:10">
+            <rect class="nb am" x="474" y="60" width="240" height="220" rx="12"/>
+            <text class="tt" x="492" y="92" font-size="14">ST transformer</text>
+            <text class="td" x="492" y="114">11 layers · d = 1536</text>
+            <text class="td" x="492" y="132">spatial attn per frame</text>
+            <text class="td" x="492" y="150">causal temporal attn</text>
+            <text class="td" x="492" y="166">(every 2nd layer)</text>
+            <text class="tl" x="492" y="196">tokens [B, T, N, 1536]</text>
+            <text class="tl" x="492" y="212">~740 tokens/frame</text>
+            <text class="tl" x="492" y="228">~4,440 total</text>
+            <text class="ta" x="492" y="258">WFM_v1.4.0.550M “Milano-Cortina”</text>
+          </g>
+          <!-- output adaptor -->
+          <g data-tip="Learned queries cross-attend over all encoder tokens. Emits waypoints as deltas + cumsum, indicator (3-class), gear direction (3-class), waypoint log-variance.|wayve/ai/latent_actions/models/outputs_behavior_control.py:205">
+            <rect class="nb" x="766" y="80" width="170" height="180" rx="10"/>
+            <text class="tt" x="780" y="106">output adaptor</text>
+            <text class="td" x="780" y="124">learned queries</text>
+            <text class="td" x="780" y="140">cross-attend all tokens</text>
+            <text class="tl" x="780" y="244">+ waypoint log-variance</text>
+          </g>
+          <!-- outputs -->
+          <g data-tip="11 waypoints @ 0.2 s = 2.0 s executable horizon (delta + cumsum). This is the fixed contract with the controller.|—">
+            <rect class="nb am" x="980" y="40" width="140" height="56" rx="10"/>
+            <text class="tt" x="992" y="62">11 waypoints</text>
+            <text class="td" x="992" y="80">@0.2 s = 2.0 s</text>
+          </g>
+          <g data-tip="A1, live in release: ActionsDiscretizer — 31×31 radial-exponent grid over the 2 s GT endpoint → 961-way CE ('privileged' hindsight target, teacher-forced embedding added to every token). Inference = argmax; top-k=10 decodable. No VQ/KL — fixed geometric grid. Plus 20-bin behavior control (assertiveness percentile, inference default 0.65). OFF in the parking config.|parking_config.py:534-535 · autoregressive.py:430">
+            <rect class="nb" x="980" y="108" width="140" height="66" rx="10"/>
+            <text class="tt" x="992" y="130">latent action</text>
+            <text class="td" x="992" y="146">961-way grid CE</text>
+            <text class="ta" x="992" y="162">OFF for parking</text>
+          </g>
+          <g data-tip="Indicator: 3-class. The only cross-tick 'memory' in the whole stack is a deployment-wrapper indicator buffer OUTSIDE the network.|deployment_wrapper.py:826">
+            <rect class="nb" x="980" y="186" width="140" height="42" rx="10"/>
+            <text class="tt" x="992" y="204">indicator</text>
+            <text class="td" x="992" y="220">3-class</text>
+          </g>
+          <g data-tip="Gear direction: 3-class output head — but never fed back as an input in release.|si/config.py:2203">
+            <rect class="nb" x="980" y="240" width="140" height="42" rx="10"/>
+            <text class="tt" x="992" y="258">gear</text>
+            <text class="td" x="992" y="274">3-class</text>
+          </g>
+          <!-- arrows -->
+          <path class="ar" d="M210,53 H262" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M422,53 C450,53 450,100 474,110" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M210,123 H262" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M210,175 H262" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M210,225 H262" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M210,282 H262" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M422,205 H474" marker-end="url(#m-mod)"/>
+          <path class="ar am" d="M714,170 H766" marker-end="url(#m-mod-a)"/>
+          <path class="ar am" d="M936,120 C958,110 958,80 980,68" marker-end="url(#m-mod-a)"/>
+          <path class="ar am" d="M936,150 H980 L980,141" marker-end="url(#m-mod-a)"/>
+          <path class="ar" d="M936,190 C958,196 958,202 980,207" marker-end="url(#m-mod)"/>
+          <path class="ar" d="M936,220 C958,232 958,250 980,261" marker-end="url(#m-mod)"/>
+          <!-- training stages strip -->
+          <g data-tip="Stage 1 — WFM pretrain: DINO-VQ future-token CE, 16-frame context.|wayve/ai/foundation/models/world_model">
+            <rect class="nb vi" x="120" y="372" width="250" height="58" rx="10"/>
+            <text class="tt" x="134" y="396">1 · WFM pretrain</text>
+            <text class="td" x="134" y="414">DINO-VQ future-token CE · 16 frames</text>
+          </g>
+          <g data-tip="Stage 2 — BC: 100k steps, ~60 weighted data buckets + 5% MRM.|release.py">
+            <rect class="nb vi" x="440" y="372" width="250" height="58" rx="10"/>
+            <text class="tt" x="454" y="396">2 · BC finetune</text>
+            <text class="td" x="454" y="414">100k steps · ~60 buckets + 5% MRM</text>
+          </g>
+          <g data-tip="Stage 3 — offline RL: TD3-style, C51 distributional critic consuming action-as-waypoints, learned state reward model, BC-anchored actor. I/O unchanged across stages 2→3. The C51 critic is the component S5 re-deploys as a ranker.|—">
+            <rect class="nb vi" x="760" y="372" width="250" height="58" rx="10"/>
+            <text class="tt" x="774" y="396">3 · offline RL</text>
+            <text class="td" x="774" y="414">TD3-style · C51 critic · BC-anchored</text>
+          </g>
+          <path class="ar vi" d="M370,401 H440" marker-end="url(#m-mod)"/>
+          <path class="ar vi" d="M690,401 H760" marker-end="url(#m-mod)"/>
+          <text class="tl" x="120" y="356">training stages — I/O unchanged across BC → RL</text>
+          <text class="ta" x="474" y="46">stateless: no recurrent state crosses ticks · fixed window 1 s in / 2 s out</text>
+        </svg>
+      </div>
+      <p class="diagcap">Release model (BC + RL share this I/O). Hover blocks for code references. Only caches: sliding-window ViT/radar feature caches (pure compute saving) + a deployment-wrapper indicator memory outside the network.</p>
+
+      <div class="grid3" style="margin-top:14px">
+        <div class="callout teal" style="margin:0"><h4>Statelessness, confirmed</h4><p>No recurrent state crosses inference ticks. Fixed-window policy: 1 s in / 2 s out. The “memory” precedent people cite — indicator memory — is a deployment-wrapper buffer <em>outside</em> the network (<code>deployment_wrapper.py:826</code>).</p></div>
+        <div class="callout amber" style="margin:0"><h4>Multimodality device</h4><p>The only one: the 961-way latent-action endpoint grid — a radial-exponent grid tuned for <em>forward</em> driving. Dense near origin, sparse at range, no reverse semantics. And it's disabled in every production parking config.</p></div>
+        <div class="callout" style="margin:0"><h4>Why this matters for parking</h4><p>Parking needs multi-leg gear-reversing plans beyond 2 s, an explicit representation of discrete choices, and task state over minutes. No current component carries any of the three.</p></div>
+      </div>
+    </div>
+  </section>
+
 <!-- NEXT-SECTION -->
 
 </div>
