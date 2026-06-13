@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-13 - PUDO Data & Pipeline Bug Report
+
+- Topic: Find bugs behind the PUDO/unpark training failures (won't pull out, unsafe pull-out, gear flicker, no-stop, suboptimal stop) by cross-referencing symptoms + bucket stats against materialization and training code.
+- Labels: parking, pudo, unpudo, data, debugging, materialization, training.
+- Branch: `boris/pudo_generic_materialization` (data) + `boris/training/main_cherrypick_generic_data` (training); read-only, no code changes.
+- PR: N/A.
+- Change type: Investigation / report.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/*`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/zoo/augmentations/gear_direction.py`, `wayve/ai/si/configs/parking/parking_config.py`, gear schema.
+- Changes:
+  - Confirmed key bugs: neutral-clamp zeroes departure trajectories (U1); gear-direction augmentation moves gear to D without moving the path (U1/U3); no `failed_to_unpudo` negative + `unpudo_ca_unsafe_weight=0` (U2); `gear==0` = NEUTRAL not PARK so drive-through PUDO stops are missed (P1); 100 m trip-match radius + clamp bias the stop position (P2); `ca_pudo` and gear-change anchors are over-broad (P1/P2/U3).
+  - Corrected an over-claim: the bucket stats are the `anchors` dataset (1 frame/anchor), so short==long / pre==window equalities are by-design artifacts, not training duplication (consistent with the 94.5%-unique warning).
+  - Listed 3 cheap verification checks and a prioritized fix order; verified the load-bearing claims (gear schema, clamp logic, config weights) directly in code.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-13-pudo-data-bug-report|2026-06-13 PUDO Data Bug Report]]
+- Report: [[projects/pudo-data-bug-report-2026-06-13]]
+
 ## 2026-06-12 - Parking Research Doc Rewrite + Interactive HTML
 
 - Topic: Rewrite the parking research solutions section for readability (Mermaid + pseudo-code) and ship an interactive HTML report.
