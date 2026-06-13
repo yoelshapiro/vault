@@ -50,4 +50,5 @@
 - Priority: `P1`
 - W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_13_20_16_20_guyamr4n100k
 - Datadog logs: https://app.datadoghq.eu/logs?query=job_name%3Aastonishing-chocolate-albatross-179301&from_ts=1780172350307&cols=job_name%2Cnode_rank&live=true
-- Final observed state: `Dispatched` on `aks-prod-training-swe.nd96h100d`; no start time yet.
+- Monitor result: reached `trainer/global_step=1001` / `trainer/train_step=1000` at `2026-06-13T20:43:05Z`; W&B state still `running`.
+- Latest observed throughput at 1K: `134.88940268120882` samples/sec world.

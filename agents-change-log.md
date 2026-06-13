@@ -15,7 +15,7 @@
   - Applied the discussed 50% driving / 50% PUDO-family split with 11/11/4/4/6/2/5/2/5% non-driving group weights.
   - Updated validation partitions and the new-driving datamodule non-driving root filters to match the new PUDO root.
   - Verified the relevant config registration and partition-weight slice after removing unsupported `track_tag` usage from this branch.
-  - Committed and pushed `90be5f9f0ef6`, then submitted 4-node training job `179301` / `astonishing-chocolate-albatross` with session `session_2026_06_13_20_16_20_guyamr4n100k`; final observed state was `Dispatched`.
+  - Committed and pushed `90be5f9f0ef6`, then submitted 4-node training job `179301` / `astonishing-chocolate-albatross` with session `session_2026_06_13_20_16_20_guyamr4n100k`; monitored until `trainer/global_step=1001` / `trainer/train_step=1000` with W&B still `running`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-13-guy-recipe-amaranth-root-config|2026-06-13 Guy Recipe Amaranth Root Config]]
 
 ## 2026-06-13 - PUDO Data & Pipeline Bug Report
