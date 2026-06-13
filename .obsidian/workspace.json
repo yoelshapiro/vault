@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/parking-capability-architecture-research.md",
+                "file": "projects/pudo-data-bug-report-2026-06-13.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,7 +312,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "parking-capability-architecture-research"
+              "title": "pudo-data-bug-report-2026-06-13"
             }
           }
         ],
@@ -373,7 +373,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 264.0054512023926
+    "width": 481.01258087158203
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -493,12 +493,12 @@
   "active": "117f440063e12be8",
   "lastOpenFiles": [
     "agent_tasks/2026/06/Week-2/2026-06-13-guy-recipe-amaranth-root-config.md",
+    "projects/parking-capability-architecture-research.md",
     "agent_tasks/2026/06/Week-2/2026-06-13-pudo-data-bug-report.md",
     "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-research-doc-rewrite-html.md",
     "html_summaries/parking-capability-architecture-research.html",
     "projects/parking-capability-critique-2026-06-12.md",
-    "projects/parking-capability-architecture-research.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-kickoff.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-capability-research-phases1-3.md",
     "projects.md",
