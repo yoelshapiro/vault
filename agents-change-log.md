@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-06-13 - Guy Recipe Amaranth Root Config
+
+- Topic: Fork the guy recipe gear-root branch and update parking BC PUDO buckets to the amaranth/no-low-steering materialization.
+- Labels: parking, pudo, training-config, materialization, buckets.
+- Branch: `codex/guy-recipe-gear-root-amaranth-root`.
+- PR: N/A.
+- Change type: Code change, config validation.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Added a dedicated parking BC PUDO root for `parking_pudo_default_no_low_steering_20260611__2026-06-11-13-23/dataset`.
+  - Kept driving partitions unchanged and replaced only the parking BC non-driving PUDO mix.
+  - Flattened non-driving groups into `dc_pudo`, `dc_unpudo`, `dc_pudo_gear_change`, `dc_unpudo_gear_change`, `dc_unpudo_pre_start`, `ca_pudo`, `pre_ca_pudo`, `ca_unpudo`, and `pre_ca_unpudo`.
+  - Applied the discussed 50% driving / 50% PUDO-family split with 11/11/4/4/6/2/5/2/5% non-driving group weights.
+  - Updated validation partitions and the new-driving datamodule non-driving root filters to match the new PUDO root.
+  - Verified the relevant config registration and partition-weight slice after removing unsupported `track_tag` usage from this branch.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-13-guy-recipe-amaranth-root-config|2026-06-13 Guy Recipe Amaranth Root Config]]
+
 ## 2026-06-13 - PUDO Data & Pipeline Bug Report
 
 - Topic: Find bugs behind the PUDO/unpark training failures (won't pull out, unsafe pull-out, gear flicker, no-stop, suboptimal stop) by cross-referencing symptoms + bucket stats against materialization and training code.
