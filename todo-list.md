@@ -5,6 +5,15 @@
 	- [x] phase 3: novel solution proposals (§8, post-adversarial-review)
 	- [ ] phase 4: Boris review of §8 → pick "Now" items (§8.9)
 	- [ ] decide: Notion page for parking team (open Q7)
+- [ ] PUDO data/pipeline bugs ([[projects/pudo-data-bug-report-2026-06-13]])
+	- [ ] CHECK: dump POLICY_GEAR/SPEED/WAYPOINTS for unparking samples around clamp_policy_at_first_neutral (U1)
+	- [ ] CHECK: plot get_gear over confirmed robotaxi drop-offs — does it hit gear==0? (P1)
+	- [ ] CHECK: confirm trained root (gear_fix vs no_low_steering) + re-pull default-dataset counts
+	- [ ] FIX U1: don't clamp on unparking_mode; couple gear-forward aug with motion-forward
+	- [ ] FIX U2: wire failed_to_unpudo + non-zero unsafe weight
+	- [ ] FIX P1: speed-based stop detection (not gear==0)
+	- [ ] FIX P2: tighten trip match radius ~15m + use timestamp; clamp at true stop
+	- [ ] FIX P3/P4: tie ca_pudo + gear-change anchors to validated park/PUDO events
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance
