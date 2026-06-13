@@ -33,3 +33,9 @@ Added lightweight metadata enrichment for `parking_pudo/anchors` generic materia
 - Started `sample` for `parking_pudo/anchors` with `job_name=anchor_metadata_20260612`.
 - Execution: `acpbf99n26hsgjcgw9bv`.
 - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/acpbf99n26hsgjcgw9bv`.
+- Failure: `IndexError: index ... is out of bounds` in anchor metadata enrichment because `post_process_batch` receives run rows that are not guaranteed to be timestamp-sorted.
+- Fix: sort each run's row indices by `timestamp_unixus` before building metadata signals, then write metadata back to original batch row positions. Added shuffled-frame regression coverage.
+- Published replacement image digest `sha256:5edbc01402b3d2feba9646d55813ea61b2fdcaaa763a6b301965bd3d3887918c`.
+- Restarted `sample` for `parking_pudo/anchors` with `job_name=anchor_metadata_sorted_20260613`.
+- Execution: `abldw24rd2s9f9kd27j6`.
+- Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/abldw24rd2s9f9kd27j6`.
