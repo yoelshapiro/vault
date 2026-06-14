@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "conflict-files-obsidian-git.md",
+                "file": "weekly plan.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "conflict-files-obsidian-git"
+              "title": "weekly plan"
             }
           }
         ],
@@ -588,8 +588,8 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
-    "weekly plan.md",
     "conflict-files-obsidian-git.md",
+    "weekly plan.md",
     "todo-list.md",
     "projects/parking-capability-architecture-research.md",
     "projects/pudo-data-bug-report-2026-06-13.md",

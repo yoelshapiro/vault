@@ -56,6 +56,7 @@
 	- [ ] unpudo compare to notebook
 	- [ ] parking evaluation
 	- [ ] Add Jack's classes
+	- [ ] upload to data
 - [x] licensing issue
 	- [x] investigate what happened
 	- [x] look at deployment wrapper
