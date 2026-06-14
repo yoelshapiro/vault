@@ -57,15 +57,10 @@
 	- [ ] parking evaluation
 	- [ ] Add Jack's classes
 	- [ ] upload to databricks
-		- [ ] anchors with me
-- [x] licensing issue
-	- [x] investigate what happened
-	- [x] look at deployment wrapper
-	- [x] look at augmentations
+		- [ ] anchors with metadata
+		- [ ] upload method?
 - [ ] eval studio - too many errors
 	- [ ] PR to fix negative waypoints
-- [ ] Model experiments
-	- [ ] request licensing
 - [ ] corpus
 	- [ ] add trip id
 	- [ ] add distance to destination
