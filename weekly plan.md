@@ -56,7 +56,8 @@
 	- [ ] unpudo compare to notebook
 	- [ ] parking evaluation
 	- [ ] Add Jack's classes
-	- [ ] upload to data
+	- [ ] upload to databricks
+		- [ ] anchors with me
 - [x] licensing issue
 	- [x] investigate what happened
 	- [x] look at deployment wrapper
