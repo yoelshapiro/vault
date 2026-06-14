@@ -1,5 +1,24 @@
 # Agents Change Log
 
+## 2026-06-14 - PUDO parking.py Deep Critique + Flags Guide
+
+- Topic: Second-pass critique of the PUDO pipeline focused on datamodules/parking.py mechanics, a full flags guide, and new bugs (model + materialization) beyond the 2026-06-13 report.
+- Labels: parking, pudo, unpudo, datamodule, debugging, materialization, flags.
+- Branch: `boris/training/main_cherrypick_generic_data` + `boris/pudo_generic_materialization` (read-only, no code changes).
+- PR: N/A.
+- Change type: Investigation / report.
+- Areas: `wayve/ai/si/datamodules/parking.py`, `otf.py`, `wayve/ai/si/configs/parking/parking_config.py`, `parking_pudo/*` materialization.
+- Changes:
+  - Confirmed the prior U-1 clamp fix landed and F4 (augment_gear_direction) is now inert.
+  - Key framing: BC release runs with policy-path/stopping-mode/strip/augment machinery OFF; many candidate bugs are diffusion-only. Tagged every finding BC-LIVE vs DIFFUSION-ONLY.
+  - New BC-LIVE findings: N1 forward-unpark still undetected (U1 blocker); N2 BC applies no min-neutral-duration gate (P1/U2); N3 clamp-NEUTRAL vs pre-intervention-motion contradiction on pre-CA/CA arrivals; N4 route-shortening clipped-vs-unclipped index; N5 clamp speed/pose off-by-one; N6 no goal-pose target in BC; N7 SI-vs-zoo parked-tail.
+  - New materialization findings: M1 cross-class frame theft (assigned before class gate); M2 approach-vs-departure context window mismatch; M3 departure-anchor off-by-one; M4 unpudo window not clipped at next stop; M5 departure not skipping start<=0; M6 trip context on raw neutral segments.
+  - Full flags guide (gear/mode/horizon/departure/stopping/goal/robustness) with current BC value + recommendation + motivation.
+  - Config hygiene: modes bind parking_bc_datamodule; pudo_bc_datamodule + diffusion datamodule unused by any mode; inverted past/lookahead; dangling enable_end_of_route_blackout.
+  - Verified load-bearing claims directly; refuted an earlier-pass "all-neutral gear on BC departures" claim.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-pudo-parking-py-critique]]
+- Report: [[projects/pudo-parking-py-critique-2026-06-14]]
+
 ## 2026-06-14 - Parking Deployment Gear Indicator Port
 
 - Topic: Port parking deployment gear and route-end indicator handling before interleave redeploy.
