@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-14 - Parking Deployment Gear Indicator Port
+
+- Topic: Port parking deployment gear and route-end indicator handling before interleave redeploy.
+- Labels: parking, deployment, gear, indicator, interleave-control.
+- Branch: `codex/guy-recipe-gear-root-amaranth-root`.
+- PR: N/A.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`, `wayve/ai/si/test/interfaces/test_deployment_wrapper.py`.
+- Changes:
+  - Ported parking deployment output handling from `boris/training/main_cherrypick_generic_data`.
+  - Added explicit parking `policy_gear_position` output, route-end hazard indicator forcing, and route-end park gear latching.
+  - Added focused parking wrapper tests and verified `//wayve/ai/si:test_deployment_wrapper -k parking`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port|2026-06-14 Parking Deployment Gear Indicator Port]]
+
 ## 2026-06-14 - Parking Hub publish_report Script + PR
 
 - Topic: Parking-owned HTML report publishing (not semantic_understanding) via the parking hub + a copy/link helper script.
