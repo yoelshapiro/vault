@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-data-bug-report-2026-06-13.md",
+                "file": "todo-list.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-data-bug-report-2026-06-13"
+              "title": "todo-list"
             }
           }
         ],
@@ -588,8 +588,10 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
-    "weekly plan.md",
+    "projects/pudo-parking-py-critique-2026-06-14.md",
+    "agent_tasks/2026/06/Week-2/2026-06-14-pudo-parking-py-critique.md",
     "projects/pudo-data-bug-report-2026-06-13.md",
+    "weekly plan.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port.md",
     "conflict-files-obsidian-git.md",
     "todo-list.md",
@@ -614,8 +616,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-11-generic-pudo-8node-training.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-training-main-cherrypick-generic-data-pr.md",
-    "agent_tasks/2026/06/Week-2/2026-06-11-departure-gear-change-buckets.md",
-    "agent_tasks/2026/06/Week-2/2026-06-11-parking-pudo-departure-60s-rerun.md",
     "html_summaries/parking-pudo-generic-buckets.html",
     "html_summaries/pre_intervention_augmentation.html",
     "agent_tasks/2026/06/Week-2",
