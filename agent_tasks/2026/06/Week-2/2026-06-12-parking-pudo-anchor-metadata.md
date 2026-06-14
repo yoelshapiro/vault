@@ -39,3 +39,13 @@ Added lightweight metadata enrichment for `parking_pudo/anchors` generic materia
 - Restarted `sample` for `parking_pudo/anchors` with `job_name=anchor_metadata_sorted_20260613`.
 - Execution: `abldw24rd2s9f9kd27j6`.
 - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/abldw24rd2s9f9kd27j6`.
+
+## Databricks Upload
+
+- Uploaded the completed anchor buckets root to `parking.parking_pudo_anchors`.
+- Source root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchor_metadata_sorted_20260613__2026-06-13-19-40`.
+- Databricks upload run: `393577664716791`.
+- Run URL: `https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/361376013964867/run/393577664716791`.
+- Table path: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/parking_pudo_anchors.table`.
+- Validation: `1,381,954` rows, `152` buckets, `2` splits (`train`: `1,194,408`, `validation`: `187,546`).
+- Finding: the materialised `buckets/` parquet contains only generic anchor columns (`run_id`, `timestamp_unixus`, `dataset_split`, `dataset_bucket`, etc.). The new event/trip/intervention metadata columns are not present in the root, so they were not uploaded to the table.
