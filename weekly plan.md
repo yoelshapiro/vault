@@ -59,6 +59,8 @@
 	- [ ] upload to databricks
 		- [ ] anchors with metadata
 		- [ ] upload method?
+		- [ ] add only event anchors maybe? 
+	- [ ] Go over code
 - [ ] eval studio - too many errors
 	- [ ] PR to fix negative waypoints
 - [ ] corpus
