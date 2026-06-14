@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-14 - Parking/PUDO Events Dataset
+
+- Topic: Add a generic materialisation `parking_pudo/events` dataset for event-table-style PUDO and UnPUDO anchors.
+- Labels: parking, pudo, unpudo, generic-materialization, events, flyte.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: N/A.
+- Change type: Code change, tests, Flyte run.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/events`, `event_table.py`, sampling mask output preservation.
+- Changes:
+  - Added `parking_pudo/events` with one unsplit `events` bucket and no AV/DC exclusion.
+  - Added PUDO/UnPUDO event metadata columns: event type, inferred what, gear-change timestamp, disengagement timestamp, country, hazard/trip flags, and trip id.
+  - Added a dataset-level `extra_output_columns` hook so post-process metadata survives mask and bucket creation.
+  - Verified scoped tests, lint, type checks, and dataset/task imports.
+  - Published a test sampling image and submitted the first `filter_and_bucket_stage` Flyte execution.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-parking-pudo-events-dataset]]
+
 ## 2026-06-14 - PUDO parking.py Deep Critique + Flags Guide
 
 - Topic: Second-pass critique of the PUDO pipeline focused on datamodules/parking.py mechanics, a full flags guide, and new bugs (model + materialization) beyond the 2026-06-13 report.
