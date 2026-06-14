@@ -2183,3 +2183,20 @@
   - Created local JSON manifest `/tmp/unpudo_trainval_splitnative_20260611_194255_UTC_manifest.json` with `video_file_path`, `split`, `run_id`, and `timestamp_unixus`.
   - Documented that uploading the JSON manifest back to `qualitymatch-data` was blocked by current Azure write/list-key permissions.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-unpudo-hari-single-dataset-upload|2026-06-14 UnPUDO HARI Single Dataset Upload]]
+
+## 2026-06-14 - Parking Deployment Gear Indicator Port
+
+- Topic: Port parking deployment gear/indicator handling and deploy the trained Guy-recipe PUDO model with parking interleave control.
+- Labels: parking, pudo, deployment, interleave-control, gear, model-ci.
+- Branch: `codex/guy-recipe-gear-root-amaranth-root`.
+- PR: n/a.
+- Change type: Code change, deployment, tests, Notion update.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`, `wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`, `wayve/ai/si/test/interfaces/test_deployment_wrapper.py`, `wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py`, Parking/PUDO Notion model cards.
+- Changes:
+  - Ported parking deployment gear output handling, route-end hazard forcing, and route-end park gear latching from `boris/training/main_cherrypick_generic_data`.
+  - Made interleave thresholds scriptable for generated TorchScript wrapper classes.
+  - Added a parking-specific interleave wrapper path for `DrivingOutputWithGearOutput` and a TorchScript regression test.
+  - Deployed `astonishing-chocolate-albatross` checkpoint `100000` as `moccasin-vivid-caterpillar` with interleave control group `parking`.
+  - Verified Gen2 radar config and triggered Alpha3 Model CI build `75970`.
+  - Updated the Parking/PUDO Notion model-card row/page; Console lifecycle note remains blocked on refreshed Console auth.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port|2026-06-14 Parking Deployment Gear Indicator Port]]
