@@ -2154,3 +2154,18 @@
   - Updated the focused filter-policy test and reran the parking_pudo sampling test slice.
   - Published a branch sampling image and submitted sample Flyte runs for `parking_pudo/default` and `parking_pudo/anchors`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-11-unpudo-15s-window|2026-06-11 UnPUDO 15s Window]]
+
+## 2026-06-14 - UnPUDO HARI Single Dataset Upload
+
+- Topic: Upload corrected train/validation-native UnPUDO standstill clips to new HARI as one annotation dataset.
+- Labels: parking, pudo, unpudo, hari, annotation-data.
+- Branch: `boris/hari_pudo`.
+- PR: n/a.
+- Change type: Data upload, operational manifest.
+- Areas: HARI, Azure Blob video outputs, vault documentation.
+- Changes:
+  - Registered 3962 blob-backed MP4 references into new HARI dataset `194350e6-1506-40e4-83c4-59a2d1593459`.
+  - Kept train/validation hidden from annotators by creating only a single HARI dataset and `all_videos` subset.
+  - Created local JSON manifest `/tmp/unpudo_trainval_splitnative_20260611_194255_UTC_manifest.json` with `video_file_path`, `split`, `run_id`, and `timestamp_unixus`.
+  - Documented that uploading the JSON manifest back to `qualitymatch-data` was blocked by current Azure write/list-key permissions.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-unpudo-hari-single-dataset-upload|2026-06-14 UnPUDO HARI Single Dataset Upload]]

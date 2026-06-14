@@ -241,6 +241,9 @@
 - Wrong split Flyte executions were aborted: train `aj6qf6s8ffmqlc7mn429`, validation `apvz2vlnrlbvl4vgrx5t`.
 - Corrected train Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a7zj4hn9x7cqd4kfjzg2. Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/trainval_splitnative_20260611_194255_UTC/train/gen2/`.
 - Corrected validation Flyte execution: https://flyte.data.wayve.ai/console/projects/datasets/domains/production/executions/a6szfdb4jlhpvvtps2cs. Output prefix: `az://wayveprodperceptiondata/qualitymatch-data/flyte_remote/videos/borisindelman/unpudo_standstill/trainval_splitnative_20260611_194255_UTC/val/gen2/`.
+- New HARI single-dataset upload completed on `2026-06-14`: dataset `194350e6-1506-40e4-83c4-59a2d1593459`, URL `https://hari.azr.internal.wayve.ai/main/media/194350e6-1506-40e4-83c4-59a2d1593459/main_dataset`; registered 3962 blob-backed MP4 references from the corrected train/validation output prefixes into one dataset with no visible split subsets; created `all_videos` subset `d6c665e0-7fb5-461e-b70e-2f1f80bacacd`.
+- Private split manifest created locally at `/tmp/unpudo_trainval_splitnative_20260611_194255_UTC_manifest.json` with fields `video_file_path`, `split`, `run_id`, `timestamp_unixus`. Attempted blob upload of the manifest was blocked by Azure write/list-key permissions.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-unpudo-hari-single-dataset-upload|2026-06-14 UnPUDO HARI Single Dataset Upload]]
 
 
 ## 2026-06-05 Event Viewer Model-Catalogue Video Source
