@@ -6,14 +6,19 @@
 	- [ ] phase 4: Boris review of §8 → pick "Now" items (§8.9)
 	- [ ] decide: Notion page for parking team (open Q7)
 - [ ] PUDO data/pipeline bugs ([[projects/pudo-data-bug-report-2026-06-13]])
-	- [ ] CHECK: dump POLICY_GEAR/SPEED/WAYPOINTS for unparking samples around clamp_policy_at_first_neutral (U1)
-	- [ ] CHECK: plot get_gear over confirmed robotaxi drop-offs — does it hit gear==0? (P1)
+	- [x] FIX U1: clamp no longer applies on unparking_mode (landed, parking.py:786)
 	- [ ] CHECK: confirm trained root (gear_fix vs no_low_steering) + re-pull default-dataset counts
-	- [ ] FIX U1: don't clamp on unparking_mode; couple gear-forward aug with motion-forward
-	- [ ] FIX U2: wire failed_to_unpudo + non-zero unsafe weight
-	- [ ] FIX P1: speed-based stop detection (not gear==0)
 	- [ ] FIX P2: tighten trip match radius ~15m + use timestamp; clamp at true stop
 	- [ ] FIX P3/P4: tie ca_pudo + gear-change anchors to validated park/PUDO events
+- [ ] PUDO parking.py critique v2 ([[projects/pudo-parking-py-critique-2026-06-14]])
+	- [ ] CONFIRM: which datamodule actually trains (parking_bc vs pudo_bc override) — §4.1
+	- [ ] FIX N1: detect forward pull-out (P/N→D) as unparking_mode + add duration gate (U1)
+	- [ ] FIX N2: add min-neutral-duration gate to _compute_parking_mode (P1/U2)
+	- [ ] FIX N3: guard clamp with _pre_intervention_would_fire (U1/U3 on pre-CA/CA)
+	- [ ] FIX N4/N5: route-shortening clipped index + clamp speed/pose off-by-one (P2)
+	- [ ] FIX M1: move `assigned |= window` inside the class gate (filters.py:104)
+	- [ ] FIX M2/M4: unify approach/departure context window; clip unpudo window at next stop
+	- [ ] FLAGS: apply guide (lower time_threshold_sec, fix min_duration gating, decide reconstruct_gear, small conditioning dropout) — §3
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance
