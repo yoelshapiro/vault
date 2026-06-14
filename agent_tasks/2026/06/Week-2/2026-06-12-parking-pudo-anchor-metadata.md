@@ -68,3 +68,6 @@ Added lightweight metadata enrichment for `parking_pudo/anchors` generic materia
 - Started `sample` for `parking_pudo/anchors` with `job_name=anchor_metadata_preserve_columns_20260614`.
 - Execution: `axpd8zm9x872cf7mj7fc`.
 - Console: `https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/axpd8zm9x872cf7mj7fc`.
+- Completed root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchor_metadata_preserve_columns_20260614__2026-06-14-06-06`.
+- Databricks schema check run: `571009178593536`.
+- Schema check result: `buckets/` has all `22` anchor metadata columns; total bucket rows `1,381,957`, event metadata rows `545,627`, trip rows `267,820`, intervention rows `285,153`.
