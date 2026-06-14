@@ -297,7 +297,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-data-bug-report-2026-06-13.md",
+                "file": "Merge to main plan.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -312,11 +312,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-data-bug-report-2026-06-13"
+              "title": "Merge to main plan"
+            }
+          },
+          {
+            "id": "161469dcc0885caa",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "weekly plan.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "weekly plan"
             }
           }
         ],
-        "currentTab": 18
+        "currentTab": 19
       }
     ],
     "direction": "vertical"
@@ -490,15 +514,18 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "117f440063e12be8",
+  "active": "161469dcc0885caa",
   "lastOpenFiles": [
+    "Merge to main plan.md",
+    "weekly plan.md",
+    "agents-change-log.md",
+    "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-unpudo-hari-single-dataset-upload.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-publish-html-sso-viewer.md",
     "html_summaries/publish_report.sh",
     "agent_tasks/2026/06/Week-2/2026-06-13-guy-recipe-amaranth-root-config.md",
     "projects/parking-capability-architecture-research.md",
     "agent_tasks/2026/06/Week-2/2026-06-13-pudo-data-bug-report.md",
-    "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-research-doc-rewrite-html.md",
     "html_summaries/parking-capability-architecture-research.html",
     "projects/parking-capability-critique-2026-06-12.md",
@@ -517,9 +544,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-11-parking-pudo-departure-60s-rerun.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-fast-bucket-discovery.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-comparison-bucket-event-type-controls.md",
-    "agent_tasks/2026/06/Week-2/2026-06-11-event-viewer-mp4-frame-snap.md",
-    "agent_tasks/2026/06/Week-2/2026-06-10-parking-pudo-context-signal-flyte-runs.md",
-    "agent_tasks/2026/06/Week-2/2026-06-10-event-viewer-materialization-segments.md",
     "html_summaries/parking-pudo-generic-buckets.html",
     "html_summaries/pre_intervention_augmentation.html",
     "agent_tasks/2026/06/Week-2",
