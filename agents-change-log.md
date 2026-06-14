@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-14 - Parking Hub publish_report Script + PR
+
+- Topic: Parking-owned HTML report publishing (not semantic_understanding) via the parking hub + a copy/link helper script.
+- Labels: parking, parking-hub, tooling, sso, pr.
+- Branch: `boris/parking-hub-publish-report` (isolated worktree off origin/main at `/workspace/parking_hub_pr`).
+- PR: https://github.com/wayveai/WayveCode/pull/118668
+- Change type: Tooling / report publishing.
+- Areas: `wayve/ai/parking/tools/parking_hub/` (publish_report.sh, BUILD, README, content/).
+- Findings/changes:
+  - Established that the parking hub (`parking-hub.sso.azr.wayve.ai`, FastAPI `hub_app.py`) ALREADY auto-discovers and serves any `*.html` or folder-with-`index.html` under `content/` at `/r/<path>` — and is intentionally static-only per its README (no workload identity/blob). So the requested "expose any html/folder" feature already exists, parking-namespaced.
+  - Added `publish_report.sh` (sh_binary + shellcheck_test): copies a single self-contained .html or a folder-with-index.html into `content/` under a slug and prints the local + `parking-hub.sso.azr.wayve.ai/r/<slug>` links; `--name`, `--content-dir`, `--dev`.
+  - Published `parking-capability-architecture-research.html` into `content/` (first hub report); README updated.
+  - Clarified to Boris why the earlier link had `semantic_understanding` (that viewer is owned by another team and prefix-locked) and that the hub is the parking-owned equivalent. Static-by-design means publish = commit + CI redeploy (not instant blob); flagged blob as a separate option if instant links are wanted.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-publish-html-sso-viewer]] (extended)
+
 ## 2026-06-14 - Publish HTML Report to SSO Viewer + Reusable Script
 
 - Topic: Publish the parking-capability HTML report as a browser-viewable Wayve SSO link, and create a reusable publish script.

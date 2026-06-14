@@ -21,6 +21,14 @@ The SSO viewer `auto-labeler-reports.sso.azr.wayve.ai` is a deployed FastAPI ser
 ## Note / earlier SAS attempt
 Generating an anyone-with-link SAS for the earlier `databricks-users/parking` upload was auto-blocked by the safety classifier (data-exfil). The SSO viewer is the correct, auth-gated alternative and needs no SAS.
 
+## Follow-up (2026-06-14) — parking-owned hub + PR
+Boris flagged the link shouldn't sit under `semantic_understanding` (another team). Found the parking hub (`parking-hub.sso.azr.wayve.ai`, `wayve/ai/parking/tools/parking_hub/hub_app.py`) already auto-exposes any `*.html` / folder-with-`index.html` under `content/` at `/r/<path>`, and is static-only by design. Built a PR:
+- `publish_report.sh` (sh_binary + shellcheck_test) copies a file/folder into `content/`, prints the parking-hub link.
+- Published the architecture report into `content/`; README updated.
+- PR: https://github.com/wayveai/WayveCode/pull/118668 (branch `boris/parking-hub-publish-report`, worktree `/workspace/parking_hub_pr`).
+- Static-by-design ⇒ publish = commit + CI redeploy, not instant. Blob-backed instant links would need workload identity/infra (separate effort) — offered, not built.
+
 ## Links
-- Script: `html_summaries/publish_report.sh`
+- Script (vault, ad-hoc): `html_summaries/publish_report.sh`
+- Script (repo, PR): `wayve/ai/parking/tools/parking_hub/publish_report.sh`
 - Report: [[projects/parking-capability-architecture-research]] · `html_summaries/parking-capability-architecture-research.html`
