@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-14 - Publish HTML Report to SSO Viewer + Reusable Script
+
+- Topic: Publish the parking-capability HTML report as a browser-viewable Wayve SSO link, and create a reusable publish script.
+- Labels: html-summary, publishing, azure-blob, sso, tooling.
+- Branch: N/A (vault + Azure blob ops; read-only repo).
+- PR: N/A.
+- Change type: Tooling / publishing.
+- Areas: `html_summaries/publish_report.sh`, `html_summaries/README.md`; Azure blob `datasets@wayveproddatasetflat`.
+- Changes:
+  - Found via `wayve/ai/semantic_understanding/auto_labeler/reports/{app.py,publish_html_report.sh}` (origin/main) that the SSO viewer `auto-labeler-reports.sso.azr.wayve.ai` is hard-bound to `datasets@wayveproddatasetflat/materialised/semantic_understanding/reports/auto_labeler/` and serves only self-contained `.html` (CSP blocks external assets; non-.html siblings 404). The earlier `databricks-users@wayveproddataset/parking` upload has no viewer → no SSO link.
+  - Published `parking-capability-architecture-research.html` to `.../auto_labeler/borisindelman/parking/` (content-type text/html); confirmed the viewer returns 302→Wayve OneLogin (live). Link viewable after Wayve SSO from any networked machine.
+  - Created `publish_report.sh`: accepts a single .html OR a folder with index.html (inlines CSS/JS/images into one self-contained file via an embedded Python inliner), uploads to the viewer store under `<user>/<subdir>/`, prints the SSO viewer URL. Verified inliner with assertions (css/js/img/url() folded, remote links preserved, no stray local refs).
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-publish-html-sso-viewer|2026-06-14 Publish HTML to SSO Viewer]]
+
 ## 2026-06-13 - Guy Recipe Amaranth Root Config
 
 - Topic: Fork the guy recipe gear-root branch and update parking BC PUDO buckets to the amaranth/no-low-steering materialization.
