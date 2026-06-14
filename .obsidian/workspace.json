@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-data-bug-report-2026-06-13.md",
+                "file": "weekly plan.md",
                 "mode": "preview",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-data-bug-report-2026-06-13"
+              "title": "weekly plan"
             }
           }
         ],
@@ -588,9 +588,9 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port.md",
     "weekly plan.md",
-    "projects/pudo-data-bug-report-2026-06-13.md",
     "conflict-files-obsidian-git.md",
     "todo-list.md",
     "projects/parking-capability-architecture-research.md",
