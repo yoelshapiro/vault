@@ -71,3 +71,12 @@ Added lightweight metadata enrichment for `parking_pudo/anchors` generic materia
 - Completed root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchor_metadata_preserve_columns_20260614__2026-06-14-06-06`.
 - Databricks schema check run: `571009178593536`.
 - Schema check result: `buckets/` has all `22` anchor metadata columns; total bucket rows `1,381,957`, event metadata rows `545,627`, trip rows `267,820`, intervention rows `285,153`.
+
+## Databricks Table Upload With Metadata
+
+- Overwrote `parking.parking_pudo_anchors` from the new metadata-preserving anchors root.
+- Databricks upload run: `722320178512605`.
+- Run URL: `https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/692649406037530/run/722320178512605`.
+- Table path: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/parking_pudo_anchors.table`.
+- Upload used a shallow-clone backup before dropping/recreating the table so the metastore schema includes the new columns.
+- SQL warehouse validation: `1,381,957` rows, `152` buckets, `545,627` non-null `event_type`, `267,820` non-null `trip_id`, `285,153` non-null `intervention_timestamp_unixus`.
