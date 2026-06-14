@@ -321,7 +321,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "weekly plan.md",
+                "file": "todo-list.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -336,7 +336,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "weekly plan"
+              "title": "todo-list"
             }
           }
         ],
@@ -516,6 +516,7 @@
   },
   "active": "161469dcc0885caa",
   "lastOpenFiles": [
+    "todo-list.md",
     "Merge to main plan.md",
     "weekly plan.md",
     "agents-change-log.md",
@@ -534,7 +535,6 @@
     "projects.md",
     "projects/parking-capability-literature.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-parking-pudo-anchor-metadata.md",
-    "todo-list.md",
     "agent_tasks/2026/06/Week-2/2026-06-12-amaranth-green-pudo-experiments.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-anchor-table-upload-workflow.md",
     "agent_tasks/2026/06/Week-2/2026-06-11-generic-pudo-8node-training.md",
