@@ -10,7 +10,7 @@ Root-cause analysis of the catastrophic on-road runs (Model A flagged for danger
 
 | Symptom | Confirmed cause(s) | Type |
 |---|---|---|
-| **S1** no park→drive shift; **S2** no park→reverse; **S6** stops but won't shift to park; **S7** no motion even when manually in gear | **W-B** wrapper NEUTRAL→PARK→zero-waypoints + shift-by-wire ignores manual gear, fed by a **NEUTRAL-biased gear head** (**C1** single-frame gear target + **C2** `augment_gear_direction` disabled in `2ad1c2d`); amplified by **W-C** monotonic PARK latch | config × wrapper (data secondary) |
+| **S1** no park→drive shift; **S2** no park→reverse; **S6** stops but won't shift to park; **S7** no motion even when manually in gear | **W-B** wrapper NEUTRAL→PARK→zero-waypoints + shift-by-wire ignores manual gear, fed by a **NEUTRAL-biased gear head** (**C1** single-frame gear target + **C2** `augment_gear_direction` disabled in `2ad1c2d`). (W-C latch downgraded — see §A: it self-releases on a new assignment.) | config × wrapper (data secondary) |
 | **S3** hazards instead of indicator, hazards on approach | **W-A** wrapper forces hazard at end-of-route, triggered by route-map sparsity (fires on approach, not stationarity). Model **cannot** emit hazard (loss-masked) | **wrapper only** |
 | **S4** wrong directional indicator | **C3** directional indicator never supervised on PUDO frames (hazard frames masked) + no curb-side grounding | data/arch |
 | **S5** doesn't slow for the pin | **M1** short PUDO approach window (30 m / 12 s) + stop target = human neutral-onset, not the pin; **M2** PUDO bucket scarcity (recent-only + relaxed filters) | data |
@@ -33,9 +33,10 @@ All in `boris/training/main_cherrypick_generic_data:wayve/ai/zoo/deployment/depl
 - Reverse (S2) additionally requires the head to emit class 0 (reverse); a neutral-biased head never does, so reverse motion is structurally zeroed.
 - **Fix:** when shift-by-wire is ON but the model gear is NEUTRAL/uncertain, fall back to the actual `input_gear_direction` for the waypoint clamp; do not zero waypoints purely on the *predicted* gear. Longer term, fix the gear head bias (§B).
 
-### W-C — Monotonic end-of-route PARK latch sticks in PARK → S1/S2/S6/S7 (CONFIRMED, blocker)
-`_apply_end_of_route_parking_latch` (`:3360-3378`): `next_latch = where(close_to_route_end, max(prev, current_is_park), 0)`. Once the model predicts PARK for a *single* frame while `close_to_route_end`, the latch is monotonic (`torch.maximum`) and **forces PARK every frame** until the route map fills back above threshold. Near a PUDO pin (route stays "ended"), a subsequent UnPUDO can **never command DRIVE/REVERSE** — the latch holds PARK, and via W-B the waypoints stay zeroed. Default `enable_end_of_route_gear_latch=True` (`:3276`).
-- **Fix:** release the latch on driver intent (`ENABLE_SHIFT_BY_WIRE` requesting non-PARK, `INITIATE_AUTO_PARKING` de-asserted, or the model predicting non-PARK for N frames), not solely on route-map fullness. Quick mitigation: `enable_end_of_route_gear_latch=False`.
+### W-C — Monotonic end-of-route PARK latch → DOWNGRADED, not a real cause (corrected 2026-06-14 per Boris)
+`_apply_end_of_route_parking_latch` (`:3360-3378`) is monotonic while `close_to_route_end`. I initially flagged it as a blocker, but **Boris confirmed `INITIATE_AUTO_PARKING` is not actually used on-road**, so `parking_mode ≈ end_of_route` (driven entirely by the route map), and **a new assignment refills the route map → `close_to_route_end` goes False → the latch resets → the gear is freed.** So the latch self-releases on a new assignment and is **not** a stuck-in-PARK cause in practice.
+- A fix I drafted (gating the latch on `INITIATE_AUTO_PARKING`) was **discarded** — since that control is always 0, the gate would make `close_to_route_end & 0 = False` and **disable the latch entirely**. Do not pursue it.
+- Net: the persistent stuck-in-PARK is **W-B + the NEUTRAL-biased gear head**, not the latch. The latch is fine as-is.
 
 ### Refuted/■ down-ranked (don't chase)
 - Base-class `_clamp_waypoints_for_forward_drive` forbidding reverse → **REFUTED for the parking path**: `ParkingDeploymentWrapperImpl` uses its own gear-aware enforcement, not the forward-only `_to_onboard_output`.
@@ -79,12 +80,12 @@ The on-road note assumed the wrapper is constant across Model A/B, so "materiali
 
 ## E. Recommended actions (ranked)
 
-**Immediate on-road isolation (no retrain):** redeploy with `enable_end_of_route_hazard_lights=False`, `enable_end_of_route_gear_latch=False`, and confirm shift-by-wire falls back to the manual gear. If the dangerous/stuck behavior largely disappears, the wrapper (W-A/W-B/W-C) is the dominant cause — fast, decisive signal.
+**Immediate on-road isolation (no retrain):** redeploy with `enable_end_of_route_hazard_lights=False` (W-A) and confirm shift-by-wire falls back to the manual gear. (Leave the gear latch as-is — per §A W-C it self-releases on a new assignment.) If the dangerous/stuck behavior largely disappears, the wrapper (W-A/W-B) + gear-head bias is the dominant cause.
 
 1. **W-B fix** — under shift-by-wire ON, don't clamp waypoints to zero purely on the *predicted* NEUTRAL/PARK; fall back to the actual vehicle gear, and require a confident DRIVE/REVERSE before forcing forward/reverse-only. (blocker, S1/S2/S7)
 2. **C2 fix** — restore forward-looking gear supervision: re-enable `augment_gear_direction` **with the motion-forward coupling** (or supervise gear over the full horizon). (blocker, S1/S2/S7)
 3. **W-A fix** — gate hazard forcing on stationarity+park, not route sparsity. (blocker, S3)
-4. **W-C fix** — release the PARK latch on driver intent. (blocker, S1/S2/S6)
+4. ~~**W-C fix** — release the PARK latch on driver intent.~~ **Dropped** — the latch self-releases on a new assignment (route map refills); `INITIATE_AUTO_PARKING` is unused. See §A W-C.
 5. **C3 fix** — supervise a directional indicator on PUDO frames (curb-side). (major, S4)
 6. **M1/M2** — lengthen the PUDO approach window / anchor toward the pin; re-enable the disabled PUDO quality filters; audit per-bucket counts. (major, S5/S6)
 7. Keep the merged N1–N5 datamodule fixes.
