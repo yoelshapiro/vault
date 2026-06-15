@@ -287,3 +287,46 @@ Validation:
   caused by the date/platform change and was not fixed in this scoped update.
 | unpark | 75546 | 7456 | 68090 | 0 | 0 |
 | unpudo | 107654 | 37916 | 69738 | 67845 | 92392 |
+
+## 2026-06-15 Events Rerun with IPACE Null Indicators
+
+The first rerun with `platforms=["gen2", "ipace"]` failed in Ray bucket
+generation because IPACE rows can carry `indicator_light = None`. The failure
+was deterministic:
+
+- Flyte execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/aqtcx7pkfdwkk8bxl8wd
+- Error: `KeyError: None` in `indicator_to_enum(...)`, called from
+  `parking_pudo/signals.py`.
+
+Fix:
+
+- Commit `32e32528ac1c`: `fix: handle missing parking pudo indicators`
+- Treat null indicator values as `VehicleIndicator.OFF` before normalising to
+  enum values.
+- Added a regression test covering event creation with all-null
+  `indicator_light`.
+
+Validation:
+
+- Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=--no-cov --test_arg=-k --test_arg='missing_indicator_as_off or events_dataset_uses_single_unsplit_bucket or park_unpark_without_pudo_context'`
+- Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty`
+
+Published sampling image:
+
+- `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`
+- Digest: `sha256:7b294882755564078f7e6eac3684800cbbeadfd209cb5da0d51f9b8b7a9f73b1`
+
+Successful events Flyte rerun:
+
+- Flyte execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a8v8hdh7bhw2lpb2rszk
+- Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_gen2_ipace_2019_null_indicator_20260615__2026-06-15-12-21`
+- Delta table stats: `{"wayve_corpus.all_data": [311945, 311946, 311947, 311948, 311961], "wayve_corpus.filtered_corpus": [147530], "teams__datasets.quarantine_runs": [5249], "teams__datasets.quarantine_segments": [270], "inferred__robotaxi.trip_events": [7248, 7252]}`
+
+Event bucket stats from the generated parquet:
+
+| event_type | rows | av_rows | non_av_rows | trip_rows | hazard_rows |
+|---|---:|---:|---:|---:|---:|
+| park | 191385 | 3035 | 188350 | 0 | 2 |
+| pudo | 106912 | 29449 | 77463 | 69047 | 91456 |
+| unpark | 201172 | 17614 | 183558 | 0 | 0 |
+| unpudo | 107654 | 37916 | 69738 | 67845 | 92392 |
