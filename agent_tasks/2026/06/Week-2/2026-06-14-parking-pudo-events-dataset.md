@@ -263,8 +263,8 @@ Event table breakdown:
 
 Implemented the requested date split:
 
-- `parking_pudo/default` and `parking_pudo/anchors` now load from `2025-08-01`.
-- `parking_pudo/parking` starts from `2025-08-01`.
+- `parking_pudo/default` and `parking_pudo/anchors` now load from `2019-10-28`.
+- `parking_pudo/parking` starts from `2019-10-28`.
 - `parking_pudo/pudo` still starts from `2025-12-01`.
 - PUDO/UnPUDO buckets also carry a bucket-level `run_date_iso >= 2025-12-01`
   filter so the wider combined default/anchor load range does not backfill
@@ -272,10 +272,8 @@ Implemented the requested date split:
 
 Updated `parking_pudo/events`:
 
-- Removed the Gen2-only platform filter by setting `platforms=[]`, which means
-  no Spark platform predicate is applied in the generic materialisation
-  partitioner.
-- The events dataset now loads from `2025-08-01`.
+- Expanded the platform scope to `platforms=["gen2", "ipace"]`.
+- The events dataset now loads from `2019-10-28`.
 - Event post-processing still emits park/unpark from the loaded range but skips
   PUDO/UnPUDO event rows before `2025-12-01`.
 
@@ -283,6 +281,7 @@ Validation:
 
 - Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=--no-cov --test_arg=-k --test_arg='pudo_start_date or events_dataset_uses_single_unsplit_bucket or default_dataset_combines_parking_and_pudo_datasets or does_not_emit_pudo_before_cutoff_date'`
 - Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty`
+- Passed `bazel build //wayve/ai/services/sampling:dataset_configs`
 - The broader `-k parking_pudo` subset still fails on the existing
   `test_overlapping_park_windows_are_assigned_to_first_event`; this was not
   caused by the date/platform change and was not fixed in this scoped update.
