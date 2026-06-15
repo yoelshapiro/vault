@@ -10,15 +10,15 @@
 	- [ ] CHECK: confirm trained root (gear_fix vs no_low_steering) + re-pull default-dataset counts
 	- [ ] FIX P2: tighten trip match radius ~15m + use timestamp; clamp at true stop
 	- [ ] FIX P3/P4: tie ca_pudo + gear-change anchors to validated park/PUDO events
-- [ ] PUDO parking.py critique v2 ([[projects/pudo-parking-py-critique-2026-06-14]])
-	- [ ] CONFIRM: which datamodule actually trains (parking_bc vs pudo_bc override) — §4.1
-	- [ ] FIX N1: detect forward pull-out (P/N→D) as unparking_mode + add duration gate (U1)
-	- [ ] FIX N2: add min-neutral-duration gate to _compute_parking_mode (P1/U2)
-	- [ ] FIX N3: guard clamp with _pre_intervention_would_fire (U1/U3 on pre-CA/CA)
-	- [ ] FIX N4/N5: route-shortening clipped index + clamp speed/pose off-by-one (P2)
-	- [ ] FIX M1: move `assigned |= window` inside the class gate (filters.py:104)
-	- [ ] FIX M2/M4: unify approach/departure context window; clip unpudo window at next stop
-	- [ ] FLAGS: apply guide (lower time_threshold_sec, fix min_duration gating, decide reconstruct_gear, small conditioning dropout) — §3
+- [ ] PUDO fixes N1-N5/M1-M6 ([[agent_tasks/2026/06/Week-2/2026-06-14-pudo-fixes-n-m]])
+	- [x] N1 forward-unpark + N2 duration gate + N3 clamp pre-intervention guard + N5 clamp speed (branch boris/pudo-parking-py-fixes, commit e1f598c, tests pass)
+	- [x] N4 investigated — NOT a bug (aligned aranges); skipped
+	- [x] M1/M2/M3/M4/M6 implemented in materialization worktree (uncommitted, py_compile clean)
+	- [ ] commit materialization M-fixes alongside events/event_table refactor; run test_parking_pudo_filters
+	- [ ] add regression tests for M1/M2/M4 in test_parking_pudo_filters.py
+	- [ ] decide whether to PR boris/pudo-parking-py-fixes or cherry-pick into the training branch
+	- [ ] CONFIRM: which datamodule actually trains (parking_bc vs pudo_bc override) — critique §4.1
+	- [ ] FLAGS: apply guide (lower time_threshold_sec, decide reconstruct_gear, small conditioning dropout) — critique §3
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance
