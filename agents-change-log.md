@@ -1,5 +1,17 @@
 # Agents Change Log
 
+## 2026-06-15 - Event Clip Viewer Rewrite (ExecPlan: Streamlit -> FastAPI + vanilla JS)
+
+- Topic: Ground-up rewrite of the parking event clip viewer; design + ExecPlan, awaiting sign-off before implementation.
+- Labels: parking, event-clip-viewer, tooling, fastapi, frontend, design.
+- Branch: reviewed `boris/event_clip_viewer` (read-only); implementation branch TBD off `main`.
+- PR: N/A (design phase).
+- Change type: Design / ExecPlan.
+- Areas: `wayve/ai/parking/tools/event_clip_viewer/` (target); precedent `wayve/ai/ori/data/dashboard/`.
+- Decisions (user-confirmed): drop Streamlit -> FastAPI + Jinja + vanilla JS (matches ori dashboard, Bazel-native via `js_checks`, no Node bundler); local-only deploy; ExecPlan first.
+- Key points: the player is already a JS app trapped in a Streamlit iframe f-string (`components.py`); most backend (`sql.py`, `model_catalogue.py`, `video_urls.py`, anchor-compare/segment logic) ports over minus `@st.cache_data`; new durable disk parquet/result cache; new JSON API + synced multi-camera SPA with prefetch, green segment/anchor box, dynamic per-source filters, random sampling, keyboard controls, shareable URL state.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan]]
+
 ## 2026-06-15 - PUDO Detection: Generic Materialization vs Zak On-the-Fly
 
 - Topic: Find generic-materialization PUDO/UnPUDO detection bugs + corrective actions, and compare thoroughly to Zak's on-the-fly detection in zmurez/pudo.
