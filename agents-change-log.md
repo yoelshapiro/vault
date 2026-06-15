@@ -1,5 +1,23 @@
 # Agents Change Log
 
+## 2026-06-14 - PUDO On-Road Failure RCA (wrapper + gear-head + materialization)
+
+- Topic: Root-cause the catastrophic on-road PUDO/UnPUDO runs (Model A flagged dangerous; Model B working-model regressed 0/~20) across deployment wrapper, datamodule/config, and materialization.
+- Labels: parking, pudo, unpudo, deployment, shift-by-wire, indicator, rca.
+- Branches: `boris/training/main_cherrypick_generic_data` + `boris/pudo_generic_materialization` (read-only).
+- PR: N/A (investigation).
+- Change type: RCA / report.
+- Key verified findings:
+  - Shift-by-wire/no-motion/reverse failures = a chain: NEUTRAL-biased gear head → wrapper maps NEUTRAL→PARK (`deployment_wrapper.py:3323-3333`) → zeroes all waypoints for PARK (`:364-376`) → shift-by-wire ignores manual gear (`:3519-3550`). NEUTRAL bias worsened by commit `2ad1c2d` disabling `augment_gear_direction` (config, not materialization).
+  - Hazards-on-approach = wrapper forcing hazard at end-of-route on route-map sparsity (`:3382-3404`, `:3452-3456`), default ON; model CANNOT emit hazard (3-class head, hazard masked in loss `imitation_losses.py:488,495`). Corrects the "VSO data" theory.
+  - Monotonic end-of-route PARK latch sticks in PARK (`:3360-3378`), default ON.
+  - Wrong directional indicator = PUDO frames masked from indicator loss + no curb-side grounding.
+  - Materialization (secondary): short PUDO approach window; PUDO recent-only + relaxed quality filters; reverse NOT structurally invisible (over-claims corrected).
+  - "Wrapper constant" assumption is unverified: route-end hazard+latch were recently added (`0b5120975beb`) — regression may be wrapper/config, not data. NEEDS-DATA: per-model wrapper/training/materialization versions.
+  - Quick on-road isolation: deploy with `enable_end_of_route_hazard_lights=False` + `enable_end_of_route_gear_latch=False`.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-pudo-onroad-rca]]
+- Report: [[projects/pudo-onroad-failure-rca-2026-06-14]]
+
 ## 2026-06-14 - PUDO datamodule + materialization bug fixes (N1-N5, M1-M6)
 
 - Topic: Implement the agreed fixes from the parking.py critique across the datamodule and materialization.

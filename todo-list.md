@@ -19,6 +19,14 @@
 	- [ ] decide whether to PR boris/pudo-parking-py-fixes or cherry-pick into the training branch
 	- [ ] CONFIRM: which datamodule actually trains (parking_bc vs pudo_bc override) — critique §4.1
 	- [ ] FLAGS: apply guide (lower time_threshold_sec, decide reconstruct_gear, small conditioning dropout) — critique §3
+- [ ] PUDO on-road failure RCA ([[projects/pudo-onroad-failure-rca-2026-06-14]])
+	- [ ] ISOLATE on-road: deploy with enable_end_of_route_hazard_lights=False + enable_end_of_route_gear_latch=False; confirm shift-by-wire falls back to manual gear
+	- [ ] DATA: per-model deployment-wrapper commit + training commit (vs 2ad1c2d) + materialization version (separates wrapper/config/data regression)
+	- [ ] FIX W-B: don't zero waypoints on predicted NEUTRAL/PARK under shift-by-wire; fall back to actual gear
+	- [ ] FIX C2: restore forward-looking gear supervision (re-enable augment_gear_direction w/ motion-forward, or full-horizon gear loss)
+	- [ ] FIX W-A: gate hazard forcing on stationarity+park, not route-map sparsity
+	- [ ] FIX W-C: release end-of-route PARK latch on driver intent
+	- [ ] FIX C3: supervise directional indicator on PUDO frames (curb-side); M1/M2 approach window + re-enable PUDO quality filters
 - [ ] merge main PR
 	- [x] go over comments
 	- [ ] investigate performance
