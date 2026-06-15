@@ -120,3 +120,40 @@ Verification query summary:
 - PUDO rows: `137792`
 - UnPUDO rows: `140816`
 - Timestamp range: `1764547496033319` to `1780774159383295`
+
+## 2026-06-15 Park/Unpark Events and Trip-Run Park Suppression
+
+Updated the generic event dataset to emit all four event types:
+
+- `pudo`
+- `unpudo`
+- `park`
+- `unpark`
+
+For normal `park`, added the requested trip-table guard: if the joined parking/PUDO trip side table has any event for the run, the park bucket returns no rows for that run. This is only applied to `park`, not `unpark`.
+
+Implementation:
+
+- Added `run_has_parking_pudo_trip_events` in `signals.py`.
+- Applied it in `select_park_pudo_event(... event_type="park")`.
+- Extended `event_table.py` so the event-row metadata builder emits `park`/`unpark` rows as well as PUDO/UnPUDO rows.
+- Added focused tests for park/unpark emission and park suppression on trip runs.
+
+Validation passed with `WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524`:
+
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_filter='test_parking_pudo_event_metadata_detects_pudo_unpudo_and_disengagement|test_parking_pudo_event_metadata_detects_park_unpark_without_pudo_context|test_parking_pudo_event_metadata_records_trip_id_without_hazards|test_parking_pudo_event_metadata_excludes_park_for_trip_runs|test_parking_pudo_events_dataset_uses_single_unsplit_bucket'`
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_tasks_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty //wayve/ai/services/sampling:test_tasks_ty`
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_tasks_py_lint_flake8`
+- `bazel build //wayve/ai/services/sampling:dataset_configs //wayve/ai/services/sampling:tasks`
+
+Published image:
+
+- `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`
+- Digest: `sha256:1408417c6b2eaf78cad2dc6e07588e386be173af98314f0df6877f0b7d3833f5`
+
+Flyte run:
+
+- Execution: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/an7nqgxvhvdrc9p4pzlh
+- Status: succeeded
+- Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_park_unpark_20260615__2026-06-15-08-14`
+- Delta table stats: `{"wayve_corpus.all_data": [311911], "inferred__robotaxi.trip_events": [7241]}`
