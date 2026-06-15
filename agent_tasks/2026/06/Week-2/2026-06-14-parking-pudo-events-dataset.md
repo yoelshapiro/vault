@@ -222,3 +222,41 @@ Validation:
 
 - `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg='--no-cov' --test_arg='-k' --test_arg='parking_pudo_dataset_includes_departure_and_failed_to_ca_buckets or parking_pudo_events_dataset_uses_single_unsplit_bucket or parking_pudo_event_metadata_detects_pudo_unpudo_and_disengagement or parking_pudo_event_metadata_detects_park_unpark_without_pudo_context'`
 - `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty`
+
+## 2026-06-15 Push, Flyte Runs, and Events Upload
+
+Pushed branch `boris/pudo_generic_materialization` at commit:
+
+- `ebba0f6cc026f61b7dcc9515e31895e709385702`
+
+Published sampling image:
+
+- `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`
+- Digest: `sha256:06e9553f2acb43eba972de69b2cdf7bf04147fb2a5ae5df3e1e3d127225a445f`
+
+Submitted Flyte runs:
+
+- Default sample: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/adks6526j2dgwkwjmp4l
+- Anchors sample: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awh28g4wfrktnvkfg6w5
+- Events filter/bucket only: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/a52wxkjd7jfnn45q745k
+
+Events run completed successfully:
+
+- Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_filtered_gen2_20260615__2026-06-15-10-33`
+- Delta table stats: `{"wayve_corpus.all_data": [311925, 311926], "wayve_corpus.filtered_corpus": [147524], "teams__datasets.quarantine_runs": [5249], "teams__datasets.quarantine_segments": [270], "inferred__robotaxi.trip_events": [7241]}`
+
+Overwrote Databricks table:
+
+- Table: `hive_metastore.parking.parking_pudo_generic_events`
+- Databricks run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/776173921928020/run/353481801601838
+- Task run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/776173921928020/run/878403626354422
+- Rows: `363138`
+
+Event table breakdown:
+
+| event_type | rows | av_rows | non_av_rows | trip_rows | hazard_rows |
+|---|---:|---:|---:|---:|---:|
+| park | 73026 | 1528 | 71498 | 0 | 2 |
+| pudo | 106912 | 29449 | 77463 | 69047 | 91456 |
+| unpark | 75546 | 7456 | 68090 | 0 | 0 |
+| unpudo | 107654 | 37916 | 69738 | 67845 | 92392 |
