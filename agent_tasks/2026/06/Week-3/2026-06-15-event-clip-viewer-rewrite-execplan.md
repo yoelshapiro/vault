@@ -36,7 +36,13 @@ The user-visible proof: `bazel run //wayve/ai/parking/tools/event_clip_viewer:vi
 - Observation: there is a clean, deployed, Bazel-native FastAPI+vanilla-JS pattern to copy, so no Node/Vite toolchain is needed.
   Evidence: `wayve/ai/ori/data/dashboard/BUILD` uses `js_checks(srcs=glob(["static/*.js", ...]))` and `py_library(data=glob(["templates/*.html","static/**"]))`, launched by uvicorn from `main.py`.
 - Observation: most of the Python backend carries over almost unchanged; only the Streamlit/caching seam is replaced.
-  Evidence: `sql.py`, `model_catalogue.py`, `video_urls.py`, `anchor_compare.py` segmenting/compare logic, and the pyarrow parquet readers are all framework-agnostic apart from the `@st.cache_data` decorators.
+  Evidence: `sql.py`, `video_urls.py`, `anchor_compare.py` segmenting/compare logic, and the pyarrow parquet readers are all framework-agnostic apart from the `@st.cache_data` decorators.
+- Observation: the streaming choice is not a toss-up — media-handler is structurally better and model-catalogue's flakiness is INHERENT, not user misuse.
+  Evidence (repo survey): media-handler `forward_catalogue_video` (`media_handler/core/pipelines/video.py:1090-1131`) server-cuts a faststart MP4 for `[start,end]` starting at 0 (no seek, no `video_start_us`), guarantees 206/Range (`http_range.py:57-84`), single-flights to Redis (2h TTL), maps clean error codes. model-catalogue (`run_video.py`) returns raw upstream signed blob URLs as-is (`:213`) with no faststart/Range guarantee, 24h SAS that can expire mid-download, 20s API timeout with no blob-download retry, gen2 all-or-nothing per-camera FAILURE gating (`:250-273`), region routing, and FrontForward-status-coupled `video_start_us` (`:87-98`). So `both_needed=false`; media-handler only.
+- Observation: because media-handler URLs are deterministic, the client can build them with no API round-trip, which makes prefetch trivial and removes the need for the old background `warmer.py` thread and any `/api/clip` endpoint.
+  Evidence: production URL builder confirmed at `wayve/ai/datasets/tools/wayve_fiftyone/fiftyone_utils/data_loader.py:907`.
+- Observation: the custom `py_binary` macro (`py_shortpath_binary`) rejects the `imports` attribute; it must go on a `py_library` and propagate to the binary via deps.
+  Evidence: bazel error "no such attribute 'imports' in 'py_shortpath_binary' rule"; fix mirrors `wayve/ai/inference/tools/roofline_profiling/BUILD` (lib carries `imports=["."]`).
 
 ## Decision Log
 
@@ -52,10 +58,16 @@ The user-visible proof: `bazel run //wayve/ai/parking/tools/event_clip_viewer:vi
 - Decision: Rebuild in the same package path `wayve/ai/parking/tools/event_clip_viewer/` with a new internal structure, keeping the `:viewer` target name.
   Rationale: preserves the run command and discoverability; the Streamlit entrypoint is removed only after parity is confirmed.
   Date/Author: 2026-06-15 / Claude.
+- Decision: Single video streaming source = media-handler; drop model-catalogue and the generated-blob source entirely.
+  Rationale: user asked for "just one that works" and to research what other apps use. The repo survey is conclusive (`both_needed=false`): media-handler is reliable by construction; model-catalogue's flakiness is inherent. Generated-blob was tied to `compile_event_videos.py`, which the user dropped.
+  Date/Author: 2026-06-15 / Claude (research-backed, user-directed).
+- Decision: Build media-handler clip URLs client-side from per-row `platform` + run identity; no `/api/clip` endpoint.
+  Rationale: deterministic URLs need no round-trip, making prefetch and before/after/speed changes instant and keeping FastAPI a thin data/cache layer.
+  Date/Author: 2026-06-15 / Claude.
 
 ## Outcomes & Retrospective
 
-Not complete yet. Current outcome: a design and decision set agreed with the user, plus a concrete architecture and step list ready for sign-off before implementation.
+Implementation complete and verified headlessly on branch `boris/event_clip_viewer_fastapi`. The Streamlit app is fully replaced by a FastAPI + vanilla-JS app: a thin JSON API over the three event sources, a `/tmp` parquet/SQL disk cache, and a synced multi-camera player (green segment/anchor box, prefetch, autoplay, keyboard, hash state) streaming media-handler clips the browser builds itself. All Bazel checks pass (`py_test` 24, flake8, ruff, ty, eslint); the server boots on :3006 and `/api/events` returned real Databricks events end-to-end. Remaining: a human visual smoke test of actual video playback (requires browser reach to media-handler), which can't be done headlessly. Net win vs the old tool: the player is a real, testable SPA instead of an iframe f-string; sync/prefetch are first-class; caching is durable; and the streaming source is the reliable one, with the model-catalogue flakiness root-caused rather than worked around.
 
 ## Context and Orientation
 

@@ -1,15 +1,17 @@
 # Agents Change Log
 
-## 2026-06-15 - Event Clip Viewer Rewrite (ExecPlan: Streamlit -> FastAPI + vanilla JS)
+## 2026-06-15 - Event Clip Viewer Rewrite (Streamlit -> FastAPI + vanilla JS) — implemented
 
-- Topic: Ground-up rewrite of the parking event clip viewer; design + ExecPlan, awaiting sign-off before implementation.
-- Labels: parking, event-clip-viewer, tooling, fastapi, frontend, design.
-- Branch: reviewed `boris/event_clip_viewer` (read-only); implementation branch TBD off `main`.
-- PR: N/A (design phase).
-- Change type: Design / ExecPlan.
-- Areas: `wayve/ai/parking/tools/event_clip_viewer/` (target); precedent `wayve/ai/ori/data/dashboard/`.
-- Decisions (user-confirmed): drop Streamlit -> FastAPI + Jinja + vanilla JS (matches ori dashboard, Bazel-native via `js_checks`, no Node bundler); local-only deploy; ExecPlan first.
-- Key points: the player is already a JS app trapped in a Streamlit iframe f-string (`components.py`); most backend (`sql.py`, `model_catalogue.py`, `video_urls.py`, anchor-compare/segment logic) ports over minus `@st.cache_data`; new durable disk parquet/result cache; new JSON API + synced multi-camera SPA with prefetch, green segment/anchor box, dynamic per-source filters, random sampling, keyboard controls, shareable URL state.
+- Topic: Ground-up rewrite of the parking event clip viewer. ExecPlan signed off; implemented and verified headlessly.
+- Labels: parking, event-clip-viewer, tooling, fastapi, frontend, media-handler.
+- Branch: `boris/event_clip_viewer_fastapi` (off `main`); reviewed old `boris/event_clip_viewer` (read-only).
+- PR: none yet (not pushed).
+- Change type: Feature / rewrite.
+- Areas: new `wayve/ai/parking/tools/event_clip_viewer/` (FastAPI app, `sources/`, `static/`, `templates/`, tests); precedent `wayve/ai/ori/data/dashboard/`.
+- Decisions (user-confirmed): FastAPI + Jinja + vanilla JS (Bazel-native via `js_checks`, no Node bundler); local-only on :3006; cache under `/tmp`; drop `compile_event_videos.py`; ONE video source.
+- Video source: **media-handler only** (5-agent repo survey, `both_needed=false`). model-catalogue dropped — its flakiness is inherent (SAS expiry, no faststart/Range guarantee, all-or-nothing per-camera gating), not user misuse. media-handler server-cuts a faststart MP4 starting at 0 (no seek), guarantees 206/Range, clean error codes; URLs built client-side (no round-trip).
+- Built: JSON API (`/api/config|buckets|event_types|events|compare|cache/clear`); `/tmp` parquet+SQL disk cache (sha256-keyed, TTL, LRU); sources `databricks_sql`/`materialization`/`compare` (+`parquet_fs`,`base`); SPA player with master-clock camera sync, green segment-vs-anchor box, prefetch pool, autoplay, keyboard (←/→/space/r/j/f/[ ]), hash state, dynamic per-source filters, random sampling.
+- Verified: `bazel build :viewer`; `py_test` 24 pass; flake8 + ruff + ty + eslint green; server boots on :3006; `/`, `/api/config`, static assets 200; `/api/events` SQL returned real Databricks events end-to-end. Pending: human visual playback check (needs browser reach to media-handler).
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan]]
 
 ## 2026-06-15 - PUDO Detection: Generic Materialization vs Zak On-the-Fly
