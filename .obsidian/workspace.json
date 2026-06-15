@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-onroad-failure-rca-2026-06-14.md",
+                "file": "weekly plan.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-onroad-failure-rca-2026-06-14"
+              "title": "weekly plan"
             }
           }
         ],
@@ -469,8 +469,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 481.01258087158203,
-    "collapsed": true
+    "width": 481.01258087158203
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -589,12 +588,13 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "projects/parking-capability-architecture-research.md",
+    "todo-list.md",
+    "projects/pudo-onroad-failure-rca-2026-06-14.md",
     "projects/pudo-materialization-vs-zmurez-2026-06-15.md",
     "agent_tasks/2026/06/Week-2/2026-06-15-pudo-materialization-vs-zmurez.md",
-    "todo-list.md",
     "projects/pudo-parking-py-critique-2026-06-14.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-onroad-rca.md",
-    "projects/pudo-onroad-failure-rca-2026-06-14.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-fixes-n-m.md",
     "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-pudo-events-dataset.md",
@@ -602,7 +602,6 @@
     "weekly plan.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port.md",
     "conflict-files-obsidian-git.md",
-    "projects/parking-capability-architecture-research.md",
     "Merge to main plan.md",
     "agents-change-log.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-unpudo-hari-single-dataset-upload.md",
