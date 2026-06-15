@@ -16,17 +16,18 @@ The user-visible proof: `bazel run //wayve/ai/parking/tools/event_clip_viewer:vi
 
 - [x] (2026-06-15) Read and characterised the existing Streamlit tool on `boris/event_clip_viewer` (app/components/data/sql/anchor_compare/materialization/model_catalogue/video_urls/warmer).
 - [x] (2026-06-15) Confirmed the in-repo FastAPI precedent: `wayve/ai/ori/data/dashboard` is FastAPI + Jinja2 + vanilla JS in `static/`, Bazel-built via `js_checks` + `py_library(data=glob(...))`, no Node bundler.
-- [x] (2026-06-15) Collected design decisions from the user: FastAPI + vanilla JS, local-only deploy, ExecPlan first.
-- [ ] Sign-off on this ExecPlan.
-- [ ] Create a fresh implementation branch off `main` (the current viewer branch is far behind main).
-- [ ] Scaffold the FastAPI app skeleton (`server/app.py`, `run.py`, `templates/index.html`, `static/`) + BUILD with `js_checks` and `py_checks`.
-- [ ] Port the backend data layer into `sources/` (SQL, materialisation, anchors, compare) decoupled from Streamlit `@st.cache_data`.
-- [ ] Implement the durable disk cache (`cache.py`) for parquet bodies and SQL result sets, hash-keyed, with an in-process LRU.
-- [ ] Implement the JSON API endpoints (`/api/sources`, `/api/schema`, `/api/events`, `/api/compare`, `/api/clip`, `/api/run_videos`).
-- [ ] Build the front end: `api.js`, `filters.js`, `player.js` (sync clock, green box, prefetch pool, autoplay, keyboard, URL state), `styles.css`.
-- [ ] Write backend unit tests (cache, sources, compare, video URL builders) and wire `js_checks`.
-- [ ] Manual smoke test of all three sources + autoplay/sync/prefetch/green-box; update README.
-- [ ] Log the work in the vault change log; remove the Streamlit entrypoint once parity is confirmed.
+- [x] (2026-06-15) Collected design decisions from the user: FastAPI + vanilla JS, local-only deploy, ExecPlan first. Follow-ups: drop `compile_event_videos.py`, cache under `/tmp`, branch `boris/event_clip_viewer_fastapi`, port 3006, pick ONE video source (research first).
+- [x] (2026-06-15) Ran a 5-agent research workflow on video streaming across the repo. Clear conclusion: **media-handler** (not model-catalogue). Single streaming source implemented.
+- [x] (2026-06-15) Created branch `boris/event_clip_viewer_fastapi` off `main`.
+- [x] (2026-06-15) Scaffolded the FastAPI app (`app.py`, `run.py` on :3006, `templates/index.html`, `static/`) + BUILD with `py_library(imports=["."])` + `py_binary`, `js_checks` (+ `.eslintrc`), `py_checks`.
+- [x] (2026-06-15) Ported the backend into `sources/` (`databricks_sql`, `materialization`, `compare`, shared `parquet_fs` + `base`), decoupled from `@st.cache_data`.
+- [x] (2026-06-15) Implemented the durable `/tmp` disk cache (`cache.py`): parquet + JSON, sha256-keyed, TTL, in-process LRU.
+- [x] (2026-06-15) Implemented the JSON API (`/api/config`, `/api/buckets`, `/api/event_types`, `/api/events`, `/api/compare`, `/api/cache/clear`). Clip URLs are built client-side (media-handler is deterministic), so no `/api/clip` round-trip is needed.
+- [x] (2026-06-15) Built the front end: `api.js`, `filters.js`, `player.js` (master-clock sync, green segment/anchor box, prefetch pool, autoplay, keyboard, hash state), `styles.css`.
+- [x] (2026-06-15) Backend unit tests (24) for cache, video URLs, base geometry, segmenting/normalisation, compare, payload — all pass. `js_checks` wired.
+- [x] (2026-06-15) Verified: `bazel build :viewer`, `py_test` (24 pass), `py_lint` (flake8+ruff), `ty`, `static_checks_eslint` all green. Server boots on :3006; `/`, `/api/config`, all static assets 200; `/api/events` SQL returned real events end-to-end.
+- [ ] User visual smoke test in a browser (video playback, autoplay/sync/prefetch/green box) — needs browser reach to media-handler.
+- [ ] Log the work in the vault change log (entry added; will finalise after visual check). Streamlit tool lives on the old `boris/event_clip_viewer` branch; nothing to remove on this fresh branch.
 
 ## Surprises & Discoveries
 
