@@ -338,3 +338,11 @@ Uploaded the same root to a separate Databricks table:
 - Databricks run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/952914874303428/run/880723106292847
 - Task run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/952914874303428/run/95545115390298
 - Used existing shared cluster `0612-095731-ovw6vag2` because Boris's user is not permitted to create Databricks job clusters.
+
+After uploading, changed the parking-side dataset start date back to
+`2025-08-01`. PUDO/UnPUDO remains filtered from `2025-12-01` onward.
+
+Validation:
+
+- Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=--no-cov --test_arg=-k --test_arg='dataset_start_dates or events_dataset_uses_single_unsplit_bucket or pudo_start_date'`
+- Passed `bazel build //wayve/ai/services/sampling:dataset_configs`

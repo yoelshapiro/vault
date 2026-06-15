@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-15 - PUDO Detection: Generic Materialization vs Zak On-the-Fly
+
+- Topic: Find generic-materialization PUDO/UnPUDO detection bugs + corrective actions, and compare thoroughly to Zak's on-the-fly detection in zmurez/pudo.
+- Labels: parking, pudo, unpudo, materialization, zmurez, detection, comparison.
+- Branches: `boris/pudo_generic_materialization` (32e3252) + `zmurez/pudo` (e45cf33), read-only.
+- PR: N/A (investigation).
+- Change type: RCA / comparison report.
+- Key findings (verified in code):
+  - Shared heuristics (gear==0 stop, hazard=PUDO, raw indicator incl. hazard, ~30m/12s window, unsigned speed) are NOT the regression — Zak's working model had them too.
+  - Generic is worse than Zak in 3 ways → regression: (1) no gear-gap compensation (Zak back-dates park to speed≈0 via clean_up_gear_stopped + patches missing gear via pred_park_intention; generic does neither → misses held-in-drive PUDO stops); (2) run-wide PARK deletion if the run has ANY trip event (filters.py:89-90); (3) 100m spatial-only trip matching with unused timestamp (signals.py:314-360).
+  - Plus ca_pudo over-broad (any gear change in ±30s context), reverse undifferentiated, short approach window, PUDO recent-only+relaxed filters.
+  - Confirmed already-fixed: departure off-by-one, unpudo next-stop clip, approach/departure context reconciliation.
+  - Top regression-repair priorities: port Zak's speed-back-date+intention compensation; per-stop park/PUDO split (drop run-wide suppression); temporal gate on trip match.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-15-pudo-materialization-vs-zmurez]]
+- Report: [[projects/pudo-materialization-vs-zmurez-2026-06-15]]
+
 ## 2026-06-14 - PUDO On-Road Failure RCA (wrapper + gear-head + materialization)
 
 - Topic: Root-cause the catastrophic on-road PUDO/UnPUDO runs (Model A flagged dangerous; Model B working-model regressed 0/~20) across deployment wrapper, datamodule/config, and materialization.
