@@ -79,6 +79,7 @@ Published image:
 Flyte rerun:
 
 - https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/asbcbg8m6s8g6c24qscc
+- Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_av_mode_20260615__2026-06-15-05-23`
 - Command:
 
 ```bash
@@ -87,3 +88,35 @@ WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel run //wayve/ai/services/s
   --dataset_name parking_pudo/events \
   --job_name parking_pudo_events_av_mode_20260615
 ```
+
+## 2026-06-15 Databricks Upload
+
+Added notebook-compatible upload script:
+
+- `wayve/ai/services/sampling/datasets/parking_pudo/events/upload_generic_events_to_databricks.py`
+
+The script reads the materialised `buckets` output, joins model attribution using the same sources as the event notebook, and overwrites:
+
+- Table: `parking.parking_pudo_generic_events`
+- Delta path: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/parking_pudo_generic_events.table`
+
+Model attribution logic:
+
+- Prefer timestamp-scoped `prod_data_pipeline.raw__inference.model_episodes`.
+- Fall back to run-scoped `prod_data_pipeline.raw__model_catalogue_sync.vehicle_run_models`.
+- Add `model_nickname`, `model_session_id`, `model_mapping_source`, `author`, `tags`, `is_pudo_model`, `model_index`, and `model_artefact_id`.
+
+Databricks upload:
+
+- Job run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/255678355932888/run/565698465815546
+- Task run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/255678355932888/run/1009115031533469
+- Status: success
+
+Verification query summary:
+
+- Rows: `278608`
+- Rows with model nickname: `268192`
+- AV rows: `69980`
+- PUDO rows: `137792`
+- UnPUDO rows: `140816`
+- Timestamp range: `1764547496033319` to `1780774159383295`
