@@ -330,3 +330,11 @@ Event bucket stats from the generated parquet:
 | pudo | 106912 | 29449 | 77463 | 69047 | 91456 |
 | unpark | 201172 | 17614 | 183558 | 0 | 0 |
 | unpudo | 107654 | 37916 | 69738 | 67845 | 92392 |
+
+Uploaded the same root to a separate Databricks table:
+
+- Table: `hive_metastore.parking.parking_pudo_generic_event_all_data`
+- Delta path: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/parking_pudo_generic_event_all_data.table`
+- Databricks run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/952914874303428/run/880723106292847
+- Task run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/952914874303428/run/95545115390298
+- Used existing shared cluster `0612-095731-ovw6vag2` because Boris's user is not permitted to create Databricks job clusters.
