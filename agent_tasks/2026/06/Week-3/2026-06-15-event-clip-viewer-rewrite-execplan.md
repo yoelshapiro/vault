@@ -26,7 +26,8 @@ The user-visible proof: `bazel run //wayve/ai/parking/tools/event_clip_viewer:vi
 - [x] (2026-06-15) Built the front end: `api.js`, `filters.js`, `player.js` (master-clock sync, green segment/anchor box, prefetch pool, autoplay, keyboard, hash state), `styles.css`.
 - [x] (2026-06-15) Backend unit tests (24) for cache, video URLs, base geometry, segmenting/normalisation, compare, payload — all pass. `js_checks` wired.
 - [x] (2026-06-15) Verified: `bazel build :viewer`, `py_test` (24 pass), `py_lint` (flake8+ruff), `ty`, `static_checks_eslint` all green. Server boots on :3006; `/`, `/api/config`, all static assets 200; `/api/events` SQL returned real events end-to-end.
-- [ ] User visual smoke test in a browser (video playback, autoplay/sync/prefetch/green box) — needs browser reach to media-handler.
+- [x] (2026-06-15) User browser test surfaced 3 playback issues; fixed in `static/player.js`: (1) green box now runs on the rAF loop (timeupdate's ~4Hz granularity missed narrow point-event windows at high speed) with a wider visible pad for anchors; (2) prefetch runs in browse mode too (was autoplay-only), warming next/prev; (3) patient skip — 45s stuck timeout, skip only on real error/long stall, delayed 700ms + a visible "N skipped (no media)" counter so no-media events don't blur past. Added a per-camera "loading clip…" overlay. eslint + build green; server restarted on :3006 serving the new JS.
+- [ ] User re-test in browser (hard-refresh to bust static cache) — confirm green box appears, browsing is warmer, autoplay no longer blurs.
 - [ ] Log the work in the vault change log (entry added; will finalise after visual check). Streamlit tool lives on the old `boris/event_clip_viewer` branch; nothing to remove on this fresh branch.
 
 ## Surprises & Discoveries
