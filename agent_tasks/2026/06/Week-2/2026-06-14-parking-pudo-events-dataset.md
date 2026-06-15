@@ -175,3 +175,27 @@ Counts by event type:
 | pudo | 137792 | 30394 | 72932 | 120833 |
 | unpark | 119760 | 9304 | 0 | 0 |
 | unpudo | 140816 | 39586 | 73913 | 123121 |
+
+## 2026-06-15 Event Dataset Safety Filters
+
+Added the requested event-dataset exclusions while keeping event generation DC + AV and Gen2-only:
+
+- filtered corpus membership
+- geofence exclusion
+- known bad runs/windows
+- quarantined runs
+- quarantined segments
+- non-contiguous frames
+- invalid video filename
+
+Implementation:
+
+- `parking_pudo/events` now applies `EVENT_EXCLUSIONS` before `select_parking_pudo_event_rows`.
+- The dataset remains `platforms=["gen2"]`.
+- No autonomous, vehicle-model, low-steering, wheel-odometry, country, speed, or allowed-run-tag filters were added for this change.
+
+Validation:
+
+- Event-focused pytest subset passed all 5 selected tests, but the Bazel target failed its coverage gate because the rest of the suite was deselected.
+- Full `test_datasets_py_test` currently fails on unrelated `test_overlapping_park_windows_are_assigned_to_first_event`.
+- Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty`.
