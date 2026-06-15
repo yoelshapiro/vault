@@ -157,3 +157,21 @@ Flyte run:
 - Status: succeeded
 - Output root: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_park_unpark_20260615__2026-06-15-08-14`
 - Delta table stats: `{"wayve_corpus.all_data": [311911], "inferred__robotaxi.trip_events": [7241]}`
+
+Databricks upload:
+
+- Run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/685889555757934/run/248929635966954
+- Task run: https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/685889555757934/run/991478778966077
+- Status: success
+- Table: `hive_metastore.parking.parking_pudo_generic_events`
+- Rows: `513502`
+- Root in table: `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_park_unpark_20260615__2026-06-15-08-14`
+
+Counts by event type:
+
+| event_type | rows | av_rows | trip_rows | hazard_rows |
+|---|---:|---:|---:|---:|
+| park | 115134 | 2108 | 0 | 8 |
+| pudo | 137792 | 30394 | 72932 | 120833 |
+| unpark | 119760 | 9304 | 0 | 0 |
+| unpudo | 140816 | 39586 | 73913 | 123121 |
