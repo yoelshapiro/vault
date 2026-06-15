@@ -1,5 +1,33 @@
 # Agents Change Log
 
+## 2026-06-14 - PUDO datamodule + materialization bug fixes (N1-N5, M1-M6)
+
+- Topic: Implement the agreed fixes from the parking.py critique across the datamodule and materialization.
+- Labels: parking, pudo, unpudo, datamodule, materialization, bugfix.
+- Branches: `boris/pudo-parking-py-fixes` (new, off training branch; committed) + `boris/pudo_generic_materialization` (user's worktree; left uncommitted alongside their WIP).
+- PR: none yet (not pushed).
+- Change type: Bug fixes.
+- Areas: `wayve/ai/si/datamodules/parking.py` (+ test); `wayve/ai/services/sampling/datasets/parking_pudo/{filters,signals,intervention_filters}.py`.
+- Changes (datamodule, committed e1f598c):
+  - N1: `_compute_parking_mode` detects forward pull-out (P/N->D) as unparking, not only reverse-out.
+  - N2: added a min-neutral-duration gate (threaded `min_duration_sec` via `add_parking_mode`).
+  - N3: arrivals clamp now guarded by `_pre_intervention_would_fire` (fixed in parking.py, not pre-intervention).
+  - N5: clamp zeroes speed from `clamp_idx+1` (matches pose/waypoint freeze).
+  - N4: NOT a bug — both index arrays are `arange(present, …)` from the same present, so positions resolve identically; skipped.
+  - N6/N7: skipped per Boris.
+  - Tests: forward-unpark, duration-gate, updated clamp-speed semantics. All 5 parking tests pass (`5 passed, 373 deselected`); 12 unrelated pre-existing suite failures (sarsa/restore/lazy_future/PARKING_POSE_GT keys) not caused by these changes.
+  - Q1 answered: in the BC config the only trajectory mutation in parking.py is the arrivals clamp (POLICY_POSE/WAYPOINTS/SPEED/CURVATURE) + gear-target rewrite (gear cleanup + add_parking_mode); POLICY_PATH/PARKING_POSE/PARKING_POSE_GT are not produced in BC.
+- Changes (materialization, uncommitted in worktree):
+  - M1: `select_park_pudo_event` claims `assigned |= window` only inside the class-match gate (no cross-class frame theft).
+  - M2: approach AND departure (incl. gear-change departures) classify PUDO/PARK over the parked-segment span `[neutral_onset-1 : neutral_end)`.
+  - M3: `_departure_anchor` searches movement from `park_end_idx` (not `-1`), so the anchor can't land on the last park frame.
+  - M4: `_departure_events` returns a `cap_idx`; the unpudo post-departure window is clipped at the next parked segment.
+  - M6: `_trip_pudo_context` skips neutral segments shorter than `min_parking_duration_sec` (default 2 s).
+  - M5: skipped per Boris.
+  - Validation: all edited files py_compile clean; module filter test is entangled with the in-progress events/event_table refactor, so not run here.
+- Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-pudo-fixes-n-m]]
+- Critique source: [[projects/pudo-parking-py-critique-2026-06-14]]
+
 ## 2026-06-14 - Parking/PUDO Events Dataset
 
 - Topic: Add a generic materialisation `parking_pudo/events` dataset for event-table-style PUDO and UnPUDO anchors.
