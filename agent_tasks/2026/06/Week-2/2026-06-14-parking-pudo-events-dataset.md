@@ -199,3 +199,26 @@ Validation:
 - Event-focused pytest subset passed all 5 selected tests, but the Bazel target failed its coverage gate because the rest of the suite was deselected.
 - Full `test_datasets_py_test` currently fails on unrelated `test_overlapping_park_windows_are_assigned_to_first_event`.
 - Passed `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty`.
+
+## 2026-06-15 Bucket Surface Cleanup
+
+Removed the debug-only trip contribution buckets from the Parking/PUDO default
+and anchor bucket lists:
+
+- `dc_pudo_trip_*`
+- `dc_unpudo_trip_*`
+- `dc_pre_unpudo_trip_*`
+
+Trip-table context is still used for normal PUDO/UnPUDO classification and
+event metadata; only the separate debug buckets were removed.
+
+Renamed the pre-departure bucket names to make the start-anchor semantics
+explicit:
+
+- `dc_pre_unpark_*` -> `dc_pre_start_unpark_*`
+- `dc_pre_unpudo_*` -> `dc_pre_start_unpudo_*`
+
+Validation:
+
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg='--no-cov' --test_arg='-k' --test_arg='parking_pudo_dataset_includes_departure_and_failed_to_ca_buckets or parking_pudo_events_dataset_uses_single_unsplit_bucket or parking_pudo_event_metadata_detects_pudo_unpudo_and_disengagement or parking_pudo_event_metadata_detects_park_unpark_without_pudo_context'`
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty`
