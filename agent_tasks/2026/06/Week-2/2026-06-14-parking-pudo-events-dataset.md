@@ -56,3 +56,34 @@ WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel run //wayve/ai/services/s
 ```
 
 Used `filter_and_bucket_stage` for the first review run because the new dataset has no stable comparison root yet; a full `sample` run would likely reach compare and fail after materialisation.
+
+## 2026-06-15 AV Mode Column
+
+Added `av_mode` to the event metadata schema. It is a boolean copied from `ground_truth__state__vehicle__automation_active` at the emitted event anchor:
+
+- PUDO: AV mode at the gear-to-Park anchor.
+- UnPUDO: AV mode at the first-movement-after-Park anchor.
+
+Validation passed:
+
+- `bazel test //wayve/ai/services/sampling:test_tasks_py_test //wayve/ai/services/sampling:test_datasets_py_test --test_filter='test_extra_output_columns_survive_masks_and_buckets|test_parking_pudo_events_dataset_uses_single_unsplit_bucket|test_parking_pudo_event_metadata_detects_pudo_unpudo_and_disengagement|test_parking_pudo_event_metadata_records_trip_id_without_hazards'`
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_ruff //wayve/ai/services/sampling:test_tasks_py_lint_ruff //wayve/ai/services/sampling:test_datasets_ty //wayve/ai/services/sampling:test_tasks_ty`
+- `bazel test //wayve/ai/services/sampling:test_datasets_py_lint_flake8 //wayve/ai/services/sampling:test_tasks_py_lint_flake8`
+- `bazel build //wayve/ai/services/sampling:dataset_configs //wayve/ai/services/sampling:tasks`
+
+Published image:
+
+- `wayveacrprodflyte.azurecr.io/sampling:borisindel-tmp-build-0.1.125-boris-pudo_generic_materialization-59584`
+- Digest: `sha256:e442447224e561c91af60dc934cb7f0c30348972fc8444513764b0dc853e055a`
+
+Flyte rerun:
+
+- https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/asbcbg8m6s8g6c24qscc
+- Command:
+
+```bash
+WAYVECODE_MAIN_COMMIT_META_OVERRIDE=244abae57524 bazel run //wayve/ai/services/sampling:workflow -- \
+  remote run filter_and_bucket_stage \
+  --dataset_name parking_pudo/events \
+  --job_name parking_pudo_events_av_mode_20260615
+```
