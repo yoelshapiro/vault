@@ -11,7 +11,8 @@
 - Changes:
   - Replaced the optional-none parking-pose output path with a shape-valid `[B, 1, 8]` float32 NaN fallback.
   - Promoted real `[B, 8]` parking pose model outputs to `[B, 1, 8]` for the DMI detensorizer contract.
-  - Added eager and TorchScript regression coverage for the missing-output case and eager coverage for real parking-pose output.
+  - Restored path-distance/position outputs with shape-valid `[B, 0]` no-op fallbacks for missing outputs and pass-through for real `[B, Fp]` tensors.
+  - Added eager and TorchScript regression coverage for the missing-output case and eager coverage for real parking-pose/path outputs.
   - Verified `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k --test_arg=parking_deployment_wrapper --test_output=errors`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output]]
 

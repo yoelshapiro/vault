@@ -26,8 +26,12 @@ The detensorizer already filters invalid parking proposals when the tensor has t
   - missing pose -> `[B, 1, 8]` float32 NaNs on the correct device.
   - model pose `[B, 8]` -> `[B, 1, 8]`.
   - model pose `[B, N, 8]` -> float32 pass-through.
-- Left the path-distance outputs disabled, because their fallback must match the configured path waypoint count and should be restored separately.
+- Restored the path outputs with `_path_output_or_empty`:
+  - missing path tensor -> `[B, 0]` float32 no-op output, matching default `num_path_waypoints=0`.
+  - model path tensor `[B]` -> `[B, 1]`.
+  - model path tensor `[B, Fp]` -> float32 pass-through.
 - Added wrapper regression coverage for missing parking pose and real `[B, 8]` parking pose output, including a TorchScript case.
+- Added wrapper regression coverage for missing path outputs and real path tensor pass-through.
 
 ## Verification
 
