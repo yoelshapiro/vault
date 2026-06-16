@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-16 - Parking Mode Provenance Labels
+
+- Topic: Record per-sample parking detector mode labels in training provenance without introducing `ParkingStage`.
+- Labels: parking, pudo, datamodule, provenance, training.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: none.
+- Change type: Feature / data provenance.
+- Areas: `wayve/ai/si/datamodules/parking.py`; `wayve/ai/lib/provenance.py`; `wayve/ai/zoo/data/keys.py`; related tests.
+- Changes:
+  - Added `parking_mode_gt`, `parked_mode_gt`, and `unparking_mode_gt` keys.
+  - Wrote those labels from the final `ParkingModeResult` after parked-mode augmentation while preserving existing `PARKING_MODE` and `UNPARKING_MODE` model-input semantics.
+  - Added the labels to the provenance batch whitelist and row extractor so they appear as parquet columns when present.
+  - Added focused datamodule and provenance tests.
+  - Verified `//wayve/ai/lib:test_provenance`, filtered parking-unit tests with `--no-cov`, and ruff lint targets for AI lib and SI datamodules.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-mode-provenance-labels]]
+
 ## 2026-06-16 - Parking Pose NaN Output Shape
 
 - Topic: Fix parking deployment wrapper output shape for missing `POLICY_PARKING_POSE`.
