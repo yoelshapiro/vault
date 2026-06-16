@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-16 - Parking Pose NaN Output Shape
+
+- Topic: Fix parking deployment wrapper output shape for missing `POLICY_PARKING_POSE`.
+- Labels: parking, deployment, DMI, torchscript, regression-test.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: none.
+- Change type: Bug fix.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/si/test/interfaces/test_deployment_wrapper.py`.
+- Changes:
+  - Replaced the optional-none parking-pose output path with a shape-valid `[B, 1, 8]` float32 NaN fallback.
+  - Promoted real `[B, 8]` parking pose model outputs to `[B, 1, 8]` for the DMI detensorizer contract.
+  - Added eager and TorchScript regression coverage for the missing-output case and eager coverage for real parking-pose output.
+  - Verified `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k --test_arg=parking_deployment_wrapper --test_output=errors`.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output]]
+
 ## 2026-06-15 - Event Clip Viewer Rewrite (Streamlit -> FastAPI + vanilla JS) — implemented
 
 - Topic: Ground-up rewrite of the parking event clip viewer. ExecPlan signed off; implemented and verified headlessly.
