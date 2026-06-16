@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-16 - PUDO BC pmprov Training
+
+- Topic: Launch and monitor the PUDO BC training run from the generic-data branch.
+- Labels: parking, pudo, training, surfboard, notion.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: none.
+- Change type: Training run / monitoring / documentation.
+- Areas: Surfboard job `180668`; Parking/PUDO Notion model cards.
+- Changes:
+  - Submitted `joyous-yellow-platypus` / `session_2026_06_16_21_48_57_pmprov` with `+mode=parking_bc_train_release_2026_5_21`, `+datamodule=pudo_bc_datamodule`, 4 H100 nodes, and `num_steps=100000`.
+  - Monitored startup through distributed init, datamodule setup, first iteration, and W&B step reporting.
+  - Confirmed W&B `trainer/global_step=1354`, passing the requested 1K-step monitoring gate.
+  - Created the Parking/PUDO Notion model-card row with status `Training` and detailed run notes.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-pudo-bc-pmprov-training|2026-06-16 PUDO BC pmprov training]]
+
 ## 2026-06-16 - Parking Mode Provenance Labels
 
 - Topic: Record per-sample parking detector mode labels in training provenance without introducing `ParkingStage`.
