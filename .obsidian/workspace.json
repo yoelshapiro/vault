@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan.md",
+                "file": "projects/pudo-parking-py-critique-2026-06-14.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-06-15-event-clip-viewer-rewrite-execplan"
+              "title": "pudo-parking-py-critique-2026-06-14"
             }
           }
         ],
@@ -590,17 +590,17 @@
   "lastOpenFiles": [
     "agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output.md",
     "weekly plan.md",
-    "agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan.md",
-    "agent_tasks/2026/06/Week-3",
+    "projects/pudo-data-bug-report-2026-06-13.md",
     "projects/parking-capability-architecture-research.md",
+    "agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan.md",
     "todo-list.md",
     "projects/pudo-onroad-failure-rca-2026-06-14.md",
+    "agent_tasks/2026/06/Week-3",
     "projects/pudo-materialization-vs-zmurez-2026-06-15.md",
     "agent_tasks/2026/06/Week-2/2026-06-15-pudo-materialization-vs-zmurez.md",
     "projects/pudo-parking-py-critique-2026-06-14.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-onroad-rca.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-fixes-n-m.md",
-    "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-pudo-events-dataset.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-parking-py-critique.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port.md",
