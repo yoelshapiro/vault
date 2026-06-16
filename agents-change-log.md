@@ -13,6 +13,7 @@
   - Promoted real `[B, 8]` parking pose model outputs to `[B, 1, 8]` for the DMI detensorizer contract.
   - Restored path-distance/position outputs with shape-valid `[B, 0]` no-op fallbacks for missing outputs and pass-through for real `[B, Fp]` tensors.
   - Added eager and TorchScript regression coverage for the missing-output case and eager coverage for real parking-pose/path outputs.
+  - Redeployed `amaranth-kestrel-charming` as `adventurous-beaver-white` (`session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_eor_latch_indicators_no_interleave_v2`) from pushed commit `0892f60b1ef6`; no interleave control; gen2 artefact `d75cc989-71ed-4c64-b70f-4562003add38`.
   - Verified `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k --test_arg=parking_deployment_wrapper --test_output=errors`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output]]
 

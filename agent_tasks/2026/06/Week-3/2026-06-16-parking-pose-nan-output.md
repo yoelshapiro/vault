@@ -40,3 +40,37 @@ bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k --test_arg=parkin
 ```
 
 Result: passed.
+
+## Redeploy
+
+Redeployed `amaranth-kestrel-charming` from branch `boris/training/main_cherrypick_generic_data` after committing and pushing the fix:
+
+- Commit: `0892f60b1ef6` (`fix: keep parking optional outputs shape-valid`)
+- Source session: `session_2026_06_11_20_44_02_gp8n100k4`
+- Source checkpoint step: `100000`
+- Deploy suffix: `__amaranth-kestrel-charming_no_eor_latch_indicators_no_interleave_v2`
+- Deployed session: `session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_eor_latch_indicators_no_interleave_v2`
+- Deployed nickname: `adventurous-beaver-white`
+- Console: https://console.sso.wayve.ai/model/session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_eor_latch_indicators_no_interleave_v2
+- Gen2 artefact id: `d75cc989-71ed-4c64-b70f-4562003add38`
+- Checkpoint hash: `b41ef5e54c36d6739ce2c7ec441815a8`
+
+Deploy command:
+
+```bash
+bazel run //wayve/ai/si:deploy -- \
+  --session_path abfss://training-session-store@wayveprodmlexperiments.dfs.core.windows.net/Parking/parking_bc/session_2026_06_11_20_44_02_gp8n100k4 \
+  --output_dir /workspace/parking_deploy_outputs \
+  --suffix __amaranth-kestrel-charming_no_eor_latch_indicators_no_interleave_v2 \
+  --with_temporal_caching True \
+  --upload \
+  --target-vehicle-models gen2-av-mache-alpha3
+```
+
+Notes:
+
+- No interleave control flag was passed.
+- Wrapper kwargs did not include route-end hazard/gear-latch overrides, so the pushed defaults (`False`) apply.
+- Verified `gen2_model_inference_config.json` has radar features X/Y/Z/range-rate/SNR and `points_per_scan=800`.
+- Verified output entries include `policy_parking_pose`, `policy_path_distance`, `policy_path_position_forward`, and `policy_path_position_left`; path outputs have `num_path_waypoints=0`.
+- Immediate Model CI polls returned no build records yet; upload request included `model_ci_config.enabled=true` for `gen2-av-mache-alpha3`.
