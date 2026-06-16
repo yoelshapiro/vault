@@ -162,6 +162,20 @@
   - Added focused unit regressions for parking stop index, unparking move-start index, and unpark route-position conversion.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-entry-lookahead-index|2026-06-16 Parking Entry Lookahead Index]]
 
+## 2026-06-16 - PUDO Window Caps Root
+
+- Topic: Point Parking/PUDO BC data config at the window-capped materialization root.
+- Labels: parking, pudo, config, materialization.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: n/a.
+- Change type: Config change.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`.
+- Changes:
+  - Updated `PARKING_BC_PUDO_BUCKETS_ROOT` to the `parking_pudo_default_window_caps_20260616__2026-06-16-10-23` dataset root.
+  - Renamed DC pre-start UnPUDO bucket references from `dc_pre_unpudo_*` to `dc_pre_start_unpudo_*`.
+  - Verified all referenced US/UK PUDO buckets exist in the new materialization for the current config.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-pudo-window-caps-root|2026-06-16 PUDO Window Caps Root]]
+
 ## 2026-06-14 - Parking Hub publish_report Script + PR
 
 - Topic: Parking-owned HTML report publishing (not semantic_understanding) via the parking hub + a copy/link helper script.
