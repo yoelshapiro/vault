@@ -74,3 +74,30 @@ Notes:
 - Verified `gen2_model_inference_config.json` has radar features X/Y/Z/range-rate/SNR and `points_per_scan=800`.
 - Verified output entries include `policy_parking_pose`, `policy_path_distance`, `policy_path_position_forward`, and `policy_path_position_left`; path outputs have `num_path_waypoints=0`.
 - Immediate Model CI polls returned no build records yet; upload request included `model_ci_config.enabled=true` for `gen2-av-mache-alpha3`.
+
+## Redeploy Without Path Outputs
+
+After on-car DMI still rejected zero-width `policy_path_distance` with:
+
+```text
+InferenceNodeAdapter::processInboxAndRunForwardPass: Failed to process output tensor policy_path_distance: Invalid shape for dimension 1: 0.
+```
+
+Removed the path-based outputs from `DrivingOutputWithGearOutput` entirely and redeployed:
+
+- Commit: `12b4d67a898c` (`fix: remove parking path outputs from deployment`)
+- Source session: `session_2026_06_11_20_44_02_gp8n100k4`
+- Source checkpoint step: `100000`
+- Deploy suffix: `__amaranth-kestrel-charming_no_path_outputs_no_interleave_v1`
+- Deployed session: `session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_path_outputs_no_interleave_v1`
+- Deployed nickname: `amber-llama-cautious`
+- Console: https://console.sso.wayve.ai/model/session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_path_outputs_no_interleave_v1
+- Gen2 artefact id: `279969c7-d2e7-498f-a858-5c999b6014a5`
+- Checkpoint hash: `b41ef5e54c36d6739ce2c7ec441815a8`
+
+Verification:
+
+- `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k --test_arg=parking_deployment_wrapper --test_output=errors` passed.
+- Generated `gen2_model_inference_config.json`, `policy_io_config.yml`, and `output_dataclass.yml` contain no `policy_parking_pose`, `policy_path_distance`, `policy_path_position_forward`, or `policy_path_position_left` entries.
+- Radar config still has X/Y/Z/range-rate/SNR and `points_per_scan=800`.
+- Immediate Model CI polls returned no build records yet; upload request included `model_ci_config.enabled=true` for `gen2-av-mache-alpha3`.

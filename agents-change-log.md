@@ -14,6 +14,7 @@
   - Restored path-distance/position outputs with shape-valid `[B, 0]` no-op fallbacks for missing outputs and pass-through for real `[B, Fp]` tensors.
   - Added eager and TorchScript regression coverage for the missing-output case and eager coverage for real parking-pose/path outputs.
   - Redeployed `amaranth-kestrel-charming` as `adventurous-beaver-white` (`session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_eor_latch_indicators_no_interleave_v2`) from pushed commit `0892f60b1ef6`; no interleave control; gen2 artefact `d75cc989-71ed-4c64-b70f-4562003add38`.
+  - After DMI rejected zero-width `policy_path_distance`, removed the path-based outputs entirely and redeployed as `amber-llama-cautious` (`session_2026_06_11_20_44_02_gp8n100k4__amaranth-kestrel-charming_no_path_outputs_no_interleave_v1`) from pushed commit `12b4d67a`; gen2 artefact `279969c7-d2e7-498f-a858-5c999b6014a5`.
   - Verified `bazel test //wayve/ai/si:test_deployment_wrapper --test_arg=-k --test_arg=parking_deployment_wrapper --test_output=errors`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output]]
 
