@@ -1,23 +1,5 @@
 # Agents Change Log
 
-## 2026-06-16 - Parking Gear Expansion And Entry Index
-
-- Topic: Remove neutral policy clamping and make parking standstill gear expansion configurable.
-- Labels: parking, pudo, datamodule, gear, route-shortening.
-- Branch: `boris/training/main_cherrypick_generic_data`.
-- PR: none.
-- Change type: Code change, tests.
-- Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/test/test_parking_unit.py`, `wayve/ai/si/configs/parking/parking_config.py`.
-- Changes:
-  - Removed `clamp_policy_at_first_neutral` from the SI parking datapipe and deleted its focused unit tests.
-  - Changed `_build_expanded_gear` to expand P/N labels only backward over standstill frames.
-  - Added `standstill_speed_threshold_kmh` to `ParkingDataConfig`, defaulting to `0.5`, and set it to `0.1` in `parking_bc_datamodule_cfg`.
-  - Threaded the threshold through gear reconstruction, cleanup, parking/unparking detection, route-entry selection, standstill stripping, and standstill gear augmentation.
-  - Kept parking/PUDO route shortening anchored on the detected neutral segment start; kept unpark/UnPUDO on the first moving frame after the parked segment.
-  - Preserved `PARKING_MODE=True` for detected parking or parked samples before parked-mode augmentation, while keeping it false for unparking.
-  - Verified Ruff passed and the focused selected parking unit tests passed; filtered Bazel target still fails only on coverage due deselected tests.
-- Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-entry-lookahead-index|2026-06-16 Parking Gear Expansion And Entry Index]]
-
 ## 2026-06-16 - Parking Pose NaN Output Shape
 
 - Topic: Fix parking deployment wrapper output shape for missing `POLICY_PARKING_POSE`.

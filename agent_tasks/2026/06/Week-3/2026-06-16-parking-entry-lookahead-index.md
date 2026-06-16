@@ -1,28 +1,24 @@
-# 2026-06-16 Parking Gear Expansion And Entry Index
+# 2026-06-16 Parking Entry Lookahead Index
 
 ## Summary
 
-Updated parking gear/mode preprocessing in `wayve/ai/si/datamodules/parking.py` after confirming that the policy clamp-at-neutral step was not the right mechanism.
+Fixed parking route-shortening event index selection in `wayve/ai/si/datamodules/parking.py`.
 
 ## Changes
 
-- Removed `clamp_policy_at_first_neutral` from the SI parking datapipe and deleted its focused unit tests.
-- Changed `_build_expanded_gear` to expand P/N labels only backward over standstill frames, not forward after the P/N segment.
-- Added `standstill_speed_threshold_kmh` to `ParkingDataConfig`, defaulting to the existing `0.5` km/h constant.
-- Threaded the standstill threshold through gear reconstruction, gear cleanup, parking/unparking detection, route-entry selection, standstill stripping, and standstill gear augmentation.
-- Set `standstill_speed_threshold_kmh=0.1` in `parking_bc_datamodule_cfg`.
-- Kept parking/PUDO route shortening anchored on the detected neutral segment start; kept unpark/UnPUDO route shortening anchored on the first moving frame after the parked segment.
-- Preserved `PARKING_MODE=True` for detected parking or parked samples before parked-mode augmentation, while keeping it false for unparking.
+- Confirmed `_PARKING_ENTRY_LOOKAHEAD_INDEX_KEY` previously stored `segment_start` for parking/PUDO and hardcoded `0` for unpark/UnPUDO.
+- Added explicit helpers to choose the first stopped frame inside the cleaned parking/PUDO neutral segment and the first moving frame after the cleaned unpark/UnPUDO neutral segment.
+- Mapped the selected table index into the current/future lookahead index array, falling back to `0` when the event is already before the current origin.
 - Updated `wayve/ai/zoo/data/parking.py` so the stored route event index is consumed for both `PARKING_MODE` and `UNPARKING_MODE`.
-- Added focused regressions for backward-only gear expansion, threshold-driven expansion, parking entry index, unpark move-start index, and parked input mode.
+- Added focused regressions for parking stop index, unparking move-start index, and unpark route-position conversion.
 
 ## Validation
 
-- `bazel test //wayve/ai/si/datamodules:py_lint_ruff`
-  - Passed.
-- `bazel test //wayve/ai/si/datamodules:py_test --test_arg='-k=build_expanded_gear or add_parking_mode_stores or add_parking_mode_sets_parking_input'`
-  - The 6 selected tests passed; target failed only because the package coverage gate drops to 20% when pytest filtering deselects most tests.
+- `bazel test //wayve/ai/si/datamodules:py_test --test_arg='-k=add_parking_mode_stores'`
+  - New SI regressions passed; target failed coverage because pytest filtering deselected most tests.
 - `bazel test //wayve/ai/zoo/data:test_zoo_data_py_test --test_arg='-k=add_parking_stop_route_position_uses_unparking_entry_index'`
+  - Passed.
+- `bazel test //wayve/ai/si/datamodules:py_lint_ruff`
   - Passed.
 - `bazel test //wayve/ai/zoo/data:test_zoo_data_py_lint_ruff`
   - Passed.
