@@ -158,6 +158,7 @@
   - Replaced `_parking_entry_lookahead_index` with `_parking_entry_table_index`, storing one absolute table index for parking/PUDO stop position or unpark/UnPUDO movement-start position.
   - Added first-moving-frame selection for unpark/UnPUDO route shortening, including cases where movement started before the current origin.
   - Removed the old lookahead-index-to-table-index mapping from zoo route-position conversion.
+  - Added parking/PUDO-only navigation shortening by clamping turn-by-turn navigation lookahead to the stored parking stop route position; unpark/UnPUDO navigation remains unchanged.
   - Added focused unit regressions for parking stop table index, unparking move-start table index, and unpark route-position conversion.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-entry-lookahead-index|2026-06-16 Parking Entry Table Index]]
 
