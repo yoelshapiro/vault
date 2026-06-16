@@ -143,11 +143,11 @@ Approach skips run-start segments (`filters.py:91-93`); departure only guards ru
 | `enable_stopping_mode` | False | **Keep OFF until the label is fixed**, then enable | The PUDO-vs-PARK distinction (relaxed double-park vs tight park) is *not conditioned* in BC. But the current label is noise: random 50/50 on non-parking frames + "hazard anywhere in the 30–50 s lookahead" on parking frames (`parking.py:1131,1135`), and it never emits the UNAVAILABLE→dropout value. Fix to a drive-level label + UNAVAILABLE first, then enable to express double-park style (**P1/P2**). |
 
 ### 3e. Goal / path / route (drives P2)
-| Flag | BC now | Recommend | Why / motivation |
-|---|---|---|---|
-| `policy_path_num_points` / `_sample_step_m` | 0 / 0.5 | Optional: add a goal-pose aux target | BC has no explicit stop-pose objective (N6); P2 is bounded by waypoint regression. A small goal-pose aux head/target would give a direct stop-position signal. |
-| `enable_route_shortening_for_parking` | True | Keep, but **fix N4** and re-check stop bias | Helps end-of-route stopping, but has the clipped-index bug (N4) and may bias the stop point; re-evaluate after fixing. |
-| `parking_goal_dropout_probability` | 0.0 | Keep 0 in BC (no goal to drop) | Only meaningful when `policy_path_num_points>0`. |
+| Flag                                        | BC now  | Recommend                                   | Why / motivation                                                                                                                                               |
+| ------------------------------------------- | ------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `policy_path_num_points` / `_sample_step_m` | 0 / 0.5 | Optional: add a goal-pose aux target        | BC has no explicit stop-pose objective (N6); P2 is bounded by waypoint regression. A small goal-pose aux head/target would give a direct stop-position signal. |
+| `enable_route_shortening_for_parking`       | True    | Keep, but **fix N4** and re-check stop bias | Helps end-of-route stopping, but has the clipped-index bug (N4) and may bias the stop point; re-evaluate after fixing.                                         |
+| `parking_goal_dropout_probability`          | 0.0     | Keep 0 in BC (no goal to drop)              | Only meaningful when `policy_path_num_points>0`.                                                                                                               |
 
 ### 3f. Conditioning robustness (drives U2)
 | Flag | BC now | Recommend | Why / motivation |
