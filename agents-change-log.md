@@ -146,6 +146,22 @@
   - Added focused parking wrapper tests and verified `//wayve/ai/si:test_deployment_wrapper -k parking`.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port|2026-06-14 Parking Deployment Gear Indicator Port]]
 
+## 2026-06-16 - Parking Entry Lookahead Index
+
+- Topic: Fix route-shortening event index selection for parking/PUDO and unpark/UnPUDO samples.
+- Labels: parking, pudo, datamodule, route-shortening.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: n/a.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/zoo/data/parking.py`.
+- Changes:
+  - Replaced `_PARKING_ENTRY_LOOKAHEAD_INDEX_KEY` storage logic that used raw `segment_start` for parking and hardcoded `0` for unparking.
+  - Added explicit stop/start-moving boundary helpers using the cleaned parking segment and speed threshold.
+  - Mapped selected table indices into the current/future lookahead array used by route shortening.
+  - Updated route-position conversion to honor the stored index for both `PARKING_MODE` and `UNPARKING_MODE`.
+  - Added focused unit regressions for parking stop index, unparking move-start index, and unpark route-position conversion.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-parking-entry-lookahead-index|2026-06-16 Parking Entry Lookahead Index]]
+
 ## 2026-06-14 - Parking Hub publish_report Script + PR
 
 - Topic: Parking-owned HTML report publishing (not semantic_understanding) via the parking hub + a copy/link helper script.
