@@ -1,19 +1,18 @@
-# 2026-06-16 Parking Entry Lookahead Index
+# 2026-06-16 Parking Entry Table Index
 
 ## Summary
 
-Fixed parking route-shortening event index selection in `wayve/ai/si/datamodules/parking.py`.
+Fixed parking route-shortening event index selection in `wayve/ai/si/datamodules/parking.py` and removed the obsolete `_parking_entry_lookahead_index` path.
 
 ## Changes
 
-- Confirmed `_PARKING_ENTRY_LOOKAHEAD_INDEX_KEY` previously stored `segment_start` for parking/PUDO and hardcoded `0` for unpark/UnPUDO.
-- Added explicit helpers to choose the cleaned parking/PUDO neutral segment start and the first moving frame after the cleaned unpark/UnPUDO neutral segment.
-- Mapped the selected table index into the current/future lookahead index array, falling back to `0` when the event is already before the current origin.
+- Confirmed `_PARKING_ENTRY_LOOKAHEAD_INDEX_KEY` previously stored a lookahead-relative event index, which could not represent past unpark/UnPUDO movement-start positions correctly.
+- Added explicit helper logic to choose the first moving frame after the cleaned unpark/UnPUDO neutral segment.
+- Replaced `_parking_entry_lookahead_index` with `_parking_entry_table_index`, storing the absolute table index for parking/PUDO stop position or unpark/UnPUDO movement-start position.
 - Updated `PARKING_MODE` model input to stay true for detected parking or parked samples, while keeping it false when the sample is converted to unparking.
-- Updated `wayve/ai/zoo/data/parking.py` so the stored route event index is consumed for both `PARKING_MODE` and `UNPARKING_MODE`.
+- Updated `wayve/ai/zoo/data/parking.py` so route-position conversion consumes only the absolute table index for both `PARKING_MODE` and `UNPARKING_MODE`.
 - Added focused regressions for parking segment-start index, unparking move-start index, parked `PARKING_MODE` input, and unpark route-position conversion.
-- Refined unparking route shortening to also store the absolute table index for the first moving frame after P/N.
-- Updated route-position conversion to prefer the absolute table index over the current/future lookahead index, so unparking samples after movement has already started still shorten the route from the original movement-start position rather than the current frame.
+- Removed the `parking_indices` mapping argument from `insert_parking_stop_route_position`.
 
 ## Validation
 
@@ -31,7 +30,7 @@ Fixed parking route-shortening event index selection in `wayve/ai/si/datamodules
   - Passed.
 - `bazel test //wayve/ai/zoo/data:test_zoo_data_py_test --test_arg='-k=parking_stop_route_position'`
   - Passed.
-- `bazel test //wayve/ai/si/datamodules:py_test --test_arg='-k=add_parking_mode_stores_unparking_first_moving_lookahead_index or add_parking_mode_stores_unparking_past_move_start_table_index or add_parking_mode_stores_parking_segment_start_lookahead_index'`
+- `bazel test //wayve/ai/si/datamodules:py_test --test_arg='-k=add_parking_mode_stores_parking_segment_start_table_index or add_parking_mode_stores_unparking_first_moving_table_index or add_parking_mode_stores_unparking_past_move_start_table_index'`
   - The 3 selected tests passed; target failed only because pytest filtering deselected most tests and coverage fell below the package threshold.
 - `bazel test //wayve/ai/si/datamodules:py_lint_ruff //wayve/ai/zoo/data:test_zoo_data_py_lint_ruff`
   - Passed.
