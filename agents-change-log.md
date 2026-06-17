@@ -2417,3 +2417,19 @@
   - Verified Gen2 radar config and triggered Alpha3 Model CI build `75970`.
   - Updated the Parking/PUDO Notion model-card row/page; Console lifecycle note remains blocked on refreshed Console auth.
 - Task note: [[agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port|2026-06-14 Parking Deployment Gear Indicator Port]]
+
+## 2026-06-17 - Astonishing No Route-End Latch Deploy
+
+- Topic: Redeploy `astonishing-chocolate-albatross` with parking interleave control but route-end gear latch and hazard forcing disabled.
+- Labels: parking, pudo, deployment, interleave-control, model-ci.
+- Branch: `codex/guy-recipe-gear-root-amaranth-root`.
+- PR: n/a.
+- Change type: Local deploy plumbing, deployment, Model CI.
+- Areas: `wayve/ai/si/deploy.py`, `wayve/ai/si/models/deployment.py`, Model Catalogue.
+- Changes:
+  - Added local deploy flags for `enable_end_of_route_hazard_lights` and `enable_end_of_route_gear_latch`, defaulting to existing true behavior.
+  - Threaded those flags into `ParkingDeploymentWrapperImpl` wrapper kwargs.
+  - Redeployed checkpoint `100000` as `coral-snake-substantial-bronze` with both route-end behaviors disabled and parking interleave group enabled.
+  - Verified the Gen2 inference config retained parking interleave control and radar settings.
+  - Triggered Model CI build `76415`; Gen2 archive and Eval Studio Gen2 Alpha3 jobs succeeded at last check.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-astonishing-no-route-end-latch-deploy|2026-06-17 Astonishing No Route-End Latch Deploy]]
