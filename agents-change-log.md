@@ -15,7 +15,10 @@
   - Fixed the navigation pybind boundary by casting `polyline_location_index` to `int` and the companion pybind inputs to explicit numeric types; added a regression assertion.
   - Verified targeted route-map tests and data-pipes lint, then pushed commit `4f306b5b8a90`.
   - Submitted retry `lime-wolverine-picturesque` / `session_2026_06_17_04_24_10_pmprov2`; confirmed W&B `trainer/global_step=1082`, passing the requested 1K-step retry gate.
-  - Created Parking/PUDO Notion model-card rows with status `Training` and detailed run notes for the original and retry runs.
+  - The retry later failed at a second pybind boundary in `generate_route_map_from_config`; fixed `Mapper.setRouteLocation` by casting the route index to `int` and fraction to `float`, with regression coverage in `test_routes.py`.
+  - Verified the focused AI Lib route-map test and lint, then pushed commit `300909d3f83f`.
+  - Submitted third attempt `universal-pink-wrasse` / `session_2026_06_17_06_57_55_pmprov3`; confirmed W&B `trainer/global_step=1122`, passing the requested 1K-step retry gate.
+  - Created Parking/PUDO Notion model-card rows with status `Training` and detailed run notes for the original, retry, and third-attempt runs.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-pudo-bc-pmprov-training|2026-06-16 PUDO BC pmprov training]]
 
 ## 2026-06-16 - Parking Mode Provenance Labels
