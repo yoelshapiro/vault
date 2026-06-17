@@ -1,18 +1,21 @@
 # Agents Change Log
 
-## 2026-06-16 - PUDO BC pmprov Training
+## 2026-06-16 - PUDO BC pmprov Training and Retry
 
-- Topic: Launch and monitor the PUDO BC training run from the generic-data branch.
-- Labels: parking, pudo, training, surfboard, notion.
+- Topic: Launch, debug, fix, and retry the PUDO BC training run from the generic-data branch.
+- Labels: parking, pudo, training, surfboard, notion, dataloader.
 - Branch: `boris/training/main_cherrypick_generic_data`.
 - PR: none.
-- Change type: Training run / monitoring / documentation.
-- Areas: Surfboard job `180668`; Parking/PUDO Notion model cards.
+- Change type: Bug fix / training run / monitoring / documentation.
+- Areas: `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`; Surfboard jobs `180668`, `180756`; Parking/PUDO Notion model cards.
 - Changes:
   - Submitted `joyous-yellow-platypus` / `session_2026_06_16_21_48_57_pmprov` with `+mode=parking_bc_train_release_2026_5_21`, `+datamodule=pudo_bc_datamodule`, 4 H100 nodes, and `num_steps=100000`.
   - Monitored startup through distributed init, datamodule setup, first iteration, and W&B step reporting.
-  - Confirmed W&B `trainer/global_step=1354`, passing the requested 1K-step monitoring gate.
-  - Created the Parking/PUDO Notion model-card row with status `Training` and detailed run notes.
+  - The original job later failed on a dataloader prefetch error in the parking route-shortening navigation path; the later NCCL timeout was downstream.
+  - Fixed the navigation pybind boundary by casting `polyline_location_index` to `int` and the companion pybind inputs to explicit numeric types; added a regression assertion.
+  - Verified targeted route-map tests and data-pipes lint, then pushed commit `4f306b5b8a90`.
+  - Submitted retry `lime-wolverine-picturesque` / `session_2026_06_17_04_24_10_pmprov2`; confirmed W&B `trainer/global_step=1082`, passing the requested 1K-step retry gate.
+  - Created Parking/PUDO Notion model-card rows with status `Training` and detailed run notes for the original and retry runs.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-16-pudo-bc-pmprov-training|2026-06-16 PUDO BC pmprov training]]
 
 ## 2026-06-16 - Parking Mode Provenance Labels
