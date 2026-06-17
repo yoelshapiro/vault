@@ -33,6 +33,8 @@ Fixed `visualise_bokeh` inference dispatch for ParkingPlotter sessions where the
 - Detected Python/generated/scripted `ParkingDeploymentWrapperImpl` wrappers and forced the visualiser through the top-level wrapper call so parking visualisation represents actual deployment inference instead of bypassing wrapper preprocessing via `.model(inputs)`.
 - Kept the parking deployment navigation path aligned with the wrapper signature: grouped navigation tensors (`lane_level_info_*`, `step_info_*`, `navigation_instructions_timestamp`) are passed through the deployment adapter.
 - Added explicit visualisation adapter/default coverage for `PARKING_MODE` and `UNPARKING_MODE` tensors so direct/research-model paths can still receive the parking mode input when requested.
+- Added a visible `Parking / Navigation` panel to `ParkingPlotter`, showing parking/unparking/stopping state plus nav timestamp and the first few grouped step/lane navigation entries.
+- Added grouped navigation keys to `ParkingPlotter.input_keys_used()` so the view requests the tensors it displays.
 
 ## Verification
 
@@ -62,3 +64,5 @@ Fixed `visualise_bokeh` inference dispatch for ParkingPlotter sessions where the
   - Passed after adding the actual parking-wrapper dispatch regression.
 - Re-ran the original command shape with default dataloader workers against `~/bokeh-outputs/test-codex-parking-wrapper`.
   - Completed successfully and visualised 9 frames using the parking deployment wrapper dispatch.
+- `bazel test //wayve/ai/si:test_bokeh_visualise`
+  - Passed after adding the visible Parking / Navigation panel assertion.

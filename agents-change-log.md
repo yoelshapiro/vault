@@ -2452,5 +2452,6 @@
   - Fixed top-level direct-input MIMOST inference and preserved categorical tensor dtypes.
   - Forced `ParkingDeploymentWrapperImpl` visualisation through the top-level wrapper path so it represents actual deployment inference.
   - Added grouped-navigation stream and parking-mode adapter/default coverage for visualisation inputs.
+  - Added a visible Parking / Navigation panel to `ParkingPlotter` with parking mode, unparking mode, stopping mode, nav timestamp, and grouped step/lane summaries.
   - Verified the reported ParkingPlotter command completes and renders 9 frames.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-bokeh-mimost-direct-inputs|2026-06-17 Bokeh MIMOST Direct Inputs]]
