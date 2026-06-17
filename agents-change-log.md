@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-17 - Bokeh MIMOST Direct Inputs
+
+- Topic: Fix ParkingPlotter `visualise_bokeh` inference dispatch for top-level MIMOST checkpoints.
+- Labels: parking, bokeh, visualisation, inference, regression-test.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: none.
+- Change type: Bug fix.
+- Areas: `wayve/ai/si/visualisation/inference_model.py`; `wayve/ai/si/visualisation/inference_model_helpers.py`; visualization tests.
+- Changes:
+  - Added signature-based detection for top-level models whose `forward` accepts a training-style `inputs` dict.
+  - Routed MIMOST-style top-level models through `model(inputs)` before falling back to deployment-wrapper keyword adaptation.
+  - Added helper and wrapper regression tests for the direct-input dispatch path.
+  - Verified `//wayve/ai/si:inference_debugger_py_checks`, focused `//wayve/ai/si:test_inference_model`, and the reported `visualise_bokeh` session against `~/bokeh-outputs/test-codex`.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-bokeh-mimost-direct-inputs]]
+
 ## 2026-06-16 - PUDO BC pmprov Training and Retry
 
 - Topic: Launch, debug, fix, and retry the PUDO BC training run from the generic-data branch.
