@@ -53,3 +53,5 @@ Fixed `visualise_bokeh` inference dispatch for ParkingPlotter sessions where the
   - Passed 9 selected path-loader tests.
 - Re-ran the session-config path against `~/bokeh-outputs/test-codex-config` with `--num_workers 0`.
   - Completed successfully and visualised 9 frames using the session datamodule config.
+- Re-ran the original command shape with default dataloader workers against `~/bokeh-outputs/test-codex-config-default-workers`.
+  - Completed successfully and visualised 9 frames using the session datamodule config.

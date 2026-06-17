@@ -16,7 +16,7 @@
   - Added `--parking_datamodule` support for checked-in parking datamodule configs.
   - Supported multi-source odometry in run-id OTF and normalized numpy-array odometry-source values in `load_paths`.
   - Preserved integer/bool tensor dtypes in visualisation inference casting for categorical model inputs.
-  - Verified `//wayve/ai/si:inference_debugger_py_checks`, focused `//wayve/ai/si:test_inference_model`, `//wayve/ai/si:test_pack_model`, `//wayve/ai/si:test_bokeh_visualise`, `//wayve/ai/si:test_run_segment_picker`, focused OTF/path-loader tests, and the reported `visualise_bokeh` session against `~/bokeh-outputs/test-codex-config` (9 frames).
+  - Verified `//wayve/ai/si:inference_debugger_py_checks`, focused `//wayve/ai/si:test_inference_model`, `//wayve/ai/si:test_pack_model`, `//wayve/ai/si:test_bokeh_visualise`, `//wayve/ai/si:test_run_segment_picker`, focused OTF/path-loader tests, and the reported `visualise_bokeh` session against `~/bokeh-outputs/test-codex-config-default-workers` (9 frames).
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-bokeh-mimost-direct-inputs]]
 
 ## 2026-06-16 - PUDO BC pmprov Training and Retry
