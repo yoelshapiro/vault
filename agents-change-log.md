@@ -2438,3 +2438,19 @@
   - Triggered Model CI build `76415`; Gen2 archive and Eval Studio Gen2 Alpha3 jobs succeeded at last check.
   - Added a Model Catalogue note for the deployed model and created UK PUDO licensing plus UK Drift/PUDO follow-up experiments against `green-stegosaurus-brave`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-astonishing-no-route-end-latch-deploy|2026-06-17 Astonishing No Route-End Latch Deploy]]
+
+## 2026-06-17 - Bokeh Parking Wrapper Direct Inputs
+
+- Topic: Make ParkingPlotter visualisation use session OTF config and actual parking deployment wrapper inference.
+- Labels: parking, bokeh, visualisation, otf, deployment-wrapper.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: n/a.
+- Change type: Code change, tests, local verification.
+- Areas: `wayve/ai/si/visualisation`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/data/pipes/paths.py`.
+- Changes:
+  - Reused session/parking datamodule OTF settings while preserving explicit run-id/timestamp segment selection.
+  - Fixed top-level direct-input MIMOST inference and preserved categorical tensor dtypes.
+  - Forced `ParkingDeploymentWrapperImpl` visualisation through the top-level wrapper path so it represents actual deployment inference.
+  - Added grouped-navigation stream and parking-mode adapter/default coverage for visualisation inputs.
+  - Verified the reported ParkingPlotter command completes and renders 9 frames.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-bokeh-mimost-direct-inputs|2026-06-17 Bokeh MIMOST Direct Inputs]]

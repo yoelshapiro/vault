@@ -30,6 +30,9 @@ Fixed `visualise_bokeh` inference dispatch for ParkingPlotter sessions where the
 - Updated run-id OTF to support multi-source odometry configs like `["wheel", "wheel_imu"]`.
 - Fixed `load_paths` scalar normalization for numpy-array odometry-source table values.
 - Preserved integer/bool tensor dtypes in the visualisation inference wrapper so categorical model inputs remain valid embedding indices.
+- Detected Python/generated/scripted `ParkingDeploymentWrapperImpl` wrappers and forced the visualiser through the top-level wrapper call so parking visualisation represents actual deployment inference instead of bypassing wrapper preprocessing via `.model(inputs)`.
+- Kept the parking deployment navigation path aligned with the wrapper signature: grouped navigation tensors (`lane_level_info_*`, `step_info_*`, `navigation_instructions_timestamp`) are passed through the deployment adapter.
+- Added explicit visualisation adapter/default coverage for `PARKING_MODE` and `UNPARKING_MODE` tensors so direct/research-model paths can still receive the parking mode input when requested.
 
 ## Verification
 
@@ -55,3 +58,7 @@ Fixed `visualise_bokeh` inference dispatch for ParkingPlotter sessions where the
   - Completed successfully and visualised 9 frames using the session datamodule config.
 - Re-ran the original command shape with default dataloader workers against `~/bokeh-outputs/test-codex-config-default-workers`.
   - Completed successfully and visualised 9 frames using the session datamodule config.
+- `bazel test //wayve/ai/si:test_inference_model --test_arg='-k=parking_deployment_wrapper or cast_preserves_nonfloating_dtypes'`
+  - Passed after adding the actual parking-wrapper dispatch regression.
+- Re-ran the original command shape with default dataloader workers against `~/bokeh-outputs/test-codex-parking-wrapper`.
+  - Completed successfully and visualised 9 frames using the parking deployment wrapper dispatch.
