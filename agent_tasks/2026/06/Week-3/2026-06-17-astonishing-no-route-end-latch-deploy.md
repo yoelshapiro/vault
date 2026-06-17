@@ -56,6 +56,22 @@ Gen2 config verification:
   - `Model Deployment Archive Gen2`: success, finished `2026-06-17T10:13:47`
   - `Eval Studio (Gen 2 Alpha 3)`: success, finished `2026-06-17T10:14:42`
 
+## Follow-up Console Setup
+
+- Model note created: `174bffda-caa1-4a1b-85f5-47c0050a9191`
+- UK PUDO licensing experiment: https://console.sso.wayve.ai/on-road-experiments/21ee33bd-d337-4aa0-9cb1-a8b2d540f50e
+  - Reference: https://console.sso.wayve.ai/on-road-experiments/f01a70c9-a7ea-4bed-82fa-c8f081ef3ec6
+  - Control: `green-stegosaurus-brave`
+  - Variant: `coral-snake-substantial-bronze`
+  - Theme: `Licensing` (`4582f9bb-00c5-494e-9734-de96ba924823`)
+- UK Drift/PUDO experiment: https://console.sso.wayve.ai/on-road-experiments/26dedf9e-710f-4671-ba7f-bb2bbe352c71
+  - Reference: https://console.sso.wayve.ai/on-road-experiments/23b1ddec-f725-4a8f-9561-0e06b7e78476
+  - Control: `green-stegosaurus-brave`
+  - Variant: `coral-snake-substantial-bronze`
+  - Controller: default/no explicit controller
+  - PUDO/SBW driving feature config copied from the reference experiment
+  - Theme: `P1 - Robotaxi + PUDO` (`2fad6b3d-2fc4-4c3a-87c8-be03d76b5119`)
+
 ## Notes
 
 - ONNX artefact upload reported the known non-fatal validation path because ONNX export was disabled.

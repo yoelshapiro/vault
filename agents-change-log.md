@@ -2432,4 +2432,5 @@
   - Redeployed checkpoint `100000` as `coral-snake-substantial-bronze` with both route-end behaviors disabled and parking interleave group enabled.
   - Verified the Gen2 inference config retained parking interleave control and radar settings.
   - Triggered Model CI build `76415`; Gen2 archive and Eval Studio Gen2 Alpha3 jobs succeeded at last check.
+  - Added a Model Catalogue note for the deployed model and created UK PUDO licensing plus UK Drift/PUDO follow-up experiments against `green-stegosaurus-brave`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-astonishing-no-route-end-latch-deploy|2026-06-17 Astonishing No Route-End Latch Deploy]]
