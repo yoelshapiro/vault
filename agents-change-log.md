@@ -2439,6 +2439,20 @@
   - Added a Model Catalogue note for the deployed model and created UK PUDO licensing plus UK Drift/PUDO follow-up experiments against `green-stegosaurus-brave`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-astonishing-no-route-end-latch-deploy|2026-06-17 Astonishing No Route-End Latch Deploy]]
 
+## 2026-06-18 - Lime 100K Resume
+
+- Topic: Resume `lime-theoretical-walrus` from 80K to 100K.
+- Labels: parking, pudo, training, resume.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data`.
+- PR: n/a.
+- Change type: Training job submission.
+- Areas: Surfboard, Parking BC training.
+- Changes:
+  - Verified `lime-theoretical-walrus` maps to `session_2026_06_03_14_19_48_p521r80`, completed at 80K.
+  - Submitted restore job `181197` from `restart_step=80000` with `num_steps=100000` and `model.lr_scheduler_num_steps=100000`.
+  - New run is `purple-mallard-proficient`, session `session_2026_06_18_07_38_05_p521r100`.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-18-lime-100k-resume|2026-06-18 Lime 100K Resume]]
+
 ## 2026-06-17 - Bokeh Parking Wrapper Direct Inputs
 
 - Topic: Make ParkingPlotter visualisation use session OTF config and actual parking deployment wrapper inference.
