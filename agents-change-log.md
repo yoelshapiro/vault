@@ -2485,3 +2485,18 @@
   - Added a visible Parking / Navigation panel to `ParkingPlotter` with parking mode, unparking mode, stopping mode, nav timestamp, and grouped step/lane summaries.
   - Verified the reported ParkingPlotter command completes and renders 9 frames.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-bokeh-mimost-direct-inputs|2026-06-17 Bokeh MIMOST Direct Inputs]]
+
+## 2026-06-18 - PUDO New Root Training Pair
+
+- Topic: Submit and monitor paired Parking/PUDO training jobs for the updated PUDO data root.
+- Labels: parking, pudo, training, notion.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data`, `boris/training/main_cherrypick_generic_data`.
+- PR: n/a.
+- Change type: Training job submission, monitoring, Notion update.
+- Areas: Surfboard, W&B, Parking/PUDO Notion model cards.
+- Changes:
+  - Submitted `lionfish-copper-cautious` / job `181482` from `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data`.
+  - Submitted `lavender-centipede-strategic` / job `181488` from `boris/training/main_cherrypick_generic_data`.
+  - Monitored both runs until they passed 1K training steps without terminal failure.
+  - Created Notion model-card rows for both not-interleaved training nicknames.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-18-pudo-new-root-training-pair|2026-06-18 PUDO New Root Training Pair]]
