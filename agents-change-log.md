@@ -2453,6 +2453,22 @@
   - New run is `purple-mallard-proficient`, session `session_2026_06_18_07_38_05_p521r100`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-18-lime-100k-resume|2026-06-18 Lime 100K Resume]]
 
+## 2026-06-18 - Yellow Cheetah Alpha3 and UK Experiments
+
+- Topic: Add lifecycle note, trigger Alpha3 Model CI, and create UK follow-up experiments for `yellow-cheetah-sparkling`.
+- Labels: parking, pudo, model-ci, licensing, drift, on-road.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data`.
+- PR: n/a.
+- Change type: Model Catalogue note, Model CI trigger, Console experiments.
+- Areas: Model Catalogue, Buildkite Model CI, Console on-road experiments.
+- Changes:
+  - Resolved `yellow-cheetah-sparkling` to checkpoint `10` / 100K and Gen2 artefact `d47f07fc-4ac3-4ab3-a693-8629000fdc00`.
+  - Triggered Alpha3 Model CI build `76550` for `gen2-av-mache-alpha3`.
+  - Added Model Catalogue note `c777d26a-ad27-4d73-afab-d9e8f218b94c`.
+  - Created UK PUDO licensing experiment `bb5b0076-4d81-4546-b335-b557b66299fd` against `green-stegosaurus-brave`.
+  - Created UK Drift/PUDO experiment `9765b6cf-11cf-4164-9b23-54760fff764e` against `green-stegosaurus-brave`, copying the reference PUDO/SBW config.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-18-yellow-cheetah-alpha3-and-uk-experiments|2026-06-18 Yellow Cheetah Alpha3 and UK Experiments]]
+
 ## 2026-06-17 - Bokeh Parking Wrapper Direct Inputs
 
 - Topic: Make ParkingPlotter visualisation use session OTF config and actual parking deployment wrapper inference.
