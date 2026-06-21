@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "weekly plan.md",
+                "file": "projects/pudo-parking-py-critique-2026-06-14.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "weekly plan"
+              "title": "pudo-parking-py-critique-2026-06-14"
             }
           }
         ],
@@ -588,8 +588,9 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
-    "weekly plan.md",
+    "agent_tasks/2026/06/Week-3/2026-06-21-parking-511-unified-lr-training-pair.md",
     "Untitled.md",
+    "weekly plan.md",
     "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-3/2026-06-18-pudo-new-root-training-pair.md",
     "agent_tasks/2026/06/Week-3/2026-06-18-yellow-cheetah-alpha3-and-uk-experiments.md",
@@ -614,7 +615,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-pudo-events-dataset.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-parking-py-critique.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port.md",
-    "conflict-files-obsidian-git.md",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
     "html_summaries/parking-pudo-generic-buckets.html",
