@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-data-bug-report-2026-06-13.md",
+                "file": "weekly plan.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-data-bug-report-2026-06-13"
+              "title": "weekly plan"
             }
           }
         ],
@@ -586,8 +586,11 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "e176dee4bd0571fb",
+  "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "weekly plan.md",
+    "Untitled.md",
+    "projects/pudo-data-bug-report-2026-06-13.md",
     "agent_tasks/2026/06/Week-3/2026-06-18-pudo-new-root-training-pair.md",
     "agent_tasks/2026/06/Week-3/2026-06-18-yellow-cheetah-alpha3-and-uk-experiments.md",
     "agent_tasks/2026/06/Week-3/2026-06-18-lime-100k-resume.md",
@@ -596,11 +599,9 @@
     "agent_tasks/2026/06/Week-3/2026-06-16-pudo-bc-pmprov-training.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-parking-mode-provenance-labels.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-pudo-window-caps-root.md",
-    "weekly plan.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output.md",
     "projects/pudo-parking-py-critique-2026-06-14.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-parking-entry-lookahead-index.md",
-    "projects/pudo-data-bug-report-2026-06-13.md",
     "projects/parking-capability-architecture-research.md",
     "agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan.md",
     "todo-list.md",
@@ -614,7 +615,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-parking-py-critique.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-parking-deployment-gear-indicator-port.md",
     "conflict-files-obsidian-git.md",
-    "Merge to main plan.md",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
     "html_summaries/parking-pudo-generic-buckets.html",
