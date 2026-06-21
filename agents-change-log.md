@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-21 - Parking 5.11 Unified-LR Training Pair
+
+- Topic: Submit and monitor two Parking/PUDO BC 5.11 training variants with unified learning rate.
+- Labels: parking, pudo, training, surfboard, notion, learning-rate.
+- Branch: `boris/training/main_cherrypick_generic_data`.
+- PR: none.
+- Change type: Training run / monitoring / documentation.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; Surfboard jobs `182491`, `182493`; Parking/PUDO Notion model cards.
+- Changes:
+  - Trained `salmon-multicolored-tapir` from commit `ce77a3fe2467` using `parking_bc_train_release_2026_5_11`, unified LR, and 50% driving / 50% PUDO-UNPUDO data.
+  - Trained `red-cheetah-nonchalant` from commit `ad0508aa1cab` using the same mode and LR change with 0% driving / 100% PUDO-UNPUDO data.
+  - Fixed the initial startup failure by adding the tele camera expected by `copy_tele_camera=True`.
+  - Monitored both retry jobs past the 1K-step gate and created Notion model-card rows with descriptive short descriptions.
+- Task note: [[agent_tasks/2026/06/Week-3/2026-06-21-parking-511-unified-lr-training-pair]]
+
 ## 2026-06-17 - Bokeh MIMOST Direct Inputs
 
 - Topic: Fix ParkingPlotter `visualise_bokeh` inference dispatch and session-config OTF setup.
