@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-22 - SI Group Interleave Control Support
+
+- Topic: Add minimal SI interleave group support on top of the default-gear deployment branch.
+- Labels: si, deployment, parking, interleave, dmi, regression-test.
+- Branch: `06-22-si-group-interleave-control-support`.
+- PR: none.
+- Change type: Deployment config update.
+- Areas: `wayve/ai/si/deploy.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/test/models/test_training.py`.
+- Changes:
+  - Added `enable_interleave_control=True` defaults to BC training and deploy paths.
+  - Set `DeploymentConfig.interleave_group="parking"` for parking deployments when interleave control is enabled.
+  - Avoided the PR 102398 interleave wrapper and left zoo deployment wrappers, waypoint handling, and behavior customization untouched.
+  - Added focused tests for parking group defaults and disabling interleave control.
+  - Verified syntax and diff whitespace; focused Bazel test was blocked by ACR `401 Unauthorized` before test execution.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support]]
+
 ## 2026-06-22 - Interleaved Wrapper Gear Output CI Fix
 
 - Topic: Preserve `policy_gear_position` through deployment wrappers and unblock non-parking shift-by-wire forwarding.
