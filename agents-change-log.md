@@ -2596,3 +2596,18 @@
   - Monitored both runs until they passed 1K training steps without terminal failure.
   - Created Notion model-card rows for both not-interleaved training nicknames.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-18-pudo-new-root-training-pair|2026-06-18 PUDO New Root Training Pair]]
+
+## 2026-06-22 - Deployment Wrapper Default Gear CI Fix
+
+- Topic: Add default policy gear output across deployment wrappers and fix CI contract gaps.
+- Labels: deployment-wrapper, gear-output, torchscript, ci.
+- Branch: `boris/deployment-wrapper-default-gear`.
+- PR: `#120234`.
+- Change type: Code change, CI fix.
+- Areas: `wayve/ai/zoo/deployment`, `wayve/ai/slam/ooc_c2v/deployment`, `wayve/ai/slam/ooc_c2v/interfaces`.
+- Changes:
+  - Added default DRIVE `policy_gear_position` output handling for deployment wrappers and propagated it through interleaved outputs.
+  - Kept parking wrapper predicted gear behavior while non-parking wrappers default to DRIVE.
+  - Fixed the SLAM C2V calibration wrapper to keep `policy_gear_position` in both the positional output tuple and deployment output key list.
+  - Verified focused deployment and calibration wrapper Bazel checks locally.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear-ci-fix|2026-06-22 Deployment Wrapper Default Gear CI Fix]]
