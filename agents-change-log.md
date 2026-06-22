@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-22 - Deployment Wrapper Default Gear Output
+
+- Topic: Add a default DRIVE gear output to deployment wrappers that do not already emit gear.
+- Labels: deployment, dmi, gear, waypoint-clamp, regression-test.
+- Branch: `codex/deployment-wrapper-default-gear`.
+- PR: none.
+- Change type: Feature / deployment contract update.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/zoo/deployment/io.py`; `wayve/ai/si/models/deployment.py`; safety wrapper tuple consumers; deployment tests.
+- Changes:
+  - Added `policy_gear_position` to the common onboard driving output contract with a default `DRIVE_POSITION_V2_DRIVE` tensor when missing.
+  - Replaced the base forward-only waypoint clamp with the shared gear-aware clamp and preserved parking wrapper gear behavior.
+  - Threaded gear through kinematic, safety, speed-sign, TSR, ODD, and LSS custom output tuples plus direct test constructors.
+  - Removed the stale non-parking shift-by-wire rejection now that non-parking wrappers emit default gear.
+  - Verified deployment py_checks plus focused SI and safety wrapper tests.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear]]
+
 ## 2026-06-22 - Merge Main Into PUDO Yellow Baseline
 
 - Topic: Merge `origin/main` into the yellow Parking/PUDO baseline draft PR branch.
