@@ -5,7 +5,7 @@
 - Topic: Add SI interleave-control output and group support on top of the default-gear deployment branch.
 - Labels: si, deployment, parking, interleave, dmi, regression-test.
 - Branch: `06-22-si-group-interleave-control-support`.
-- PR: none.
+- PR: https://github.com/wayveai/WayveCode/pull/120390
 - Change type: Deployment wrapper output / config update.
 - Areas: `wayve/ai/si/deploy.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/models/offline_rl.py`; `wayve/ai/si/offline_rl/bc_rl_combined.py`; `wayve/ai/si/test/models/test_training.py`; `wayve/ai/si/test/models/test_offline_rl.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`; `wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py`.
 - Changes:
@@ -15,7 +15,9 @@
   - Added parking handover logic and baseline DRIVE-gear gating using the default gear output.
   - Avoided PR 102398 waypoint handling, behavior customization, and driving-control changes.
   - Added focused tests for wrapper output inference, parking handover logic, parking group defaults, offline-RL forwarding, and disabling interleave control.
-  - Verified syntax, diff whitespace, and stubbed codegen generation; focused Bazel tests were blocked by `No space left on device` under `/workspace/.cache/bazel`.
+  - Fixed deployment model matching for bool outputs such as `interleave_control` by comparing with exact equality instead of numeric diff math.
+  - Added regression tests for bool output matching/mismatch and verified `//wayve/ai/lib:test_deploy`.
+  - Pushed amended PR commit `ec7f3d5f9af2`; fresh Buildkite presubmit `515296` is still running.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support]]
 
 ## 2026-06-22 - Interleaved Wrapper Gear Output CI Fix
