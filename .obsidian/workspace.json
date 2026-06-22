@@ -588,6 +588,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-merge-main-into-pudo-baseline.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-pudo-yellow-baseline-draft-pr.md",
     "agent_tasks/2026/06/Week-4",
@@ -615,7 +616,6 @@
     "agent_tasks/2026/06/Week-2/2026-06-15-pudo-materialization-vs-zmurez.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-onroad-rca.md",
     "agent_tasks/2026/06/Week-2/2026-06-14-pudo-fixes-n-m.md",
-    "agent_tasks/2026/06/Week-2/2026-06-14-parking-pudo-events-dataset.md",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
     "html_summaries/parking-pudo-generic-buckets.html",
