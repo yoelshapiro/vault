@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-22 - Merge Main Into PUDO Yellow Baseline
+
+- Topic: Merge `origin/main` into the yellow Parking/PUDO baseline draft PR branch.
+- Labels: parking, pudo, merge, main, pr.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: https://github.com/wayveai/WayveCode/pull/120214
+- Change type: Merge / conflict resolution.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/zoo/deployment/behavior_customization.py`; route/OTF conflict paths.
+- Changes:
+  - Merged `origin/main` (`0804b83a6bd5`) into the baseline branch and committed merge `8cb57a562b0e`.
+  - Preserved Parking/PUDO config, route-shortening, interleave deployment, and scheduler behavior from the branch while taking required main API/import changes.
+  - Restored `INITIATE_AUTO_PARKING` behavior customization support after resolving the main-side unsupported-control test change.
+  - Fixed sandbox-safe lazy `Session` handling in training callback configuration.
+  - Verified focused zoo deployment and parking release config tests; focused callback tests pass but the filtered target fails its target-wide coverage threshold.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-merge-main-into-pudo-baseline]]
+
 ## 2026-06-22 - PUDO Yellow Baseline Draft PR
 
 - Topic: Create a draft PR for the yellow Parking/PUDO baseline without later unified-LR training changes.
