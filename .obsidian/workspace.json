@@ -588,6 +588,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear-ci-fix.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-gear-output-ci.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear.md",
@@ -615,7 +616,6 @@
     "projects/pudo-onroad-failure-rca-2026-06-14.md",
     "agent_tasks/2026/06/Week-3",
     "projects/pudo-materialization-vs-zmurez-2026-06-15.md",
-    "agent_tasks/2026/06/Week-2/2026-06-15-pudo-materialization-vs-zmurez.md",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
     "html_summaries/parking-pudo-generic-buckets.html",
