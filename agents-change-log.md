@@ -2,17 +2,19 @@
 
 ## 2026-06-22 - Interleaved Wrapper Gear Output CI Fix
 
-- Topic: Preserve `policy_gear_position` through the interleaved deployment wrapper.
-- Labels: deployment, interleaved-wrapper, gear, ci, regression-test.
+- Topic: Preserve `policy_gear_position` through deployment wrappers and unblock non-parking shift-by-wire forwarding.
+- Labels: deployment, interleaved-wrapper, gear, shift-by-wire, ci, regression-test.
 - Branch: `boris/deployment-wrapper-default-gear`.
 - PR: https://github.com/wayveai/WayveCode/pull/120234
 - Change type: Bug fix.
-- Areas: `wayve/ai/zoo/deployment/interleaved_wrapper.py`; `wayve/ai/zoo/deployment/test/test_interleaved_wrapper.py`.
+- Areas: `wayve/ai/zoo/deployment/interleaved_wrapper.py`; `wayve/ai/zoo/deployment/behavior_customization.py`; `wayve/ai/zoo/deployment/test/test_interleaved_wrapper.py`; `wayve/ai/si/test/interfaces/test_deployment_wrapper.py`.
 - Changes:
   - Added `policy_gear_position` to `InterleavedDrivingOutput`.
   - Cached and returned gear position in warmup, cache-reuse, and normal output paths.
   - Added focused assertions covering warmup and cache reuse so gear cannot be silently dropped.
-  - Verified the focused interleaved deployment Bazel test.
+  - Treated non-parking `ENABLE_SHIFT_BY_WIRE` as a no-op behavior control so wrappers can forward and emit default DRIVE gear.
+  - Added eager and TorchScript prepare-to-forward regression coverage for non-parking shift-by-wire.
+  - Verified focused interleaved, SI deployment wrapper, and zoo deployment Bazel tests.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-gear-output-ci]]
 
 ## 2026-06-22 - Deployment Wrapper Default Gear Output
