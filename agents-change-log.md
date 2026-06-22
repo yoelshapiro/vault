@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-22 - PUDO Yellow Baseline Draft PR
+
+- Topic: Create a draft PR for the yellow Parking/PUDO baseline without later unified-LR training changes.
+- Labels: parking, pudo, pr, baseline, model-catalogue.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: https://github.com/wayveai/WayveCode/pull/120214
+- Change type: PR creation / branch curation.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; parking route-shortening and deployment-wrapper support; Parking/PUDO baseline branch history.
+- Changes:
+  - Resolved `yellow-cheetah-sparkling` to commit `b8703e56c2b7636b60da22e4d0d7e468f9f0217b`.
+  - Created and pushed `boris/26-06-22-pudo-baseline` at the yellow commit.
+  - Verified the later unified-LR change is excluded and opened draft PR `#120214` to `main`.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-pudo-yellow-baseline-draft-pr]]
+
 ## 2026-06-21 - Parking 5.11 Unified-LR Training Pair
 
 - Topic: Submit and monitor two Parking/PUDO BC 5.11 training variants with unified learning rate.
