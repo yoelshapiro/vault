@@ -7,14 +7,14 @@
 - Branch: `06-22-si-group-interleave-control-support`.
 - PR: none.
 - Change type: Deployment wrapper output / config update.
-- Areas: `wayve/ai/si/deploy.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/test/models/test_training.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`; `wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py`.
+- Areas: `wayve/ai/si/deploy.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/models/offline_rl.py`; `wayve/ai/si/offline_rl/bc_rl_combined.py`; `wayve/ai/si/test/models/test_training.py`; `wayve/ai/si/test/models/test_offline_rl.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`; `wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py`.
 - Changes:
-  - Added `enable_interleave_control=True` defaults to BC training and deploy paths.
+  - Added `enable_interleave_control=True` defaults to BC, TD3 offline-RL, BC+TD3 offline-RL, and deploy paths.
   - Set `DeploymentConfig.interleave_group="parking"` for parking deployments when interleave control is enabled.
   - Set `model.interleave_control_group` and added generated-wrapper support for the default `interleave_control` output tensor.
   - Added parking handover logic and baseline DRIVE-gear gating using the default gear output.
   - Avoided PR 102398 waypoint handling, behavior customization, and driving-control changes.
-  - Added focused tests for wrapper output inference, parking handover logic, parking group defaults, and disabling interleave control.
+  - Added focused tests for wrapper output inference, parking handover logic, parking group defaults, offline-RL forwarding, and disabling interleave control.
   - Verified syntax, diff whitespace, and stubbed codegen generation; focused Bazel tests were blocked by `No space left on device` under `/workspace/.cache/bazel`.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support]]
 

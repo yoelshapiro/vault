@@ -13,7 +13,7 @@ including the default `interleave_control` output tensor and group metadata.
 
 ## Changes
 
-- Added `enable_interleave_control=True` defaults to BC training and deploy paths.
+- Added `enable_interleave_control=True` defaults to BC, TD3 offline-RL, BC+TD3 offline-RL, and deploy paths.
 - Set `DeploymentConfig.interleave_group="parking"` for parking deployments when interleave control is enabled.
 - Set `model.interleave_control_group` from the resolved deployment interleave group.
 - Added generated-wrapper support to append `interleave_control` to the forward return `NamedTuple`.
@@ -21,7 +21,7 @@ including the default `interleave_control` output tensor and group metadata.
 - Added parking-group handover logic: end-of-route or speed at/below 5 mph.
 - Added baseline-group logic: not end-of-route and effective gear is DRIVE.
 - Left waypoint handling, behavior customization, and driving controls untouched.
-- Added focused tests for wrapper output inference, parking handover logic, parking group defaults, and the explicit disable path.
+- Added focused tests for wrapper output inference, parking handover logic, parking group defaults, offline-RL forwarding, and the explicit disable path.
 
 ## Verification
 
