@@ -2,18 +2,20 @@
 
 ## 2026-06-22 - SI Group Interleave Control Support
 
-- Topic: Add minimal SI interleave group support on top of the default-gear deployment branch.
+- Topic: Add SI interleave-control output and group support on top of the default-gear deployment branch.
 - Labels: si, deployment, parking, interleave, dmi, regression-test.
 - Branch: `06-22-si-group-interleave-control-support`.
 - PR: none.
-- Change type: Deployment config update.
-- Areas: `wayve/ai/si/deploy.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/test/models/test_training.py`.
+- Change type: Deployment wrapper output / config update.
+- Areas: `wayve/ai/si/deploy.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/models/training.py`; `wayve/ai/si/test/models/test_training.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/zoo/deployment/deployment_wrapper_codegen.py`; `wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py`.
 - Changes:
   - Added `enable_interleave_control=True` defaults to BC training and deploy paths.
   - Set `DeploymentConfig.interleave_group="parking"` for parking deployments when interleave control is enabled.
-  - Avoided the PR 102398 interleave wrapper and left zoo deployment wrappers, waypoint handling, and behavior customization untouched.
-  - Added focused tests for parking group defaults and disabling interleave control.
-  - Verified syntax and diff whitespace; focused Bazel test was blocked by ACR `401 Unauthorized` before test execution.
+  - Set `model.interleave_control_group` and added generated-wrapper support for the default `interleave_control` output tensor.
+  - Added parking handover logic and baseline DRIVE-gear gating using the default gear output.
+  - Avoided PR 102398 waypoint handling, behavior customization, and driving-control changes.
+  - Added focused tests for wrapper output inference, parking handover logic, parking group defaults, and disabling interleave control.
+  - Verified syntax, diff whitespace, and stubbed codegen generation; focused Bazel tests were blocked by `No space left on device` under `/workspace/.cache/bazel`.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support]]
 
 ## 2026-06-22 - Interleaved Wrapper Gear Output CI Fix
