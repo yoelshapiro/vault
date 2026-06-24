@@ -13,6 +13,8 @@
   - Added `route_shortening_jitter_m=30.0` and plumbed it into route-map options only when parking route shortening is enabled.
   - Added metre-based route stop jitter that is applied for `parking_mode` only, leaving unparking shortening exact.
   - Added focused route-map tests; Bazel execution was blocked by `No space left on device` while extracting external Python wheels.
+  - Pushed commit `97d124ff5461`, published the matching training image, and submitted P1 training job `184193` (`avid-seahorse-aquamarine`) with session `session_2026_06_24_20_46_10_fgjit700`.
+  - Delegated 1K-step monitoring and up to 3 fix/resubmit retries to the Lorentz subagent.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-variant]]
 
 ## 2026-06-24 - Parking Generic Data Aug Training Retry

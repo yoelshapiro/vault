@@ -19,3 +19,11 @@
 - `git diff --check` passed.
 - AST parsing passed for all touched Python files.
 - Bazel tests were attempted but blocked before execution by the shared Bazel cache running out of disk while extracting Python wheels (`OSError: [Errno 28] No space left on device`).
+
+## Training
+
+- Commit pushed: `97d124ff546161d63a85707b94e67c9aa5d57292`.
+- Image published: `wayvetraining.azurecr.io/scaled-intelligence:97d124ff546161d63a85707b94e67c9aa5d57292`.
+- Submitted job: `184193` / `avid-seahorse-aquamarine`.
+- Session: `session_2026_06_24_20_46_10_fgjit700`.
+- Monitor owner: Lorentz subagent, with a 1K-step gate and up to 3 fix/resubmit retries.
