@@ -13,7 +13,7 @@
   - Added the missing `/dataset` suffix to `PUDO_BUCKETS_ROOT`, keeping the branch's new PUDO root and route-jitter variant intact.
   - Verified `git diff --check`, `bazel build //wayve/ai/si:si`, and `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
   - Committed and pushed `ea03fa86fb72`, published `wayvetraining.azurecr.io/scaled-intelligence:ea03fa86fb72ce0f10668bc29a3453d09ee9760e`, and submitted retry job `184196` (`plum-hatchetfish-satisfied`) with session `session_2026_06_24_21_04_24_fgjit7r1`.
-  - Sent Boris a Slack update and continued monitoring the retry to the 1K-step gate.
+  - Monitored retry job `184196` to W&B `trainer/global_step=1039` with Surfboard still `Running`, then created the Parking/PUDO model-card row.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-training-retry]]
 
 ## 2026-06-24 - Scarlet Root Jitter Variant
