@@ -15,6 +15,7 @@
   - Disabled default end-of-route hazard lights and gear latch in `ParkingDeploymentWrapperImpl`.
   - Added deterministic adaptor regression tests and verified the focused pytest plus ruff, flake8, and ty checks with `TMPDIR=/workspace/tmp`.
   - Pushed commit `cae7fb21c8bc` and submitted P1 H100 training job `184160` (`feisty-orange-eel`) with session `session_2026_06_24_19_35_50_g50lr5k`.
+  - Fixed the step-0 failure from Lightning scheduler API validation by making `_PostBoostLRScheduler` a PyTorch `LRScheduler` and adding scheduler API regression coverage.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-fixes]]
 
 ## 2026-06-22 - SI Group Interleave Control Support
