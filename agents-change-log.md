@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-24 - Scarlet Root Jitter Variant
+
+- Topic: Prepare a scarlet-source Parking/PUDO training variant with the new indicator-start materialization root and parking-only route-shortening jitter.
+- Labels: parking, pudo, route-shortening, augmentation, training.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/scarlet_full_gear_root_jitter`.
+- PR: none.
+- Change type: Training config / datapipe augmentation.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/datamodules/parking.py`; `wayve/ai/si/datamodules/otf.py`; `wayve/ai/lib/data/pipes/routes.py`; route-map tests.
+- Changes:
+  - Switched the PUDO buckets root to the `parking_pudo_default_indicator_start_700_20260623__2026-06-23-19-25` materialization.
+  - Added `route_shortening_jitter_m=30.0` and plumbed it into route-map options only when parking route shortening is enabled.
+  - Added metre-based route stop jitter that is applied for `parking_mode` only, leaving unparking shortening exact.
+  - Added focused route-map tests; Bazel execution was blocked by `No space left on device` while extracting external Python wheels.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-variant]]
+
 ## 2026-06-24 - Parking Generic Data Aug Training Retry
 
 - Topic: Monitor retry `chocolate-snowy-owl-astonishing` until it passes the 1K-step gate, with fix/resubmit handling if it fails.
