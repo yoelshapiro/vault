@@ -22,10 +22,12 @@
 - Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data_aug_fixes`.
 - PR: none.
 - Change type: Training monitoring / retry handling.
-- Areas: Surfboard job `184174`; W&B run `session_2026_06_24_20_03_22_g50lr5k2`; `/tmp/main_cherrypick_generic_data_aug_fixes`.
+- Areas: Surfboard jobs `184174`, `184180`; W&B runs `session_2026_06_24_20_03_22_g50lr5k2`, `session_2026_06_24_20_21_51_g50lr5k3`; `/tmp/main_cherrypick_generic_data_aug_fixes`; Parking/PUDO model-card table.
 - Changes:
-  - Confirmed job `184174` is running from commit `73882d43f09e6bd5b4992bbd5afa6d1a5f926253` with the expected image and H100 4-node setup.
-  - Started a run ledger for the current attempt and up to 3 retry attempts if code/config fixes are needed.
+  - Diagnosed job `184174` failing at step 0 from a TorchScript type error in adaptor dropout: `base_mask` was inferred as `NoneType` before Tensor assignment.
+  - Added the minimal `Optional[Tensor]` fix and scripted `RouteSTAdaptor` regression, verified `bazel test //wayve/ai/zoo/st:test_st`, committed and pushed `7d3b356add696f8499d71bf0e6f6221229393bf9`.
+  - Published `wayvetraining.azurecr.io/scaled-intelligence:7d3b356add696f8499d71bf0e6f6221229393bf9` and resubmitted retry job `184180` (`aquamarine-quizzical-kingfisher`, session `session_2026_06_24_20_21_51_g50lr5k3`).
+  - Monitored retry job `184180` to W&B `trainer/global_step=1112` with Surfboard still `Running`, sent Slack updates to Boris, and created the Parking/PUDO model-card row.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-training-retry]]
 
 ## 2026-06-24 - Parking Generic Data Aug Fixes
