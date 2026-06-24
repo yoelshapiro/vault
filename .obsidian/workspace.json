@@ -588,6 +588,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-training-retry.md",
     "agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-variant.md",
     "agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-training-retry.md",
     "agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-fixes.md",
@@ -614,7 +615,6 @@
     "projects/pudo-parking-py-critique-2026-06-14.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-parking-entry-lookahead-index.md",
     "projects/parking-capability-architecture-research.md",
-    "agent_tasks/2026/06/Week-3/2026-06-15-event-clip-viewer-rewrite-execplan.md",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
