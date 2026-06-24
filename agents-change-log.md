@@ -2,7 +2,7 @@
 
 ## 2026-06-24 - Parking Generic Data Aug Fixes
 
-- Topic: Fork the scarlet Parking/PUDO source commit and prepare 50% gear/parking token-dropout plus staged input-adaptor LR changes.
+- Topic: Fork the scarlet Parking/PUDO source commit and prepare 50% gear token-dropout plus staged input-adaptor LR changes.
 - Labels: parking, pudo, training, augmentation, learning-rate, deployment.
 - Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data_aug_fixes`.
 - PR: none.
@@ -10,10 +10,11 @@
 - Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/models/training.py`; `wayve/ai/zoo/st/input_adaptors`; `wayve/ai/zoo/st/models.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`.
 - Changes:
   - Created the aug-fixes branch at scarlet source commit `ce77a3fe2467` and reset `main_cherrypick_generic_data` locally to the same commit.
-  - Added train-only token dropout for gear direction and parking mode and configured `parking_bc_train_release_2026_5_11` to use 50% token dropout.
+  - Added train-only token dropout for gear direction and configured `parking_bc_train_release_2026_5_11` to use 50% gear token dropout.
   - Added a temporary `parking_input_adaptors` LR group that runs at `1e-4` for 5k steps and scales back to `1e-5`.
   - Disabled default end-of-route hazard lights and gear latch in `ParkingDeploymentWrapperImpl`.
-  - Added deterministic adaptor regression tests; Bazel validation was blocked by no space left on device during dependency fetch.
+  - Added deterministic adaptor regression tests and verified the focused pytest plus ruff, flake8, and ty checks with `TMPDIR=/workspace/tmp`.
+  - Pushed commit `cae7fb21c8bc` and submitted P1 H100 training job `184160` (`feisty-orange-eel`) with session `session_2026_06_24_19_35_50_g50lr5k`.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-fixes]]
 
 ## 2026-06-22 - SI Group Interleave Control Support
