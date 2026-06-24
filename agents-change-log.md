@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-24 - Scarlet Root Jitter Training Retry
+
+- Topic: Monitor the Scarlet full-gear root-jitter Parking/PUDO training run, fix the step-0 PUDO root failure, and resubmit.
+- Labels: parking, pudo, training, surfboard, wandb, retry.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/scarlet_full_gear_root_jitter`.
+- PR: none.
+- Change type: Training monitoring / config fix / retry handling.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; Surfboard jobs `184193`, `184196`; W&B runs `session_2026_06_24_20_46_10_fgjit700`, `session_2026_06_24_21_04_24_fgjit7r1`; `/tmp/scarlet_full_gear_root_jitter`.
+- Changes:
+  - Diagnosed job `184193` failing before step 1 from `No parquet files found` under the new `parking_pudo_default_indicator_start_700_20260623__2026-06-23-19-25` PUDO materialization root; the visible `ConnectionResetError` was downstream of the prefetch failure.
+  - Added the missing `/dataset` suffix to `PUDO_BUCKETS_ROOT`, keeping the branch's new PUDO root and route-jitter variant intact.
+  - Verified `git diff --check`, `bazel build //wayve/ai/si:si`, and `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
+  - Committed and pushed `ea03fa86fb72`, published `wayvetraining.azurecr.io/scaled-intelligence:ea03fa86fb72ce0f10668bc29a3453d09ee9760e`, and submitted retry job `184196` (`plum-hatchetfish-satisfied`) with session `session_2026_06_24_21_04_24_fgjit7r1`.
+  - Sent Boris a Slack update and continued monitoring the retry to the 1K-step gate.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-training-retry]]
+
 ## 2026-06-24 - Scarlet Root Jitter Variant
 
 - Topic: Prepare a scarlet-source Parking/PUDO training variant with the new indicator-start materialization root and parking-only route-shortening jitter.
