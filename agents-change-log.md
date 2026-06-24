@@ -1,5 +1,18 @@
 # Agents Change Log
 
+## 2026-06-24 - Parking Generic Data Aug Training Retry
+
+- Topic: Monitor retry `chocolate-snowy-owl-astonishing` until it passes the 1K-step gate, with fix/resubmit handling if it fails.
+- Labels: parking, pudo, training, surfboard, wandb, retry.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/main_cherrypick_generic_data_aug_fixes`.
+- PR: none.
+- Change type: Training monitoring / retry handling.
+- Areas: Surfboard job `184174`; W&B run `session_2026_06_24_20_03_22_g50lr5k2`; `/tmp/main_cherrypick_generic_data_aug_fixes`.
+- Changes:
+  - Confirmed job `184174` is running from commit `73882d43f09e6bd5b4992bbd5afa6d1a5f926253` with the expected image and H100 4-node setup.
+  - Started a run ledger for the current attempt and up to 3 retry attempts if code/config fixes are needed.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-training-retry]]
+
 ## 2026-06-24 - Parking Generic Data Aug Fixes
 
 - Topic: Fork the scarlet Parking/PUDO source commit and prepare 50% gear token-dropout plus staged input-adaptor LR changes.
