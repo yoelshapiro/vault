@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-25 - Safe/Unsafe HARI Databricks Upload
+
+- Topic: Aggregate a HARI OpenLABEL safe/unsafe export into a Databricks-ready table and attempt upload to `hive_metastore.parking.safe_unsafe_hari_annotations`.
+- Labels: parking, hari, databricks, openlabel, annotations.
+- Branch: `codex/preserve-dirty-main-cherrypick-generic-data`.
+- PR: none.
+- Change type: Tooling / data aggregation / Databricks upload attempt.
+- Areas: `tools/hari_annotations/`; `/home/borisindelman/Downloads/olf_export_pilot_2026-06-24T12_16_36.095814+00_00.zip`; `/tmp/safe_unsafe_hari_annotations.csv`; `hive_metastore.parking.safe_unsafe_hari_annotations`.
+- Changes:
+  - Added a Bazel-run parser/uploader for the HARI export with regression tests around the OpenLABEL sample shape and category mapping.
+  - Extracted 100 JSON files and wrote 100 rows to `/tmp/safe_unsafe_hari_annotations.csv`; category counts were 68 `[1]`, 31 `[2]`, and 1 `[1, 2]`.
+  - Added safe Databricks upload modes: `create`, `replace`, and `append`, with explicit ADLS location support and optional key-vault auth.
+  - Verified `bazel test //tools/hari_annotations/...`.
+  - Upload was blocked by Databricks permissions: no schema create on catalog, DBFS root disabled for managed Hive tables, no `SELECT ON ANY FILE` for the explicit ADLS location, and the shared-cluster service principal received HTTP 403 opening the SQL warehouse.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-25-safe-unsafe-hari-databricks-upload]]
+
 ## 2026-06-24 - Scarlet Root Jitter Training Retry
 
 - Topic: Monitor the Scarlet full-gear root-jitter Parking/PUDO training run, fix the step-0 PUDO root failure, and resubmit.
