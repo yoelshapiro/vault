@@ -14,6 +14,7 @@
   - Added safe Databricks upload modes: `create`, `replace`, and `append`, with explicit ADLS location support and optional key-vault auth.
   - Verified `bazel test //wayve/ai/parking/classifiers/...`.
   - Upload was blocked by Databricks permissions: no schema create on catalog, DBFS root disabled for managed Hive tables, no `SELECT ON ANY FILE` for the explicit ADLS location, and the shared-cluster service principal received HTTP 403 opening the SQL warehouse.
+  - Submitted a one-off Databricks notebook run on cluster `0624-170917-6yh5w7tu`, which successfully created `hive_metastore.parking.safe_unsafe_hari_annotations` at the ADLS Delta location and loaded 100 rows; verified count and category distribution by SQL readback.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-25-safe-unsafe-hari-databricks-upload]]
 
 ## 2026-06-24 - Scarlet Root Jitter Training Retry

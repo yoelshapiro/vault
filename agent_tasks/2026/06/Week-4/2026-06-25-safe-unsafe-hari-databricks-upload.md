@@ -79,7 +79,34 @@ Output:
 
 ## Databricks Status
 
-Upload is blocked by Databricks permissions/storage policy.
+Upload succeeded after running the write inside Databricks compute instead of through the SQL connector.
+
+Successful run:
+
+- Parent run: `645744837290866`
+- Task run: `716671648777976`
+- URL: `https://adb-7835963732836817.17.azuredatabricks.net/?o=7835963732836817#job/338321269882518/run/645744837290866`
+- Notebook: `/Users/boris.indelman@wayve.ai/safe_unsafe_hari_annotations_upload_20260625`
+- Cluster: `0624-170917-6yh5w7tu`
+- Table: `hive_metastore.parking.safe_unsafe_hari_annotations`
+- Location: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/safe_unsafe_hari_annotations`
+
+Readback verification:
+
+```sql
+SELECT COUNT(*) AS row_count
+FROM hive_metastore.parking.safe_unsafe_hari_annotations
+```
+
+Result: `100`.
+
+Category distribution:
+
+- `['safe']`: 68
+- `['unsafe']`: 31
+- `['safe', 'unsafe']`: 1
+
+The earlier local SQL-connector upload path was blocked by Databricks permissions/storage policy.
 
 Retried after moving the script to `wayve/ai/parking/classifiers/` using:
 
