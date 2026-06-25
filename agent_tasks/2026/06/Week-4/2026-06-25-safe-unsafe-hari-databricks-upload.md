@@ -81,6 +81,18 @@ Output:
 
 Upload is blocked by Databricks permissions/storage policy.
 
+Retried after moving the script to `wayve/ai/parking/classifiers/` using:
+
+```bash
+bazel run //wayve/ai/parking/classifiers:safe_unsafe_hari_annotations -- --mode create
+```
+
+The retry regenerated `/tmp/safe_unsafe_hari_annotations.csv` successfully but failed at table creation with:
+
+- `[INSUFFICIENT_PERMISSIONS] User does not have permission SELECT on any file`
+
+Also retried key-vault auth with `--endpoint-name larger_queries`; the service principal still received HTTP 403 opening the SQL warehouse session.
+
 Azure CLI user auth works, but:
 
 1. Creating the schema failed with:
