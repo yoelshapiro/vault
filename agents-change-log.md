@@ -26,6 +26,7 @@
   - Forked the Lorentz-fixed scarlet root-jitter branch at `ea03fa86fb72` and added 50% gear-direction token dropout without pulling in the staged LR experiment.
   - Verified `bazel test //wayve/ai/zoo/st:test_st` and `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`.
   - Committed and pushed `df2b887a2bad`, published `wayvetraining.azurecr.io/scaled-intelligence:df2b887a2bad07dda31863dca920272eb57b97b1`, and submitted P1 training job `184444` (`coral-elaborate-chipmunk`) with session `session_2026_06_25_09_10_01_fgjitg50`.
+  - Follow-up commit `949bb24ae3d4` added the gated standstill gear augmentation fix, enabled it in parking config, adjusted PUDO gear/pre-start weights, published `wayvetraining.azurecr.io/scaled-intelligence:949bb24ae3d485c2b35fb436f00d407139211761`, and submitted P1 training job `184565` (`acrobatic-rose-cobra`) with session `session_2026_06_25_12_30_21_fgjitg50af`.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-25-scarlet-root-jitter-g50-training]]
 
 ## 2026-06-25 - Safe/Unsafe HARI Databricks Upload
