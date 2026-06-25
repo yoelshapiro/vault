@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-06-25 - Port Augment Standstill Gear Fix
+
+- Topic: Port the gated parking standstill gear augmentation fix into the Scarlet root-jitter G50 training branch.
+- Labels: parking, pudo, datamodule, gear-augmentation.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/scarlet_full_gear_root_jitter_g50`.
+- PR: none.
+- Change type: Datamodule fix / unit test update.
+- Areas: `wayve/ai/si/datamodules/parking.py`; `wayve/ai/si/datamodules/test/test_parking_unit.py`.
+- Changes:
+  - Ported source commit `92b6a52f4f5f` because the named branch tip still showed the older random standstill gear augmentation.
+  - Changed `augment_standstill_gear` to apply a 50% gated input-gear change only when the policy gear target indicates an actual gear transition.
+  - Added focused tests for parking previous-moving-gear, probability skip, parking no-op, unparking neutral input, and non-parking no-op behavior.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-25-port-augment-standstill-gear-fix]]
+
 ## 2026-06-25 - Scarlet Root Jitter G50 Training
 
 - Topic: Create and dispatch a 50% gear-direction token dropout variant from the Scarlet full-gear root-jitter Parking/PUDO branch.
