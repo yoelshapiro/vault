@@ -5,7 +5,7 @@
 - PR: none
 - Change type: Tooling / data aggregation / Databricks upload attempt
 - Areas:
-  - `/workspace/WayveCode/tools/hari_annotations/`
+  - `/workspace/WayveCode/wayve/ai/parking/classifiers/`
   - `/home/borisindelman/Downloads/olf_export_pilot_2026-06-24T12_16_36.095814+00_00.zip`
   - `/tmp/olf_export_pilot_2026-06-24T12_16_36.095814+00_00`
   - `/tmp/safe_unsafe_hari_annotations.csv`
@@ -26,19 +26,21 @@ The local aggregation succeeded:
 
 ## Implementation
 
-Added `//tools/hari_annotations:safe_unsafe_hari_annotations`.
+Added `//wayve/ai/parking/classifiers:safe_unsafe_hari_annotations`.
 
 Default command:
 
 ```bash
-bazel run //tools/hari_annotations:safe_unsafe_hari_annotations -- --mode create
+bazel run //wayve/ai/parking/classifiers:safe_unsafe_hari_annotations -- --mode create
 ```
 
 Local-only validation:
 
 ```bash
-bazel run //tools/hari_annotations:safe_unsafe_hari_annotations -- --no-upload
+bazel run //wayve/ai/parking/classifiers:safe_unsafe_hari_annotations -- --no-upload
 ```
+
+The script was originally created under `tools/hari_annotations/` and then moved to `wayve/ai/parking/classifiers/`.
 
 The tool extracts:
 
@@ -56,6 +58,12 @@ Passed:
 
 ```bash
 bazel test //tools/hari_annotations/...
+```
+
+After moving the script:
+
+```bash
+bazel test //wayve/ai/parking/classifiers/...
 ```
 
 Validated local aggregation:
