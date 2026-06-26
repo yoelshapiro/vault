@@ -6,6 +6,7 @@ Interactive HTML reports served from the vault.
 | ------------------------ | ---------------------------------------------------- | ------------------------ |
 | Parking model comparison | `html_summaries/parking-model-comparison/index.html` | `http://localhost:3005/` |
 | Parking/PUDO generic materialisation bucket groups | `html_summaries/parking-pudo-generic-buckets.html` | open file directly |
+| Legacy parking vs generic parking_pudo sampler (event detection, windows, buckets) | `html_summaries/parking-vs-pudo-generic-sampler.html` | open file directly |
 | Parking capability architecture research | `html_summaries/parking-capability-architecture-research.html` | open file directly · [SSO viewer](https://auto-labeler-reports.sso.azr.wayve.ai/materialised/semantic_understanding/reports/auto_labeler/borisindelman/parking/parking-capability-architecture-research.html) |
 
 ## Publishing to a shareable SSO link
