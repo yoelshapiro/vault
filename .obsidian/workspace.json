@@ -588,6 +588,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "html_summaries/parking-vs-pudo-generic-sampler.html",
     "agent_tasks/2026/06/Week-4/2026-06-25-port-augment-standstill-gear-fix.md",
     "agent_tasks/2026/06/Week-4/2026-06-25-scarlet-root-jitter-g50-training.md",
     "agent_tasks/2026/06/Week-4/2026-06-25-safe-unsafe-hari-databricks-upload.md",
@@ -614,7 +615,6 @@
     "agent_tasks/2026/06/Week-3/2026-06-16-pudo-bc-pmprov-training.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-parking-mode-provenance-labels.md",
     "agent_tasks/2026/06/Week-3/2026-06-16-pudo-window-caps-root.md",
-    "agent_tasks/2026/06/Week-3/2026-06-16-parking-pose-nan-output.md",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
