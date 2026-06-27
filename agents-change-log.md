@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-27 - Acrobatic No-Aug Gear75 Training
+
+- Topic: Dispatch a Parking/PUDO training variant from `acrobatic-rose-cobra` with generic gear augmentation disabled and stronger gated standstill gear augmentation.
+- Labels: parking, pudo, training, gear-augmentation, surfboard.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/acrobatic-no-aug-gear75`.
+- PR: none.
+- Change type: Training config / deployment defaults / Surfboard submission.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/datamodules/parking.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; Surfboard job `185617`.
+- Changes:
+  - Forked from the `acrobatic-rose-cobra` commit and disabled `augment_gear_direction`.
+  - Added config knobs for standstill gear augmentation probability and neutral-clamp gating, then set `augment_standstill_gear_prob=0.75` and `enable_clamp_policy_at_first_neutral=False`.
+  - Set parked-unparking augmentation to `0.5/0.5` and updated the requested PUDO/UnPUDO bucket weights.
+  - Disabled parking end-of-route hazard-light and gear-latch deployment defaults.
+  - Submitted P1 training job `185617`, session `session_2026_06_27_21_39_49_noaug75c05`, and delegated monitoring to 1K steps.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-27-acrobatic-no-aug-gear75-training|2026-06-27 Acrobatic No-Aug Gear75 Training]]
+
 ## 2026-06-25 - Port Augment Standstill Gear Fix
 
 - Topic: Port the gated parking standstill gear augmentation fix into the Scarlet root-jitter G50 training branch.
