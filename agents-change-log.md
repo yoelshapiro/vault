@@ -14,6 +14,8 @@
   - Set parked-unparking augmentation to `0.5/0.5` and updated the requested PUDO/UnPUDO bucket weights.
   - Disabled parking end-of-route hazard-light and gear-latch deployment defaults.
   - Submitted P1 training job `185617`, session `session_2026_06_27_21_39_49_noaug75c05`, and delegated monitoring to 1K steps.
+  - Added a second ablation branch `boris/parking-past30-no-standstill-gear-aug/acrobatic-no-standstill-aug` with `enable_augment_standstill_gear=False`, `parked_unparking_prob=0.0`, and `unparking_gear_augment_prob=0.0`.
+  - Verified the second ablation with the parking config resolve test, submitted P1 training job `185618`, session `session_2026_06_27_21_58_32_nostaug0`, and delegated monitoring to 1K steps.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-27-acrobatic-no-aug-gear75-training|2026-06-27 Acrobatic No-Aug Gear75 Training]]
 
 ## 2026-06-25 - Port Augment Standstill Gear Fix

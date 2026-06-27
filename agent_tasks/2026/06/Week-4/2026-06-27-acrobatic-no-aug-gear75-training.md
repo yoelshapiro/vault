@@ -51,3 +51,24 @@ bazel run //wayve/ai/si/cli:cli -- --no-verify --experiment parking_bc --platfor
 ## Monitoring
 
 - Delegated 1K-step monitoring and up to three failure fix/resubmit attempts to subagent `Gibbs` (`019f0b06-9d90-7fd3-b5f6-de71cb1a8126`).
+
+## Second Ablation
+
+- Branch: `boris/parking-past30-no-standstill-gear-aug/acrobatic-no-standstill-aug`
+- Submitted commit: `5a42369a6faa05c70573d1541e0dfef056d6dd12`
+- Additional config changes on top of the first variant:
+  - `enable_augment_standstill_gear=False`
+  - `parked_unparking_prob=0.0`
+  - `unparking_gear_augment_prob=0.0`
+- Deployment defaults remain:
+  - `enable_end_of_route_hazard_lights=False`
+  - `enable_end_of_route_gear_latch=False`
+- Validation:
+  - `git diff --check`
+  - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves`
+- Job: `185618`
+- Surfboard name: `fuchsia-vampire-bat-jubilant-185618`
+- Session: `session_2026_06_27_21_58_32_nostaug0`
+- W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_27_21_58_32_nostaug0
+- Datadog: https://app.datadoghq.eu/logs?query=job_name%3Afuchsia-vampire-bat-jubilant-185618&from_ts=1781387912954&cols=job_name%2Cnode_rank&live=true
+- Monitoring delegated to subagent `Russell` (`019f0b17-c3fb-7e93-836b-bda4cd435cef`).
