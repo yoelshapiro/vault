@@ -2656,12 +2656,11 @@
 - Branch: `boris/parking-past30-no-standstill-gear-aug/scarlet_full_gear_root_jitter_g50`.
 - PR: n/a.
 - Change type: Code change, tests.
-- Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/si/datamodules/otf.py`.
+- Areas: `wayve/ai/si/datamodules/parking.py`.
 - Changes:
-  - Store a direct parking/unparking event table index instead of a lookahead-array index.
-  - Use the first movement after the parked segment as the unparking route-shortening anchor.
-  - Propagate the stored table index through zoo route-position insertion for parking and unparking samples.
-  - Added focused regression tests for SI index storage and zoo route-position propagation.
+  - Kept the existing `_parking_entry_lookahead_index` handoff contract.
+  - Use the first movement after the parked segment as the unparking/pre-start route-shortening anchor.
+  - Added focused regression coverage for SI lookahead-index storage.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-27-unparking-route-shortening-fix|2026-06-27 Unparking Route Shortening Fix]]
 
 ## 2026-06-18 - Lime 100K Resume
