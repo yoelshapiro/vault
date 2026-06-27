@@ -72,3 +72,10 @@ bazel run //wayve/ai/si/cli:cli -- --no-verify --experiment parking_bc --platfor
 - W&B: https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_06_27_21_58_32_nostaug0
 - Datadog: https://app.datadoghq.eu/logs?query=job_name%3Afuchsia-vampire-bat-jubilant-185618&from_ts=1781387912954&cols=job_name%2Cnode_rank&live=true
 - Monitoring delegated to subagent `Russell` (`019f0b17-c3fb-7e93-836b-bda4cd435cef`).
+- Monitoring follow-up at 2026-06-27 22:19 UTC:
+  - Surfboard job `185618` was still `Running` with no termination reason.
+  - W&B reached `trainer/global_step=1057` and `trainer/samples_seen=67648` at 2026-06-27 22:18 UTC.
+  - Retry count: 0 failed attempts; no code fix or resubmit was needed.
+  - Model Catalogue lookup by session id and Surfboard nickname returned no indexed row yet.
+  - Parking/PUDO model-card row created: https://app.notion.com/38c03da5d69a8196be78c2c8127402d5
+  - Slack update sent to Boris: https://wayve-ai.slack.com/archives/D09SNLZT7PA/p1782598785897979
