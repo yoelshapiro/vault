@@ -2649,6 +2649,21 @@
   - Added a Model Catalogue note for the deployed model and created UK PUDO licensing plus UK Drift/PUDO follow-up experiments against `green-stegosaurus-brave`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-17-astonishing-no-route-end-latch-deploy|2026-06-17 Astonishing No Route-End Latch Deploy]]
 
+## 2026-06-27 - Unparking Route Shortening Fix
+
+- Topic: Fix Parking/PUDO route-shortening handoff for unparking samples.
+- Labels: parking, pudo, route-shortening, datamodule.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/scarlet_full_gear_root_jitter_g50`.
+- PR: n/a.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/si/datamodules/parking.py`, `wayve/ai/zoo/data/parking.py`, `wayve/ai/si/datamodules/otf.py`.
+- Changes:
+  - Store a direct parking/unparking event table index instead of a lookahead-array index.
+  - Use the first movement after the parked segment as the unparking route-shortening anchor.
+  - Propagate the stored table index through zoo route-position insertion for parking and unparking samples.
+  - Added focused regression tests for SI index storage and zoo route-position propagation.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-27-unparking-route-shortening-fix|2026-06-27 Unparking Route Shortening Fix]]
+
 ## 2026-06-18 - Lime 100K Resume
 
 - Topic: Resume `lime-theoretical-walrus` from 80K to 100K.
