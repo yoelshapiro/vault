@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-28 - Parking Lifecycle Dashboard Phase 2
+
+- Topic: Extend the parking model lifecycle dashboard — date-range lookup, split Model-CI vs per-geo licensing, gated write actions, runs calendar, and a lineage tab.
+- Labels: parking, pudo, tooling, dashboard, model-catalogue, model-ci, on-road-experiments, lineage.
+- Branch: `boris/parking-lifecycle-dashboard` (commit `5879cf6afb2c`, pushed to origin; no PR yet).
+- Change type: Feature expansion of an internal tool (reads + gated writes).
+- Areas: `wayve/ai/parking/tools/lifecycle_dashboard/` (clients/, lifecycle.py, poller.py, store/, app.py, templates/, static/).
+- Changes:
+  - Overview date-range lookup (default last 3 weeks); `model_date` parsed from session id.
+  - Split status: Model CI (per gen2 artefact via `…/modelci_builds`) + per-geo licensing UK/US/JPN/DEU (via `…/on_road_experiments?model_session_id=&checkpoint_num=&artefact_id=`, 'licens' heuristic, completed=passed) with experiment links.
+  - Write actions (confirm + payload preview, ENABLE_WRITES, Entra bearer): trigger Model CI (anon `POST /v2/model/artefact/{id}/modelci`); create run + per-geo licensing experiments (`POST /v1/public/on_road_experiments`). Public API forbids per-branch controller → UI shows it disabled (flagged).
+  - Calendar tab (runs/day across the user's models) and Lineage tab (merged WFM→BC→RL DAG via `/v2/model/{id}/lineage`, resolved once per new session, SVG render).
+  - `bazel test ...:all` green (py_test, ruff, flake8, ty, eslint); live smoke incl. write previews resolving real themes/templates with no real writes; server running on :3007.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-parking-lifecycle-dashboard-phase2|2026-06-28 Parking Lifecycle Dashboard — Phase 2]]
+
 ## 2026-06-28 - Parking Accelerate From Stopped Skill
 
 - Topic: Add a ParkingSkills child skill for Denis-controller PUDO/UnPUDO accelerate-from-stopped evaluations.
