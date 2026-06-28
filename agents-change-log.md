@@ -2713,6 +2713,22 @@
   - Added focused regression tests for stopped UnPUDO CA bucket wiring and the 5s pre-start window.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-unpudo-ca-prestart-update|2026-06-28 UnPUDO CA And Pre-Start Update]]
 
+## 2026-06-28 - Denis Controller Accelerate From Stopped
+
+- Topic: Run Accelerate From Stopped PUDO/UnPUDO reproduction for three Parking/PUDO models with Denis's controller.
+- Labels: parking, pudo, av-test, evaluation, denis-controller.
+- Branch: `origin/denis/pudo-start-stop-threshold` at `73ff920e58d9`.
+- PR: n/a.
+- Change type: Evaluation run.
+- Areas: AV Test Pipeline, Eval Studio, Model Catalogue, Databricks.
+- Changes:
+  - Resolved model sessions/checkpoints and Gen2 artefacts for `teal-ecstatic-magpie`, `fuchsia-vampire-bat-jubilant`, and `acrobatic-rose-cobra`.
+  - Generated scenario-version `5700` inputs for collection `45fe8c12-859d-49c3-919b-d639bbbfea96`.
+  - Ran simulation with Denis's controller branch, applied the guide's `+2,000,000 us` shifted segment starts, and ran local timestamp evaluation with `--skip-missing-inference`.
+  - Wrote Delta result tables `--local--6351c1ca`, `--local--ce3fffbe`, and `--local--4581c6e9`.
+  - Queried corrected row and segment pass rates; `acrobatic-rose-cobra` led the common-segment comparison at 65.051% row pass and 61.815% all-rows-pass segment rate.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-denis-controller-accelerate-from-stopped|2026-06-28 Denis Controller Accelerate From Stopped]]
+
 ## 2026-06-18 - Lime 100K Resume
 
 - Topic: Resume `lime-theoretical-walrus` from 80K to 100K.
