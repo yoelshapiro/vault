@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-28 - Teal/Fuchsia End-Route Hysteresis Redeploy
+
+- Topic: Redeploy `teal-ecstatic-magpie` and `fuchsia-vampire-bat-jubilant` with parking interleave end-route hysteresis and end-route parking outputs enabled.
+- Labels: parking, pudo, deploy, interleave-control, gear-latch, hazard-lights.
+- Branch: detached historical worktrees at model training commits.
+- PR: none.
+- Change type: Deployment wrapper local change / model redeploy.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/inference/deployment/onnx_custom_layers/persistent_state.py`; Parking deploy; Console model upload.
+- Changes:
+  - Added parking interleave route hysteresis: switch to parking below `2.5e4`, release route handover at `3e4`, with speed handover unchanged.
+  - Enabled `enable_end_of_route_hazard_lights` and `enable_end_of_route_gear_latch` by default in `ParkingDeploymentWrapperImpl`.
+  - Fixed `PersistentStateBuffer.to_device()` TorchScript typing by making it side-effect-only.
+  - Deployed checkpoint `100000` for both source sessions with temporal caching, interleave control, and group `parking`.
+  - Uploaded Console sessions `session_2026_06_27_21_39_49_noaug75c05__teal-ecstatic-magpie_interleave_control_eor_hysteresis_latches_v1` and `session_2026_06_27_21_58_32_nostaug0__fuchsia-vampire-bat-jubilant_interleave_control_eor_hysteresis_latches_v1`.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-teal-fuchsia-end-route-hysteresis-redeploy|2026-06-28 Teal/Fuchsia End-Route Hysteresis Redeploy]]
+
 ## 2026-06-28 - Parking Lifecycle Dashboard Phase 2c
 
 - Topic: Unified experiment-create form, configurable refresh, controller preset, and a richer dependency chart for the parking lifecycle dashboard.
