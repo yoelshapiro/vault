@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-28 - Parking Accelerate From Stopped Skill
+
+- Topic: Add a ParkingSkills child skill for Denis-controller PUDO/UnPUDO accelerate-from-stopped evaluations.
+- Labels: parking, pudo, skills, eval-studio, flyte, accelerate-from-stopped.
+- Branch: none.
+- PR: none.
+- Change type: Skill/workflow documentation.
+- Areas: `skills/parking_model_lifecycle/parking-accelerate-from-stopped/`; `skills/parking_model_lifecycle/SKILL.md`.
+- Changes:
+  - Created `$parking-accelerate-from-stopped` with default scenario collection/version and Denis branch context.
+  - Documented the preferred branch-built Flyte development workflow via `make run-dev`.
+  - Kept the old `make run-simulation` plus local `run local` flow as a fallback/reproduction path.
+  - Updated `$parking-model-lifecycle` routing to hand accelerate-from-stopped requests to the new child skill.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-parking-accelerate-from-stopped-skill|2026-06-28 Parking Accelerate From Stopped Skill]]
+
 ## 2026-06-28 - Parking Model Lifecycle Dashboard
 
 - Topic: New per-user web tool showing all recent models and their parking lifecycle stage/status (training → trained → licensed → on-road).
