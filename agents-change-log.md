@@ -2698,6 +2698,21 @@
   - Added focused regression coverage for SI lookahead-index storage.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-27-unparking-route-shortening-fix|2026-06-27 Unparking Route Shortening Fix]]
 
+## 2026-06-28 - UnPUDO CA And Pre-Start Update
+
+- Topic: Keep stopped UnPUDO CA handovers and widen UnPUDO pre-start context.
+- Labels: parking, pudo, materialisation, sampling.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: n/a.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added a `filter_remain_stopped` selector option while preserving the default stopped-handover rejection for existing callers.
+  - Disabled that filter only for UnPUDO CA and `failed_to_unpudo` buckets, including anchor buckets.
+  - Changed `dc_pre_start_unpudo` from 0.9s to 5s before first movement, still extending back to directional indicators.
+  - Added focused regression tests for stopped UnPUDO CA bucket wiring and the 5s pre-start window.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-unpudo-ca-prestart-update|2026-06-28 UnPUDO CA And Pre-Start Update]]
+
 ## 2026-06-18 - Lime 100K Resume
 
 - Topic: Resume `lime-theoretical-walrus` from 80K to 100K.
