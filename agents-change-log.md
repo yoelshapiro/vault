@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-28 - Aquamarine Gear Latch Redeploy
+
+- Topic: Redeploy `aquamarine-quizzical-kingfisher` with parking end-of-route hazard lights and gear latch enabled.
+- Labels: parking, pudo, deploy, gear-latch, hazard-lights.
+- Branch: `boris/redeploy-aquamarine-gear-latch`.
+- PR: none.
+- Change type: Deployment wrapper default change / model redeploy.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; Parking deploy; Console model upload.
+- Changes:
+  - Checked out the `aquamarine-quizzical-kingfisher` training commit `7d3b356add696f8499d71bf0e6f6221229393bf9` in a separate worktree.
+  - Set `enable_end_of_route_hazard_lights=True` and `enable_end_of_route_gear_latch=True` in `ParkingDeploymentWrapperImpl`.
+  - Committed and pushed `fc28134404d8` on `boris/redeploy-aquamarine-gear-latch`.
+  - Deployed checkpoint `100000` with temporal caching and parking interleave control.
+  - Uploaded deployed model `magnetic-songbird-aquamarine`.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-aquamarine-gear-latch-redeploy|2026-06-28 Aquamarine Gear Latch Redeploy]]
+
 ## 2026-06-27 - Acrobatic No-Aug Gear75 Training
 
 - Topic: Dispatch a Parking/PUDO training variant from `acrobatic-rose-cobra` with generic gear augmentation disabled and stronger gated standstill gear augmentation.
