@@ -1,5 +1,35 @@
 # Agents Change Log
 
+## 2026-06-28 - Teal Zak Warmup Zero Init Training Monitor
+
+- Topic: Monitor Teal Zak-style warmup / near-zero adaptor init Parking/PUDO training to the 1K-step gate and update the model card.
+- Labels: parking, pudo, training, surfboard, wandb, notion, retry.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/teal_zak_warmup_zero_init`.
+- PR: none.
+- Change type: Training monitoring / retry handling / model-card update.
+- Areas: Surfboard jobs `185913`, `185915`; W&B runs `session_2026_06_28_21_29_00_zkwrm50p1`, `session_2026_06_28_21_37_03_zkwrm50p1`; Parking/PUDO model-card table.
+- Changes:
+  - Diagnosed initial job `185913` failing before training with `AttributeError: 'str' object has no attribute 'log_datapipe_stat_interval'`.
+  - Retried as job `185915` using `+datamodule=parking_bc_datamodule` instead of `datamodule=parking_bc_datamodule`.
+  - Monitored retry `185915` to W&B `trainer/global_step=1078` while Surfboard still reported `Running`.
+  - Created the Parking/PUDO model-card row for `substantial-teal-cobra (not interleaved)` with status `Training`.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-teal-zak-warmup-zero-init-training-monitor|2026-06-28 Teal Zak Warmup Zero Init Training Monitor]]
+
+## 2026-06-28 - Teal March WFM G50 Training Monitor
+
+- Topic: Monitor March/FEB WFM Parking/PUDO training with 50% gear token dropout to the 1K-step gate and update the model card.
+- Labels: parking, pudo, training, surfboard, wandb, notion, retry.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/teal_march_wfm_g50`.
+- PR: none.
+- Change type: Training monitoring / retry handling / model-card update.
+- Areas: Surfboard jobs `185914`, `185917`; W&B runs `session_2026_06_28_21_30_02_marwfm50p1`, `session_2026_06_28_21_38_07_marwfm50p2`; Parking/PUDO model-card table.
+- Changes:
+  - Diagnosed initial job `185914` failing before training with `AttributeError: 'str' object has no attribute 'log_datapipe_stat_interval'`.
+  - Retried as job `185917` using `+datamodule=parking_bc_datamodule` instead of `datamodule=parking_bc_datamodule`.
+  - Monitored retry `185917` to W&B `trainer/train_step=1064` while Surfboard still reported `Running`.
+  - Created the Parking/PUDO model-card row for `harlequin-parrot-energetic (not interleaved)` with status `Training`.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-teal-march-wfm-g50-training-monitor|2026-06-28 Teal March WFM G50 Training Monitor]]
+
 ## 2026-06-28 - Teal/Fuchsia End-Route Hysteresis Redeploy
 
 - Topic: Redeploy `teal-ecstatic-magpie` and `fuchsia-vampire-bat-jubilant` with parking interleave end-route hysteresis and end-route parking outputs enabled.
