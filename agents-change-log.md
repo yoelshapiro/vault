@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-28 - Parking Lifecycle Dashboard Phase 2c
+
+- Topic: Unified experiment-create form, configurable refresh, controller preset, and a richer dependency chart for the parking lifecycle dashboard.
+- Labels: parking, pudo, tooling, dashboard, dependency-chart, controller, on-road-experiments.
+- Branch: `boris/parking-lifecycle-dashboard` (commits `8790095f9329` + `44942b4041f1`, pushed; no PR). Running on :3007.
+- Change type: Feature iteration of an internal tool.
+- Areas: `wayve/ai/parking/tools/lifecycle_dashboard/` (lifecycle.py, app.py, config.py, templates/, static/).
+- Changes:
+  - Auto-refresh interval selector (off/30s/1m/5m/30m), default 30m; poller default cadence 30m.
+  - Controller chooser = default / `prod@rawnam-robotaxi-pudo-v1abi-shim-12.3.1` / custom (open text); preset encoded as name@version.
+  - Unified experiment creation into one shared modal form (geo + optional driving [default `anteater-harlequin-colorful`] + optional extra parking for licensing + controller for run), used identically from the overview table and the model page. Added a "Run exp" table column. Default note text "PUDO model".
+  - Dependency chart: date-span filter (default 1 month) + more connections — resolve parents against the full polled set (out-of-window parents pulled in as external nodes) and add same-branch sequential "branch" fallback edges when no git-diff commit parent matches. Live: 49 nodes / 32 edges (2 fork, 15 branch, 15 interleave) at default span. Curated Notion-only lineage edges still not reproduced.
+  - `bazel test ...:all` green; live smoke verified dependency edge breakdown + controller preset + note default.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-parking-lifecycle-dashboard-phase2|Phase 2 note]] (2b/2c appended).
+
 ## 2026-06-28 - Parking Lifecycle Dashboard Phase 2b
 
 - Topic: Dependency chart, settable controller, create-note, and clickable overview write actions for the parking lifecycle dashboard.
