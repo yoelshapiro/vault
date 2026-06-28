@@ -50,6 +50,41 @@ Common 1697 segments:
 | `fuchsia-vampire-bat-jubilant` | 3920 | 2230 | 1690 | 56.888 | 895 | 667 | 135 | 52.740 |
 | `teal-ecstatic-magpie` | 3920 | 2385 | 1535 | 60.842 | 963 | 603 | 131 | 56.747 |
 
+## Combined With Original Guide Results
+
+Original guide result tables included:
+
+| Controller | Model | Result table suffix |
+| --- | --- | --- |
+| Denis | `elated-jaguar-blush@1` | `--local--efbf0fec` |
+| Denis | `reassured-red-sea-turtle@1` | `--local--e75acc02` |
+| Naman | `elated-jaguar-blush@1` | `--local--eadd5149` |
+| Naman | `reassured-red-sea-turtle@1` | `--local--baa8213a` |
+
+Five-way Denis common comparison across the two original guide Denis runs and the three new Denis runs:
+
+| Run | Common segments | Rows | Row pass % | Segment pass % | Failed rows | All-pass | Mixed | All-fail |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Denis / `reassured-red-sea-turtle@1` | 1575 | 16170 | 93.426 | 91.937 | 1063 | 1448 | 42 | 85 |
+| Denis / `elated-jaguar-blush@1` | 1575 | 16170 | 80.210 | 77.079 | 3200 | 1214 | 102 | 259 |
+| Denis / `acrobatic-rose-cobra` | 1575 | 3645 | 65.953 | 62.603 | 1241 | 986 | 105 | 484 |
+| Denis / `teal-ecstatic-magpie` | 1575 | 3645 | 62.030 | 57.905 | 1384 | 912 | 124 | 539 |
+| Denis / `fuchsia-vampire-bat-jubilant` | 1575 | 3645 | 59.314 | 55.175 | 1483 | 869 | 128 | 578 |
+
+Seven-way common comparison including original Naman rows:
+
+| Run | Common segments | Rows | Row pass % | Segment pass % | Failed rows |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Denis / `reassured-red-sea-turtle@1` | 1574 | 16159 | 93.422 | 91.931 | 1063 |
+| Naman / `reassured-red-sea-turtle@1` | 1574 | 16159 | 89.610 | 87.294 | 1679 |
+| Denis / `elated-jaguar-blush@1` | 1574 | 16159 | 80.197 | 77.065 | 3200 |
+| Denis / `acrobatic-rose-cobra` | 1574 | 3642 | 65.925 | 62.579 | 1241 |
+| Denis / `teal-ecstatic-magpie` | 1574 | 3642 | 61.999 | 57.878 | 1384 |
+| Denis / `fuchsia-vampire-bat-jubilant` | 1574 | 3642 | 59.281 | 55.146 | 1483 |
+| Naman / `elated-jaguar-blush@1` | 1574 | 16159 | 37.849 | 31.067 | 10043 |
+
+Combined takeaway: on the shared Denis-only set, the original `reassured-red-sea-turtle@1` and `elated-jaguar-blush@1` still dominate the three new no/gear-aug style candidates. Among the three new Denis-controller runs, `acrobatic-rose-cobra` is best by both row pass rate and all-rows-pass segment rate.
+
 ## Caveats
 
 - The simulation wrappers plateaued at `1707/1722`; local wait processes were interrupted after the output YAMLs were stable. The cloud simulation had already produced usable inference files.
