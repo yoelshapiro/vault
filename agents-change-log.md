@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-28 - Parking Lifecycle Dashboard Phase 2b
+
+- Topic: Dependency chart, settable controller, create-note, and clickable overview write actions for the parking lifecycle dashboard.
+- Labels: parking, pudo, tooling, dashboard, model-catalogue, dependency-chart, controller, on-road-experiments.
+- Branch: `boris/parking-lifecycle-dashboard` (commit `807c473cd771`, pushed; no PR).
+- Change type: Feature iteration of an internal tool.
+- Areas: `wayve/ai/parking/tools/lifecycle_dashboard/` (lifecycle.py, clients/writes.py, app.py, poller.py, store/, templates/, static/).
+- Changes:
+  - Replaced the lineage-API DAG tab with a parking **Model Dependency Chart** (Mermaid) built from `metadata.run_command`: git-diff parent-commit "fork" edges + deploy "interleave" source edges + decoded short descriptions. Removed `/v2/model/{id}/lineage` plumbing + lineage store table.
+  - On-road create switched to the **internal** `POST /v2/on_road_experiments` so a per-branch **controller** can be set (public endpoint rejects controllers); added a controller chooser (default/prod/prod_tunable/ddp/wdcr/custom+version) applied to all branches; branches now carry `branch_type`.
+  - **Create model-change note** (`POST /v2/model/{id}/note`, Entra bearer) from clicking the note ✗ in the overview table.
+  - Overview table interactive: click note ✗ / "missing" Model CI badge / missing geo chip → matching write flow with confirm + payload preview (shared modal in base.html).
+  - Calendar gained a date-range filter (default last 3 weeks); Model column width-capped with ellipsis.
+  - `bazel test ...:all` green; live smoke confirmed dependency fork chain (plum→coral→…), note/controller previews, no real writes; running on :3007.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-parking-lifecycle-dashboard-phase2|Phase 2 note]] (phase-2b appended).
+
 ## 2026-06-28 - Parking Lifecycle Dashboard Phase 2
 
 - Topic: Extend the parking model lifecycle dashboard — date-range lookup, split Model-CI vs per-geo licensing, gated write actions, runs calendar, and a lineage tab.

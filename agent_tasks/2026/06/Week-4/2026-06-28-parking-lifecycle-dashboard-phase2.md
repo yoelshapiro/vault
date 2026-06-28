@@ -40,8 +40,28 @@ plus a lineage-extraction agent; then implemented with the research's recommende
   ("P1 - Robotaxi + PUDO" + UK template; "Licensing" + "[UK] Licensing…" template) — no real writes performed.
 - Deployed: server running on :3007 (poller watching boris.indelman@wayve.ai).
 
+## Phase 2b (same day, commit `807c473cd771`)
+
+Follow-up batch after Boris's feedback:
+- **Model Dependency Chart** replaces the lineage-API DAG tab. Built from `metadata.run_command`
+  (no Notion): hex `notes=` decodes to branch + `Github Diff compare/<parent>..<this>` + a human
+  short description; deploy `--session_path .../parking_bc/<source>` gives interleave source. Edges:
+  "fork" (a model's commit == another's diff parent-commit) and "interleave" (deploy source). Rendered
+  as a Mermaid flowchart (CDN). Curated release subgroups/feature labels remain Notion-only.
+- **Settable controller**: switched on-road create to the **internal** `POST /v2/on_road_experiments`
+  (public rejects controllers). Branch = {branch_type, model, controller?}. Controller chooser
+  default/prod/prod_tunable/ddp/wdcr/custom+version, applied to all branches. Values from `GET /v2/controllers`.
+- **Create model-change note**: `POST /v2/model/{id}/note` {note, note_metadata.purpose=model_change_note},
+  Entra bearer (Authorization + Id-Token). Triggered by clicking the note ✗ in the overview table.
+- **Clickable overview actions**: note ✗ / "missing" Model CI badge / missing geo chip launch the
+  matching write flow with confirm + payload preview (shared modal moved to base.html).
+- **Calendar** date-range filter (default last 3 weeks); **Model column** width-capped with ellipsis.
+- Verified: `bazel test ...:all` green; live smoke showed the dependency fork chain (plum→coral→fgjitg50af)
+  with decoded descriptions, note preview, and a run-experiment preview carrying branch_type + controller
+  {ddp, 12.2.20}; no real writes. Server restarted on :3007.
+
 ## Follow-ups
 
-- Smarter run-experiment template selection (currently first London template; preview shows the name).
+- Smarter run-experiment template selection (currently first matching geo/London template; preview shows the name).
 - W&B live training state, `model_pipeline_progress` ingestion step, confirmed Foxglove URL.
 - Authoritative geo bucketing (GraphQL) if the name/tag heuristic mis-buckets.
