@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-28 - Parking Model Lifecycle Dashboard
+
+- Topic: New per-user web tool showing all recent models and their parking lifecycle stage/status (training → trained → licensed → on-road).
+- Labels: parking, pudo, tooling, dashboard, fastapi, model-catalogue, lifecycle.
+- Branch: `boris/parking-lifecycle-dashboard` (worktree off `origin/main`).
+- PR: none.
+- Change type: New internal tool (read/monitor first).
+- Areas: `wayve/ai/parking/tools/lifecycle_dashboard/` (new, 22 files).
+- Changes:
+  - FastAPI + Jinja2 + vanilla JS tool (mirrors `event_clip_viewer`), background asyncio poller into a SQLite snapshot the UI reads.
+  - Pure `lifecycle.py`: stage derivation + license status (missing/waiting/finished/revoked) + commit/branch/W&B/BC-RL extraction; thin Model Catalogue I/O client; per-source errors surfaced, never faked.
+  - Overview (per-user model table with stage/note/license/commit) + per-model detail (training, trained/note, licensing, on-road runs with Console/Foxglove/logs, redeploy commit+branch). No redeploy in-tool by design.
+  - Resolved Phase-0 spikes via `/v2/models/list`, `/v3/model/{id}`, `/notes`, `/{ckpt}/{licenses,license_logs,runs}`; author handle = email local-part.
+  - `bazel test ...:all` green (py_test, ruff, flake8, ty, eslint); live smoke against Model Catalogue fetched 6 of Boris's models in ~8s with zero source errors and correct commits/branches/stages.
+- Task note: [[agent_tasks/2026/06/Week-4/2026-06-28-parking-lifecycle-dashboard|2026-06-28 Parking Model Lifecycle Dashboard]]
+
 ## 2026-06-28 - Aquamarine Gear Latch Redeploy
 
 - Topic: Redeploy `aquamarine-quizzical-kingfisher` with parking end-of-route hazard lights and gear latch enabled.
