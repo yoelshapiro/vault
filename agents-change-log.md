@@ -2945,3 +2945,17 @@
   - Fixed the SLAM C2V calibration wrapper to keep `policy_gear_position` in both the positional output tuple and deployment output key list.
   - Verified focused deployment and calibration wrapper Bazel checks locally.
 - Task note: [[agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear-ci-fix|2026-06-22 Deployment Wrapper Default Gear CI Fix]]
+
+## 2026-06-29 - PUDO Harsh Brake Pre-CA
+
+- Topic: Add a brake-override-backed UnPUDO pre-CA bucket to generic materialization.
+- Labels: parking, pudo, materialization, flyte.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: n/a.
+- Change type: Code change, Flyte run.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`.
+- Changes:
+  - Added raw DBW brake override timestamp aggregation from `BrakeReport1Mache.override_active`.
+  - Added `pre_ca_unpudo_harsh_brake_*` bucket and anchor variant for interventions with brake override active within +/-1s.
+  - Kept `dc_pre_start_unpudo` at 2s and submitted `parking_pudo/default` sample Flyte run `ad2q8cwvq5t4dj59gt6g`.
+- Task note: [[agent_tasks/2026/06/Week-5/2026-06-29-pudo-harsh-brake-pre-ca|2026-06-29 PUDO Harsh Brake Pre-CA]]

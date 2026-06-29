@@ -1,0 +1,29 @@
+# 2026-06-29 PUDO Harsh Brake Pre-CA
+
+## Summary
+
+Added a separate `pre_ca_unpudo_harsh_brake_*` bucket to Parking/PUDO generic materialization.
+
+## Changes
+
+- Added a raw DBW brake report join for `raw__gen2.CAN_BUS_GEN2_DATASPEED_MACHE_V1_DBW__BrakeReport1Mache.override_active`.
+- Aggregated override-active timestamps per run to avoid duplicating corpus frames during side-table joins.
+- Added `select_intervention_near_departure_brake_override_event`, which selects UnPUDO pre-CA interventions near departure anchors when brake override is active within `[-1s, +1s]` of the intervention.
+- Wired the new bucket into normal default materialization and anchors via existing country splitting.
+- Kept `dc_pre_start_unpudo` at 2s before movement anchor.
+
+## Validation
+
+- `python3 -m py_compile` passed for the changed materialization modules.
+- `git diff --check` passed.
+- Scoped Bazel test attempt failed before running tests due the known local `WayveMeta --commit` metadata genrule issue.
+
+## Flyte
+
+- Branch: `boris/pudo_generic_materialization`
+- Commit: `96c953d7650c`
+- Execution: `ad2q8cwvq5t4dj59gt6g`
+- Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/ad2q8cwvq5t4dj59gt6g
+- Dataset: `parking_pudo/default`
+- Job name: `parking_pudo_default_harsh_brake_20260629`
+- Partition size: `MAX_NUM_RUN_IDS_PER_PARTITION=700`
