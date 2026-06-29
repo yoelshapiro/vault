@@ -15,9 +15,11 @@ Ran the Parking/PUDO accelerate-from-stopped timestamp evaluation path through F
 
 ## Run Ledger
 
-- `harlequin-parrot-energetic` (`session_2026_06_28_21_38_07_marwfm50p2@10`, artefact `0ec7f3d1-b300-4aa2-82be-40613575c1d5`): 1,722 scenario segments fetched; 598 had existing inference; launched 3 Flyte batches. Status check immediately after submission showed all 3 executions `RUNNING`.
+- `harlequin-parrot-energetic` (`session_2026_06_28_21_38_07_marwfm50p2@10`, artefact `0ec7f3d1-b300-4aa2-82be-40613575c1d5`): 1,722 scenario segments fetched; 598 had existing inference; launched 3 Flyte batches. All 3 executions later reached `SUCCEEDED`.
   - Batch executions: `av26zgrhbhbk6lxld6vk`, `a2hq2fhm9bghb2mpxn7r`, `ajtzxkhttdw52r7b5qpv`
   - Result path: `abfss://evaluation-studio-sandbox@wayveproddataset.dfs.core.windows.net/av_test_evaluation_results/accelerate_from_stopped__timestamp__simulation_shadow_mode--development--c14e41ce`
+  - Result aggregate: 6,132 rows across 597 segment names / inference items; 3,790 pass rows, 2,342 fail rows, row pass rate `61.807%`; strict segment outcomes: 313 all-pass, 176 all-fail, 108 mixed.
+  - Detailed Flyte check: batch 2 had one failed attempt for `load_openloop_sim_driving_plans_task` (`a2hq2fhm9bghb2mpxn7r-n0-0`, exit 137) followed by successful retry attempt `a2hq2fhm9bghb2mpxn7r-n0-1`; no terminal workflow failure.
 - `substantial-teal-cobra` (`session_2026_06_28_21_37_03_zkwrm50p1@10`, artefact `55a3b237-89c1-4284-8401-2eaada2c398a`): 1,722 scenario segments fetched; all 1,722 were missing inference; no Flyte batches submitted.
   - Empty result path suffix emitted by runner: `accelerate_from_stopped__timestamp__simulation_shadow_mode--development--516b0e2e`
 - `magenta-watchful-ostrich` (`session_2026_06_29_05_23_16_mzwarm50p1@10`, artefact `82c4fa33-2779-4959-a377-691ad8f3ef45`): 1,722 scenario segments fetched; all 1,722 were missing inference; no Flyte batches submitted.

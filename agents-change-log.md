@@ -11,7 +11,9 @@
 - Changes:
   - Registered the Denis-branch accelerate-from-stopped timestamp workflow as `accelerate-from-stopped-timestamp-shadow@borisindel-tmp-build-382674be4fb7-73ff920e58d9ff9deb6e125ff1559c7d02ee1140_vylv0`.
   - Launched `harlequin-parrot-energetic` checkpoint `10` on 598 available-inference items as 3 Flyte batches: `av26zgrhbhbk6lxld6vk`, `a2hq2fhm9bghb2mpxn7r`, and `ajtzxkhttdw52r7b5qpv`.
-  - Checked the three harlequin batch executions after submission; all were `RUNNING`.
+  - Checked the three harlequin batch executions after completion; all reached `SUCCEEDED`.
+  - Queried the harlequin result Delta path: 6,132 rows across 597 evaluated segment names / inference items, 3,790 pass rows, 2,342 fail rows, row pass rate `61.807%`, and strict segment outcomes of 313 all-pass / 176 all-fail / 108 mixed.
+  - Found one hidden retry in batch 2: `load_openloop_sim_driving_plans_task` attempt `a2hq2fhm9bghb2mpxn7r-n0-0` exited 137, then retry attempt `a2hq2fhm9bghb2mpxn7r-n0-1` succeeded.
   - Attempted `substantial-teal-cobra` and `magenta-watchful-ostrich` checkpoint `10`; both had zero runnable items because all 1,722 scenario segments were missing inference, so no Flyte batches were submitted.
 - Task note: [[agent_tasks/2026/06/Week-5/2026-06-29-accelerate-from-stopped-flyte-three-models|2026-06-29 Accelerate From Stopped Flyte Three Models]]
 
