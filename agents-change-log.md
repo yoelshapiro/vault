@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-29 - Accelerate From Stopped Flyte Three Models
+
+- Topic: Run Parking/PUDO accelerate-from-stopped Flyte development evaluations for three new model checkpoints with Denis controller source.
+- Labels: parking, pudo, av-test, flyte, accelerate-from-stopped, denis-controller.
+- Branch: detached `origin/denis/pudo-start-stop-threshold@73ff920e58d9ff9deb6e125ff1559c7d02ee1140` in `/tmp/WayveCode-denis-pudo-start-stop-threshold`.
+- PR: none.
+- Change type: Evaluation run / Flyte workflow registration / run ledger.
+- Areas: `wayve/services/av_test_pipeline/evaluation_methods/accelerate_from_stopped/timestamp`; Flyte development workflow `accelerate-from-stopped-timestamp-shadow`; scenario collection `5700`.
+- Changes:
+  - Registered the Denis-branch accelerate-from-stopped timestamp workflow as `accelerate-from-stopped-timestamp-shadow@borisindel-tmp-build-382674be4fb7-73ff920e58d9ff9deb6e125ff1559c7d02ee1140_vylv0`.
+  - Launched `harlequin-parrot-energetic` checkpoint `10` on 598 available-inference items as 3 Flyte batches: `av26zgrhbhbk6lxld6vk`, `a2hq2fhm9bghb2mpxn7r`, and `ajtzxkhttdw52r7b5qpv`.
+  - Checked the three harlequin batch executions after submission; all were `RUNNING`.
+  - Attempted `substantial-teal-cobra` and `magenta-watchful-ostrich` checkpoint `10`; both had zero runnable items because all 1,722 scenario segments were missing inference, so no Flyte batches were submitted.
+- Task note: [[agent_tasks/2026/06/Week-5/2026-06-29-accelerate-from-stopped-flyte-three-models|2026-06-29 Accelerate From Stopped Flyte Three Models]]
+
 ## 2026-06-28 - Teal Zak Warmup Zero Init Training Monitor
 
 - Topic: Monitor Teal Zak-style warmup / near-zero adaptor init Parking/PUDO training to the 1K-step gate and update the model card.
