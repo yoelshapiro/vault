@@ -185,7 +185,7 @@
       </div>
       <div id="chartHolder"></div>
       <div class="hint">
-        <b>Tip:</b> scroll / use &minus; ⤢ + to zoom the spider. Click a model in the legend to toggle it. Hover a vertex for the exact value and delta versus the reference. In <b>Δ mode</b> the center is the reference baseline; outward = better than reference, inward = worse.
+        <b>Tip:</b> scroll / use &minus; ⤢ + to zoom; <b>drag to pan</b>, <b>double-click to reset</b>. Click a model in the legend to toggle it. Hover a vertex for the exact value and delta versus the reference. In <b>Δ mode</b> the center is the reference baseline; outward = better than reference, inward = worse.
       </div>
     </section>
   </div>
@@ -228,6 +228,8 @@ const METRICS = [
    v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
   {label:"Failed to accelerate\nin unpudo · reverse", n:153,
    v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
+  {label:"Failed to accel · Forward\n[Denis · raw pass]", n:16205,
+   v:[93.372, 61.807, null, 53.294, 57.469, 80.105]},
 ];
 
 // ---- state -------------------------------------------------------------
@@ -235,7 +237,8 @@ let refIdx = 0;
 let visible = MODELS.map(()=>true);
 let mode = "abs";
 let logScale = false;    // log radial scale (abs mode only)
-let zoom = 1;            // viewBox zoom factor
+let zoom = 1;            // css-transform zoom factor
+let panX = 0, panY = 0;  // css-transform pan offset (screen px)
 const ZMIN = 0.6, ZMAX = 4;
 
 // ---- geometry ----------------------------------------------------------
@@ -283,6 +286,8 @@ function render(){
   holder.innerHTML = "";
   const svg = el("svg", {viewBox:`0 0 ${SVGW} ${SVGH}`, id:"spiderSvg"}, holder);
   svg.addEventListener("wheel", onWheel, {passive:false});
+  svg.addEventListener("mousedown", onDragStart);
+  svg.addEventListener("dblclick", resetView);
 
   // grid rings (scale-aware): each {f: radial fraction, label}
   let rings;
@@ -440,24 +445,55 @@ document.getElementById("allBtn").addEventListener("click",()=>{
 document.getElementById("noneBtn").addEventListener("click",()=>{
   visible=MODELS.map((_,i)=>i===refIdx); buildLegend(); render();
 });
-// ---- zoom --------------------------------------------------------------
+// ---- zoom & pan --------------------------------------------------------
 function applyZoom(){
   const svg = document.getElementById("spiderSvg");
-  if(svg) svg.style.transform = `scale(${zoom})`;
+  if(svg){
+    svg.style.transform = `translate(${panX}px,${panY}px) scale(${zoom})`;
+    svg.style.transition = dragging ? "none" : "transform .08s linear";
+  }
 }
 function setZoom(z){
   zoom = Math.max(ZMIN, Math.min(ZMAX, z));
   applyZoom();
 }
+function resetView(){
+  zoom = 1; panX = 0; panY = 0; applyZoom();
+}
 function onWheel(e){
   e.preventDefault();
   setZoom(zoom * (e.deltaY < 0 ? 1.12 : 1/1.12));
 }
+
+// drag-to-pan
+let dragging = false, dragSX = 0, dragSY = 0, dragPX = 0, dragPY = 0, dragMoved = false;
+function onDragStart(e){
+  if(e.button!==0) return;
+  dragging = true; dragMoved = false;
+  dragSX = e.clientX; dragSY = e.clientY; dragPX = panX; dragPY = panY;
+  const svg = document.getElementById("spiderSvg");
+  if(svg) svg.style.cursor = "grabbing";
+  e.preventDefault();
+}
+window.addEventListener("mousemove",e=>{
+  if(!dragging) return;
+  const dx = e.clientX - dragSX, dy = e.clientY - dragSY;
+  if(Math.abs(dx)+Math.abs(dy) > 2) dragMoved = true;
+  panX = dragPX + dx; panY = dragPY + dy;
+  applyZoom();
+});
+window.addEventListener("mouseup",()=>{
+  if(!dragging) return;
+  dragging = false;
+  const svg = document.getElementById("spiderSvg");
+  if(svg) svg.style.cursor = "grab";
+});
+
 document.getElementById("zoomCtrl").addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b)return;
   if(b.dataset.z==="in") setZoom(zoom*1.25);
   else if(b.dataset.z==="out") setZoom(zoom/1.25);
-  else setZoom(1);
+  else resetView();
 });
 
 const scaleToggle = document.getElementById("scaleToggle");
