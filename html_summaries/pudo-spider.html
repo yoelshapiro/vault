@@ -449,7 +449,7 @@ function showTip(ev, mi, metricIdx){
     }
   }
   tip.innerHTML =
-    `<div class="t-name">${MODELS[mi].short}${mi===refIdx?" · REF":""}</div>`+
+    `<div class="t-name" style="color:${MODELS[mi].color}">${MODELS[mi].short}${mi===refIdx?" · REF":""}</div>`+
     `<div>${m.label.replace(/\n/g," ")}</div>`+
     `<div class="t-val">${valHtml}</div>`+
     deltaHtml;
@@ -503,6 +503,7 @@ document.getElementById("noneBtn").addEventListener("click",()=>{
 // ---- zoom & pan (geometry-based: strokes & markers stay fixed size) ----
 function setZoom(z){
   zoom = Math.max(ZMIN, Math.min(ZMAX, z));
+  panX = 0; panY = 0;   // keep the web centered while zooming
   render();
 }
 function resetView(){
