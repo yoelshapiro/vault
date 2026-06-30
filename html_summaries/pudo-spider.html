@@ -98,8 +98,8 @@
     font-family:'Space Grotesk',sans-serif;font-size:.76rem;cursor:pointer;transition:.15s;
   }
   .mode-toggle button.active{background:var(--accent);color:#1a1205;font-weight:600;}
-  #chartHolder{width:100%;display:flex;justify-content:center;}
-  svg{width:100%;height:auto;max-width:640px;overflow:visible;}
+  #chartHolder{width:100%;display:flex;justify-content:center;overflow:hidden;}
+  svg{width:100%;height:auto;max-width:640px;overflow:visible;transform-origin:center center;transition:transform .08s linear;cursor:grab;}
   .axis-line{stroke:var(--grid);stroke-width:1;}
   .grid-poly{fill:none;stroke:var(--grid);stroke-width:1;opacity:.55;}
   .grid-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;}
@@ -265,7 +265,7 @@ const tip = document.getElementById("tip");
 
 function render(){
   holder.innerHTML = "";
-  const svg = el("svg", {viewBox:viewBoxStr(), id:"spiderSvg"}, holder);
+  const svg = el("svg", {viewBox:`0 0 ${SVGW} ${SVGH}`, id:"spiderSvg"}, holder);
   svg.addEventListener("wheel", onWheel, {passive:false});
 
   // grid rings
@@ -421,14 +421,9 @@ document.getElementById("noneBtn").addEventListener("click",()=>{
   visible=MODELS.map((_,i)=>i===refIdx); buildLegend(); render();
 });
 // ---- zoom --------------------------------------------------------------
-function viewBoxStr(){
-  const w = SVGW/zoom, h = SVGH/zoom;
-  const x = CX - w/2, y = CY - h/2;
-  return `${x} ${y} ${w} ${h}`;
-}
 function applyZoom(){
   const svg = document.getElementById("spiderSvg");
-  if(svg) svg.setAttribute("viewBox", viewBoxStr());
+  if(svg) svg.style.transform = `scale(${zoom})`;
 }
 function setZoom(z){
   zoom = Math.max(ZMIN, Math.min(ZMAX, z));
