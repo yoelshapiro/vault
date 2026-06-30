@@ -135,6 +135,9 @@
   .up{color:var(--good);}
   .down{color:var(--bad);}
   tr:hover td{background:rgba(255,255,255,.025);}
+  .avg-row td{border-top:2px solid var(--accent);border-bottom:none;padding-top:11px;font-weight:600;}
+  .avg-row td.metric{color:var(--accent);}
+  .avg-row .val{font-size:1.02em;}
 </style>
 </head>
 <body>
@@ -200,12 +203,12 @@
 <script>
 // ---- data --------------------------------------------------------------
 const MODELS = [
-  {id:"reassured-red-sea-turtle@1",   short:"reassured-red-sea-turtle@1",   top:41.69, color:"#ffb454"},
-  {id:"harlequin-parrot-energetic@10",short:"harlequin-parrot-energetic@10",top:34.01, color:"#5ec8ff"},
-  {id:"chameleon-sarcastic-silver@1", short:"chameleon-sarcastic-silver@1", top:38.05, color:"#3ddc97"},
-  {id:"substantial-teal-cobra@10",    short:"substantial-teal-cobra@10",    top:34.35, color:"#c08bff"},
-  {id:"magenta-watchful-ostrich@10",  short:"magenta-watchful-ostrich@10",  top:34.87, color:"#ff7eb6"},
-  {id:"elated-jaguar-blush@1",        short:"elated-jaguar-blush@1",        top:31.22, color:"#f4d35e"},
+  {id:"reassured-red-sea-turtle@1",   short:"reassured-red-sea-turtle@1",   color:"#ffb454"},
+  {id:"harlequin-parrot-energetic@10",short:"harlequin-parrot-energetic@10",color:"#5ec8ff"},
+  {id:"chameleon-sarcastic-silver@1", short:"chameleon-sarcastic-silver@1", color:"#3ddc97"},
+  {id:"substantial-teal-cobra@10",    short:"substantial-teal-cobra@10",    color:"#c08bff"},
+  {id:"magenta-watchful-ostrich@10",  short:"magenta-watchful-ostrich@10",  color:"#ff7eb6"},
+  {id:"elated-jaguar-blush@1",        short:"elated-jaguar-blush@1",        color:"#f4d35e"},
 ];
 
 // metrics for the spider; values indexed in MODELS order
@@ -257,6 +260,13 @@ function el(tag, attrs, parent){
   for(const k in attrs) e.setAttribute(k, attrs[k]);
   if(parent) parent.appendChild(e);
   return e;
+}
+
+// overall score = mean of a model's metric values (nulls skipped)
+function avgScore(modelIdx){
+  let sum=0, cnt=0;
+  METRICS.forEach(m=>{ const v=m.v[modelIdx]; if(v!=null){ sum+=v; cnt++; } });
+  return cnt? sum/cnt : null;
 }
 
 // log mapping: 0.1%..100% -> 0..1
@@ -397,6 +407,23 @@ function renderTable(){
     html += "</tr>";
   });
   html += "</tbody>";
+
+  // average-score footer
+  html += "<tfoot><tr class='avg-row'><td class='metric'>Average score <span class='n'>(mean of metrics)</span></td>";
+  const refAvg = avgScore(refIdx);
+  cols.forEach(i=>{
+    const isRef = i===refIdx;
+    const a = avgScore(i);
+    let cell = a==null ? `<span class='val'>n/a</span>` : `<span class='val'>${a.toFixed(2)}%</span>`;
+    if(!isRef && a!=null && refAvg!=null){
+      const d = a - refAvg;
+      const cls = d>=0?"up":"down";
+      cell += `<span class='dl ${cls}'>${d>=0?"+":""}${d.toFixed(2)}%</span>`;
+    }
+    html += `<td class='${isRef?"refcell":""}'>${cell}</td>`;
+  });
+  html += "</tr></tfoot>";
+
   tbl.innerHTML = html;
 }
 
@@ -449,7 +476,7 @@ function buildLegend(){
     item.className="lg-item"+(visible[i]?"":" off")+(i===refIdx?" ref":"");
     item.innerHTML=
       `<span class="swatch" style="background:${m.color}"></span>`+
-      `<span class="lg-name">${m.short}<br><span class="lg-top">top ${m.top.toFixed(2)}%</span></span>`+
+      `<span class="lg-name">${m.short}<br><span class="lg-top">avg ${(avgScore(i)??0).toFixed(2)}%</span></span>`+
       (i===refIdx?`<span class="lg-badge">ref</span>`:"");
     item.addEventListener("click",()=>{
       if(i===refIdx) return;           // keep reference always visible
