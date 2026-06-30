@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-30 - Safe/Unsafe HARI Folder Overwrite Script
+
+- Topic: Update the HARI OpenLABEL parser/uploader to read an annotation folder and overwrite the parking safe/unsafe Databricks table via a Databricks notebook run.
+- Labels: parking, hari, databricks, openlabel, annotations.
+- Branch: `boris/parking-past30-no-standstill-gear-aug/scarlet_full_gear_root_jitter_g50`.
+- PR: none.
+- Change type: Tooling / Databricks upload refinement.
+- Areas: `wayve/ai/parking/classifiers/`; `wayve/ai/parking/BUILD`; `hive_metastore.parking.safe_unsafe_hari_annotations`.
+- Changes:
+  - Added `--input-dir` support to recursively parse folders of HARI OpenLABEL JSON files.
+  - Made overwrite semantics the default upload path via `--mode replace`.
+  - Replaced the local SQL-warehouse write path with a Databricks notebook-run backend that imports a generated notebook and submits it on cluster `0624-170917-6yh5w7tu`.
+  - Kept local CSV audit output and excluded the standalone tool from the broad `wayve/ai/parking:parking` library glob.
+  - Verified `bazel test //wayve/ai/parking/classifiers/...` and a no-upload parser smoke run.
+- Task note: [[agent_tasks/2026/06/Week-5/2026-06-30-safe-unsafe-hari-folder-overwrite-script]]
+
 ## 2026-06-30 - PUDO Harsh Brake Pre-CA Materialization OOM Fix
 
 - Topic: Fix and rerun Parking/PUDO default materialization after adding the UnPUDO harsh-brake pre-CA bucket.
