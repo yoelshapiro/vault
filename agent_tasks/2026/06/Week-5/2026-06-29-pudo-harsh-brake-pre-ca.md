@@ -27,3 +27,14 @@ Added a separate `pre_ca_unpudo_harsh_brake_*` bucket to Parking/PUDO generic ma
 - Dataset: `parking_pudo/default`
 - Job name: `parking_pudo_default_harsh_brake_20260629`
 - Partition size: `MAX_NUM_RUN_IDS_PER_PARTITION=700`
+
+## 2026-06-30 Follow-up
+
+- Found that the first run did not write `pre_ca_unpudo_harsh_brake_*` bucket files.
+- Root cause: brake override preprocessing grouped only by `run_id`, while the side-table join was declared on `vehicle_platform`, `run_date_iso`, and `run_id`.
+- Fixed `_preprocess_brake_override` and `_empty_brake_override_table` to preserve all declared join keys.
+- Commit: `4b1e43c7e52a`
+- Published image: `wayveacrprodflyte.azurecr.io/sampling@sha256:7556d2ebc080727b3476075ff8a62e45fe64b58e801b785937fe2ca51d06ce3b`
+- Corrected execution: `avgcnlghmgkr2j4rjb4j`
+- Console: https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/avgcnlghmgkr2j4rjb4j
+- Stale-image execution `ad9hplxxfr7vw6cd82sf` was terminated after it resolved to the old image digest.

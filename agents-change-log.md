@@ -2974,4 +2974,5 @@
   - Added raw DBW brake override timestamp aggregation from `BrakeReport1Mache.override_active`.
   - Added `pre_ca_unpudo_harsh_brake_*` bucket and anchor variant for interventions with brake override active within +/-1s.
   - Kept `dc_pre_start_unpudo` at 2s and submitted `parking_pudo/default` sample Flyte run `ad2q8cwvq5t4dj59gt6g`.
+  - Fixed the brake override side-table join to preserve `vehicle_platform`, `run_date_iso`, and `run_id`, then submitted corrected Flyte run `avgcnlghmgkr2j4rjb4j`.
 - Task note: [[agent_tasks/2026/06/Week-5/2026-06-29-pudo-harsh-brake-pre-ca|2026-06-29 PUDO Harsh Brake Pre-CA]]
