@@ -265,9 +265,10 @@ function logFrac(v){
   const cv = Math.max(LOG_LO, Math.min(LOG_HI, v));
   return (Math.log10(cv) - Math.log10(LOG_LO)) / (Math.log10(LOG_HI) - Math.log10(LOG_LO));
 }
-// value -> radial fraction for current mode
+// value -> radial fraction for current mode (null => missing, plot at center)
 function frac(metricIdx, modelIdx){
   const m = METRICS[metricIdx];
+  if(m.v[modelIdx]==null) return 0;
   if(mode==="abs"){
     if(logScale) return logFrac(m.v[modelIdx]);
     return Math.max(0, Math.min(1, m.v[modelIdx]/100));
@@ -343,9 +344,16 @@ function render(){
   order.forEach(mi=>{
     const isRef = mi===refIdx;
     for(let i=0;i<N;i++){
+      const missing = METRICS[i].v[mi]==null;
       const [x,y]=pt(i,frac(i,mi));
-      el("circle",{cx:x,cy:y,r:isRef?2.4:2,class:"vertex",
-                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":0.8},dotLayer);
+      if(missing){
+        // hollow muted marker — not a real value
+        el("circle",{cx:x,cy:y,r:2.6,fill:"none",stroke:"var(--muted)",
+                     "stroke-width":0.8,"stroke-dasharray":"1.5 1.5"},dotLayer);
+      } else {
+        el("circle",{cx:x,cy:y,r:isRef?2.4:2,class:"vertex",
+                     fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":0.8},dotLayer);
+      }
       // invisible larger hit target for reliable hover
       const hit = el("circle",{cx:x,cy:y,r:9,class:"vertex",fill:"transparent",
                    stroke:"transparent"},dotLayer);
@@ -373,11 +381,16 @@ function renderTable(){
     cols.forEach(i=>{
       const isRef = i===refIdx;
       const val = m.v[i];
-      let cell = `<span class='val'>${val.toFixed(2)}%</span>`;
-      if(!isRef){
-        const d = val - m.v[refIdx];
-        const cls = d>=0?"up":"down";
-        cell += `<span class='dl ${cls}'>${d>=0?"+":""}${d.toFixed(2)}%</span>`;
+      let cell;
+      if(val==null){
+        cell = `<span class='val' style='color:var(--muted)'>n/a</span>`;
+      } else {
+        cell = `<span class='val'>${val.toFixed(2)}%</span>`;
+        if(!isRef && m.v[refIdx]!=null){
+          const d = val - m.v[refIdx];
+          const cls = d>=0?"up":"down";
+          cell += `<span class='dl ${cls}'>${d>=0?"+":""}${d.toFixed(2)}%</span>`;
+        }
       }
       html += `<td class='${isRef?"refcell":""}'>${cell}</td>`;
     });
@@ -390,14 +403,27 @@ function renderTable(){
 function showTip(ev, mi, metricIdx){
   const m = METRICS[metricIdx];
   const val = m.v[mi];
-  const d = val - m.v[refIdx];
-  const dStr = (d>0?"+":"")+d.toFixed(2)+"%";
-  const dColor = mi===refIdx ? "var(--muted)" : (d>=0?"var(--good)":"var(--bad)");
+  const refVal = m.v[refIdx];
+  let valHtml, deltaHtml="";
+  if(val==null){
+    valHtml = `<span style="color:var(--muted)">n/a — no results</span>`;
+  } else {
+    valHtml = `${val.toFixed(2)}%`;
+    if(mi!==refIdx){
+      if(refVal==null){
+        deltaHtml = `<div class="t-delta" style="color:var(--muted)">ref n/a</div>`;
+      } else {
+        const d = val - refVal;
+        const dColor = d>=0?"var(--good)":"var(--bad)";
+        deltaHtml = `<div class="t-delta" style="color:${dColor}">${d>0?"+":""}${d.toFixed(2)}% vs ref</div>`;
+      }
+    }
+  }
   tip.innerHTML =
     `<div class="t-name">${MODELS[mi].short}${mi===refIdx?" · REF":""}</div>`+
     `<div>${m.label.replace(/\n/g," ")}</div>`+
-    `<div class="t-val">${val.toFixed(2)}%</div>`+
-    (mi===refIdx?"":`<div class="t-delta" style="color:${dColor}">${dStr} vs ref</div>`);
+    `<div class="t-val">${valHtml}</div>`+
+    deltaHtml;
   tip.style.opacity=1;
   tip.style.left=Math.min(ev.clientX+14, window.innerWidth-270)+"px";
   tip.style.top=(ev.clientY+14)+"px";
