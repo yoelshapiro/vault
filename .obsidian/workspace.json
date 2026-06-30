@@ -588,6 +588,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "html_summaries/pudo-spider.html",
     "agent_tasks/2026/06/Week-5/2026-06-30-accelerate-from-stopped-flyte-three-models.md",
     "agent_tasks/2026/06/Week-5/2026-06-29-pudo-harsh-brake-pre-ca.md",
     "agent_tasks/2026/06/Week-5/2026-06-29-accelerate-from-stopped-flyte-three-models.md",
@@ -615,7 +616,6 @@
     "agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-gear-output-ci.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear.md",
-    "agent_tasks/2026/06/Week-4/2026-06-22-merge-main-into-pudo-baseline.md",
     "agent_tasks/2026/06/Week-4",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
