@@ -286,8 +286,8 @@ function render(){
     el("polygon",{points:pts.trim(),class:"series-poly"+(isRef?" ref":""),
                   stroke:MODELS[mi].color, fill:MODELS[mi].color},svg);
     verts.forEach(([x,y,i])=>{
-      const c = el("circle",{cx:x,cy:y,r:isRef?5:4,class:"vertex",
-                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":1.5},svg);
+      const c = el("circle",{cx:x,cy:y,r:isRef?3.6:3,class:"vertex",
+                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":1.2},svg);
       c.addEventListener("mousemove",ev=>showTip(ev, mi, i));
       c.addEventListener("mouseleave",hideTip);
     });
