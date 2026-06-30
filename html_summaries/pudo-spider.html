@@ -105,7 +105,7 @@
   .grid-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;}
   .axis-label{fill:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;}
   .axis-n{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9.5px;}
-  .series-poly{fill-opacity:.06;stroke-width:0.9;transition:fill-opacity .2s;}
+  .series-poly{fill-opacity:.06;stroke-width:0.9;transition:fill-opacity .2s;pointer-events:none;}
   .series-poly.ref{stroke-width:1.4;stroke-dasharray:none;fill-opacity:.10;}
   .vertex{cursor:pointer;}
   .tooltip{
@@ -167,9 +167,16 @@
     <section class="panel chart-panel">
       <div class="chart-head">
         <h2 style="margin:0;">Metric spider</h2>
-        <div class="mode-toggle" id="modeToggle">
-          <button data-mode="abs" class="active">Absolute %</button>
-          <button data-mode="delta">Δ vs reference</button>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <div class="mode-toggle" id="zoomCtrl">
+            <button data-z="out">&minus;</button>
+            <button data-z="reset" title="reset zoom">⤢</button>
+            <button data-z="in">+</button>
+          </div>
+          <div class="mode-toggle" id="modeToggle">
+            <button data-mode="abs" class="active">Absolute %</button>
+            <button data-mode="delta">Δ vs reference</button>
+          </div>
         </div>
       </div>
       <div id="chartHolder"></div>
@@ -219,6 +226,8 @@ const METRICS = [
 let refIdx = 0;
 let visible = MODELS.map(()=>true);
 let mode = "abs";
+let zoom = 1;            // viewBox zoom factor
+const ZMIN = 0.6, ZMAX = 4;
 
 // ---- geometry ----------------------------------------------------------
 const SVGW = 600, SVGH = 600;
@@ -294,24 +303,29 @@ function render(){
   const order = MODELS.map((_,i)=>i).filter(i=>i!==refIdx && visible[i]);
   if(visible[refIdx]) order.push(refIdx);
 
+  // 1) all polygons first (fills/strokes never block hover)
   order.forEach(mi=>{
     const isRef = mi===refIdx;
     let pts="";
-    const verts=[];
-    for(let i=0;i<N;i++){
-      const f = frac(i, mi);
-      const [x,y]=pt(i,f);
-      pts+=`${x},${y} `;
-      verts.push([x,y,i]);
-    }
+    for(let i=0;i<N;i++){ const [x,y]=pt(i,frac(i,mi)); pts+=`${x},${y} `; }
     el("polygon",{points:pts.trim(),class:"series-poly"+(isRef?" ref":""),
                   stroke:MODELS[mi].color, fill:MODELS[mi].color},svg);
-    verts.forEach(([x,y,i])=>{
-      const c = el("circle",{cx:x,cy:y,r:isRef?2.4:2,class:"vertex",
-                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":0.8},svg);
-      c.addEventListener("mousemove",ev=>showTip(ev, mi, i));
-      c.addEventListener("mouseleave",hideTip);
-    });
+  });
+
+  // 2) all vertices in a top layer so every dot is hoverable
+  const dotLayer = el("g",{},svg);
+  order.forEach(mi=>{
+    const isRef = mi===refIdx;
+    for(let i=0;i<N;i++){
+      const [x,y]=pt(i,frac(i,mi));
+      el("circle",{cx:x,cy:y,r:isRef?2.4:2,class:"vertex",
+                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":0.8},dotLayer);
+      // invisible larger hit target for reliable hover
+      const hit = el("circle",{cx:x,cy:y,r:9,class:"vertex",fill:"transparent",
+                   stroke:"transparent"},dotLayer);
+      hit.addEventListener("mousemove",ev=>showTip(ev, mi, i));
+      hit.addEventListener("mouseleave",hideTip);
+    }
   });
 
   renderTable();
