@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-06-30 - PUDO Harsh Brake Pre-CA Materialization OOM Fix
+
+- Topic: Fix and rerun Parking/PUDO default materialization after adding the UnPUDO harsh-brake pre-CA bucket.
+- Labels: parking, pudo, materialization, flyte, brake-override, ray, oom.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: draft PR for generic Parking/PUDO materialization.
+- Change type: Bug fix / Flyte execution / materialization debugging.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/signals.py`; `wayve/ai/services/sampling/datasets/parking_pudo/intervention_filters.py`; Flyte `parking_pudo/default`.
+- Changes:
+  - Diagnosed corrected run `avgcnlghmgkr2j4rjb4j` failing in Ray filter-and-bucket because raw brake override timestamp lists were joined onto each corpus frame and one task reached roughly `363GB`.
+  - Changed brake override preprocessing to preserve declared side-table join keys and compress override-active samples into interval start/end lists split by gaps larger than `250ms`.
+  - Updated the harsh-brake pre-CA selector to test interval overlap with the intervention `[-1s, +1s]` window.
+  - Committed and pushed `5468b17c3d86`, published sampling image digest `7cb431a89b801ce70c06556949151dfefaaa875757f0dcdcbd27f41595b1227b`, and launched rerun `axrc88mcxtj47gj4wgwg`.
+- Task note: [[agent_tasks/2026/06/Week-5/2026-06-29-pudo-harsh-brake-pre-ca|2026-06-29 PUDO Harsh Brake Pre-CA]]
+
 ## 2026-06-30 - Accelerate From Stopped Flyte Three Models
 
 - Topic: Run Parking/PUDO accelerate-from-stopped Flyte development evaluations for `substantial-teal-cobra`, `magenta-watchful-ostrich`, and `chameleon-sarcastic-silver` with Denis controller source.
