@@ -52,7 +52,7 @@ bazel run //wayve/ai/parking/classifiers:safe_unsafe_hari_annotations -- \
   --mode replace
 ```
 
-The folder path was not present under `~/Downloads`, so the folder overwrite upload was not run yet.
+The new annotation folder was later provided at `/home/borisindelman/tmp/hari/safe_unsafe_standstill`.
 
 ## Databricks Write Verification
 
@@ -84,3 +84,38 @@ Results:
 - `['safe', 'unsafe']`: `1`
 - `['safe']`: `68`
 - `['unsafe']`: `31`
+
+## New Annotation Upload
+
+On 2026-06-30, parsed `/home/borisindelman/tmp/hari/safe_unsafe_standstill` and overwrote `hive_metastore.parking.safe_unsafe_hari_annotations`.
+
+- Source JSON files: `3962`
+- Parsed rows: `4062`
+- Local CSV audit output: `/tmp/safe_unsafe_hari_annotations.csv`
+- Submit run: `296524428244747`
+- Task run: `999072434111556`
+- Result: `SUCCESS`
+
+Readback via `databricks-queries`:
+
+```sql
+SELECT COUNT(*) AS row_count
+FROM hive_metastore.parking.safe_unsafe_hari_annotations;
+```
+
+Result: `4062`
+
+```sql
+SELECT category_str, COUNT(*) AS row_count
+FROM hive_metastore.parking.safe_unsafe_hari_annotations
+GROUP BY category_str
+ORDER BY category_str;
+```
+
+Results:
+
+- `['safe', 'unsafe']`: `268`
+- `['safe']`: `2510`
+- `['unsafe']`: `1284`
+
+Also fixed the generated notebook source to emit Python boolean literals (`False`) instead of JSON literals (`false`) for `create_schema`, after the first upload attempt failed before writing with `NameError: name 'false' is not defined`.

@@ -15,6 +15,8 @@
   - Kept local CSV audit output and excluded the standalone tool from the broad `wayve/ai/parking:parking` library glob.
   - Verified `bazel test //wayve/ai/parking/classifiers/...` and a no-upload parser smoke run.
   - Verified write permission to `hive_metastore.parking.safe_unsafe_hari_annotations` with a conservative overwrite probe on live cluster `0630-110905-ztaxoake`: submit run `144827625769`, task run `263673491901967`, result `SUCCESS`; readback remained 100 rows with category counts `['safe']=68`, `['unsafe']=31`, `['safe', 'unsafe']=1`.
+  - Overwrote the table from `/home/borisindelman/tmp/hari/safe_unsafe_standstill`: parsed 3,962 JSON files into 4,062 rows, submit run `296524428244747`, task run `999072434111556`, result `SUCCESS`; readback category counts `['safe']=2510`, `['unsafe']=1284`, `['safe', 'unsafe']=268`.
+  - Fixed the generated Databricks notebook source to emit Python boolean literals for `create_schema` after the first upload attempt failed with `NameError: name 'false' is not defined`; added regression coverage and reran `bazel test //wayve/ai/parking/classifiers/...`.
 - Task note: [[agent_tasks/2026/06/Week-5/2026-06-30-safe-unsafe-hari-folder-overwrite-script]]
 
 ## 2026-06-30 - PUDO Harsh Brake Pre-CA Materialization OOM Fix
