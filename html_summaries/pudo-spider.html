@@ -119,6 +119,22 @@
   .tooltip .t-delta{font-weight:600;}
   .hint{color:var(--muted);font-size:.78rem;margin-top:14px;line-height:1.5;}
   .hint b{color:var(--ink);font-weight:600;}
+  /* table */
+  .table-panel{margin-top:24px;overflow-x:auto;}
+  table{border-collapse:collapse;width:100%;font-family:'JetBrains Mono',monospace;font-size:.76rem;}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th{color:var(--muted);font-weight:600;font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;position:sticky;top:0;}
+  th.metric,td.metric{text-align:left;white-space:normal;min-width:180px;}
+  td.metric{color:var(--ink);}
+  td.metric .n{color:var(--muted);font-size:.92em;}
+  th .sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+  th.refcol{color:var(--accent);}
+  td .val{color:var(--ink);}
+  td .dl{font-size:.86em;display:block;margin-top:2px;}
+  td.refcell .val{color:var(--accent);font-weight:600;}
+  .up{color:var(--good);}
+  .down{color:var(--bad);}
+  tr:hover td{background:rgba(255,255,255,.025);}
 </style>
 </head>
 <body>
@@ -162,6 +178,11 @@
       </div>
     </section>
   </div>
+
+  <section class="panel table-panel">
+    <h2 style="margin:0 0 14px;">Metric table</h2>
+    <table id="dataTable"></table>
+  </section>
 </div>
 <div class="tooltip" id="tip"></div>
 
@@ -292,6 +313,37 @@ function render(){
       c.addEventListener("mouseleave",hideTip);
     });
   });
+
+  renderTable();
+}
+
+function renderTable(){
+  const tbl = document.getElementById("dataTable");
+  const cols = MODELS.map((_,i)=>i).filter(i=>i===refIdx || visible[i]);
+  let html = "<thead><tr><th class='metric'>Metric</th>";
+  cols.forEach(i=>{
+    const isRef = i===refIdx;
+    html += `<th class='${isRef?"refcol":""}'><span class='sw' style='background:${MODELS[i].color}'></span>`+
+            `${MODELS[i].short}${isRef?" · ref":""}</th>`;
+  });
+  html += "</tr></thead><tbody>";
+  METRICS.forEach(m=>{
+    html += `<tr><td class='metric'>${m.label.replace(/\n/g," ")} <span class='n'>(n=${m.n})</span></td>`;
+    cols.forEach(i=>{
+      const isRef = i===refIdx;
+      const val = m.v[i];
+      let cell = `<span class='val'>${val.toFixed(2)}%</span>`;
+      if(!isRef){
+        const d = val - m.v[refIdx];
+        const cls = d>=0?"up":"down";
+        cell += `<span class='dl ${cls}'>${d>=0?"+":""}${d.toFixed(2)}%</span>`;
+      }
+      html += `<td class='${isRef?"refcell":""}'>${cell}</td>`;
+    });
+    html += "</tr>";
+  });
+  html += "</tbody>";
+  tbl.innerHTML = html;
 }
 
 function showTip(ev, mi, metricIdx){
