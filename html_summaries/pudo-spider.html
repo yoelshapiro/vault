@@ -240,8 +240,8 @@ let refIdx = 0;
 let visible = MODELS.map(()=>true);
 let mode = "abs";
 let logScale = false;    // log radial scale (abs mode only)
-let zoom = 1;            // css-transform zoom factor
-let panX = 0, panY = 0;  // css-transform pan offset (screen px)
+let zoom = 1;            // geometry zoom — spreads vertices, keeps strokes/markers fixed
+let panX = 0, panY = 0;  // pan offset in svg user units
 const ZMIN = 0.6, ZMAX = 4;
 
 // ---- geometry ----------------------------------------------------------
