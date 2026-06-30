@@ -105,8 +105,8 @@
   .grid-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;}
   .axis-label{fill:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;}
   .axis-n{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9.5px;}
-  .series-poly{fill-opacity:.08;stroke-width:1.4;transition:fill-opacity .2s;}
-  .series-poly.ref{stroke-width:2;stroke-dasharray:none;fill-opacity:.12;}
+  .series-poly{fill-opacity:.06;stroke-width:0.9;transition:fill-opacity .2s;}
+  .series-poly.ref{stroke-width:1.4;stroke-dasharray:none;fill-opacity:.10;}
   .vertex{cursor:pointer;}
   .tooltip{
     position:fixed;pointer-events:none;z-index:50;background:#05080d;
@@ -286,8 +286,8 @@ function render(){
     el("polygon",{points:pts.trim(),class:"series-poly"+(isRef?" ref":""),
                   stroke:MODELS[mi].color, fill:MODELS[mi].color},svg);
     verts.forEach(([x,y,i])=>{
-      const c = el("circle",{cx:x,cy:y,r:isRef?3.6:3,class:"vertex",
-                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":1.2},svg);
+      const c = el("circle",{cx:x,cy:y,r:isRef?2.4:2,class:"vertex",
+                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":0.8},svg);
       c.addEventListener("mousemove",ev=>showTip(ev, mi, i));
       c.addEventListener("mouseleave",hideTip);
     });
