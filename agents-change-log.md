@@ -11,9 +11,10 @@
 - Changes:
   - Added `--input-dir` support to recursively parse folders of HARI OpenLABEL JSON files.
   - Made overwrite semantics the default upload path via `--mode replace`.
-  - Replaced the local SQL-warehouse write path with a Databricks notebook-run backend that imports a generated notebook and submits it on cluster `0624-170917-6yh5w7tu`.
+  - Replaced the local SQL-warehouse write path with a Databricks notebook-run backend that imports a generated notebook and submits it on a Databricks cluster.
   - Kept local CSV audit output and excluded the standalone tool from the broad `wayve/ai/parking:parking` library glob.
   - Verified `bazel test //wayve/ai/parking/classifiers/...` and a no-upload parser smoke run.
+  - Verified write permission to `hive_metastore.parking.safe_unsafe_hari_annotations` with a conservative overwrite probe on live cluster `0630-110905-ztaxoake`: submit run `144827625769`, task run `263673491901967`, result `SUCCESS`; readback remained 100 rows with category counts `['safe']=68`, `['unsafe']=31`, `['safe', 'unsafe']=1`.
 - Task note: [[agent_tasks/2026/06/Week-5/2026-06-30-safe-unsafe-hari-folder-overwrite-script]]
 
 ## 2026-06-30 - PUDO Harsh Brake Pre-CA Materialization OOM Fix
