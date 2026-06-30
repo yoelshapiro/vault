@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-06-30 - Accelerate From Stopped Flyte Three Models
+
+- Topic: Run Parking/PUDO accelerate-from-stopped Flyte development evaluations for `substantial-teal-cobra`, `magenta-watchful-ostrich`, and `chameleon-sarcastic-silver` with Denis controller source.
+- Labels: parking, pudo, av-test, flyte, accelerate-from-stopped, denis-controller.
+- Branch: detached `origin/denis/pudo-start-stop-threshold@73ff920e58d9ff9deb6e125ff1559c7d02ee1140` in `/tmp/WayveCode-denis-pudo-start-stop-threshold`.
+- PR: none.
+- Change type: Evaluation run / Flyte execution / result aggregation.
+- Areas: `wayve/services/av_test_pipeline/evaluation_methods/accelerate_from_stopped/timestamp`; Flyte development workflow `accelerate-from-stopped-timestamp-shadow`; scenario collection `5700`.
+- Changes:
+  - Reused the branch-built Denis Flyte workflow `accelerate-from-stopped-timestamp-shadow@borisindel-tmp-build-382674be4fb7-73ff920e58d9ff9deb6e125ff1559c7d02ee1140_vylv0`.
+  - Launched `substantial-teal-cobra` checkpoint `10` on 598 available-inference items as 3 Flyte batches; all succeeded and produced result table suffix `967c8733`.
+  - Launched `magenta-watchful-ostrich` checkpoint `10` on 598 available-inference items as 3 Flyte batches; all succeeded and produced result table suffix `81625f1f`.
+  - Launched `chameleon-sarcastic-silver` checkpoint `1` on 597 available-inference items as 3 Flyte batches; all failed before writing results with `ValueError: combine_waypoints_and_vehicle_states: No valid segments remain after validation`.
+  - Aggregated successful results: magenta row pass rate `57.469%` with 276 all-pass segments; substantial row pass rate `53.294%` with 247 all-pass segments over the common 597 segment set.
+- Task note: [[agent_tasks/2026/06/Week-5/2026-06-30-accelerate-from-stopped-flyte-three-models|2026-06-30 Accelerate From Stopped Flyte Three Models]]
+
 ## 2026-06-29 - Accelerate From Stopped Flyte Three Models
 
 - Topic: Run Parking/PUDO accelerate-from-stopped Flyte development evaluations for three new model checkpoints with Denis controller source.
