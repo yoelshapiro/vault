@@ -224,6 +224,10 @@ const METRICS = [
    v:[40.70, 81.12, 76.60, 81.38, 82.27, 79.75]},
   {label:"Alpha3 Intervention\n(less wrong)", n:1805,
    v:[67.46, 74.44, 79.97, 73.38, 74.58, 78.49]},
+  {label:"Standstill unpudo\nwhen wants reverse", n:81,
+   v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
+  {label:"Failed to accelerate\nin unpudo · reverse", n:153,
+   v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
 ];
 
 // ---- state -------------------------------------------------------------
@@ -252,10 +256,17 @@ function el(tag, attrs, parent){
   return e;
 }
 
+// log mapping: 0.1%..100% -> 0..1
+const LOG_LO = 0.1, LOG_HI = 100;
+function logFrac(v){
+  const cv = Math.max(LOG_LO, Math.min(LOG_HI, v));
+  return (Math.log10(cv) - Math.log10(LOG_LO)) / (Math.log10(LOG_HI) - Math.log10(LOG_LO));
+}
 // value -> radial fraction for current mode
 function frac(metricIdx, modelIdx){
   const m = METRICS[metricIdx];
   if(mode==="abs"){
+    if(logScale) return logFrac(m.v[modelIdx]);
     return Math.max(0, Math.min(1, m.v[modelIdx]/100));
   } else {
     // delta mode: reference sits at 0.5, +-50pp maps to full range
@@ -273,20 +284,23 @@ function render(){
   const svg = el("svg", {viewBox:`0 0 ${SVGW} ${SVGH}`, id:"spiderSvg"}, holder);
   svg.addEventListener("wheel", onWheel, {passive:false});
 
-  // grid rings
-  const rings = mode==="abs" ? [0.2,0.4,0.6,0.8,1.0] : [0.2,0.4,0.6,0.8,1.0];
-  rings.forEach(fr=>{
+  // grid rings (scale-aware): each {f: radial fraction, label}
+  let rings;
+  if(mode==="delta"){
+    rings = [0.2,0.4,0.6,0.8,1.0].map(f=>({f, label:((f-0.5)*100>0?"+":"")+Math.round((f-0.5)*100)}));
+  } else if(logScale){
+    rings = [0.1,1,10,100].map(v=>({f:logFrac(v), label:(v<1?v:v+"")+"%"}));
+  } else {
+    rings = [0.2,0.4,0.6,0.8,1.0].map(f=>({f, label:Math.round(f*100)+"%"}));
+  }
+  rings.forEach(({f})=>{
     let pts="";
-    for(let i=0;i<N;i++){ const [x,y]=pt(i,fr); pts+=`${x},${y} `; }
+    for(let i=0;i<N;i++){ const [x,y]=pt(i,f); pts+=`${x},${y} `; }
     el("polygon", {points:pts.trim(), class:"grid-poly"}, svg);
   });
-  // ring labels (along top axis)
-  rings.forEach(fr=>{
-    const [x,y]=pt(0,fr);
-    let lbl;
-    if(mode==="abs") lbl = Math.round(fr*100)+"%";
-    else lbl = ((fr-0.5)*100>0?"+":"")+Math.round((fr-0.5)*100);
-    el("text",{x:x+5,y:y+3,class:"grid-label"},svg).textContent = lbl;
+  rings.forEach(({f,label})=>{
+    const [x,y]=pt(0,f);
+    el("text",{x:x+5,y:y+3,class:"grid-label"},svg).textContent = label;
   });
 
   // axes + labels
@@ -446,16 +460,30 @@ document.getElementById("zoomCtrl").addEventListener("click",e=>{
   else setZoom(1);
 });
 
+const scaleToggle = document.getElementById("scaleToggle");
+function syncScaleToggle(){
+  scaleToggle.style.opacity = mode==="delta" ? .4 : 1;
+  scaleToggle.style.pointerEvents = mode==="delta" ? "none" : "auto";
+}
+scaleToggle.addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  logScale = b.dataset.scale==="log";
+  [...scaleToggle.children].forEach(c=>c.classList.toggle("active",c===b));
+  render();
+});
+
 document.getElementById("modeToggle").addEventListener("click",e=>{
   const b=e.target.closest("button"); if(!b)return;
   mode=b.dataset.mode;
   [...e.currentTarget.children].forEach(c=>c.classList.toggle("active",c===b));
+  syncScaleToggle();
   render();
 });
 
 // ---- init --------------------------------------------------------------
 buildRefSelect();
 buildLegend();
+syncScaleToggle();
 render();
 </script>
 </body>
