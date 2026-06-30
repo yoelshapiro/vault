@@ -99,7 +99,7 @@
   }
   .mode-toggle button.active{background:var(--accent);color:#1a1205;font-weight:600;}
   #chartHolder{width:100%;display:flex;justify-content:center;overflow:hidden;}
-  svg{width:100%;height:auto;max-width:640px;overflow:visible;}
+  svg{width:100%;height:auto;max-width:640px;overflow:visible;cursor:grab;}
   .axis-line{stroke:var(--grid);stroke-width:1;}
   .grid-poly{fill:none;stroke:var(--grid);stroke-width:1;opacity:.55;}
   .grid-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;}
@@ -188,7 +188,7 @@
       </div>
       <div id="chartHolder"></div>
       <div class="hint">
-        <b>Tip:</b> scroll / use &minus; ⤢ + to zoom (always centered); <b>double-click to reset</b>. Click a model in the legend to toggle it. Hover a vertex for the exact value and delta versus the reference. In <b>Δ mode</b> the center is the reference baseline; outward = better than reference, inward = worse.
+        <b>Tip:</b> scroll / use &minus; ⤢ + to zoom (re-centers); <b>drag to pan</b>, <b>double-click to reset</b>. Click a model in the legend to toggle it. Hover a vertex for the exact value and delta versus the reference. In <b>Δ mode</b> the center is the reference baseline; outward = better than reference, inward = worse.
       </div>
     </section>
   </div>
@@ -299,6 +299,7 @@ function render(){
   holder.innerHTML = "";
   const svg = el("svg", {viewBox:`0 0 ${SVGW} ${SVGH}`, id:"spiderSvg"}, holder);
   svg.addEventListener("wheel", onWheel, {passive:false});
+  svg.addEventListener("mousedown", onDragStart);
   svg.addEventListener("dblclick", resetView);
 
   // grid rings (scale-aware): each {f: radial fraction, label}
