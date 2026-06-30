@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUDO / Unpudo — Model Spider</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117;
+    --bg2:#11161f;
+    --panel:#161c27;
+    --panel2:#1b2230;
+    --line:#283142;
+    --ink:#e8edf6;
+    --muted:#8a98ad;
+    --accent:#ffb454;
+    --grid:#2a3445;
+    --good:#3ddc97;
+    --bad:#ff6b6b;
+    --ref:#ffb454;
+    font-size:15px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 12% -8%, rgba(255,180,84,.10), transparent 55%),
+      radial-gradient(1000px 600px at 110% 110%, rgba(61,220,151,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:34px 28px 60px;}
+  header.top{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px;}
+  header.top h1{
+    font-size:1.85rem;font-weight:700;letter-spacing:-.02em;margin:0;
+  }
+  header.top h1 .dot{color:var(--accent);}
+  header.top .sub{color:var(--muted);font-size:.95rem;}
+  .layout{
+    display:grid;grid-template-columns:320px 1fr;gap:24px;margin-top:26px;
+  }
+  @media(max-width:880px){.layout{grid-template-columns:1fr;}}
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 12px 40px -20px rgba(0,0,0,.8);
+  }
+  .panel h2{
+    font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;
+    color:var(--muted);margin:0 0 14px;font-weight:600;
+  }
+  /* reference selector */
+  .ref-select{width:100%;}
+  select{
+    width:100%;appearance:none;background:var(--bg2);color:var(--ink);
+    border:1px solid var(--line);border-radius:10px;padding:11px 13px;
+    font-family:'JetBrains Mono',monospace;font-size:.86rem;cursor:pointer;
+    background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);
+    background-position:calc(100% - 18px) 19px,calc(100% - 13px) 19px;
+    background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+  }
+  select:focus{outline:none;border-color:var(--accent);}
+  .legend{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+  .lg-item{
+    display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:10px;
+    background:var(--bg2);border:1px solid var(--line);cursor:pointer;
+    transition:border-color .15s,transform .08s,opacity .15s;user-select:none;
+  }
+  .lg-item:hover{border-color:#3b465c;}
+  .lg-item:active{transform:scale(.99);}
+  .lg-item.off{opacity:.38;}
+  .lg-item.ref{border-color:var(--accent);box-shadow:inset 0 0 0 1px rgba(255,180,84,.35);}
+  .swatch{width:13px;height:13px;border-radius:4px;flex:0 0 auto;}
+  .lg-name{font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.25;flex:1;word-break:break-word;}
+  .lg-badge{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700;}
+  .lg-top{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--muted);}
+  .controls-row{display:flex;gap:8px;margin-top:14px;}
+  .controls-row button{
+    flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--muted);
+    border-radius:9px;padding:8px;font-family:'Space Grotesk',sans-serif;
+    font-size:.74rem;cursor:pointer;transition:.15s;
+  }
+  .controls-row button:hover{color:var(--ink);border-color:#3b465c;}
+  /* chart */
+  .chart-panel{display:flex;flex-direction:column;}
+  .chart-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:8px;}
+  .mode-toggle{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .mode-toggle button{
+    background:transparent;border:none;color:var(--muted);padding:7px 14px;
+    font-family:'Space Grotesk',sans-serif;font-size:.76rem;cursor:pointer;transition:.15s;
+  }
+  .mode-toggle button.active{background:var(--accent);color:#1a1205;font-weight:600;}
+  #chartHolder{width:100%;display:flex;justify-content:center;}
+  svg{width:100%;height:auto;max-width:640px;overflow:visible;}
+  .axis-line{stroke:var(--grid);stroke-width:1;}
+  .grid-poly{fill:none;stroke:var(--grid);stroke-width:1;opacity:.55;}
+  .grid-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;}
+  .axis-label{fill:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;}
+  .axis-n{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9.5px;}
+  .series-poly{fill-opacity:.10;stroke-width:2.4;transition:fill-opacity .2s;}
+  .series-poly.ref{stroke-width:3.2;stroke-dasharray:none;fill-opacity:.16;}
+  .vertex{cursor:pointer;}
+  .tooltip{
+    position:fixed;pointer-events:none;z-index:50;background:#05080d;
+    border:1px solid var(--line);border-radius:9px;padding:9px 12px;
+    font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--ink);
+    box-shadow:0 10px 30px -10px #000;opacity:0;transition:opacity .12s;max-width:260px;
+  }
+  .tooltip .t-name{color:var(--accent);margin-bottom:3px;}
+  .tooltip .t-val{font-size:.95rem;font-weight:600;}
+  .tooltip .t-delta{font-weight:600;}
+  .hint{color:var(--muted);font-size:.78rem;margin-top:14px;line-height:1.5;}
+  .hint b{color:var(--ink);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>PUDO / Unpudo <span class="dot">·</span> Model Spider</h1>
+    <span class="sub">Pass-rate per metric across model nicknames — higher is better</span>
+  </header>
+
+  <div class="layout">
+    <!-- sidebar -->
+    <aside>
+      <div class="panel" style="margin-bottom:20px;">
+        <h2>Reference model</h2>
+        <div class="ref-select">
+          <select id="refSelect"></select>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Show models</h2>
+        <div class="legend" id="legend"></div>
+        <div class="controls-row">
+          <button id="allBtn">Show all</button>
+          <button id="noneBtn">Only reference</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- chart -->
+    <section class="panel chart-panel">
+      <div class="chart-head">
+        <h2 style="margin:0;">Metric spider</h2>
+        <div class="mode-toggle" id="modeToggle">
+          <button data-mode="abs" class="active">Absolute %</button>
+          <button data-mode="delta">Δ vs reference</button>
+        </div>
+      </div>
+      <div id="chartHolder"></div>
+      <div class="hint">
+        <b>Tip:</b> click a model in the legend to toggle it. Hover a vertex for the exact value and delta versus the reference. In <b>Δ mode</b> the center is the reference baseline; outward = better than reference, inward = worse.
+      </div>
+    </section>
+  </div>
+</div>
+<div class="tooltip" id="tip"></div>
+
+<script>
+// ---- data --------------------------------------------------------------
+const MODELS = [
+  {id:"reassured-red-sea-turtle@1",   short:"reassured-red-sea-turtle@1",   top:41.69, color:"#ffb454"},
+  {id:"harlequin-parrot-energetic@10",short:"harlequin-parrot-energetic@10",top:34.01, color:"#5ec8ff"},
+  {id:"chameleon-sarcastic-silver@1", short:"chameleon-sarcastic-silver@1", top:38.05, color:"#3ddc97"},
+  {id:"substantial-teal-cobra@10",    short:"substantial-teal-cobra@10",    top:34.35, color:"#c08bff"},
+  {id:"magenta-watchful-ostrich@10",  short:"magenta-watchful-ostrich@10",  top:34.87, color:"#ff7eb6"},
+  {id:"elated-jaguar-blush@1",        short:"elated-jaguar-blush@1",        top:31.22, color:"#f4d35e"},
+];
+
+// metrics for the spider; values indexed in MODELS order
+const METRICS = [
+  {label:"Failed to accelerate\nin unpudo · Forward", n:566,
+   v:[81.51, 1.29, 28.60, 1.25, 1.24, 17.86]},
+  {label:"Gear flickering\nat end of PUDO", n:123,
+   v:[44.58, 35.30, 44.51, 30.67, 40.51, 46.05]},
+  {label:"Gear stays in park\nin Unpudo", n:136,
+   v:[63.72, 63.92, 56.79, 61.27, 61.45, 54.54]},
+  {label:"Failed To Pudo\n(less wrong)", n:305,
+   v:[64.16, 63.79, 69.18, 68.29, 64.39, 66.20]},
+  {label:"Failed To Unpudo\n(less wrong)", n:321,
+   v:[60.53, 42.85, 56.71, 44.72, 43.63, 48.83]},
+  {label:"Failed To Unpudo\nMarked Unsafe", n:41,
+   v:[40.70, 81.12, 76.60, 81.38, 82.27, 79.75]},
+];
+
+// ---- state -------------------------------------------------------------
+let refIdx = 0;
+let visible = MODELS.map(()=>true);
+let mode = "abs";
+
+// ---- geometry ----------------------------------------------------------
+const SVGW = 600, SVGH = 600;
+const CX = SVGW/2, CY = SVGH/2 - 6, R = 200;
+const N = METRICS.length;
+const SVGNS = "http://www.w3.org/2000/svg";
+
+function angle(i){ return -Math.PI/2 + i*2*Math.PI/N; }
+function pt(i, frac){
+  const a = angle(i);
+  return [CX + Math.cos(a)*R*frac, CY + Math.sin(a)*R*frac];
+}
+function el(tag, attrs, parent){
+  const e = document.createElementNS(SVGNS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+
+// value -> radial fraction for current mode
+function frac(metricIdx, modelIdx){
+  const m = METRICS[metricIdx];
+  if(mode==="abs"){
+    return Math.max(0, Math.min(1, m.v[modelIdx]/100));
+  } else {
+    // delta mode: reference sits at 0.5, +-50pp maps to full range
+    const d = m.v[modelIdx] - m.v[refIdx];
+    return Math.max(0.02, Math.min(1, 0.5 + d/100));
+  }
+}
+
+// ---- render ------------------------------------------------------------
+const holder = document.getElementById("chartHolder");
+const tip = document.getElementById("tip");
+
+function render(){
+  holder.innerHTML = "";
+  const svg = el("svg", {viewBox:`0 0 ${SVGW} ${SVGH}`}, holder);
+
+  // grid rings
+  const rings = mode==="abs" ? [0.2,0.4,0.6,0.8,1.0] : [0.2,0.4,0.6,0.8,1.0];
+  rings.forEach(fr=>{
+    let pts="";
+    for(let i=0;i<N;i++){ const [x,y]=pt(i,fr); pts+=`${x},${y} `; }
+    el("polygon", {points:pts.trim(), class:"grid-poly"}, svg);
+  });
+  // ring labels (along top axis)
+  rings.forEach(fr=>{
+    const [x,y]=pt(0,fr);
+    let lbl;
+    if(mode==="abs") lbl = Math.round(fr*100)+"%";
+    else lbl = ((fr-0.5)*100>0?"+":"")+Math.round((fr-0.5)*100);
+    el("text",{x:x+5,y:y+3,class:"grid-label"},svg).textContent = lbl;
+  });
+
+  // axes + labels
+  for(let i=0;i<N;i++){
+    const [x,y]=pt(i,1);
+    el("line",{x1:CX,y1:CY,x2:x,y2:y,class:"axis-line"},svg);
+    const [lx,ly]=pt(i,1.18);
+    const anchor = Math.abs(lx-CX)<8 ? "middle" : (lx>CX?"start":"end");
+    const lines = METRICS[i].label.split("\n");
+    const t = el("text",{x:lx,y:ly,class:"axis-label","text-anchor":anchor},svg);
+    lines.forEach((ln,k)=>{
+      const ts = el("tspan",{x:lx,dy:k===0?(-(lines.length-1)*7):14},t);
+      ts.textContent = ln;
+    });
+    el("text",{x:lx,y:ly+ (lines.length-1)*14 +14,class:"axis-n","text-anchor":anchor},svg)
+      .textContent = "n="+METRICS[i].n;
+  }
+
+  // series (draw non-ref first, ref on top)
+  const order = MODELS.map((_,i)=>i).filter(i=>i!==refIdx && visible[i]);
+  if(visible[refIdx]) order.push(refIdx);
+
+  order.forEach(mi=>{
+    const isRef = mi===refIdx;
+    let pts="";
+    const verts=[];
+    for(let i=0;i<N;i++){
+      const f = frac(i, mi);
+      const [x,y]=pt(i,f);
+      pts+=`${x},${y} `;
+      verts.push([x,y,i]);
+    }
+    el("polygon",{points:pts.trim(),class:"series-poly"+(isRef?" ref":""),
+                  stroke:MODELS[mi].color, fill:MODELS[mi].color},svg);
+    verts.forEach(([x,y,i])=>{
+      const c = el("circle",{cx:x,cy:y,r:isRef?5:4,class:"vertex",
+                   fill:MODELS[mi].color,stroke:"#0d1117","stroke-width":1.5},svg);
+      c.addEventListener("mousemove",ev=>showTip(ev, mi, i));
+      c.addEventListener("mouseleave",hideTip);
+    });
+  });
+}
+
+function showTip(ev, mi, metricIdx){
+  const m = METRICS[metricIdx];
+  const val = m.v[mi];
+  const d = val - m.v[refIdx];
+  const dStr = (d>0?"+":"")+d.toFixed(2)+"%";
+  const dColor = mi===refIdx ? "var(--muted)" : (d>=0?"var(--good)":"var(--bad)");
+  tip.innerHTML =
+    `<div class="t-name">${MODELS[mi].short}${mi===refIdx?" · REF":""}</div>`+
+    `<div>${m.label.replace(/\n/g," ")}</div>`+
+    `<div class="t-val">${val.toFixed(2)}%</div>`+
+    (mi===refIdx?"":`<div class="t-delta" style="color:${dColor}">${dStr} vs ref</div>`);
+  tip.style.opacity=1;
+  tip.style.left=Math.min(ev.clientX+14, window.innerWidth-270)+"px";
+  tip.style.top=(ev.clientY+14)+"px";
+}
+function hideTip(){ tip.style.opacity=0; }
+
+// ---- sidebar -----------------------------------------------------------
+const refSelect = document.getElementById("refSelect");
+const legend = document.getElementById("legend");
+
+function buildRefSelect(){
+  refSelect.innerHTML="";
+  MODELS.forEach((m,i)=>{
+    const o=document.createElement("option");
+    o.value=i; o.textContent=m.short; if(i===refIdx)o.selected=true;
+    refSelect.appendChild(o);
+  });
+}
+function buildLegend(){
+  legend.innerHTML="";
+  MODELS.forEach((m,i)=>{
+    const item=document.createElement("div");
+    item.className="lg-item"+(visible[i]?"":" off")+(i===refIdx?" ref":"");
+    item.innerHTML=
+      `<span class="swatch" style="background:${m.color}"></span>`+
+      `<span class="lg-name">${m.short}<br><span class="lg-top">top ${m.top.toFixed(2)}%</span></span>`+
+      (i===refIdx?`<span class="lg-badge">ref</span>`:"");
+    item.addEventListener("click",()=>{
+      if(i===refIdx) return;           // keep reference always visible
+      visible[i]=!visible[i];
+      buildLegend(); render();
+    });
+    legend.appendChild(item);
+  });
+}
+
+refSelect.addEventListener("change",e=>{
+  refIdx=+e.target.value;
+  visible[refIdx]=true;
+  buildLegend(); render();
+});
+document.getElementById("allBtn").addEventListener("click",()=>{
+  visible=MODELS.map(()=>true); buildLegend(); render();
+});
+document.getElementById("noneBtn").addEventListener("click",()=>{
+  visible=MODELS.map((_,i)=>i===refIdx); buildLegend(); render();
+});
+document.getElementById("modeToggle").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  mode=b.dataset.mode;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle("active",c===b));
+  render();
+});
+
+// ---- init --------------------------------------------------------------
+buildRefSelect();
+buildLegend();
+render();
+</script>
+</body>
+</html>
