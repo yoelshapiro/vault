@@ -106,7 +106,7 @@
   .axis-label{fill:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500;}
   .axis-n{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9.5px;}
   .series-poly{fill-opacity:.04;stroke-width:0.9;transition:fill-opacity .2s;pointer-events:none;}
-  .series-poly.ref{stroke-width:2.6;stroke-opacity:.85;fill-opacity:.14;}
+  .series-poly.ref{stroke-width:4;stroke-opacity:.9;fill-opacity:.06;}
   .vertex{cursor:pointer;}
   .tooltip{
     position:fixed;pointer-events:none;z-index:50;background:#05080d;
@@ -177,6 +177,10 @@
             <button data-mode="abs" class="active">Absolute %</button>
             <button data-mode="delta">Δ vs reference</button>
           </div>
+          <div class="mode-toggle" id="scaleToggle">
+            <button data-scale="lin" class="active">Linear</button>
+            <button data-scale="log">Log</button>
+          </div>
         </div>
       </div>
       <div id="chartHolder"></div>
@@ -226,6 +230,7 @@ const METRICS = [
 let refIdx = 0;
 let visible = MODELS.map(()=>true);
 let mode = "abs";
+let logScale = false;    // log radial scale (abs mode only)
 let zoom = 1;            // viewBox zoom factor
 const ZMIN = 0.6, ZMAX = 4;
 
@@ -330,6 +335,7 @@ function render(){
     }
   });
 
+  applyZoom();
   renderTable();
 }
 
