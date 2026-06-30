@@ -29,22 +29,11 @@
 	- [ ] FIX C3: supervise directional indicator on PUDO frames (curb-side); M1/M2 approach window + re-enable PUDO quality filters
 - [ ] merge main PR
 	- [x] go over comments
-	- [ ] investigate performance
+	- [x] investigate performance
 	- [x] cherry pick
-	- [ ] cherry pick with latest model + new materialization + new driving
-- [ ] parking augmentations
+	- [x] cherry pick with latest model + new materialization + new driving
+- [x] parking augmentations
 - [ ] pre train updated augmentations request
-- [ ] investigate train warnings 
-      ![:warning:](https://a.slack-edge.com/production-standard-emoji-assets/16.0/apple-medium/26a0-fe0f@2x.png) **Low Unique Sample Ratio** ![:warning:](https://a.slack-edge.com/production-standard-emoji-assets/16.0/apple-medium/26a0-fe0f@2x.png)  
-	Unique ratio: `94.5%` (threshold: `95%`)  
-	Total samples: `640000`, Unique samples: `604644`  
-	Training may be consuming duplicate data.
-	
-	[1:24 AM]
-	
-	![:warning:](https://a.slack-edge.com/production-standard-emoji-assets/16.0/apple-medium/26a0-fe0f@2x.png) **Stale Data Detected on Restart** ![:warning:](https://a.slack-edge.com/production-standard-emoji-assets/16.0/apple-medium/26a0-fe0f@2x.png)  
-	Stale samples: `6` samples overlap with previous run across all ranks  
-	Dataloader may not have properly resumed from checkpoint.
 - [ ] classifier
 	- [ ] safe unpudo
 		- [ ] create videos

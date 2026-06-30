@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/pudo-parking-py-critique-2026-06-14.md",
+                "file": "weekly plan.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "pudo-parking-py-critique-2026-06-14"
+              "title": "weekly plan"
             }
           }
         ],
@@ -586,8 +586,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "a6cdcc3493cdeb21",
+  "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "todo-list.md",
+    "projects/pudo-parking-py-critique-2026-06-14.md",
     "agent_tasks/2026/06/Week-5/2026-06-30-safe-unsafe-hari-folder-overwrite-script.md",
     "html_summaries/pudo-spider.html",
     "agent_tasks/2026/06/Week-5/2026-06-30-accelerate-from-stopped-flyte-three-models.md",
@@ -615,8 +617,6 @@
     "agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-fixes.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear-ci-fix.md",
     "agent_tasks/2026/06/Week-4/2026-06-22-si-group-interleave-control-support.md",
-    "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-gear-output-ci.md",
-    "agent_tasks/2026/06/Week-4/2026-06-22-deployment-wrapper-default-gear.md",
     "agent_tasks/2026/06/Week-4",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
