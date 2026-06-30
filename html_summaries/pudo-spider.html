@@ -99,7 +99,7 @@
   }
   .mode-toggle button.active{background:var(--accent);color:#1a1205;font-weight:600;}
   #chartHolder{width:100%;display:flex;justify-content:center;overflow:hidden;}
-  svg{width:100%;height:auto;max-width:640px;overflow:visible;transform-origin:center center;transition:transform .08s linear;cursor:grab;}
+  svg{width:100%;height:auto;max-width:640px;overflow:visible;cursor:grab;}
   .axis-line{stroke:var(--grid);stroke-width:1;}
   .grid-poly{fill:none;stroke:var(--grid);stroke-width:1;opacity:.55;}
   .grid-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:9px;}
@@ -253,7 +253,9 @@ const SVGNS = "http://www.w3.org/2000/svg";
 function angle(i){ return -Math.PI/2 + i*2*Math.PI/N; }
 function pt(i, frac){
   const a = angle(i);
-  return [CX + Math.cos(a)*R*frac, CY + Math.sin(a)*R*frac];
+  const bx = CX + Math.cos(a)*R*frac, by = CY + Math.sin(a)*R*frac;
+  // zoom about center + pan, in user units (strokes/markers drawn at fixed size)
+  return [CX + (bx-CX)*zoom + panX, CY + (by-CY)*zoom + panY];
 }
 function el(tag, attrs, parent){
   const e = document.createElementNS(SVGNS, tag);
@@ -324,7 +326,8 @@ function render(){
     const [x,y]=pt(i,1);
     el("line",{x1:CX,y1:CY,x2:x,y2:y,class:"axis-line"},svg);
     const [lx,ly]=pt(i,1.18);
-    const anchor = Math.abs(lx-CX)<8 ? "middle" : (lx>CX?"start":"end");
+    const ca = Math.cos(angle(i));
+    const anchor = Math.abs(ca)<0.15 ? "middle" : (ca>0?"start":"end");
     const lines = METRICS[i].label.split("\n");
     const t = el("text",{x:lx,y:ly,class:"axis-label","text-anchor":anchor},svg);
     lines.forEach((ln,k)=>{
@@ -372,7 +375,6 @@ function render(){
     }
   });
 
-  applyZoom();
   renderTable();
 }
 
@@ -498,48 +500,43 @@ document.getElementById("allBtn").addEventListener("click",()=>{
 document.getElementById("noneBtn").addEventListener("click",()=>{
   visible=MODELS.map((_,i)=>i===refIdx); buildLegend(); render();
 });
-// ---- zoom & pan --------------------------------------------------------
-function applyZoom(){
-  const svg = document.getElementById("spiderSvg");
-  if(svg){
-    svg.style.transform = `translate(${panX}px,${panY}px) scale(${zoom})`;
-    svg.style.transition = dragging ? "none" : "transform .08s linear";
-  }
-}
+// ---- zoom & pan (geometry-based: strokes & markers stay fixed size) ----
 function setZoom(z){
   zoom = Math.max(ZMIN, Math.min(ZMAX, z));
-  applyZoom();
+  render();
 }
 function resetView(){
-  zoom = 1; panX = 0; panY = 0; applyZoom();
+  zoom = 1; panX = 0; panY = 0; render();
 }
 function onWheel(e){
   e.preventDefault();
   setZoom(zoom * (e.deltaY < 0 ? 1.12 : 1/1.12));
 }
 
-// drag-to-pan
-let dragging = false, dragSX = 0, dragSY = 0, dragPX = 0, dragPY = 0, dragMoved = false;
+// drag-to-pan (pan stored in svg user units)
+let dragging = false, dragSX = 0, dragSY = 0, dragPX = 0, dragPY = 0, pxToUser = 1;
 function onDragStart(e){
   if(e.button!==0) return;
-  dragging = true; dragMoved = false;
+  dragging = true;
   dragSX = e.clientX; dragSY = e.clientY; dragPX = panX; dragPY = panY;
   const svg = document.getElementById("spiderSvg");
-  if(svg) svg.style.cursor = "grabbing";
+  if(svg){
+    const w = svg.getBoundingClientRect().width || SVGW;
+    pxToUser = SVGW / w;   // convert screen px drag -> user units
+  }
+  document.body.style.cursor = "grabbing";
   e.preventDefault();
 }
 window.addEventListener("mousemove",e=>{
   if(!dragging) return;
-  const dx = e.clientX - dragSX, dy = e.clientY - dragSY;
-  if(Math.abs(dx)+Math.abs(dy) > 2) dragMoved = true;
-  panX = dragPX + dx; panY = dragPY + dy;
-  applyZoom();
+  panX = dragPX + (e.clientX - dragSX) * pxToUser;
+  panY = dragPY + (e.clientY - dragSY) * pxToUser;
+  render();
 });
 window.addEventListener("mouseup",()=>{
   if(!dragging) return;
   dragging = false;
-  const svg = document.getElementById("spiderSvg");
-  if(svg) svg.style.cursor = "grab";
+  document.body.style.cursor = "";
 });
 
 document.getElementById("zoomCtrl").addEventListener("click",e=>{
