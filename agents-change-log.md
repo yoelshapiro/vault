@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-01 - Accelerate From Stopped Frog Bronze Tessellated
+
+- Topic: Run Parking/PUDO accelerate-from-stopped Flyte development evaluation for `frog-bronze-tessellated@10` with Denis controller source.
+- Labels: parking, pudo, av-test, flyte, accelerate-from-stopped, denis-controller.
+- Branch: detached `origin/denis/pudo-start-stop-threshold@73ff920e58d9ff9deb6e125ff1559c7d02ee1140` in `/tmp/WayveCode-denis-pudo-start-stop-threshold`.
+- PR: none.
+- Change type: Evaluation run / Flyte execution / result aggregation.
+- Areas: `wayve/services/av_test_pipeline/evaluation_methods/accelerate_from_stopped/timestamp`; Flyte development workflow `accelerate-from-stopped-timestamp-shadow`; scenario collection `5700`.
+- Changes:
+  - Resolved `frog-bronze-tessellated` to session `session_2026_06_30_10_46_01_harqolr81wb2`, checkpoint `10`, Gen2 artefact `a710ca23-1380-4b7b-bf65-64198100f25a`.
+  - Reused the branch-built Denis Flyte workflow `accelerate-from-stopped-timestamp-shadow@borisindel-tmp-build-382674be4fb7-73ff920e58d9ff9deb6e125ff1559c7d02ee1140_vylv0`.
+  - Launched 598 available-inference items as 3 Flyte batches: `a945wxhb8g9hglpzc5rd`, `ap5fqdbhlgrmjmc88prw`, and `a5dtscs7tjx4w7qfzppf`; all reached `SUCCEEDED`.
+  - Queried result table suffix `57392ced`: 6,052 rows across 589 result segments, 3,356 pass rows, 2,696 fail rows, row pass rate `55.453%`, strict segment outcomes 265 all-pass / 125 mixed / 199 all-fail.
+  - Noted a coverage caveat: the runner submitted 598 items but the Delta table contains 589 result segments; no failed Flyte nodes were found in the details scan.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-01-accelerate-from-stopped-frog-bronze-tessellated|2026-07-01 Accelerate From Stopped Frog Bronze Tessellated]]
+
 ## 2026-06-30 - Safe/Unsafe HARI Folder Overwrite Script
 
 - Topic: Update the HARI OpenLABEL parser/uploader to read an annotation folder and overwrite the parking safe/unsafe Databricks table via a Databricks notebook run.
