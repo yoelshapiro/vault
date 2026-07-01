@@ -2933,6 +2933,21 @@
   - New run is `purple-mallard-proficient`, session `session_2026_06_18_07_38_05_p521r100`.
 - Task note: [[agent_tasks/2026/06/Week-3/2026-06-18-lime-100k-resume|2026-06-18 Lime 100K Resume]]
 
+## 2026-07-01 - PUDO Baseline Harlequin Fixes
+
+- Topic: Port selected Harlequin parking/PUDO fixes into the PUDO baseline PR branch.
+- Labels: parking, pudo, datamodule, route-shortening, training-config.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `boris/26-06-22-pudo-baseline`.
+- Change type: Code change, uncommitted.
+- Areas: `wayve/ai/si/configs/parking`, `wayve/ai/si/datamodules`, `wayve/ai/lib/data/pipes/routes.py`.
+- Changes:
+  - Updated parking BC data root, weights, binary/config knobs, and gear/dropout settings from Harlequin.
+  - Added policy-target-aware standstill gear augmentation and configurable clamp disabling while preserving provenance.
+  - Threaded parking route-shortening jitter into route map generation and jittered the stop along route distance.
+  - Kept PR branch driving release partition construction, diffusion configs, mode registrations, and provenance fields.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes|2026-07-01 PUDO Baseline Harlequin Fixes]]
+
 ## 2026-06-18 - Yellow Cheetah Alpha3 and UK Experiments
 
 - Topic: Add lifecycle note, trigger Alpha3 Model CI, and create UK follow-up experiments for `yellow-cheetah-sparkling`.
