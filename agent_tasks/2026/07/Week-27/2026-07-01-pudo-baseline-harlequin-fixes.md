@@ -3,7 +3,7 @@
 - Branch: `boris/26-06-22-pudo-baseline`
 - PR: `boris/26-06-22-pudo-baseline`
 - Change type: Code change, uncommitted
-- Areas: `wayve/ai/si/BUILD`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/configs/parking/parking_diffusion_config.py`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/data/pipes/routes.py`
+- Areas: `wayve/ai/lib/provenance.py`, `wayve/ai/lib/test/test_provenance.py`, `wayve/ai/si/BUILD`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/configs/parking/parking_diffusion_config.py`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/data/pipes/routes.py`
 
 ## Summary
 
@@ -18,6 +18,7 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 - Added route-distance-based parking stop jitter before route shortening.
 - Preserved the PR branch's driving release partition construction and provenance fields.
 - Moved Parking/PUDO diffusion datamodule, model, output adaptor, and mode registrations into `parking_diffusion_config.py`, and added that module to the `:si` Bazel source list.
+- Compared PR provenance comments and Guy's `608e97771bcd` enum-metrics commit. Kept the PR's string `PROVENANCE_PARKING_STAGE` design instead of importing the full parking-stage metric/loss surface, but wired the parking provenance fields into `wayve/ai/lib/provenance.py` so they are copied/extracted into training provenance output.
 
 ## Validation
 
@@ -29,3 +30,4 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 - `bazel test //wayve/ai/si:test_config_py_lint_ruff //wayve/ai/si:test_config_ty //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
 - Direct `parking_diffusion_config.py` import through `//wayve/ai/si:train_ipython` passed and printed diffusion binary version `3.0.23`, output adaptor target `wayve.ai.zoo.outputs.diffusion.DiffusionOutputAdaptor`, and diffusion loss weight `1.0`.
 - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration` failed before assertions with an OpenMP duplicate-runtime environment error.
+- `bazel test //wayve/ai/lib:test_provenance //wayve/ai/lib:test_lib_py_lint_ruff //wayve/ai/lib:test_lib_ty` passed.
