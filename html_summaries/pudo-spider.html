@@ -211,28 +211,29 @@ const MODELS = [
   {id:"elated-jaguar-blush@1",        short:"elated-jaguar-blush@1",        color:"#f4d35e"},
   {id:"beige-massive-ram@1",          short:"beige-massive-ram@1",          color:"#e07a5f"},
   {id:"mallard-erudite-turquoise@1",  short:"mallard-erudite-turquoise@1",  color:"#2ec4b6"},
+  {id:"frog-bronze-tessellated@10",   short:"frog-bronze-tessellated@10",   color:"#9b8cff"},
 ];
 
 // metrics for the spider; values indexed in MODELS order
 const METRICS = [
   {label:"Gear flickering\nat end of PUDO", n:123,
-   v:[44.58, 35.30, 44.51, 30.67, 40.51, 46.05, 68.09, 71.16]},
+   v:[44.58, 35.30, 44.51, 30.67, 40.51, 46.05, 68.09, 71.16, 65.85]},
   {label:"Gear stays in park\nin Unpudo", n:136,
-   v:[63.72, 63.92, 56.79, 61.27, 61.45, 54.54, 59.54, 59.29]},
+   v:[63.72, 63.92, 56.79, 61.27, 61.45, 54.54, 59.54, 59.29, 61.11]},
   {label:"Failed To Pudo\n(less wrong)", n:305,
-   v:[64.16, 63.79, 69.18, 68.29, 64.39, 66.20, 69.87, 68.85]},
+   v:[64.16, 63.79, 69.18, 68.29, 64.39, 66.20, 69.87, 68.85, 65.96]},
   {label:"Failed To Unpudo\n(less wrong)", n:321,
-   v:[60.53, 42.85, 56.71, 44.72, 43.63, 48.83, 43.48, 43.14]},
+   v:[60.53, 42.85, 56.71, 44.72, 43.63, 48.83, 43.48, 43.14, 43.75]},
   {label:"Failed To Unpudo\nMarked Unsafe", n:41,
-   v:[40.70, 81.12, 76.60, 81.38, 82.27, 79.75, 83.86, 82.08]},
+   v:[40.70, 81.12, 76.60, 81.38, 82.27, 79.75, 83.86, 82.08, 82.34]},
   {label:"Alpha3 Intervention\n(less wrong)", n:1805,
-   v:[67.46, 74.44, 79.97, 73.38, 74.58, 78.49, 73.30, 73.00]},
+   v:[67.46, 74.44, 79.97, 73.38, 74.58, 78.49, 73.30, 73.00, null]},
   {label:"Standstill unpudo\nwhen wants reverse", n:81,
-   v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
+   v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
   {label:"Failed to accelerate\nin unpudo · reverse", n:153,
-   v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
+   v:[0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00]},
   {label:"Failed to accel · Forward\n[Denis · raw pass]", n:16205,
-   v:[93.372, 61.807, null, 53.294, 57.469, 80.105, 60.842, 56.888]},
+   v:[93.372, 61.807, null, 53.294, 57.469, 80.105, 60.842, 56.888, null]},
 ];
 
 // ---- state -------------------------------------------------------------
