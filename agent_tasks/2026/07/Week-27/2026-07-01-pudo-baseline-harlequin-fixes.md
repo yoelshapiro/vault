@@ -3,7 +3,7 @@
 - Branch: `boris/26-06-22-pudo-baseline`
 - PR: `boris/26-06-22-pudo-baseline`
 - Change type: Code change, uncommitted
-- Areas: `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/data/pipes/routes.py`
+- Areas: `wayve/ai/si/BUILD`, `wayve/ai/si/configs/parking/parking_config.py`, `wayve/ai/si/configs/parking/parking_diffusion_config.py`, `wayve/ai/si/datamodules/parking.py`, `wayve/ai/si/datamodules/otf.py`, `wayve/ai/lib/data/pipes/routes.py`
 
 ## Summary
 
@@ -16,7 +16,8 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 - Added `enable_clamp_policy_at_first_neutral` so the clamp step can be disabled from config.
 - Threaded `route_shortening_jitter_m` from `ParkingDataConfig` through OTF route map options.
 - Added route-distance-based parking stop jitter before route shortening.
-- Preserved the PR branch's driving release partition construction, diffusion configs, mode registrations, and provenance fields.
+- Preserved the PR branch's driving release partition construction and provenance fields.
+- Moved Parking/PUDO diffusion datamodule, model, output adaptor, and mode registrations into `parking_diffusion_config.py`, and added that module to the `:si` Bazel source list.
 
 ## Validation
 
@@ -25,3 +26,6 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 - `bazel test //wayve/ai/lib:test_lib_py_lint_ruff //wayve/ai/lib:test_lib_ty` passed.
 - `bazel test //wayve/ai/si/datamodules:py_test --test_arg=-k --test_arg=parking` ran 53 selected tests: 51 passed, 2 failed due local test environment frame loading hitting read-only `/home/nobody`.
 - `bazel test //wayve/ai/lib:test_lib_py_test --test_arg=-k --test_arg=route` selected 10 route tests and all 10 passed, but the target failed the package coverage threshold because the filtered run only reached 11% coverage.
+- `bazel test //wayve/ai/si:test_config_py_lint_ruff //wayve/ai/si:test_config_ty //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
+- Direct `parking_diffusion_config.py` import through `//wayve/ai/si:train_ipython` passed and printed diffusion binary version `3.0.23`, output adaptor target `wayve.ai.zoo.outputs.diffusion.DiffusionOutputAdaptor`, and diffusion loss weight `1.0`.
+- `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration` failed before assertions with an OpenMP duplicate-runtime environment error.
