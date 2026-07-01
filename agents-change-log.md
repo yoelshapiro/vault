@@ -2936,7 +2936,7 @@
 ## 2026-07-01 - PUDO Baseline Harlequin Fixes
 
 - Topic: Port selected Harlequin parking/PUDO fixes into the PUDO baseline PR branch.
-- Labels: parking, pudo, datamodule, route-shortening, training-config.
+- Labels: parking, pudo, datamodule, route-shortening, training-config, diffusion-config.
 - Branch: `boris/26-06-22-pudo-baseline`.
 - PR: `boris/26-06-22-pudo-baseline`.
 - Change type: Code change, uncommitted.
@@ -2945,7 +2945,8 @@
   - Updated parking BC data root, weights, binary/config knobs, and gear/dropout settings from Harlequin.
   - Added policy-target-aware standstill gear augmentation and configurable clamp disabling while preserving provenance.
   - Threaded parking route-shortening jitter into route map generation and jittered the stop along route distance.
-  - Kept PR branch driving release partition construction, diffusion configs, mode registrations, and provenance fields.
+  - Kept PR branch driving release partition construction and provenance fields.
+  - Split Parking/PUDO diffusion datamodule, model, output adaptor, and mode registrations into `parking_diffusion_config.py`.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes|2026-07-01 PUDO Baseline Harlequin Fixes]]
 
 ## 2026-06-18 - Yellow Cheetah Alpha3 and UK Experiments
