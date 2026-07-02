@@ -3135,3 +3135,19 @@
   - Changed parking interleave control to trigger only above the exit threshold and handover speed.
   - Updated deployment-wrapper codegen regression tests and pushed commit `1ed05d9ec195`.
 - Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-pr120390-stateless-eor-hysteresis|2026-07-02 PR 120390 Stateless EOR Hysteresis]]
+
+## 2026-07-02 - Frog EOR Fresh Training Batch
+
+- Topic: Start fresh Parking/PUDO training variants from the frog code commit with corrected stateless EOR hysteresis.
+- Labels: parking, pudo, training, hysteresis, surfboard.
+- Branch: `boris/parking-frog-eor-fresh-base`, `boris/parking-frog-eor-fresh-driving70`, `boris/parking-frog-eor-fresh-rawgear`.
+- PR: n/a.
+- Change type: Code change, training job submission, monitoring.
+- Areas: `wayve/ai/zoo/deployment`, `wayve/ai/si/configs/parking`, Surfboard, W&B.
+- Changes:
+  - Created three fresh-training branches from frog commit `a7be3baacc63` without checkpoint restart.
+  - Applied stateless EOR hysteresis with enter threshold `3.75e4`, exit threshold `4.5e4`, and end-of-route latch/hazard defaults enabled.
+  - Submitted jobs `187893`, `187902`, and `187920` for baseline 8-node, 70% driving mix, and raw-gear PUDO/UNPUDO root variants.
+  - Spawned one monitor agent per job to watch to 1K steps, retry up to three times on failure, and send Slack updates.
+  - Recorded that job `187893` passed 1K, while Notion update was blocked by connector reauth.
+- Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-frog-eor-fresh-training-batch|2026-07-02 Frog EOR Fresh Training Batch]]
