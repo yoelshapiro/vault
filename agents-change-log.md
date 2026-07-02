@@ -3075,3 +3075,18 @@
   - Kept `dc_pre_start_unpudo` at 2s and submitted `parking_pudo/default` sample Flyte run `ad2q8cwvq5t4dj59gt6g`.
   - Fixed the brake override side-table join to preserve `vehicle_platform`, `run_date_iso`, and `run_id`, then submitted corrected Flyte run `avgcnlghmgkr2j4rjb4j`.
 - Task note: [[agent_tasks/2026/06/Week-5/2026-06-29-pudo-harsh-brake-pre-ca|2026-06-29 PUDO Harsh Brake Pre-CA]]
+
+## 2026-07-02 - Stateless EOR Hysteresis Redeploys
+
+- Topic: Redeploy Parking/PUDO models with stateless end-of-route hysteresis and end-of-route defaults enabled.
+- Labels: parking, pudo, deployment, interleave-control, hysteresis.
+- Branch: `boris/parking-stateless-eor-hysteresis-redeploy`, `boris/parking-stateless-eor-hysteresis-magenta-redeploy`.
+- PR: n/a.
+- Change type: Code change, model redeploy.
+- Areas: `wayve/ai/zoo/deployment`, model catalogue.
+- Changes:
+  - Replaced persisted interleave hysteresis state with stateless route-threshold logic: 2.5e4 to enter parking, 3e4 plus speed gate to leave parking.
+  - Kept `enable_end_of_route_hazard_lights` and `enable_end_of_route_gear_latch` defaulted to `True`.
+  - Redeployed fuchsia/mallard, teal/beige, frog, harlequin, and magenta variants with group parking interleave control.
+  - Recorded new nicknames: `sandpiper-spotless-beige`, `wren-agile-amber`, `amber-porpoise-precise`, `thoughtful-silver-nautilus`, `azure-gnu-outspoken`.
+- Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-stateless-eor-hysteresis-redeploys|2026-07-02 Stateless EOR Hysteresis Redeploys]]
