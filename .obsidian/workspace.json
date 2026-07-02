@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "llm_wiki/index.md",
+                "file": "newsletters/newsletter_parking-stopping-mode-dilc.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "index"
+              "title": "newsletter_parking-stopping-mode-dilc"
             }
           }
         ],
@@ -588,13 +588,17 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "agent_tasks/2026/07/Week-1/2026-07-02-stateless-eor-hysteresis-redeploys.md",
+    "agent_tasks/2026/07/Week-1",
+    "newsletters/newsletter_parking-maneuver-filters.md",
+    "projects/generic-materialisation-parking-pudo-migration.md",
+    "projects.md",
+    "agents-change-log.md",
+    "llm_wiki/index.md",
     "llm_wiki/README.md",
     "newsletters/newsletter_inference-visualization-tool.md",
-    "projects.md",
     "Excalidraw/head_options.excalidraw.md",
-    "agents-change-log.md",
     "agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes.md",
-    "projects/generic-materialisation-parking-pudo-migration.md",
     "weekly plan.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-parking-pudo-partition-size-override.md",
     "agent_tasks/2026/07/Week-27/2026-07-01-accelerate-from-stopped-frog-bronze-tessellated.md",
@@ -615,15 +619,11 @@
     "agent_tasks/2026/06/Week-4/2026-06-28-parking-accelerate-from-stopped-skill.md",
     "agent_tasks/2026/06/Week-4/2026-06-28-parking-lifecycle-dashboard.md",
     "agent_tasks/2026/06/Week-4/2026-06-28-denis-controller-accelerate-from-stopped.md",
-    "agent_tasks/2026/06/Week-4/2026-06-28-unpudo-ca-prestart-update.md",
-    "agent_tasks/2026/06/Week-4/2026-06-28-aquamarine-gear-latch-redeploy.md",
-    "agent_tasks/2026/06/Week-4/2026-06-27-acrobatic-no-aug-gear75-training.md",
     "html_summaries/parking-vs-pudo-generic-sampler.html",
     "agent_tasks/2026/06/Week-4",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
     "html_summaries/parking-capability-architecture-research.html",
-    "html_summaries/parking-pudo-generic-buckets.html",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
