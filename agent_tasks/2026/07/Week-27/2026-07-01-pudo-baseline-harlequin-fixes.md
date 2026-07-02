@@ -31,3 +31,19 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 - Direct `parking_diffusion_config.py` import through `//wayve/ai/si:train_ipython` passed and printed diffusion binary version `3.0.23`, output adaptor target `wayve.ai.zoo.outputs.diffusion.DiffusionOutputAdaptor`, and diffusion loss weight `1.0`.
 - `bazel test //wayve/ai/si:test_config_py_test_test_configs_utils_load_config_works_after_full_registration` failed before assertions with an OpenMP duplicate-runtime environment error.
 - `bazel test //wayve/ai/lib:test_provenance //wayve/ai/lib:test_lib_py_lint_ruff //wayve/ai/lib:test_lib_ty` passed.
+
+## 2026-07-02 PR Review Follow-Up
+
+- Cleaned up the BehaviorCustomizer parking-control tests so parking controls remain ignored, including `INITIATE_AUTO_PARKING`, `PARKING_DIRECTION`, and `ENABLE_SHIFT_BY_WIRE`, with eager and TorchScript coverage.
+- Fixed parked-origin route-shortening entry lookup by accepting parking segments with `segment_start >= 0` instead of requiring the segment to start after the current origin.
+- Removed unused route-anchor arguments from parking route shortening so planned-route samples, which intentionally have `last_waypoint_index=None`, do not fail on `float(None)`.
+- Added focused regressions for parked-origin entry lookup and planned-route parking route shortening.
+
+## 2026-07-02 Validation
+
+- `git diff --check` passed.
+- `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=-k --test_arg=behavior_customizer` passed.
+- `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/si/datamodules:py_lint_ruff` passed.
+- `bazel test //wayve/ai/si/datamodules:py_test --test_env=PYTEST_ADDOPTS=--no-cov --test_arg=-k --test_arg='add_parking_mode_stores_entry_index_for_parking_segment_started_before_origin or add_parking_mode_records_pre_augmentation_stage_and_gear'` passed.
+- `bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=-k --test_arg='planned_route_fetch_route_map_with_parking_route_shortening or planned_route_fetch_route_map_happy_path'` and `//wayve/ai/lib:test_data_pipes_lib_py_lint_ruff` were blocked in analysis by ACR auth fetching `azure-storage/azurite` with `401 Unauthorized`.
+- Full `bazel test //wayve/ai/si/datamodules:py_test` still fails on existing broader integration tests that try to load frame metadata under read-only `/home/nobody` and later produce empty SARSA pipes; the new parking unit regression passed in that run.
