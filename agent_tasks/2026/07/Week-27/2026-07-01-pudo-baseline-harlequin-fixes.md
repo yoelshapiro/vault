@@ -36,6 +36,7 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 
 - Cleaned up the BehaviorCustomizer parking-control tests so parking controls remain ignored, including `INITIATE_AUTO_PARKING`, `PARKING_DIRECTION`, and `ENABLE_SHIFT_BY_WIRE`, with eager and TorchScript coverage.
 - Rewrote `ParkingModelRelease2026_5_21Cfg` override construction to use a deep-copied `WFM_FEB_2026_EARLY_FUSION_BACKBONE_OVERRIDES` dict, preserving `WFMFeb2026EarlyFusionCFG(overrides=...)` behavior while removing nested dict unpacking.
+- Split OTF route-map option copying from the individual noise-disable and route-shortening mutations so both settings remain independent and easier to review.
 - Fixed parked-origin route-shortening entry lookup by accepting parking segments with `segment_start >= 0` instead of requiring the segment to start after the current origin.
 - Removed unused route-anchor arguments from parking route shortening so planned-route samples, which intentionally have `last_waypoint_index=None`, do not fail on `float(None)`.
 - Added focused regressions for parked-origin entry lookup and planned-route parking route shortening.
@@ -45,6 +46,7 @@ Ported selected parking/PUDO fixes from `boris/parking-past30-no-standstill-gear
 - `git diff --check` passed.
 - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_test --test_arg=-k --test_arg=behavior_customizer` passed.
 - `bazel test //wayve/ai/zoo/deployment:test_deployment_py_lint_ruff //wayve/ai/si/datamodules:py_lint_ruff` passed.
+- `bazel test //wayve/ai/si/datamodules:py_lint_ruff //wayve/ai/si/datamodules:ty` passed.
 - `bazel test //wayve/ai/si:test_config_py_lint_ruff //wayve/ai/si:test_config_ty //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` passed.
 - `bazel test //wayve/ai/si/datamodules:py_test --test_env=PYTEST_ADDOPTS=--no-cov --test_arg=-k --test_arg='add_parking_mode_stores_entry_index_for_parking_segment_started_before_origin or add_parking_mode_records_pre_augmentation_stage_and_gear'` passed.
 - `bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_arg=-k --test_arg='planned_route_fetch_route_map_with_parking_route_shortening or planned_route_fetch_route_map_happy_path'` and `//wayve/ai/lib:test_data_pipes_lib_py_lint_ruff` were blocked in analysis by ACR auth fetching `azure-storage/azurite` with `401 Unauthorized`.

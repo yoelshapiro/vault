@@ -11,6 +11,7 @@
 - Changes:
   - Consolidated parking-control BehaviorCustomizer tests while keeping parking controls ignored.
   - Refactored the Parking 2026_5_21 WFM override block to use a deep-copied backbone override dict while preserving `WFMFeb2026EarlyFusionCFG`.
+  - Split OTF route-map option copying from the noise-disable and route-shortening mutations for clearer independent control flow.
   - Fixed stored parking entry index for parked-origin route shortening by allowing non-negative segment starts before origin.
   - Removed unused route-anchor casts from parking route shortening so planned-route samples with `None` anchors do not fail.
   - Added focused regressions for parked-origin entry lookup and planned-route parking route shortening.
