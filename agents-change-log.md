@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-02 - Frog Stateless EOR Resume Training Batch
+
+- Topic: Start three resumed Parking/PUDO training runs from `frog-bronze-tessellated` with stateless EOR hysteresis.
+- Labels: parking, pudo, training, surfboard, eor-hysteresis, notion, slack.
+- Branch: `boris/parking-frog-eor-hysteresis-trains`.
+- PR: none.
+- Change type: Code change, training submission, monitoring handoff.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/test/configs/test_configs_utils.py`; Surfboard jobs `187862`, `187863`, `187864`.
+- Changes:
+  - Applied stateless EOR hysteresis with `END_OF_ROUTE_THRESHOLD = 3.75e4` and `END_OF_ROUTE_EXIT_THRESHOLD = 4.5e4` on the frog training commit.
+  - Added Parking datamodule variants for 70% driving / 30% parking and the raw gear-window PUDO/UNPUDO root.
+  - Submitted resumed 100K-additional-step runs for the 8-node baseline, 70% driving, and raw gear-window data variants.
+  - Spawned one monitor agent per run to watch through global step `101000`, retry/fix up to three times, update Slack on status changes, and update the Notion model card after the pass gate.
+- Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-pr120390-stateless-eor-hysteresis|2026-07-02 PR 120390 Stateless EOR Hysteresis]]
+
 ## 2026-07-02 - PUDO Baseline PR Review Follow-Up
 
 - Topic: Address focused PR review items for Parking/PUDO baseline branch.

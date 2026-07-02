@@ -35,3 +35,35 @@ Notes:
 - Freed space by deleting task-owned old Bazel output bases from previous stateless EOR redeploy worktrees, then reran successfully.
 - PR checks were queued after push.
 
+## Frog Resume Training Batch
+
+Started three resumed Parking/PUDO training runs from `frog-bronze-tessellated` using the same stateless EOR hysteresis behavior:
+
+- `END_OF_ROUTE_THRESHOLD = 3.75e4`
+- `END_OF_ROUTE_EXIT_THRESHOLD = 4.5e4`
+
+### Branch
+
+- Worktree: `/tmp/wayvecode-frog-eor-train`
+- Branch: `boris/parking-frog-eor-hysteresis-trains`
+- Commit: `3d579bdcb039736a2f21ae0de01f40384e5ee63a`
+- Image: `wayvetraining.azurecr.io/scaled-intelligence:3d579bdcb039736a2f21ae0de01f40384e5ee63a`
+- Source session: `session_2026_06_30_10_46_01_harqolr81wb2`
+- Restart step: `100000`
+- Target training limit: `200000`
+
+### Training Ledger
+
+| Variant | Job id | Session | Nodes | Data change | Monitor |
+| --- | --- | --- | --- | --- | --- |
+| `frog-eor-hyst-n8-100k` | `187862` | `session_2026_07_02_20_43_18_si_parking_bc_train_release_2026_5_21_frog-eor-hyst-n8-100k` | 8 | Original 50% driving / 50% parking | Mill |
+| `frog-eor-hyst-driving70-100k` | `187863` | `session_2026_07_02_20_45_21_si_parking_bc_train_release_2026_5_21_frog-eor-hyst-driving70-100k` | 4 | 70% driving / 30% parking | Volta |
+| `frog-eor-hyst-rawgear-100k` | `187864` | `session_2026_07_02_20_46_30_si_parking_bc_train_release_2026_5_21_frog-eor-hyst-rawgear-100k` | 4 | PUDO/UNPUDO root `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/default/dev/parking_pudo_default_raw_gear_window_20260617__2026-06-17-08-18/dataset` | Lorentz |
+
+### Monitor Plan
+
+- Each monitor agent owns one job.
+- Success gate: observe global training step `>=101000`.
+- Failure handling: investigate and retry/fix up to three times for the assigned run.
+- Slack updates go to Boris on monitor start, failure/retry/fix, and pass.
+- After the success gate, update the Parking/PUDO Notion model-card table with branch and run details.
