@@ -588,6 +588,7 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "agent_tasks/2026/07/Week-27/2026-07-02-parking-pudo-partition-size-override.md",
     "agent_tasks/2026/07/Week-27/2026-07-01-accelerate-from-stopped-frog-bronze-tessellated.md",
     "agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes.md",
     "agent_tasks/2026/07/Week-27",
@@ -618,7 +619,6 @@
     "agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-training-retry.md",
     "agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-variant.md",
     "agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-training-retry.md",
-    "agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-fixes.md",
     "agent_tasks/2026/06/Week-4",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
