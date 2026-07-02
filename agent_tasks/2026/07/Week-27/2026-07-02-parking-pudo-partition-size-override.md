@@ -12,6 +12,7 @@ Made the generic sampler partition chunk size configurable per `BucketedDataset`
 - Added `PARKING_PUDO_MAX_NUM_RUN_IDS_PER_PARTITION = 700` and wired it into Parking/PUDO default, anchors, events, parking-only, and pudo-only datasets.
 - Added tests for the dataset default/validation and for forwarding the dataset-specific override into Spark partition planning.
 - Reworded Parking/PUDO README, docstrings, comments, and PR body to describe the generic materialisation logic directly instead of framing it as notebook parity.
+- Refreshed the README and PR body with newer branch details: registered dataset variants, binary versions, 700 run-ID partitioning, release metadata, and event-row metadata/disengagement semantics.
 
 ## Validation
 
