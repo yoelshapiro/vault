@@ -3090,3 +3090,18 @@
   - Redeployed fuchsia/mallard, teal/beige, frog, harlequin, and magenta variants with group parking interleave control after superseding the wrong-threshold v1 deploys.
   - Recorded corrected v2 nicknames: `scarlet-dreaming-hamster`, `earnest-brown-catfish`, `snowy-owl-lavender-spotless`, `seahorse-orange-rigorous`, `peach-cautious-kangaroo`.
 - Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-stateless-eor-hysteresis-redeploys|2026-07-02 Stateless EOR Hysteresis Redeploys]]
+
+## 2026-07-02 - PR 120390 Stateless EOR Hysteresis
+
+- Topic: Update SI interleave-control PR with stateless end-of-route hysteresis.
+- Labels: deployment-wrapper, interleave-control, parking, hysteresis, pr.
+- Branch: `06-22-si-group-interleave-control-support`.
+- PR: `#120390`.
+- Change type: Code change, PR update.
+- Areas: `wayve/ai/zoo/deployment`.
+- Changes:
+  - Added `END_OF_ROUTE_EXIT_THRESHOLD = 4.5e4` alongside enter threshold `3.75e4`.
+  - Changed default/driving interleave control to trigger below the enter threshold.
+  - Changed parking interleave control to trigger only above the exit threshold and handover speed.
+  - Updated deployment-wrapper codegen regression tests and pushed commit `1ed05d9ec195`.
+- Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-pr120390-stateless-eor-hysteresis|2026-07-02 PR 120390 Stateless EOR Hysteresis]]
