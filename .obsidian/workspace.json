@@ -393,7 +393,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "weekly plan.md",
+                "file": "llm_wiki/index.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -408,7 +408,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "weekly plan"
+              "title": "index"
             }
           }
         ],
@@ -588,9 +588,16 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "llm_wiki/README.md",
+    "newsletters/newsletter_inference-visualization-tool.md",
+    "projects.md",
+    "Excalidraw/head_options.excalidraw.md",
+    "agents-change-log.md",
+    "agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes.md",
+    "projects/generic-materialisation-parking-pudo-migration.md",
+    "weekly plan.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-parking-pudo-partition-size-override.md",
     "agent_tasks/2026/07/Week-27/2026-07-01-accelerate-from-stopped-frog-bronze-tessellated.md",
-    "agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes.md",
     "agent_tasks/2026/07/Week-27",
     "agent_tasks/2026/07",
     "todo-list.md",
@@ -611,14 +618,7 @@
     "agent_tasks/2026/06/Week-4/2026-06-28-unpudo-ca-prestart-update.md",
     "agent_tasks/2026/06/Week-4/2026-06-28-aquamarine-gear-latch-redeploy.md",
     "agent_tasks/2026/06/Week-4/2026-06-27-acrobatic-no-aug-gear75-training.md",
-    "agent_tasks/2026/06/Week-4/2026-06-27-unparking-route-shortening-fix.md",
     "html_summaries/parking-vs-pudo-generic-sampler.html",
-    "agent_tasks/2026/06/Week-4/2026-06-25-port-augment-standstill-gear-fix.md",
-    "agent_tasks/2026/06/Week-4/2026-06-25-scarlet-root-jitter-g50-training.md",
-    "agent_tasks/2026/06/Week-4/2026-06-25-safe-unsafe-hari-databricks-upload.md",
-    "agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-training-retry.md",
-    "agent_tasks/2026/06/Week-4/2026-06-24-scarlet-root-jitter-variant.md",
-    "agent_tasks/2026/06/Week-4/2026-06-24-parking-generic-data-aug-training-retry.md",
     "agent_tasks/2026/06/Week-4",
     "agent_tasks/2026/06/Week-3",
     "html_summaries/publish_report.sh",
