@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-02 - PUDO Baseline PR Review Follow-Up
+
+- Topic: Address focused PR review items for Parking/PUDO baseline branch.
+- Labels: parking, pudo, pr-review, route-shortening, tests.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/zoo/deployment/test/test_behavior_customization.py`; `wayve/ai/si/datamodules/parking.py`; `wayve/ai/si/datamodules/test/test_parking_unit.py`; `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`.
+- Changes:
+  - Consolidated parking-control BehaviorCustomizer tests while keeping parking controls ignored.
+  - Fixed stored parking entry index for parked-origin route shortening by allowing non-negative segment starts before origin.
+  - Removed unused route-anchor casts from parking route shortening so planned-route samples with `None` anchors do not fail.
+  - Added focused regressions for parked-origin entry lookup and planned-route parking route shortening.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-01-pudo-baseline-harlequin-fixes|2026-07-01 PUDO Baseline Harlequin Fixes]]
+
 ## 2026-07-02 - Parking PUDO Partition Size Override
 
 - Topic: Make generic sampler run-ID partition chunk size configurable per dataset while keeping the default at 1000.
