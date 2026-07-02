@@ -82,4 +82,4 @@ Started three resumed Parking/PUDO training runs from `frog-bronze-tessellated` 
 
 | Time UTC | Surfboard state | W&B step | Outcome / notes |
 | --- | --- | ---: | --- |
-| 2026-07-02 21:42 | `Running` | `0` | Started monitoring. Verified branch `boris/parking-frog-eor-hysteresis-trains`, commit `3d579bdcb039736a2f21ae0de01f40384e5ee63a`, expected job command, datamodule override, restart session dir, and restart step. |
+| 2026-07-02 20:53 | `Running` | `0` | Started monitoring. Verified branch `boris/parking-frog-eor-hysteresis-trains`, commit `3d579bdcb039736a2f21ae0de01f40384e5ee63a`, expected job command, datamodule override, restart session dir, and restart step. |
