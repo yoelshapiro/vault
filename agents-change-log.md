@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-02 - Parking PUDO Partition Size Override
+
+- Topic: Make generic sampler run-ID partition chunk size configurable per dataset while keeping the default at 1000.
+- Labels: parking, pudo, sampling, materialization, flyte, partitioning.
+- Branch: `boris/pudo_generic_materialization` in `/workspace/pudo_materialization_buckets`.
+- PR: draft PR for generic Parking/PUDO materialization.
+- Change type: Framework configuration / Parking/PUDO materialization tuning.
+- Areas: `wayve/ai/services/sampling/common/api/dataset.py`; `wayve/ai/services/sampling/common/spark_tasks.py`; `wayve/ai/services/sampling/datasets/parking_pudo/`.
+- Changes:
+  - Added `BucketedDataset.max_num_run_ids_per_partition` with `MAX_NUM_RUN_IDS_PER_PARTITION = 1000` as the framework default.
+  - Updated Spark partition planning to chunk by the dataset-specific value.
+  - Set Parking/PUDO default, anchors, events, parking-only, and pudo-only datasets to 700 run IDs per partition.
+  - Added focused tests for default/validation and forwarding the override to Spark partition planning.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-02-parking-pudo-partition-size-override|2026-07-02 Parking PUDO Partition Size Override]]
+
 ## 2026-07-01 - Accelerate From Stopped Frog Bronze Tessellated
 
 - Topic: Run Parking/PUDO accelerate-from-stopped Flyte development evaluation for `frog-bronze-tessellated@10` with Denis controller source.
