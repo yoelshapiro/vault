@@ -588,6 +588,7 @@
   },
   "active": "e176dee4bd0571fb",
   "lastOpenFiles": [
+    "agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-bazel-cache-cleanup.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-fresh-rawgear-1k-monitor.md",
     "agent_tasks/2026/07/Week-1/2026-07-02-frog-eor-fresh-driving70-1k-monitor.md",
     "agent_tasks/2026/07/Week-1/2026-07-02-frog-eor-fresh-training-batch.md",
@@ -618,7 +619,6 @@
     "agent_tasks/2026/06/Week-5/2026-06-29-accelerate-from-stopped-flyte-three-models.md",
     "agent_tasks/2026/06/Week-5",
     "agent_tasks/2026/06/Week-4/2026-06-28-teal-zak-warmup-zero-init-training-monitor.md",
-    "agent_tasks/2026/06/Week-4/2026-06-28-teal-march-wfm-g50-training-monitor.md",
     "html_summaries/parking-vs-pudo-generic-sampler.html",
     "agent_tasks/2026/06/Week-4",
     "agent_tasks/2026/06/Week-3",
