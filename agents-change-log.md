@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-02 - Frog EOR Fresh Raw-Gear 1K Monitor
+
+- Topic: Monitor fresh-base Parking/PUDO frog EOR raw-gear training through the 1K-step gate.
+- Labels: parking, pudo, training, surfboard, wandb, slack, notion.
+- Branch: `boris/parking-frog-eor-fresh-rawgear`.
+- PR: none.
+- Change type: Training monitoring / external status update.
+- Areas: Surfboard job `187920`; W&B run `session_2026_07_02_22_18_33_si_parking_bc_train_release_2026_5_21_frog-eor-raw`; Parking/PUDO model-card table.
+- Changes:
+  - Monitored job `187920` from dispatch through W&B `trainer/global_step=1201` while Surfboard remained `Running`.
+  - Observed no retry-worthy failure; no code changes or relaunch were needed.
+  - Sent the Slack start update to Boris, but the 1K-passed Slack update was blocked by connector `HTTP 401 token_expired`.
+  - Attempted the Parking/PUDO model-card update, but the Notion connector was blocked by connector `HTTP 401 token_expired` before schema fetch.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-fresh-rawgear-1k-monitor|2026-07-02 Frog EOR Fresh Raw-Gear 1K Monitor]]
+
 ## 2026-07-02 - Frog EOR Fresh Driving70 1K Monitor
 
 - Topic: Monitor fresh-base Parking/PUDO frog EOR 70% driving training through the 1K-step gate.
