@@ -10,6 +10,7 @@
 - Areas: `wayve/ai/zoo/deployment/test/test_behavior_customization.py`; `wayve/ai/si/datamodules/parking.py`; `wayve/ai/si/datamodules/test/test_parking_unit.py`; `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`.
 - Changes:
   - Consolidated parking-control BehaviorCustomizer tests while keeping parking controls ignored.
+  - Refactored the Parking 2026_5_21 WFM override block to use a deep-copied backbone override dict while preserving `WFMFeb2026EarlyFusionCFG`.
   - Fixed stored parking entry index for parked-origin route shortening by allowing non-negative segment starts before origin.
   - Removed unused route-anchor casts from parking route shortening so planned-route samples with `None` anchors do not fail.
   - Added focused regressions for parked-origin entry lookup and planned-route parking route shortening.
