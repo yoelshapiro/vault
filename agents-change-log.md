@@ -3085,8 +3085,8 @@
 - Change type: Code change, model redeploy.
 - Areas: `wayve/ai/zoo/deployment`, model catalogue.
 - Changes:
-  - Replaced persisted interleave hysteresis state with stateless route-threshold logic: 2.5e4 to enter parking, 3e4 plus speed gate to leave parking.
+  - Replaced persisted interleave hysteresis state with stateless route-threshold logic: 3.75e4 to enter parking, 4.5e4 plus speed gate to leave parking.
   - Kept `enable_end_of_route_hazard_lights` and `enable_end_of_route_gear_latch` defaulted to `True`.
-  - Redeployed fuchsia/mallard, teal/beige, frog, harlequin, and magenta variants with group parking interleave control.
-  - Recorded new nicknames: `sandpiper-spotless-beige`, `wren-agile-amber`, `amber-porpoise-precise`, `thoughtful-silver-nautilus`, `azure-gnu-outspoken`.
+  - Redeployed fuchsia/mallard, teal/beige, frog, harlequin, and magenta variants with group parking interleave control after superseding the wrong-threshold v1 deploys.
+  - Recorded corrected v2 nicknames: `scarlet-dreaming-hamster`, `earnest-brown-catfish`, `snowy-owl-lavender-spotless`, `seahorse-orange-rigorous`, `peach-cautious-kangaroo`.
 - Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-stateless-eor-hysteresis-redeploys|2026-07-02 Stateless EOR Hysteresis Redeploys]]
