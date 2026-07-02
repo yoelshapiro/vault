@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-02 - Frog EOR Fresh-Base 1K Monitor
+
+- Topic: Monitor fresh-base Parking/PUDO frog EOR baseline training through the 1K-step gate.
+- Labels: parking, pudo, training, surfboard, wandb, slack, notion.
+- Branch: `boris/parking-frog-eor-fresh-base`.
+- PR: none.
+- Change type: Training monitoring / external status update.
+- Areas: Surfboard job `187893`; W&B run `session_2026_07_02_21_48_15_si_parking_bc_train_release_2026_5_21_frog-eor-n8`; Parking/PUDO model-card table.
+- Changes:
+  - Monitored job `187893` from startup through W&B `trainer/global_step=1210` while Surfboard remained `Running`.
+  - Observed no retry-worthy failure; no code changes or relaunch were needed.
+  - Sent Slack start, 1K-passed, and Notion-blocker updates to Boris.
+  - Attempted the Parking/PUDO model-card update, but the Notion connector was blocked by `oauth_token_invalid_grant` reauthentication.
+- Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-frog-eor-fresh-base-1k-monitor|2026-07-02 Frog EOR Fresh-Base 1K Monitor]]
+
 ## 2026-07-02 - Frog Stateless EOR Resume Training Batch
 
 - Topic: Start three resumed Parking/PUDO training runs from `frog-bronze-tessellated` with stateless EOR hysteresis.
