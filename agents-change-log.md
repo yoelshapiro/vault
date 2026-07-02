@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-02 - Frog EOR Bazel Cache Cleanup
+
+- Topic: Delete the Bazel output bases used by the three frog EOR fresh training worktrees after their 1K gates resolved.
+- Labels: parking, pudo, training, bazel, cache-cleanup.
+- Branch: `boris/parking-frog-eor-fresh-base`, `boris/parking-frog-eor-fresh-driving70`, `boris/parking-frog-eor-fresh-rawgear`.
+- PR: none.
+- Change type: Operational cleanup.
+- Areas: `/workspace/.cache/bazel`; worktrees `/tmp/wayvecode-frog-eor-fresh-base`, `/tmp/wayvecode-frog-eor-fresh-driving70`, `/tmp/wayvecode-frog-eor-fresh-rawgear`; Surfboard jobs `187893`, `187902`, `187920`.
+- Changes:
+  - Confirmed the cleanup gate: job `187893` already passed 1K, job `187902` had W&B `trainer/global_step=1732`, and job `187920` reached W&B `trainer/global_step=1114`.
+  - Shut down Bazel servers for the three worktrees and deleted only the three requested output-base directories.
+  - Repaired permissions with scoped `chmod -R u+rwX` only inside the remaining target directories after the first `rm -rf` hit permission-denied files, then retried successfully.
+  - Verified none of the three output-base directories remained and final `/workspace` usage was `840G` used, `185G` available, `83%`.
+  - Attempted the requested Slack DM to Boris, but the Slack connector returned `HTTP 401 token_expired`.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-bazel-cache-cleanup|2026-07-02 Frog EOR Bazel Cache Cleanup]]
+
 ## 2026-07-02 - Frog EOR Fresh Raw-Gear 1K Monitor
 
 - Topic: Monitor fresh-base Parking/PUDO frog EOR raw-gear training through the 1K-step gate.
