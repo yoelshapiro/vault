@@ -26,8 +26,16 @@ Source frog commit: `a7be3baacc633e5d407f95227266537c41974e3b`.
 Spawned one monitor subagent per job to watch to 1K steps, retry/fix up to three times on failure, update Boris on Slack, and update the Parking PUDO Notion page if the run passes 1K.
 
 - Run 1 passed the 1K gate at W&B global step `1210`; no retries.
-- Run 1 Notion update was blocked by connector reauth: `UNAUTHORIZED`, `oauth_token_invalid_grant`, `TRIGGER_REAUTHENTICATION`.
-- Run 2 and run 3 monitors were spawned after their jobs were queued.
+- Run 2 passed the 1K gate at W&B global step `1173`; no retries.
+- Run 3 passed the 1K gate at W&B global step `1201`; no retries.
+
+## Notion
+
+Created Parking/PUDO model-card rows:
+
+- `vigorous-lime-caterpillar (not interleaved)`: https://app.notion.com/39203da5d69a816dab66d78d61de8e87
+- `salmon-silver-prototypical (not interleaved)`: https://app.notion.com/39203da5d69a810ca54fc463ec48b971
+- `parrot-turquoise-earnest (not interleaved)`: https://app.notion.com/39203da5d69a81e29dcaebadb625af9e
 
 ## Slack
 
