@@ -12,7 +12,7 @@
   - Resolved the three frog EOR model nicknames to checkpoint `10` Gen2 artefacts and generated scenario collection input YAMLs for version `5700`.
   - Published/registered the Denis branch evaluation workflow as `accelerate-from-stopped-timestamp-shadow@borisindel-tmp-build-382674be4fb7-73ff920e58d9ff9deb6e125ff1559c7d02ee1140_py0ud`.
   - Submitted each model with 598 available-inference items after missing-inference filtering; each model was split into 3 Flyte batches.
-  - Captured emitted result suffixes `315aa475`, `79539e4c`, and `244ca8fa`; immediate Databricks aggregation was not ready because the first Delta path still returned `PATH_NOT_FOUND`.
+  - Captured emitted result suffixes `315aa475`, `79539e4c`, and `244ca8fa`; immediate Databricks aggregation was not ready because emitted Delta paths still returned `PATH_NOT_FOUND`.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-03-denis-controller-accelerate-from-stopped-frog-eor|2026-07-03 Denis Controller Accelerate From Stopped Frog EOR]]
 
 ## 2026-07-02 - Frog EOR Bazel Cache Cleanup
