@@ -47,9 +47,30 @@ abfss://evaluation-studio-sandbox@wayveproddataset.dfs.core.windows.net/av_test_
 abfss://evaluation-studio-sandbox@wayveproddataset.dfs.core.windows.net/av_test_evaluation_results/accelerate_from_stopped__timestamp__simulation_shadow_mode--development--244ca8fa
 ```
 
+## Results
+
+Result tables were readable at approximately 2026-07-03 16:05 UTC.
+
+All available result rows:
+
+| Model | Rows | Segments | Passed rows | Failed rows | Row pass % | All-pass / Mixed / All-fail segments | All-rows-pass segment % |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| `parrot-turquoise-earnest` | 6,052 | 589 | 4,202 | 1,850 | 69.432 | 346 / 117 / 126 | 58.744 |
+| `vigorous-lime-caterpillar` | 6,031 | 587 | 3,496 | 2,535 | 57.967 | 276 / 122 / 189 | 47.019 |
+| `salmon-silver-prototypical` | 6,052 | 589 | 3,130 | 2,922 | 51.718 | 231 / 144 / 214 | 39.219 |
+
+Common-segment comparison across 587 segment names:
+
+| Model | Rows | Segments | Passed rows | Failed rows | Row pass % | All-pass / Mixed / All-fail segments | All-rows-pass segment % |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| `parrot-turquoise-earnest` | 6,031 | 587 | 4,183 | 1,848 | 69.358 | 345 / 116 / 126 | 58.773 |
+| `vigorous-lime-caterpillar` | 6,031 | 587 | 3,496 | 2,535 | 57.967 | 276 / 122 / 189 | 47.019 |
+| `salmon-silver-prototypical` | 6,031 | 587 | 3,119 | 2,912 | 51.716 | 230 / 144 / 213 | 39.182 |
+
 ## Operational Notes
 
 - Initial `make run-dev` hit Azure Container Registry `401 Unauthorized`; fixed with `az acr login --name wayve`, `az acr login --name wayvetraining`, and `az acr login --name wayveacrprodflyte`.
 - `make run-dev` then published the image but registration looked for a sanitized detached-commit tag that did not exist. Registered manually with explicit `--docker-image-ref` using the published image tag.
 - Flyte status check via `obs-flyte-execution` was blocked because the helper target depends on missing package `wayve/prototypes/robotics/vehicle_dynamics/common/flyte` in this checkout.
-- Result aggregation queries at approximately 2026-07-03 15:18-15:19 UTC returned `PATH_NOT_FOUND` while reading the emitted Delta paths, so the full result set was not ready for common-segment comparison at handoff.
+- Result aggregation queries at approximately 2026-07-03 15:18-15:19 UTC returned `PATH_NOT_FOUND` while reading the emitted Delta paths, but the tables were readable by 2026-07-03 16:05 UTC.
+- Each run submitted 598 items; result coverage is 587-589 segment names depending on model, so some submitted items did not produce result rows.
