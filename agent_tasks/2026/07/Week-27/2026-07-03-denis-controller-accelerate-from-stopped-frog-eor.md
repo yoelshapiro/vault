@@ -52,4 +52,4 @@ abfss://evaluation-studio-sandbox@wayveproddataset.dfs.core.windows.net/av_test_
 - Initial `make run-dev` hit Azure Container Registry `401 Unauthorized`; fixed with `az acr login --name wayve`, `az acr login --name wayvetraining`, and `az acr login --name wayveacrprodflyte`.
 - `make run-dev` then published the image but registration looked for a sanitized detached-commit tag that did not exist. Registered manually with explicit `--docker-image-ref` using the published image tag.
 - Flyte status check via `obs-flyte-execution` was blocked because the helper target depends on missing package `wayve/prototypes/robotics/vehicle_dynamics/common/flyte` in this checkout.
-- Result aggregation query at approximately 2026-07-03 15:18 UTC returned `PATH_NOT_FOUND` for the first emitted Delta path, so the result tables were not ready at that check.
+- Result aggregation queries at approximately 2026-07-03 15:18-15:19 UTC returned `PATH_NOT_FOUND` while reading the emitted Delta paths, so the full result set was not ready for common-segment comparison at handoff.
