@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-07-07 - Parking Reverse-UnPUDO No Gear-Aug Train
+
+- Topic: Launch Variant 5 Parking/PUDO BC training with reverse UnPUDO buckets and no unparking gear augmentation, then monitor through the 1K-step gate.
+- Labels: parking, pudo, training, reverse-unpudo, gear-augmentation, surfboard, wandb, notion, slack, bazel.
+- Branch: `boris/parking-train-reverse-unpudo-no-gear-aug`.
+- PR: none.
+- Change type: Code change, training submission, monitoring, cleanup.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/test/configs/test_configs_utils.py`; Surfboard job `189855`; Bazel output base `/workspace/.cache/bazel/cf27e866e2c67ed5715cc5c1d50760bb`.
+- Changes:
+  - Replaced `dc_unpudo_gear_change` buckets with five `dc_unpudo_reverse` buckets from the requested 2026-06-23 Parking/PUDO materialization root while preserving train weight `0.06`.
+  - Set `unparking_gear_augment_prob=0` for the parking BC train and added config/test assertions for the variant.
+  - Verified the deploy-wrapper EOR threshold, corrected interleave polarity, hazard-light, and gear-latch fixes were present.
+  - Committed and pushed `21090f07c920`, launched P1 100K-step training as `fierce-opossum-tomato-189855`, and observed W&B `trainer/global_step=1859` while running.
+  - Sent the pass-1000 Slack update to Boris and created the Parking/PUDO Notion model-card row for `fierce-opossum-tomato (not interleaved)`.
+  - Removed only the worktree Bazel output base after confirming no process was using it.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-reverse-unpudo-no-gear-aug-train|2026-07-07 Parking Reverse-UnPUDO No Gear-Aug Train]]
+
 ## 2026-07-07 - Parking Reverse-UnPUDO Train
 
 - Topic: Launch reverse-UnPUDO Parking/PUDO BC training variant and monitor through the 1K-step gate.
