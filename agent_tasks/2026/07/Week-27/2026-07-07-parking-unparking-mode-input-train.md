@@ -40,5 +40,13 @@ Variant 3 separates model-facing parking mode from route-shortening parking mode
 - Job: `189873`
 - Nickname: `nautilus-silver-adventurous`
 - Session: `session_2026_07_07_20_12_12_si_parking_bc_train_release_2026_5_21_unpmode1`
-- Outcome: monitoring in progress.
+- W&B: <https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_07_07_20_12_12_si_parking_bc_train_release_2026_5_21_unpmode1>
+- Datadog: <https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=nautilus-silver-adventurous-189873%2A&from_ts=1782850357987&to_ts=1783455157987&live=false>
+- Outcome: passed the 1K-step gate while Surfboard stayed `Running`.
+- Observed gate evidence: W&B `trainer/global_step=1147`, `trainer/samples_seen=73408`, W&B state `running`.
+- Slack: Boris pass update sent at <https://wayve-ai.slack.com/archives/D09SNLZT7PA/p1783456451190459>.
+- Notion: Parking/PUDO model-card row created at <https://app.notion.com/p/39603da5d69a819ea9afcfcad29cc449>.
 
+## Cleanup
+
+- Bazel output base cleanup: pending.
