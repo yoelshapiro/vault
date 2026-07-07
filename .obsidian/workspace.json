@@ -410,9 +410,21 @@
               "icon": "lucide-file",
               "title": "newsletter_parking-stopping-mode-dilc"
             }
+          },
+          {
+            "id": "fc6fc3a2fef8f3d8",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2026-07-07 10.00.23.excalidraw"
+            }
           }
         ],
-        "currentTab": 22
+        "currentTab": 23
       }
     ],
     "direction": "vertical"
@@ -469,7 +481,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 481.01258087158203
+    "width": 481.01258087158203,
+    "collapsed": true
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -586,8 +599,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "e176dee4bd0571fb",
+  "active": "fc6fc3a2fef8f3d8",
   "lastOpenFiles": [
+    "newsletters/newsletter_parking-stopping-mode-dilc.md",
+    "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
     "agent_tasks/2026/07/Week-27/2026-07-03-denis-controller-accelerate-from-stopped-frog-eor.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-bazel-cache-cleanup.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-fresh-rawgear-1k-monitor.md",
@@ -616,8 +631,6 @@
     "agent_tasks/2026/06/Week-5/2026-06-30-safe-unsafe-hari-folder-overwrite-script.md",
     "html_summaries/pudo-spider.html",
     "agent_tasks/2026/06/Week-5/2026-06-30-accelerate-from-stopped-flyte-three-models.md",
-    "agent_tasks/2026/06/Week-5/2026-06-29-pudo-harsh-brake-pre-ca.md",
-    "agent_tasks/2026/06/Week-5/2026-06-29-accelerate-from-stopped-flyte-three-models.md",
     "agent_tasks/2026/06/Week-5",
     "html_summaries/parking-vs-pudo-generic-sampler.html",
     "agent_tasks/2026/06/Week-4",
