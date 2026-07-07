@@ -7,7 +7,7 @@
 - Branch: `boris/parking-train-unparking-mode-input`.
 - PR: none.
 - Change type: Code change, tests, training submission, monitoring, cleanup.
-- Areas: `wayve/ai/si/datamodules/parking.py`; `wayve/ai/zoo/data/keys.py`; `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; Surfboard jobs `189873`, `189974`; Bazel output base pending final cleanup.
+- Areas: `wayve/ai/si/datamodules/parking.py`; `wayve/ai/zoo/data/keys.py`; `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; Surfboard jobs `189873`, `189974`; Bazel output base `/workspace/.cache/bazel/e9498e7cde03652993798c17005b513e`.
 - Changes:
   - Added `PARKING_ROUTE_SHORTENING_MODE` so route shortening can preserve `result.parking_mode` while model-facing `PARKING_MODE` follows `result.unparking_mode`.
   - Kept `UNPARKING_MODE` sourced from `result.unparking_mode` and added focused datamodule, route-shortening, deployment-wrapper, and config-resolution regression coverage.
@@ -18,6 +18,7 @@
   - Committed and pushed `022e076ee315` to keep route-map segment indices integral, then relaunched retry `intrepid-cat-lime-189974`.
   - Observed retry `intrepid-cat-lime-189974` pass the 1K gate with W&B `trainer/global_step=1813` while Surfboard and W&B both reported running.
   - Sent the failure/fix and pass-1000 Slack updates to Boris and created the Parking/PUDO Notion model-card row for `intrepid-cat-lime (not interleaved)`.
+  - Removed only this worktree's Bazel output base after confirming no process referenced it.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-unparking-mode-input-train|2026-07-07 Parking Unparking-Mode Input Train]]
 
 ## 2026-07-07 - Parking Reverse-UnPUDO No Gear-Aug Train
