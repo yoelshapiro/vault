@@ -3339,5 +3339,6 @@
   - Added a dedicated `PARKING_ROUTE_SHORTENING_MODE` key so route shortening remains active while model-facing `PARKING_MODE` is false.
   - Disabled end-of-route parking-mode switching by default in `ParkingDeploymentWrapperImpl` for this variant while preserving route shortening and EOR hazard/gear behavior.
   - Added focused datamodule, deployment-wrapper, and release-config regression coverage.
-  - Submitted Surfboard job `189865` / `thriving-lime-grouse`, monitored W&B past 1000 steps, notified Boris in Slack, and created the Notion model-card row.
+  - Submitted Surfboard job `189865` / `thriving-lime-grouse`, monitored W&B past 1000 steps, then canceled it after finding checkpoint ingestion missed parking interleave control / group parking due `use_parking_mode=False` coupling.
+  - Marked the Notion model-card row as `Canceled`; follow-up is to decouple model-facing parking-mode input from parking deployment/interleave metadata before retraining.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-park-mode-training|2026-07-07 Parking No Park Mode Training]]

@@ -29,7 +29,7 @@
 
 ## Training
 
-- Status: dispatched and passed the requested 1000-step gate.
+- Status: canceled after passing the requested 1000-step gate.
 - Branch pushed: `origin/boris/parking-train-no-park-mode`
 - Commit: `baccabf54ae1d78f7b87a3b6adfc666a007d3cd8`
 - Session tag: `nopmode0`
@@ -40,7 +40,13 @@
 - Datadog: <https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=thriving-lime-grouse-189865%2A&from_ts=1782850065383&to_ts=1783454865383&live=false>
 - Observed W&B state: `running`, `_step=2629` at `2026-07-07T20:18:13Z`.
 - Slack: sent pre-dispatch failure/fix update and pass-1000 DM to Boris.
-- Notion: created Parking/PUDO model-card row `thriving-lime-grouse (not interleaved)`.
+- Notion: created Parking/PUDO model-card row `thriving-lime-grouse (not interleaved)`, then marked it `Canceled`.
+
+## Cancellation
+
+- Surfboard job `189865` was canceled at `2026-07-07 23:15 UTC`.
+- Cancellation reason: the no-park-mode variant disabled `use_parking_mode`, which also gated checkpoint ingestion/deployment metadata for parking interleave control and `interleave_group="parking"`.
+- Follow-up needed before retraining: decouple model-facing parking-mode input from parking deployment wrapper/interleave metadata.
 
 ## Operational Notes
 
