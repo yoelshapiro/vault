@@ -3257,3 +3257,19 @@
   - Spawned one monitor agent per job to watch to 1K steps, retry up to three times on failure, and send Slack updates.
   - Recorded that job `187893` passed 1K, while Notion update was blocked by connector reauth.
 - Task note: [[agent_tasks/2026/07/Week-1/2026-07-02-frog-eor-fresh-training-batch|2026-07-02 Frog EOR Fresh Training Batch]]
+
+## 2026-07-07 - Parking No UnPUDO Gear-Change Training
+
+- Topic: Start Parking/PUDO Variant 1 training with UnPUDO gear-change buckets removed.
+- Labels: parking, pudo, training, config.
+- Branch: `boris/parking-train-no-unpudo-gear-change`.
+- PR: n/a.
+- Change type: Code change, training job submission.
+- Areas: `wayve/ai/si/configs/parking`, Surfboard, W&B.
+- Changes:
+  - Created an isolated worktree from `d3a297cd99516999980706bb0a6d1f4e39282ab9`.
+  - Removed `dc_unpudo_gear_change_*` train/validation buckets from `parking_bc_datamodule`.
+  - Redistributed the removed `0.06` train weight as `+0.03` to `dc_unpudo_pre_start` and `+0.03` to `pre_ca_unpudo`.
+  - Added a config regression assertion and verified the split-out parking config test locally.
+  - Training dispatch and monitoring are in progress.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-unpudo-gear-change-training|2026-07-07 Parking No UnPUDO Gear-Change Training]]
