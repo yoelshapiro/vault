@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-07 - SI Interleave Control Polarity Fix
+
+- Topic: Fix SI group interleave-control branch so driving emits interleave when near EOR or not in Drive.
+- Labels: parking, pudo, si, interleave-control, deployment-wrapper.
+- Branch: `06-22-si-group-interleave-control-support`.
+- PR: existing PR branch.
+- Change type: Code change, tests.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; `wayve/ai/zoo/deployment/test/test_deployment_wrapper_codegen.py`.
+- Changes:
+  - Preserved stateless EOR hysteresis thresholds and parking-side exit/speed behavior.
+  - Added the missing driving-side non-Drive gear trigger for `interleave_control=True`.
+  - Added regression coverage for the non-Drive trigger in the codegen interleave-control test.
+  - Verified `bazel test //wayve/ai/zoo/deployment:test_deployment`.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-si-interleave-control-polarity-fix|2026-07-07 SI Interleave Control Polarity Fix]]
+
 ## 2026-07-03 - Denis Controller Accelerate From Stopped Frog EOR
 
 - Topic: Submit Parking/PUDO accelerate-from-stopped Flyte development evaluations for `vigorous-lime-caterpillar`, `salmon-silver-prototypical`, and `parrot-turquoise-earnest` with Denis controller source.
