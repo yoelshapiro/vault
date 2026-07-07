@@ -1,5 +1,57 @@
 # Agents Change Log
 
+## 2026-07-07 - Parking Unparking-Mode Input Train
+
+- Topic: Launch Variant 3 Parking/PUDO BC training with model-facing parking mode sourced from `unparking_mode`, then monitor through the 1K-step gate.
+- Labels: parking, pudo, training, unparking-mode, route-shortening, deployment-wrapper, surfboard, wandb, notion, slack, bazel.
+- Branch: `boris/parking-train-unparking-mode-input`.
+- PR: none.
+- Change type: Code change, tests, training submission, monitoring, cleanup.
+- Areas: `wayve/ai/si/datamodules/parking.py`; `wayve/ai/zoo/data/keys.py`; `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; Surfboard job `189873`; Bazel output base `/workspace/.cache/bazel/e9498e7cde03652993798c17005b513e`.
+- Changes:
+  - Added `PARKING_ROUTE_SHORTENING_MODE` so route shortening can preserve `result.parking_mode` while model-facing `PARKING_MODE` follows `result.unparking_mode`.
+  - Kept `UNPARKING_MODE` sourced from `result.unparking_mode` and added focused datamodule, route-shortening, deployment-wrapper, and config-resolution regression coverage.
+  - Updated Parking deployment to stop forcing model parking mode near route end and added an unparking latch controlled by end-of-route gear latch state and a 5 kph release threshold.
+  - Preserved and tested the end-of-route threshold, interleave-polarity, hazard-light, and gear-latch fixes.
+  - Committed and pushed `91e7485f7ece`, launched P1 100K-step training, cancelled attempt `189857` after watchdog hang at `trainer/global_step=176`, and relaunched attempt `189873`.
+  - Observed retry `nautilus-silver-adventurous-189873` pass the 1K gate with W&B `trainer/global_step=1147` while running.
+  - Sent the pass-1000 Slack update to Boris and created the Parking/PUDO Notion model-card row for `nautilus-silver-adventurous (not interleaved)`.
+  - Removed only this worktree's Bazel output base after confirming no non-check process referenced it.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-unparking-mode-input-train|2026-07-07 Parking Unparking-Mode Input Train]]
+
+## 2026-07-07 - Parking Reverse-UnPUDO No Gear-Aug Train
+
+- Topic: Launch Variant 5 Parking/PUDO BC training with reverse UnPUDO buckets and no unparking gear augmentation, then monitor through the 1K-step gate.
+- Labels: parking, pudo, training, reverse-unpudo, gear-augmentation, surfboard, wandb, notion, slack, bazel.
+- Branch: `boris/parking-train-reverse-unpudo-no-gear-aug`.
+- PR: none.
+- Change type: Code change, training submission, monitoring, cleanup.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/test/configs/test_configs_utils.py`; Surfboard job `189855`; Bazel output base `/workspace/.cache/bazel/cf27e866e2c67ed5715cc5c1d50760bb`.
+- Changes:
+  - Replaced `dc_unpudo_gear_change` buckets with five `dc_unpudo_reverse` buckets from the requested 2026-06-23 Parking/PUDO materialization root while preserving train weight `0.06`.
+  - Set `unparking_gear_augment_prob=0` for the parking BC train and added config/test assertions for the variant.
+  - Verified the deploy-wrapper EOR threshold, corrected interleave polarity, hazard-light, and gear-latch fixes were present.
+  - Committed and pushed `21090f07c920`, launched P1 100K-step training as `fierce-opossum-tomato-189855`, and observed W&B `trainer/global_step=1859` while running.
+  - Sent the pass-1000 Slack update to Boris and created the Parking/PUDO Notion model-card row for `fierce-opossum-tomato (not interleaved)`.
+  - Removed only the worktree Bazel output base after confirming no process was using it.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-reverse-unpudo-no-gear-aug-train|2026-07-07 Parking Reverse-UnPUDO No Gear-Aug Train]]
+
+## 2026-07-07 - Parking Reverse-UnPUDO Train
+
+- Topic: Launch reverse-UnPUDO Parking/PUDO BC training variant and monitor through the 1K-step gate.
+- Labels: parking, pudo, training, reverse-unpudo, surfboard, wandb, notion, slack.
+- Branch: `boris/parking-train-reverse-unpudo`.
+- PR: none.
+- Change type: Code change, training submission, monitoring.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/test/configs/test_configs_utils.py`; Surfboard job `189854`.
+- Changes:
+  - Replaced `dc_unpudo_gear_change` buckets with five `dc_unpudo_reverse` buckets from the requested 2026-06-23 Parking/PUDO materialization root while preserving train weight `0.06`.
+  - Added config validation and test coverage for the reverse-UnPUDO variant.
+  - Verified the deploy-wrapper EOR threshold, corrected interleave polarity, hazard-light, and gear-latch fixes were present.
+  - Committed and pushed `3b89565e6c53`, launched P1 100K-step training as `moccasin-impartial-koala-189854`, and observed W&B `trainer/global_step=1150` while running.
+  - Sent the pass-1000 Slack update to Boris and created the Parking/PUDO Notion model-card row for `moccasin-impartial-koala (not interleaved)`.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-reverse-unpudo-train|2026-07-07 Parking Reverse-UnPUDO Train]]
+
 ## 2026-07-07 - Parrot Train Variant Plan
 
 - Topic: Capture planned train variants from `parrot-turquoise-earnest` branch.
@@ -3273,3 +3325,19 @@
   - Added a config regression assertion and verified the split-out parking config test locally.
   - Training dispatch and monitoring are in progress.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-unpudo-gear-change-training|2026-07-07 Parking No UnPUDO Gear-Change Training]]
+
+## 2026-07-07 - Parking No Park Mode Training
+
+- Topic: Start Parking/PUDO Variant 4 training with model-facing parking mode disabled.
+- Labels: parking, pudo, training, datamodule, deployment-wrapper.
+- Branch: `boris/parking-train-no-park-mode`.
+- PR: n/a.
+- Change type: Code change, training job submission, monitoring, Notion update.
+- Areas: `wayve/ai/si/datamodules`, `wayve/ai/zoo/data`, `wayve/ai/lib/data/pipes`, `wayve/ai/zoo/deployment`, Surfboard, W&B.
+- Changes:
+  - Created an isolated worktree from `d3a297cd99516999980706bb0a6d1f4e39282ab9`.
+  - Added a dedicated `PARKING_ROUTE_SHORTENING_MODE` key so route shortening remains active while model-facing `PARKING_MODE` is false.
+  - Disabled end-of-route parking-mode switching by default in `ParkingDeploymentWrapperImpl` for this variant while preserving route shortening and EOR hazard/gear behavior.
+  - Added focused datamodule, deployment-wrapper, and release-config regression coverage.
+  - Submitted Surfboard job `189865` / `thriving-lime-grouse`, monitored W&B past 1000 steps, notified Boris in Slack, and created the Notion model-card row.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-park-mode-training|2026-07-07 Parking No Park Mode Training]]

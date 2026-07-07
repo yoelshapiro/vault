@@ -31,4 +31,15 @@
 
 ## Training
 
-- Status: pending commit/push and dispatch.
+- Status: dispatched and passed the requested 1000-step gate.
+- Branch pushed: `origin/boris/parking-train-no-unpudo-gear-change`
+- Commit: `e09ae0cd885e40f9a2a8fa45bac99afeb5b2b708`
+- Session tag: `unpdogc0`
+- Surfboard job: `189848`
+- Session id: `session_2026_07_07_19_24_31_unpdogc0`
+- Nickname: `cyan-wallaby-scholarly`
+- W&B: <https://wandb.ai/wayve-ai/parking_bc/runs/session_2026_07_07_19_24_31_unpdogc0>
+- Datadog: <https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=cyan-wallaby-scholarly-189848%2A&from_ts=1782848121274&to_ts=1783452921274&live=false>
+- Observed W&B state: `running`, `trainer/global_step=1086`, `trainer/samples_seen=69504`.
+- Slack: sent pass-1000 DM to Boris.
+- Notion: created Parking/PUDO model-card row `cyan-wallaby-scholarly (not interleaved)`.
