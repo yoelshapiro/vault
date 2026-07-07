@@ -422,9 +422,33 @@
               "icon": "excalidraw-icon",
               "title": "Drawing 2026-07-07 10.00.23.excalidraw"
             }
+          },
+          {
+            "id": "721d72beb79ec2cb",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Untitled.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Untitled"
+            }
           }
         ],
-        "currentTab": 23
+        "currentTab": 24
       }
     ],
     "direction": "vertical"
@@ -599,10 +623,11 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "fc6fc3a2fef8f3d8",
+  "active": "721d72beb79ec2cb",
   "lastOpenFiles": [
-    "newsletters/newsletter_parking-stopping-mode-dilc.md",
     "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
+    "Untitled.md",
+    "newsletters/newsletter_parking-stopping-mode-dilc.md",
     "agent_tasks/2026/07/Week-27/2026-07-03-denis-controller-accelerate-from-stopped-frog-eor.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-bazel-cache-cleanup.md",
     "agent_tasks/2026/07/Week-27/2026-07-02-frog-eor-fresh-rawgear-1k-monitor.md",
@@ -630,7 +655,6 @@
     "projects/pudo-parking-py-critique-2026-06-14.md",
     "agent_tasks/2026/06/Week-5/2026-06-30-safe-unsafe-hari-folder-overwrite-script.md",
     "html_summaries/pudo-spider.html",
-    "agent_tasks/2026/06/Week-5/2026-06-30-accelerate-from-stopped-flyte-three-models.md",
     "agent_tasks/2026/06/Week-5",
     "html_summaries/parking-vs-pudo-generic-sampler.html",
     "agent_tasks/2026/06/Week-4",
