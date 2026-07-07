@@ -3306,3 +3306,19 @@
   - Added a config regression assertion and verified the split-out parking config test locally.
   - Training dispatch and monitoring are in progress.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-unpudo-gear-change-training|2026-07-07 Parking No UnPUDO Gear-Change Training]]
+
+## 2026-07-07 - Parking No Park Mode Training
+
+- Topic: Start Parking/PUDO Variant 4 training with model-facing parking mode disabled.
+- Labels: parking, pudo, training, datamodule, deployment-wrapper.
+- Branch: `boris/parking-train-no-park-mode`.
+- PR: n/a.
+- Change type: Code change, training job submission, monitoring, Notion update.
+- Areas: `wayve/ai/si/datamodules`, `wayve/ai/zoo/data`, `wayve/ai/lib/data/pipes`, `wayve/ai/zoo/deployment`, Surfboard, W&B.
+- Changes:
+  - Created an isolated worktree from `d3a297cd99516999980706bb0a6d1f4e39282ab9`.
+  - Added a dedicated `PARKING_ROUTE_SHORTENING_MODE` key so route shortening remains active while model-facing `PARKING_MODE` is false.
+  - Disabled end-of-route parking-mode switching by default in `ParkingDeploymentWrapperImpl` for this variant while preserving route shortening and EOR hazard/gear behavior.
+  - Added focused datamodule, deployment-wrapper, and release-config regression coverage.
+  - Submitted Surfboard job `189865` / `thriving-lime-grouse`, monitored W&B past 1000 steps, notified Boris in Slack, and created the Notion model-card row.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-park-mode-training|2026-07-07 Parking No Park Mode Training]]
