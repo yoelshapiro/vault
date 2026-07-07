@@ -49,4 +49,7 @@ Variant 3 separates model-facing parking mode from route-shortening parking mode
 
 ## Cleanup
 
-- Bazel output base cleanup: pending.
+- Bazel output base: `/workspace/.cache/bazel/e9498e7cde03652993798c17005b513e`
+- Initial size: `73G`
+- Process check: no non-check process referenced the output base after `bazel shutdown`.
+- Cleanup status: removed. The first `rm -rf` hit permission-denied files inside this output base, then a scoped `chmod -R u+rwX` on this output base followed by `rm -rf` succeeded.
