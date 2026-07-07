@@ -1,5 +1,18 @@
 # Agents Change Log
 
+## 2026-07-07 - Parrot Train Variant Plan
+
+- Topic: Capture planned train variants from `parrot-turquoise-earnest` branch.
+- Labels: parking, pudo, training, ablation-plan, route-shortening.
+- Branch: `origin/boris/parking-frog-eor-fresh-rawgear@c51b5baa`.
+- PR: none.
+- Change type: Planning note.
+- Areas: Parking/PUDO training config, parking datamodule, route shortening, deployment wrapper.
+- Changes:
+  - Planned four separate train branches for DC UnPUDO gear-change removal, reverse UnPUDO replacement, unparking-only parking-mode input, and no parking-mode input.
+  - Captured bucket weight changes and the need for `PARKING_ROUTE_SHORTENING_MODE` to separate model input semantics from route-shortening semantics.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parrot-train-variant-plan|2026-07-07 Parrot Train Variant Plan]]
+
 ## 2026-07-07 - Parrot EOR Interleave Redeploy
 
 - Topic: Redeploy `parrot-turquoise-earnest` with fixed EOR interleave polarity and hazard latch gating.
