@@ -29,3 +29,28 @@ bazel test //wayve/ai/zoo/deployment:test_deployment
 ```
 
 Result: passed.
+
+## Parrot Redeploy
+
+- Source model: `parrot-turquoise-earnest`
+- Source session: `session_2026_07_02_22_18_33_si_parking_bc_train_release_2026_5_21_frog-eor-raw`
+- Redeploy branch: `boris/parking-frog-eor-fresh-rawgear`
+- Redeploy commit: `c51b5baa241d`
+- Deployed session: `session_2026_07_02_22_18_33_si_parking_bc_train_release_2026_5_21_frog-eor-raw__parrot-turquoise-earnest_interleave_control_v2`
+- Deployed nickname: `flourishing-cormorant-amber`
+- Console: `https://console.sso.wayve.ai/model/session_2026_07_02_22_18_33_si_parking_bc_train_release_2026_5_21_frog-eor-raw__parrot-turquoise-earnest_interleave_control_v2`
+- Checkpoint: 100000 steps, checkpoint hash `094636662f6f50308bb6e83482c2aeae`
+- Gen2 artefact: `b6864e4b-8b17-4f8c-b7f1-ac5e384224f5`
+
+Redeploy branch changes:
+
+- Applied the same interleave-control polarity fix to the training branch used for deployment.
+- Gated forced hazard indicators on the end-of-route gear latch being enabled and producing Park.
+- Kept deployment with `--enable_interleave_control --interleave_control_group parking`.
+
+Deploy verification:
+
+- Exported `policy_io_config.yml` contains `interleave_control`, `policy_gear_position`, and `policy_indicator_weights`.
+- Exported `gen2_model_inference_config.json` has radar features `X/Y/Z/range_rate/SNR` and `points_per_scan=800`.
+- Upload completed successfully. The deploy script emitted a non-fatal ONNX artefact upload warning because ONNX export was disabled.
+- Console model note was not added because the local Console auth cookie redirected to OneLogin.

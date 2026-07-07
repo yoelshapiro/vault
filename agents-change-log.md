@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-07 - Parrot EOR Interleave Redeploy
+
+- Topic: Redeploy `parrot-turquoise-earnest` with fixed EOR interleave polarity and hazard latch gating.
+- Labels: parking, pudo, deployment, interleave-control, model-catalogue.
+- Branch: `boris/parking-frog-eor-fresh-rawgear`.
+- PR: none.
+- Change type: Code change, deployment.
+- Areas: `wayve/ai/zoo/deployment/deployment_wrapper.py`; deployment session `flourishing-cormorant-amber`.
+- Changes:
+  - Pushed redeploy commit `c51b5baa241d` to `origin/boris/parking-frog-eor-fresh-rawgear`.
+  - Deployed source `parrot-turquoise-earnest` checkpoint 100000 with suffix `__parrot-turquoise-earnest_interleave_control_v2`.
+  - Produced deployed nickname `flourishing-cormorant-amber`, gen2 artefact `b6864e4b-8b17-4f8c-b7f1-ac5e384224f5`.
+  - Verified exported config contains `interleave_control`, `policy_gear_position`, `policy_indicator_weights`, radar X/Y/Z/range-rate/SNR, and `points_per_scan=800`.
+  - Console note write was blocked by expired Console auth cookie.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-si-interleave-control-polarity-fix|2026-07-07 SI Interleave Control Polarity Fix]]
+
 ## 2026-07-07 - SI Interleave Control Polarity Fix
 
 - Topic: Fix SI group interleave-control branch so driving emits interleave when near EOR or not in Drive.
