@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-07 - Parking Reverse-UnPUDO Train
+
+- Topic: Launch reverse-UnPUDO Parking/PUDO BC training variant and monitor through the 1K-step gate.
+- Labels: parking, pudo, training, reverse-unpudo, surfboard, wandb, notion, slack.
+- Branch: `boris/parking-train-reverse-unpudo`.
+- PR: none.
+- Change type: Code change, training submission, monitoring.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/test/configs/test_configs_utils.py`; Surfboard job `189854`.
+- Changes:
+  - Replaced `dc_unpudo_gear_change` buckets with five `dc_unpudo_reverse` buckets from the requested 2026-06-23 Parking/PUDO materialization root while preserving train weight `0.06`.
+  - Added config validation and test coverage for the reverse-UnPUDO variant.
+  - Verified the deploy-wrapper EOR threshold, corrected interleave polarity, hazard-light, and gear-latch fixes were present.
+  - Committed and pushed `3b89565e6c53`, launched P1 100K-step training as `moccasin-impartial-koala-189854`, and observed W&B `trainer/global_step=1150` while running.
+  - Sent the pass-1000 Slack update to Boris and created the Parking/PUDO Notion model-card row for `moccasin-impartial-koala (not interleaved)`.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-reverse-unpudo-train|2026-07-07 Parking Reverse-UnPUDO Train]]
+
 ## 2026-07-07 - Parrot Train Variant Plan
 
 - Topic: Capture planned train variants from `parrot-turquoise-earnest` branch.
