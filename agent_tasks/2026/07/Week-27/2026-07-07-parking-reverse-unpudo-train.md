@@ -60,4 +60,9 @@ bazel run //wayve/ai/si/cli:cli -- \
 
 ## Follow-Up
 
-- Clean the Bazel output base for this worktree after final verification.
+- Bazel cache cleanup completed after final verification.
+  - Output base: `/workspace/.cache/bazel/dd9e4acb3ee41551a2d97056409b60b7`
+  - Pre-cleanup size: `72G`
+  - Process check: no process referenced the exact output base.
+  - Result: removed.
+  - `/workspace` after cleanup: `804G` used, `220G` available, `79%`.
