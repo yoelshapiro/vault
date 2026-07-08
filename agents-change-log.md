@@ -3363,3 +3363,18 @@
   - Submitted Surfboard job `189865` / `thriving-lime-grouse`, monitored W&B past 1000 steps, then canceled it after finding checkpoint ingestion missed parking interleave control / group parking due `use_parking_mode=False` coupling.
   - Marked the Notion model-card row as `Canceled`; follow-up is to decouple model-facing parking-mode input from parking deployment/interleave metadata before retraining.
 - Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-park-mode-training|2026-07-07 Parking No Park Mode Training]]
+
+## 2026-07-08 - Denis Controller Accelerate From Stopped Eval
+
+- Topic: Run Parking/PUDO accelerate-from-stopped shadow evaluations with Denis's start/stop-threshold controller.
+- Labels: parking, pudo, evaluation, flyte, databricks.
+- Branch: `origin/denis/pudo-start-stop-threshold@73ff920e58d9ff9deb6e125ff1559c7d02ee1140`.
+- PR: n/a.
+- Change type: Evaluation run, monitoring, result query.
+- Areas: `wayve/services/av_test_pipeline/evaluation_methods/accelerate_from_stopped/timestamp`, Flyte, Databricks.
+- Changes:
+  - Reused registered workflow version `accelerate-from-stopped-timestamp-shadow@borisindel-tmp-build-382674be4fb7-73ff920e58d9ff9deb6e125ff1559c7d02ee1140_py0ud`.
+  - Ran scenario collection version `5700` for `cyan-wallaby-scholarly@10`, `moccasin-impartial-koala@9`, and `fierce-opossum-tomato@9` with `--skip-missing-inference`.
+  - Submitted three Flyte batches per model, verified all nine executions reached `end-node - SUCCEEDED`, and queried the materialized Delta outputs.
+  - Recorded aggregate all-available and common-segment pass rates plus output paths.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-08-denis-controller-accelerate-from-stopped-eval|2026-07-08 Denis Controller Accelerate From Stopped Eval]]
