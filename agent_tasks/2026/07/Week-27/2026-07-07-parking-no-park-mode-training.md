@@ -77,8 +77,9 @@
   - Nickname: `amaranth-timely-gerbil`
   - W&B: <https://wandb.ai/wayve-ai/parking/runs/session_2026_07_08_00_15_00_nopmfix2>
   - Datadog: <https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=amaranth-timely-gerbil-190005%2A&from_ts=1782864901264&to_ts=1783469701264&live=false>
-  - Observed W&B state at `2026-07-08T00:28:17Z`: `running`, `trainer/global_step=31`, `trainer/train_step=31`.
-  - Slack: Boris was notified about the initial fix/relaunch, the `189988` failure, the follow-up fix/relaunch, the long-tag cancellation, and the active short-tag replacement.
+  - Observed W&B state at `2026-07-08T00:38:19Z`: `running`, `trainer/global_step=1525`, `trainer/train_step=1525`.
+  - Slack: Boris was notified about the initial fix/relaunch, the `189988` failure, the follow-up fix/relaunch, the long-tag cancellation, the active short-tag replacement, and the pass-1000 gate.
+  - Notion: created Parking/PUDO model-card row `amaranth-timely-gerbil (not interleaved)` at <https://app.notion.com/p/39703da5d69a81558ab4d3ad76d08aa1>.
 
 ## Operational Notes
 
