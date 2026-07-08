@@ -48,6 +48,38 @@
 - Cancellation reason: the no-park-mode variant disabled `use_parking_mode`, which also gated checkpoint ingestion/deployment metadata for parking interleave control and `interleave_group="parking"`.
 - Follow-up needed before retraining: decouple model-facing parking-mode input from parking deployment wrapper/interleave metadata.
 
+## 2026-07-08 Fix and Relaunch
+
+- Fixed the follow-up issue by decoupling model-facing `use_parking_mode=False` from parking deployment/export behavior.
+- Commits pushed to `origin/boris/parking-train-no-park-mode`:
+  - `a8e4b2cfaece` - `fix: decouple parking deployment from park mode input`
+  - `364bc2d1388b` - `fix: add parking deployment controls for no-park export`
+- Kept `use_parking_mode=False` for training/model input and kept route shortening on `DataKeys.PARKING_ROUTE_SHORTENING_MODE`.
+- Added `enable_parking_deployment=True` for the variant so export/deployment still uses `ParkingDeploymentWrapperImpl`, interleave control, `interleave_control_group="parking"`, and `DeploymentConfig.interleave_group="parking"`.
+- Added parking deployment controls (`INITIATE_AUTO_PARKING`, `PARKING_DIRECTION`, `ENABLE_SHIFT_BY_WIRE`) to no-park export paths so the deployment wrapper has the required runtime inputs without re-enabling model-facing `PARKING_MODE`.
+- Preserved the EOR/hazard fixes: enter threshold `3.75e4`, exit threshold `4.5e4`, corrected interleave polarity, gear latch and hazard defaults, and hazards only forced when gear is latched to Park.
+
+### 2026-07-08 Verification
+
+- Passed focused training/deployment regressions:
+  - `bazel test --override_repository=_main~_repo_rules~WayveMeta=/tmp/fake_wayvemeta //wayve/ai/si:py_test_test_training_core //wayve/ai/si:py_test_test_deployment_core --test_arg=--no-cov --test_arg=-k --test_arg='no_park_mode_training_can_export_as_parking_deployment or parking_deployment_config_sets_interleave_group_and_driving_parameters or prepare_deployment_model_can_enable_parking_deployment_without_parking_mode_input or prepare_deployment_model_with_parking_wrapper'`
+- Passed focused config regression:
+  - `bazel test --override_repository=_main~_repo_rules~WayveMeta=/tmp/fake_wayvemeta //wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves --test_arg=-k --test_arg=parking_release_2026_5_21_config_resolves`
+- `git diff --check` passed before the follow-up commit.
+
+### 2026-07-08 Relaunch Ledger
+
+- `189988` / `session_2026_07_07_23_43_35_nopmfix0` failed during train-start export compile with `KeyError: 'enable_shift_by_wire'`; fixed by adding deployment control keys and pushed `364bc2d1388b`.
+- `189992` / `session_2026_07_08_00_06_25_si_parking_bc_train_release_2026_5_21_nopmfix1` was canceled with reason `Incorrect configuration` because the generated long session tag was accepted accidentally.
+- Active replacement:
+  - Surfboard job: `190005`
+  - Session id: `session_2026_07_08_00_15_00_nopmfix2`
+  - Nickname: `amaranth-timely-gerbil`
+  - W&B: <https://wandb.ai/wayve-ai/parking/runs/session_2026_07_08_00_15_00_nopmfix2>
+  - Datadog: <https://app.datadoghq.eu/dashboard/6eg-vtz-9d5?fromUser=true&refresh_mode=paused&tpl_var_job_name=amaranth-timely-gerbil-190005%2A&from_ts=1782864901264&to_ts=1783469701264&live=false>
+  - Observed W&B state at `2026-07-08T00:28:17Z`: `running`, `trainer/global_step=31`, `trainer/train_step=31`.
+  - Slack: Boris was notified about the initial fix/relaunch, the `189988` failure, the follow-up fix/relaunch, the long-tag cancellation, and the active short-tag replacement.
+
 ## Operational Notes
 
 - Initial image publish failed before dispatch due the worktree Bazel output base filling `/workspace`.
