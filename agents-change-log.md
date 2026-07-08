@@ -1,5 +1,24 @@
 # Agents Change Log
 
+## 2026-07-08 - Parking No-Park-Mode Train Fix
+
+- Topic: Fix Variant 4 no-park-mode Parking/PUDO BC training so model-facing `PARKING_MODE` stays disabled while parking deployment/export remains enabled, then relaunch and monitor through the 1K-step gate.
+- Labels: parking, pudo, training, no-park-mode, route-shortening, deployment-wrapper, interleave-control, surfboard, wandb, notion, slack, bazel.
+- Branch: `boris/parking-train-no-park-mode`.
+- PR: none.
+- Change type: Code change, tests, training submission, monitoring, documentation, cleanup.
+- Areas: `wayve/ai/si/models/training.py`; `wayve/ai/si/models/deployment.py`; `wayve/ai/si/test/models/test_training.py`; `wayve/ai/si/test/models/test_deployment.py`; Surfboard jobs `189988`, `189992`, `190005`; Bazel output base `/workspace/.cache/bazel/fe94e528b23300c19c99d59bf4cc0196`.
+- Changes:
+  - Added an `enable_parking_deployment` path so `use_parking_mode=False` only disables model-facing parking-mode input, not parking deployment/export metadata.
+  - Preserved route shortening through `DataKeys.PARKING_ROUTE_SHORTENING_MODE` and kept parking export on `ParkingDeploymentWrapperImpl` with interleave control and group `parking`.
+  - Added parking deployment controls for no-park export so the deployment wrapper receives `initiate_auto_parking`, `parking_direction`, and `enable_shift_by_wire` without re-enabling model-facing `PARKING_MODE`.
+  - Preserved the end-of-route thresholds, corrected interleave polarity, hazard-light default, gear-latch default, and hazard gating on actual Park latch.
+  - Committed and pushed `a8e4b2cfaece` and `364bc2d1388b`; focused training/deployment/config regressions passed.
+  - Debugged failed relaunch `189988` (`KeyError: 'enable_shift_by_wire'`), canceled long-tag relaunch `189992`, and relaunched short-tag job `190005`.
+  - Observed W&B `trainer/global_step=1525` while Surfboard/W&B reported running, sent Boris the failure/fix/relaunch and pass-1000 Slack updates, and created the Parking/PUDO Notion model-card row for `amaranth-timely-gerbil (not interleaved)`.
+  - Removed only this worktree's Bazel output base after confirming no process referenced it.
+- Task note: [[agent_tasks/2026/07/Week-27/2026-07-07-parking-no-park-mode-training|2026-07-07 Parking No Park Mode Training]]
+
 ## 2026-07-07 - Parking Unparking-Mode Input Train
 
 - Topic: Launch Variant 3 Parking/PUDO BC training with model-facing parking mode sourced from `unparking_mode`, then monitor through the 1K-step gate.

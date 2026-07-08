@@ -84,4 +84,9 @@
 ## Operational Notes
 
 - Initial image publish failed before dispatch due the worktree Bazel output base filling `/workspace`.
-- Cleaned only this worktree's output base, relaunched successfully, and will remove the recreated worktree output base after final monitoring/documentation.
+- Cleaned only this worktree's original output base, relaunched successfully, and removed the recreated worktree output base after final monitoring/documentation.
+- Final Bazel cleanup:
+  - `bazel info output_base`: `/workspace/.cache/bazel/fe94e528b23300c19c99d59bf4cc0196`
+  - Confirmed no process referenced that exact output base after `bazel shutdown`.
+  - Initial removal hit permission-denied generated files; fixed permissions only inside that output base with `chmod -R u+rwX` and retried.
+  - Final status: removed `/workspace/.cache/bazel/fe94e528b23300c19c99d59bf4cc0196`.
