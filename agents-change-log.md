@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-09 - Copy Classifier Predictions Table
+
+- Topic: Copy Tom Boehling's classifier studio UnPUDO safety predictions table into the parking Hive metastore.
+- Labels: databricks, parking, classifier, unpudo, hive-metastore.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: none.
+- Change type: Databricks table copy / verification.
+- Areas: `prod_user.users__tomboehling.classifier_studio_unpudo_safety_predictions`; `hive_metastore.parking.safe_unsafe_classifier_predictions`; Databricks run `385190844997028`; task run `973781485320106`.
+- Changes:
+  - Validated the source table existed with `621542` rows and confirmed the destination table did not exist before creation.
+  - Observed SQL warehouse CTAS blockers: `[DBFS_DISABLED] Public DBFS root is disabled` and `[INSUFFICIENT_PERMISSIONS] User does not have permission SELECT on any file`.
+  - Submitted a one-off notebook on cluster `0708-170632-ven4cr6q` to create the destination Delta table at `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/safe_unsafe_classifier_predictions`.
+  - Verified source and destination row counts both equal `621542`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-09-copy-classifier-predictions-table|2026-07-09 Copy Classifier Predictions Table]]
+
 ## 2026-07-08 - Parking No-Park-Mode Train Fix
 
 - Topic: Fix Variant 4 no-park-mode Parking/PUDO BC training so model-facing `PARKING_MODE` stays disabled while parking deployment/export remains enabled, then relaunch and monitor through the 1K-step gate.
