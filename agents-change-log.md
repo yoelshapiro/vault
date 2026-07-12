@@ -13,7 +13,8 @@
   - Added `_RunSignals` timestamp-index helpers and reused them in intervention filters plus timestamp-search call sites in `signals.py`.
   - Split pre/post intervention window marking and frame-existence helpers.
   - Centralised repeated intervention window selection logic and moved the empty gear-change check before the loop.
-  - Left brake-override validation and pre-window automation behavior unchanged.
+  - Simplified brake-override side-table parsing through `_as_list`, keeping only missing-column and mismatched-length checks.
+  - Left pre-window automation behavior unchanged.
   - Verified with `py_compile`, ruff check/format check, and `bazel test //wayve/ai/services/sampling:test_datasets`.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-intervention-filters-pr-comments|2026-07-12 Intervention Filters PR Comments]]
 

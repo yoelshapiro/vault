@@ -14,7 +14,7 @@ Addressed selected review comments in Parking/PUDO intervention filters:
 - Split pre/post intervention window marking and frame-existence helpers.
 - Centralised the repeated `anchor_only` versus full-window selection block.
 - Moved the empty `gear_change_indices` check before the intervention loop.
-- Left brake-override side-table defensive checks unchanged.
+- Simplified brake-override side-table parsing through `_as_list`, keeping only missing-column and mismatched-length checks.
 - Did not change pre-window automation behavior.
 
 ## Verification
