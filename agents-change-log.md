@@ -12,7 +12,7 @@
   - Added shared metadata column constants for event-row printing and boolean filter-column detection, derived from sampling `DEFAULT_COLUMNS`.
   - Reused `DATASET_SPLIT_COL_NAME` when parsing local parquet split directories.
   - Extracted materialized masks partition path construction into local helpers and derived it from the same `DEFAULT_PARTITION` column list used by the Ray masks writer.
-  - Added a clear empty-result message when materialized masks query filters return no rows.
+  - Added a clear empty-result message when materialized masks query filters return no rows, including the concrete partition path and applied filters.
   - Verified with `bazel test //wayve/ai/services/sampling:test_debug_sampling`.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-debug-sampling-pr-comments|2026-07-12 Debug Sampling PR Comments]]
 
