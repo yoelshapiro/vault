@@ -9,7 +9,8 @@
 - Change type: Code cleanup, PR comment follow-up.
 - Areas: `wayve/ai/services/sampling/datasets/debug_sampling.py`.
 - Changes:
-  - Added shared metadata column constants for event-row printing and boolean filter-column detection.
+  - Added shared metadata column constants for event-row printing and boolean filter-column detection, derived from sampling `DEFAULT_COLUMNS`.
+  - Reused `DATASET_SPLIT_COL_NAME` when parsing local parquet split directories.
   - Extracted materialized masks partition path construction into local helpers and derived it from the same `DEFAULT_PARTITION` column list used by the Ray masks writer.
   - Added a clear empty-result message when materialized masks query filters return no rows.
   - Verified with `bazel test //wayve/ai/services/sampling:test_debug_sampling`.
