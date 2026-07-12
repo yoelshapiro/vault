@@ -7,12 +7,14 @@
 - Branch: `boris/pudo_generic_materialization`.
 - PR: none.
 - Change type: Code constant update, Flyte execution.
-- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/events/dataset.py`; Flyte execution `acgjrnc5dtv8rzwg9665`.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/events/dataset.py`; sampling image `sha256:b883758b7d27945bcf401ec53fede6ecc8da59f7ead76e45dbe33b5402b8fedc`; Flyte execution `afn8fd4kkvhzvhjxlxmx`.
 - Changes:
   - Updated the events dataset constants to `binary_version="3.0.84"` and `end_date="2026-07-12"`.
-  - Ran `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking_pudo/events --job_name parking_pudo_events_20260712_0851_codex --end_date 2026-07-12`.
   - Refreshed ACR credentials after the first attempt failed while listing `wayveacrprodflyte.azurecr.io/sampling` tags.
-  - Submitted production Flyte execution `acgjrnc5dtv8rzwg9665`.
+  - Observed stale-image execution `acgjrnc5dtv8rzwg9665` fail because fallback image `sampling:9bb01c6956b6` predates `parking_pudo/events`.
+  - Published the branch-local sampling image with `make -C wayve/ai/services/sampling publish-test`.
+  - Ran `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking_pudo/events --job_name parking_pudo_events_20260712_0904_codex --end_date 2026-07-12`.
+  - Submitted corrected production Flyte execution `afn8fd4kkvhzvhjxlxmx`, mapped to branch image digest `sha256:b883758b7d27945bcf401ec53fede6ecc8da59f7ead76e45dbe33b5402b8fedc`.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-materialisation|2026-07-12 Parking/PUDO Events Materialisation]]
 
 ## 2026-07-09 - Copy Classifier Predictions Table
