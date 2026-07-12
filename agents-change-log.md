@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-12 - Parking/PUDO Events Materialisation
+
+- Topic: Submit the generic Parking/PUDO events sampling workflow with binary `3.0.84` through `2026-07-12`.
+- Labels: parking, pudo, sampling, flyte, materialisation, events.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: none.
+- Change type: Code constant update, Flyte execution.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/events/dataset.py`; Flyte execution `acgjrnc5dtv8rzwg9665`.
+- Changes:
+  - Updated the events dataset constants to `binary_version="3.0.84"` and `end_date="2026-07-12"`.
+  - Ran `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking_pudo/events --job_name parking_pudo_events_20260712_0851_codex --end_date 2026-07-12`.
+  - Refreshed ACR credentials after the first attempt failed while listing `wayveacrprodflyte.azurecr.io/sampling` tags.
+  - Submitted production Flyte execution `acgjrnc5dtv8rzwg9665`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-materialisation|2026-07-12 Parking/PUDO Events Materialisation]]
+
 ## 2026-07-09 - Copy Classifier Predictions Table
 
 - Topic: Copy Tom Boehling's classifier studio UnPUDO safety predictions table into the parking Hive metastore.
