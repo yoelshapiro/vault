@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-12 - Debug Sampling PR Comments
+
+- Topic: Address `debug_sampling.py` review feedback on the Parking/PUDO generic materialisation PR.
+- Labels: parking, pudo, sampling, debug-tool, pr-review.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Code cleanup, PR comment follow-up.
+- Areas: `wayve/ai/services/sampling/datasets/debug_sampling.py`.
+- Changes:
+  - Added shared metadata column constants for event-row printing and boolean filter-column detection.
+  - Extracted materialized masks partition path candidates into local helpers while preserving both supported path layouts.
+  - Added a clear empty-result message when materialized masks query filters return no rows.
+  - Verified with `bazel test //wayve/ai/services/sampling:test_debug_sampling`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-debug-sampling-pr-comments|2026-07-12 Debug Sampling PR Comments]]
+
 ## 2026-07-12 - Parking/PUDO Events Materialisation
 
 - Topic: Submit the generic Parking/PUDO events sampling workflow with binary `3.0.84` through `2026-07-12`.
