@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-12 - Parking/PUDO PR Rebase
+
+- Topic: Rebase the Parking/PUDO generic materialisation PR onto `main`.
+- Labels: parking, pudo, sampling, rebase, pr.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Git rebase, conflict resolution.
+- Areas: `wayve/ai/services/sampling/BUILD`; `wayve/ai/services/sampling/common/api/dataset.py`; generated release metadata.
+- Changes:
+  - Rebased the branch onto `origin/main`.
+  - Resolved additive dataset API conflict by keeping both upstream `include_source_bucket` and PR `extra_output_columns`.
+  - Kept parking PUDO release metadata while dropping stale `bc/split_alpha2_alpha3_hash_merged` references from old generated version bumps.
+  - Kept `main`'s `.codecov.yml` deletion.
+  - Verified no conflict markers and no stale codecov/hash-merged paths in the rebased PR diff.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-pr-rebase|2026-07-12 Parking/PUDO PR Rebase]]
+
 ## 2026-07-12 - Intervention Filters PR Comments
 
 - Topic: Address Parking/PUDO intervention filter review feedback.
