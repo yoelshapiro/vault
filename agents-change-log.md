@@ -17,16 +17,19 @@
 
 ## 2026-07-12 - Parking/PUDO Events No Binary Index Run
 
-- Topic: Submit `parking_pudo/events` sampling with the binary success-index table disabled.
+- Topic: Submit and debug `parking_pudo/events` sampling with the binary success-index table disabled.
 - Labels: parking, pudo, sampling, flyte, events.
 - Branch: `boris/pudo_generic_materialization`.
 - PR: `#117075`.
-- Change type: Flyte execution, image publish.
-- Areas: sampling image `sha256:5c2225f2786e33ae23cd451b2363ca5cbddd1eb378eb894ff9e08ac7660a08b4`; Flyte execution `ac7zzw4ftbwk6czgz72p`.
+- Change type: Flyte execution, image publish, code fix, tests.
+- Areas: `wayve/core/data/vehicles.py`; `wayve/core/data/test/test_vehicles.py`; `wayve/ai/services/sampling/test/datasets/parking_pudo/test_parking_pudo_filters.py`; Flyte executions `ac7zzw4ftbwk6czgz72p`, `apcv9qkl7zvhwnbcgnrx`.
 - Changes:
-  - Published the current sampling image with `make -C wayve/ai/services/sampling publish-test`.
+  - Published sampling image `sha256:5c2225f2786e33ae23cd451b2363ca5cbddd1eb378eb894ff9e08ac7660a08b4`.
   - Submitted `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking_pudo/events --job_name parking_pudo_events_20260712_1042_nobin_codex --end_date 2026-07-12 --no_use_binary_success_index_table`.
-  - Verified the Flyte execution reached `RUNNING`.
+  - Debugged failure to `ValueError: Invalid vehicle model string: gen2-maserati-grecale-alpha3` during Parking/PUDO event metadata post-processing.
+  - Added a Gen2 non-Nissan unregistered model fallback in frequency resolution while preserving Nissan typo failures.
+  - Verified focused core and Parking/PUDO regressions, published fixed image `sha256:05fbeccc2dc81cc1a5a8c09c3e1a510a0c68416d7bf1547d42617a054058d48c`, and resubmitted `parking_pudo_events_20260712_1150_nobin_fix_codex`.
+  - Confirmed the resubmitted Flyte execution remained `RUNNING` past the previous failure window.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-no-binary-index-run|2026-07-12 Parking/PUDO Events No Binary Index Run]]
 
 ## 2026-07-12 - Upload Generic Events PR Comments
