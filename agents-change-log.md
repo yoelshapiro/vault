@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-07-12 - Upload Generic Events PR Comments
+
+- Topic: Address review feedback on the Parking/PUDO generic events Databricks upload script and README.
+- Labels: parking, pudo, sampling, databricks, events, pr-review.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Code refactor, docs.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/events/upload_generic_events_to_databricks.py`; `wayve/ai/services/sampling/datasets/parking_pudo/README.md`.
+- Changes:
+  - Refactored the upload file into a runnable Python entrypoint while keeping Databricks widget/env compatibility.
+  - Added CLI arguments and explicit `SparkSession` plumbing for script-style execution.
+  - Replaced string suffix path handling with URI parsing for materialised rows paths.
+  - Simplified the README dataset overview and changed the publish command to canonical `make -C ... publish-test` order.
+  - Updated the upload docs to show script-style Databricks job submission.
+  - Verified with `py_compile`, repo ruff check/format check, and a stubbed URI parser check.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-upload-generic-events-pr-comments|2026-07-12 Upload Generic Events PR Comments]]
+
 ## 2026-07-12 - Event Table PR Comments
 
 - Topic: Address `event_table.py` review feedback on Parking/PUDO generic event labeling.
