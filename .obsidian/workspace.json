@@ -625,6 +625,7 @@
   },
   "active": "721d72beb79ec2cb",
   "lastOpenFiles": [
+    "agent_tasks/2026/07/Week-28/2026-07-12-debug-sampling-pr-comments.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-materialisation.md",
     "agent_tasks/2026/07/Week-28/2026-07-09-copy-classifier-predictions-table.md",
     "agent_tasks/2026/07/Week-28/2026-07-08-denis-controller-accelerate-from-stopped-eval.md",
@@ -652,7 +653,6 @@
     "projects/generic-materialisation-parking-pudo-migration.md",
     "projects.md",
     "agents-change-log.md",
-    "llm_wiki/index.md",
     "agent_tasks/2026/07/Week-27",
     "agent_tasks/2026/07",
     "html_summaries/pudo-spider.html",
