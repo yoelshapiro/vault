@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-12 - Drop Vehicle Frequency Fallback
+
+- Topic: Remove unnecessary core vehicle changes from the Parking/PUDO PR.
+- Labels: parking, pudo, sampling, vehicles, pr-cleanup.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: PR cleanup, tests.
+- Areas: `wayve/core/data/vehicles.py`; `wayve/core/data/test/test_vehicles.py`.
+- Changes:
+  - Removed the unregistered Gen2 vehicle-model frequency fallback and its regression test from the PR.
+  - Relied on the rebased `main` registration of `gen2-maserati-grecale-alpha3` instead.
+  - Verified with focused core data vehicle tests.
+  - Pushed the cleanup commit to the PR branch.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-drop-vehicle-frequency-fallback|2026-07-12 Drop Vehicle Frequency Fallback]]
+
 ## 2026-07-12 - Parking/PUDO PR Rebase
 
 - Topic: Rebase the Parking/PUDO generic materialisation PR onto `main`.
