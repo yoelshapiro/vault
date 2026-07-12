@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-12 - PUDO Baseline PR Comments
+
+- Topic: Address review feedback on the Parking/PUDO baseline PR.
+- Labels: parking, pudo, baseline, deployment-wrapper, route-shortening, pr-review.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: Code cleanup, behavior fix, tests.
+- Areas: `wayve/ai/lib/data/pipes/routes.py`; `wayve/ai/lib/test/data/pipes/test_generate_route_map.py`; `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/datamodules/parking.py`; `wayve/ai/zoo/deployment/deployment_wrapper.py`; parking/deployment tests.
+- Changes:
+  - Preserved per-sample end-of-route masks for hazard forcing and replaced raw `DrivePositionV2` integers with enum-derived constants.
+  - Added route-shortening helper regressions and strengthened the planned-route shortening test to inspect renderer inputs.
+  - Made `lookahead_sec=30.0` explicit for the Parking BC config.
+  - Restored the `PATH_VALID` gate for parking goal-distance clamping and added an all-invalid-path regression.
+  - Verified focused pytest selections, ruff/flake8 wrappers, and ty wrappers; refreshed ACR auth after an initial `401 Unauthorized`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-pudo-baseline-pr-comments|2026-07-12 PUDO Baseline PR Comments]]
+
 ## 2026-07-12 - Drop Vehicle Frequency Fallback
 
 - Topic: Remove unnecessary core vehicle changes from the Parking/PUDO PR.
