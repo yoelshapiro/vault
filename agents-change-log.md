@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-12 - Parking Best Model Follow-Up
+
+- Topic: Align Parking BC follow-up settings with the best model branch while keeping reverse buckets out.
+- Labels: parking, pudo, baseline, best-model, config, tests.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: Config adjustment, feature flag, tests.
+- Areas: `wayve/ai/si/configs/parking/parking_config.py`; `wayve/ai/si/datamodules/parking.py`; `wayve/ai/si/datamodules/test/test_parking_unit.py`.
+- Changes:
+  - Switched the Parking BC PUDO root to the best-model non-reverse `raw_gear_window_20260617` materialisation while keeping the current non-reverse bucket set.
+  - Set `unparking_gear_augment_prob=0.0`.
+  - Added a default-off flag to opt into main's original standstill gear randomization.
+  - Added unit coverage for the default policy-target-aware path and the opt-in main randomization path.
+  - Verified `git diff --check`; datamodules Bazel runs failed only in unrelated restore tests because a local parquet fixture is corrupted.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-best-model-follow-up|2026-07-12 Parking Best Model Follow-Up]]
+
 ## 2026-07-12 - Parking/PUDO CI Rerun
 
 - Topic: Triage failing CI for Parking/PUDO generic materialisation PR.
