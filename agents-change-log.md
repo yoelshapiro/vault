@@ -10,7 +10,7 @@
 - Areas: `wayve/ai/services/sampling/datasets/debug_sampling.py`.
 - Changes:
   - Added shared metadata column constants for event-row printing and boolean filter-column detection.
-  - Extracted materialized masks partition path candidates into local helpers while preserving both supported path layouts.
+  - Extracted materialized masks partition path construction into local helpers and derived it from the same `DEFAULT_PARTITION` column list used by the Ray masks writer.
   - Added a clear empty-result message when materialized masks query filters return no rows.
   - Verified with `bazel test //wayve/ai/services/sampling:test_debug_sampling`.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-debug-sampling-pr-comments|2026-07-12 Debug Sampling PR Comments]]
