@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-12 - Parking/PUDO Generic Events Databricks Upload
+
+- Topic: Upload the new Parking/PUDO generic events materialisation to Databricks.
+- Labels: parking, pudo, databricks, sampling, events.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Databricks upload, code fix.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/events/upload_generic_events_to_databricks.py`; `hive_metastore.parking.parking_pudo_generic_events`.
+- Changes:
+  - Imported and ran the upload notebook against `parking_pudo_events_20260712_0904_codex__2026-07-12-09-11`.
+  - Fixed the notebook to read bucket parquet leaves with `basePath` so split-level `summary.yaml` files do not break Spark partition inference.
+  - Uploaded `523876` rows to `hive_metastore.parking.parking_pudo_generic_events`.
+  - Verified the table contains exactly one materialization root matching the requested path.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-generic-events-databricks-upload|2026-07-12 Parking/PUDO Generic Events Databricks Upload]]
+
 ## 2026-07-12 - Debug Sampling PR Comments
 
 - Topic: Address `debug_sampling.py` review feedback on the Parking/PUDO generic materialisation PR.
