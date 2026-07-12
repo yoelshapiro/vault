@@ -1,5 +1,19 @@
 # Agents Change Log
 
+## 2026-07-12 - Parking/PUDO Events No Binary Index Run
+
+- Topic: Submit `parking_pudo/events` sampling with the binary success-index table disabled.
+- Labels: parking, pudo, sampling, flyte, events.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Flyte execution, image publish.
+- Areas: sampling image `sha256:5c2225f2786e33ae23cd451b2363ca5cbddd1eb378eb894ff9e08ac7660a08b4`; Flyte execution `ac7zzw4ftbwk6czgz72p`.
+- Changes:
+  - Published the current sampling image with `make -C wayve/ai/services/sampling publish-test`.
+  - Submitted `bazel run //wayve/ai/services/sampling:workflow -- remote run sample --dataset_name parking_pudo/events --job_name parking_pudo_events_20260712_1042_nobin_codex --end_date 2026-07-12 --no_use_binary_success_index_table`.
+  - Verified the Flyte execution reached `RUNNING`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-no-binary-index-run|2026-07-12 Parking/PUDO Events No Binary Index Run]]
+
 ## 2026-07-12 - Upload Generic Events PR Comments
 
 - Topic: Address review feedback on the Parking/PUDO generic events Databricks upload script and README.
