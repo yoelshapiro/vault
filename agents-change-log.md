@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-12 - Buckets Config PR Comments
+
+- Topic: Address repeated constant review feedback in Parking/PUDO bucket definitions.
+- Labels: parking, pudo, sampling, buckets, pr-review.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Code cleanup, tests.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/common.py`; `wayve/ai/services/sampling/datasets/parking_pudo/parking/buckets.py`; `wayve/ai/services/sampling/datasets/parking_pudo/pudo/buckets.py`.
+- Changes:
+  - Added a frozen `ParkingPudoBucketConfig` structure plus parking and PUDO config instances.
+  - Replaced repeated bucket timing and behavior literals with config references across parking and PUDO bucket files.
+  - Kept readable event/window string arguments inline to avoid unnecessary churn.
+  - Verified with `bazel test //wayve/ai/services/sampling:test_datasets`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-buckets-config-pr-comments|2026-07-12 Buckets Config PR Comments]]
+
 ## 2026-07-12 - Parking/PUDO Events No Binary Index Run
 
 - Topic: Submit `parking_pudo/events` sampling with the binary success-index table disabled.
