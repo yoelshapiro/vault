@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-12 - Signals PR Comments
+
+- Topic: Address Parking/PUDO `signals.py` review feedback.
+- Labels: parking, pudo, sampling, signals, pr-review.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Code cleanup, behavior fix, tests.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/signals.py`; `filters.py`; `event_table.py`; bucket config files; Parking/PUDO filter tests.
+- Changes:
+  - Renamed the trip side-table helper to `run_has_trip_events`.
+  - Added start-of-run short gear segment smoothing to use the next stable gear value, with a tolerance for exact-threshold segment duration comparisons.
+  - Moved parking-window lookback into `ParkingPudoBucketConfig` as `park_window_before_sec`.
+  - Added regression coverage and updated affected synthetic fixtures to keep initial approaches above the default smoothing threshold.
+  - Verified with `py_compile`, ruff check/format check, and `bazel test //wayve/ai/services/sampling:test_datasets`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-signals-pr-comments|2026-07-12 Signals PR Comments]]
+
 ## 2026-07-12 - Buckets Config PR Comments
 
 - Topic: Address repeated constant review feedback in Parking/PUDO bucket definitions.
