@@ -52,9 +52,21 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run sample \
 
 - Sampling image digest: `sha256:05fbeccc2dc81cc1a5a8c09c3e1a510a0c68416d7bf1547d42617a054058d48c`
 - Flyte execution: <https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/apcv9qkl7zvhwnbcgnrx>
-- Last checked status: `RUNNING` at `2026-07-12T12:13:23Z`; execution started at `2026-07-12T11:49:47Z`.
+- Final status: `FAILED` after producing the materialised dataset root. The original Grecale model-string crash path was cleared; the dataset write nodes succeeded and emitted:
+  `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_20260712_1150_nobin_fix_codex__2026-07-12-11-55`
+
+## Databricks Upload
+
+- Imported upload notebook to `/Users/boris.indelman@wayve.ai/upload_generic_events_to_databricks_20260712_1150_nobin_fix_codex.py`.
+- First Databricks submission `83103263359524` failed because `spark_python_task` cannot open a workspace SOURCE notebook as a filesystem Python file.
+- Resubmitted as notebook task `228798864810362` / task run `392723027561171`; status `TERMINATED SUCCESS`.
+- Uploaded root:
+  `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/events/dev/parking_pudo_events_20260712_1150_nobin_fix_codex__2026-07-12-11-55/buckets`
+- Target table: `hive_metastore.parking.parking_pudo_generic_events`
+- Target Delta path: `abfss://databricks-users@wayveproddataset.dfs.core.windows.net/parking/parking_pudo_generic_events_20260712_1150_nobin_fix_codex.table`
+- Verification query returned `544757` rows, `root_count=1`, and matching `materialization_root`; `uploaded_at_utc=2026-07-12T12:18:48.141938+00:00`.
 
 ## Notes
 
 - Published the current sampling image first with `make -C wayve/ai/services/sampling publish-test` to avoid stale fallback-image registration.
-- The resubmitted run was still running past the previous failure time window, so the original Grecale model-string crash path appears cleared.
+- The table refresh is complete even though the Flyte execution's later post-processing finished as `FAILED`.

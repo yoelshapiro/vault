@@ -29,7 +29,8 @@
   - Debugged failure to `ValueError: Invalid vehicle model string: gen2-maserati-grecale-alpha3` during Parking/PUDO event metadata post-processing.
   - Added a Gen2 non-Nissan unregistered model fallback in frequency resolution while preserving Nissan typo failures.
   - Verified focused core and Parking/PUDO regressions, published fixed image `sha256:05fbeccc2dc81cc1a5a8c09c3e1a510a0c68416d7bf1547d42617a054058d48c`, and resubmitted `parking_pudo_events_20260712_1150_nobin_fix_codex`.
-  - Confirmed the resubmitted Flyte execution remained `RUNNING` past the previous failure window.
+  - Confirmed the resubmitted Flyte execution produced materialised root `parking_pudo_events_20260712_1150_nobin_fix_codex__2026-07-12-11-55` before later post-processing failed.
+  - Uploaded the new root to `hive_metastore.parking.parking_pudo_generic_events` via Databricks run `228798864810362` and verified `544757` rows from one materialization root.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-no-binary-index-run|2026-07-12 Parking/PUDO Events No Binary Index Run]]
 
 ## 2026-07-12 - Upload Generic Events PR Comments
