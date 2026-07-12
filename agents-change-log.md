@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-07-12 - Event Table PR Comments
+
+- Topic: Address `event_table.py` review feedback on Parking/PUDO generic event labeling.
+- Labels: parking, pudo, sampling, events, pr-review.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: Code fix, tests.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo/event_table.py`; `wayve/ai/services/sampling/test/datasets/parking_pudo/test_parking_pudo_filters.py`.
+- Changes:
+  - Replaced ambiguous park segment locals with `park_gear_*` naming and renamed the departure displacement index variable.
+  - Classified PUDO and UnPUDO from the parked gear segment context, using the full segment for arrival labels and excluding post-park departure context for departure labels.
+  - Matched trip IDs across the same event context span used for trip/hazard metadata.
+  - Added event metadata regressions for late in-segment PUDO evidence and post-park/pre-departure evidence.
+  - Updated stale brake override test fixtures to use compressed start/end timestamp columns.
+  - Verified with `bazel test //wayve/ai/services/sampling:test_datasets`.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-event-table-pr-comments|2026-07-12 Event Table PR Comments]]
+
 ## 2026-07-12 - Parking/PUDO Generic Events Databricks Upload
 
 - Topic: Upload the new Parking/PUDO generic events materialisation to Databricks.
