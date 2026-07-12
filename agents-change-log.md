@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-12 - Parking/PUDO CI Rerun
+
+- Topic: Triage failing CI for Parking/PUDO generic materialisation PR.
+- Labels: parking, pudo, sampling, ci, buildkite.
+- Branch: `boris/pudo_generic_materialization`.
+- PR: `#117075`.
+- Change type: CI triage, local verification, rerun.
+- Areas: Buildkite presubmit; `wayve/ai/services/sampling`.
+- Changes:
+  - Confirmed failing Buildkite build `533713` reported `static-check suite` and `integration-cpu suite` failures.
+  - Could not fetch Buildkite logs because the available token lacks `read_builds` and MCP log tools were unavailable.
+  - Created isolated worktree `/workspace/WayveCode-pr117075` for PR checks.
+  - Reproduced relevant local checks; sampling ruff/type targets and dataset pytest targets passed.
+  - Triggered fresh Buildkite presubmit build `533726` for the current PR head.
+- Task note: [[agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun|2026-07-12 Parking/PUDO CI Rerun]]
+
 ## 2026-07-12 - PUDO Baseline PR Comments
 
 - Topic: Address review feedback on the Parking/PUDO baseline PR.
