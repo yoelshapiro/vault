@@ -3652,3 +3652,18 @@
   - Removed redundant `parking_config is not None` condition after `route_shortening_enabled`.
   - Verified focused deployment-wrapper tests and datamodule type check.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
+
+## 2026-07-20 - Parking/PUDO CI Fixes After Rebase
+
+- Topic: Rebase Parking/PUDO baseline PR and fix branch-owned CI failures.
+- Labels: parking, pudo, ci, rebase, tests.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: Code change, test fixture update, CI fix.
+- Areas: `wayve/ai/zoo/deployment`, `wayve/ai/si/test`, `wayve/ai/lib/test/data/pipes`.
+- Changes:
+  - Rebased the PR onto `origin/main` and resolved conflicts.
+  - Fixed TorchScript gear enum usage in deployment waypoint postprocessing.
+  - Updated stale deployment-wrapper, deploy temporal-caching, route-map signature, and BC config regression tests.
+  - Verified the focused SI targets and lib ruff/type checks; noted an unrelated local lidar fixture parse error blocking the aggregate data-pipes py_test.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
