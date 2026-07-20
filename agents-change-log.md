@@ -3636,3 +3636,19 @@
   - Identified route-map signature regression in `//wayve/ai/lib:test_data_pipes_lib_py_test` for new route-shortening parameters.
   - Identified deployment wrapper regressions from TorchScript enum lookup and stale `_clamp_waypoints_for_direction` test calls.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
+
+## 2026-07-20 - Parking/PUDO PR Comment Follow-up
+
+- Topic: Address selected review comments on Parking/PUDO baseline PR.
+- Labels: parking, pudo, deployment-wrapper, datamodule, pr-comments.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: Code change, review follow-up.
+- Areas: `wayve/ai/zoo/deployment`, `wayve/ai/si/datamodules`.
+- Changes:
+  - Derived parking hazard indicator index from `IndicatorsStateV2` enum value.
+  - Added documentation for end-of-route PARK latch behavior.
+  - Replaced online hazard-template construction with a registered hazard indicator template buffer.
+  - Removed redundant `parking_config is not None` condition after `route_shortening_enabled`.
+  - Verified focused deployment-wrapper tests and datamodule type check.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
