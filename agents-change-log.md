@@ -3621,3 +3621,18 @@
   - Submitted three Flyte batches per model, verified all nine executions reached `end-node - SUCCEEDED`, and queried the materialized Delta outputs.
   - Recorded aggregate all-available and common-segment pass rates plus output paths.
 - Task note: [[agent_tasks/2026/07/Week-28/2026-07-08-denis-controller-accelerate-from-stopped-eval|2026-07-08 Denis Controller Accelerate From Stopped Eval]]
+
+## 2026-07-20 - Parking/PUDO CI Triage
+
+- Topic: Diagnose failing CI for Parking/PUDO baseline PR.
+- Labels: parking, pudo, ci, buildkite, triage.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: CI investigation.
+- Areas: `wayve/ai/si`, `wayve/ai/lib/data/pipes`, `wayve/ai/zoo/deployment`.
+- Changes:
+  - Checked latest PR checks and Buildkite presubmit build `533739` on commit `ada5b1e592f7`.
+  - Identified PR-owned config regression in `//wayve/ai/si:test_config_py_test_core` from newly materialized parking datamodule fields missing in `reference_bc.yaml`.
+  - Identified route-map signature regression in `//wayve/ai/lib:test_data_pipes_lib_py_test` for new route-shortening parameters.
+  - Identified deployment wrapper regressions from TorchScript enum lookup and stale `_clamp_waypoints_for_direction` test calls.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
