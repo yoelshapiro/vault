@@ -1,3 +1,4 @@
+- [ ] Split PR #117075 and open stacked Parking/PUDO events draft ([[agent_tasks/2026/07/Week-30/2026-07-20-split-parking-pudo-events-pr]])
 - [ ] parking capability architecture research ([[projects/parking-capability-architecture-research]])
 	- [x] phase 0: framing doc + clarification questions
 	- [x] phase 1: deep-dive sibling branches + design docs
