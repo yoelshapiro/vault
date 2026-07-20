@@ -3684,3 +3684,17 @@
   - Updated stale deployment-wrapper, deploy temporal-caching, route-map signature, and BC config regression tests.
   - Verified the focused SI targets and lib ruff/type checks; noted an unrelated local lidar fixture parse error blocking the aggregate data-pipes py_test.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
+
+## 2026-07-20 - Parking/PUDO Integration CPU CI Fix
+
+- Topic: Fix remaining integration-cpu failure after Parking/PUDO PR rebase.
+- Labels: parking, pudo, ci, qualcomm, onnx.
+- Branch: `boris/26-06-22-pudo-baseline`.
+- PR: `#120214`.
+- Change type: Test fixture update.
+- Areas: `wayve/ai/inference/qualcomm/tools/partition/test`.
+- Changes:
+  - Waited for Buildkite presubmit build `542130`; only deterministic failure was the Qualcomm partition integration golden count.
+  - Updated `EXPECTED_NODE_COUNTS["output_adaptor"]` from `89` to `90` after the PR intentionally changed the output adaptor ONNX graph.
+  - Verified the focused and full `test_partition_integration` Bazel target locally.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]

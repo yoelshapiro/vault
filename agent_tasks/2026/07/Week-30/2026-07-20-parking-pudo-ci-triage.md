@@ -42,3 +42,11 @@
 - Passed: `bazel test //wayve/ai/lib:test_data_pipes_lib_ty --test_output=errors`.
 - Passed: `bazel test //wayve/ai/si:test_config_py_lint_ruff --test_output=errors`.
 - Blocked locally: `bazel test //wayve/ai/lib:test_data_pipes_lib_py_test --test_output=errors --test_arg=-k --test_arg=test_route_map_pipe_and_generate_route_map_signatures_match` failed during collection in unrelated `test_lidar_cpp_converter.py` with `google.protobuf.message.DecodeError` before running the selected route-map test.
+
+## Integration CPU Follow-up
+
+- Waited for Buildkite presubmit build `542130` on commit `8a34ff18fbdd`; all test suites completed except `coverage suite`, which remained pending after the build was already failed.
+- Only deterministic test failure was `//wayve/ai/inference/qualcomm/tools/partition:test_partition_integration` in `integration-cpu`.
+- Failure: `test_subgraph_node_counts_are_stable` reported `output_adaptor` has `90` ONNX nodes, expected `89`.
+- Fixed by updating the expected `output_adaptor` node count to `90`, matching the intentional output adaptor graph change from this PR.
+- Verification: focused `test_subgraph_node_counts_are_stable` passed locally; full `//wayve/ai/inference/qualcomm/tools/partition:test_partition_integration --test_output=errors` passed locally.
