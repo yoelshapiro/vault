@@ -10,12 +10,12 @@ Pull request #117075 currently combines the core Parking/PUDO generic materialis
 
 - [x] (2026-07-20 20:54Z) Inspected the current PR file list, unresolved review context, and event dependency edges.
 - [x] (2026-07-20 20:54Z) Agreed the split boundary with Boris.
-- [ ] Commit the pending CODEOWNERS additions on `boris/pudo_generic_materialization`.
-- [ ] Remove the deferred event scope from PR #117075 and update its description.
-- [ ] Validate, commit, and push the narrowed current PR.
-- [ ] Create `boris/pudo_generic_events` from the narrowed head and reapply the deferred scope.
-- [ ] Validate, commit, push, and open the stacked pull request as a draft.
-- [ ] Update this note and `agents-change-log.md`, then remove the temporary todo entry.
+- [x] (2026-07-20 20:58Z) Committed the CODEOWNERS additions on `boris/pudo_generic_materialization`.
+- [x] (2026-07-20 21:00Z) Removed the deferred event scope from PR #117075 and updated its description.
+- [x] (2026-07-20 21:02Z) Validated, committed, and pushed the narrowed current PR.
+- [x] (2026-07-20 21:04Z) Created `boris/pudo_generic_events` from the narrowed head and reapplied the deferred scope.
+- [x] (2026-07-20 21:15Z) Validated, committed, pushed, and opened draft PR #126237.
+- [x] (2026-07-20 21:18Z) Updated this note and `agents-change-log.md`, then removed the temporary todo entry.
 
 ## Surprises & Discoveries
 
@@ -25,6 +25,8 @@ Pull request #117075 currently combines the core Parking/PUDO generic materialis
   Evidence: its diff adds materialised-mask inspection, timestamp lookup, parquet inspection, and CLI options; it can be deferred with the events work without changing core bucket behavior.
 - Observation: the requested CODEOWNERS path `datasets/p2p` does not exist.
   Evidence: the tracked path is `wayve/ai/services/sampling/datasets/bc/p2p/dataset.py`, so the ownership rule uses `datasets/bc/p2p`.
+- Observation: the new shared-column regression initially failed because its `SimpleNamespace` dataset fixture lacked the production `iter_buckets()` interface.
+  Evidence: `test_extra_output_columns_survive_masks_and_buckets` raised `AttributeError`; adding the same fixture method used by the neighboring bucket test made the focused regression pass.
 
 ## Decision Log
 
@@ -43,7 +45,18 @@ Pull request #117075 currently combines the core Parking/PUDO generic materialis
 
 ## Outcomes & Retrospective
 
-Work is in progress. At completion, this section will record the narrowed PR commit, the draft follow-up PR number, test evidence, and any remaining review or CI work.
+PR #117075 was preserved and narrowed through normal commits, retaining its discussion history. Commit `951c9aa4d37f` adds the requested CODEOWNERS coverage, and commit `53e4f3021356` removes event creation and its supporting runtime/tooling scope. Its final 17-file diff contains the core Parking/PUDO datasets, store and BUILD registration, core tests, release metadata, README, and CODEOWNERS changes. GitHub currently reports `REVIEW_REQUIRED` after the new commits, so branch protection may require approvals to be refreshed even though the PR and comments were preserved.
+
+Draft PR #126237, "Add Parking/PUDO generic event materialisation", is stacked on `boris/pudo_generic_materialization`. Commit `3b5c04a1657d` restores the exact 22-file deferred scope: compact event rows, shared extra-output-column propagation, event tests and documentation, the Databricks/Flyte publisher, debug-sampling expansion, registration, and related autopublish bumps.
+
+Validation completed:
+
+    bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg=parking_pudo --test_arg=--no-cov
+    bazel test //wayve/ai/services/sampling:test_datasets_py_test --test_arg=-k --test_arg='parking_pudo_events or parking_pudo_event_metadata' --test_arg=--no-cov
+    bazel test //wayve/ai/services/sampling:test_tasks_py_test --test_arg=-k --test_arg=extra_output_columns --test_arg=--no-cov
+    bazel test //wayve/ai/services/sampling:test_debug_sampling
+
+All four commands passed. Both PR descriptions were updated to match the final split and cross-link the dependency.
 
 ## Context and Orientation
 
@@ -94,7 +107,7 @@ No history rewrite, reset, clean, or force push is used. The narrowing commit is
 
 ## Artifacts and Notes
 
-PR #117075 head at planning time is `9ed1d77e70c85807508cab1194379281ad918257`; base is `93b144b18c0a3b804971aea32039f0ca5a02db10`. The existing PR branch worktree is clean except for the requested `docs/CODEOWNERS` edit.
+PR #117075 head moved from `9ed1d77e70c85807508cab1194379281ad918257` to `53e4f302135672012dd8e08d65836cb9e8ea95cc`; base is `93b144b18c0a3b804971aea32039f0ca5a02db10`. Draft PR #126237 head is `3b5c04a1657dc2e9f16e5a7d52160659172595c9` and its base is `boris/pudo_generic_materialization`. The isolated worktree is clean and the unrelated primary worktree was not modified.
 
 ## Interfaces and Dependencies
 

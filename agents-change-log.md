@@ -1,5 +1,22 @@
 # Agents Change Log
 
+## 2026-07-20 - Split Parking/PUDO Event Materialisation PR
+
+- Topic: Preserve the reviewed core Parking/PUDO PR while moving event publication into a stacked draft.
+- Labels: parking, pudo, sampling, events, pr-split, codeowners.
+- Branches: `boris/pudo_generic_materialization`; `boris/pudo_generic_events`.
+- PRs: `#117075`; draft `#126237`.
+- Change type: PR cleanup, stacked PR creation, tests, documentation.
+- Areas: `docs/CODEOWNERS`; `wayve/ai/services/sampling`; Parking/PUDO events; sampling autopublish metadata.
+- Changes:
+  - Narrowed #117075 to the core Parking/PUDO materialisation while preserving its branch and discussion history.
+  - Added ownership rules for shared parking filters and `datasets/bc/p2p`.
+  - Moved compact event creation, shared output-column support, Databricks publication, debug tooling, and external autopublish bumps to stacked draft #126237.
+  - Fixed the event follow-up's shared-column regression fixture to implement `iter_buckets()`.
+  - Passed focused core, event, extra-output-column, and debug-sampling Bazel tests.
+  - Updated both PR descriptions to reflect and cross-link the final split.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-split-parking-pudo-events-pr|2026-07-20 Split Parking/PUDO Events PR]]
+
 ## 2026-07-12 - Parking Best Model Follow-Up
 
 - Topic: Align Parking BC follow-up settings with the best model branch while keeping reverse buckets out.
