@@ -12,7 +12,6 @@
   - Merged current main into the core PR without rewriting history and removed the retired filtered-corpus exclusion.
   - Merged the updated core into the draft, resolving additive dataset API, debug-tool, and autopublish conflicts.
   - Confirmed checklist requires core sampling version bumps; retained the reapplied bot commit and advanced the draft versions once more so the event PR owns the next publish step.
-  - Diagnosed static-check's stale version baseline, merged latest main, ran the prescribed bump/check commands, and revalidated both dataset suites.
   - Updated partial dataset mocks for `extra_output_columns` and `all_referenced_attributes`.
   - Passed the datasets, tasks, and debug-sampling Bazel suites and pushed both branches.
   - Confirmed the stale GitHub gate now passes and both PRs have restarted CI.
