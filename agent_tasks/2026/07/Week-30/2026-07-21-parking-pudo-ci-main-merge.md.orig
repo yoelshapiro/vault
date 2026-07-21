@@ -34,4 +34,4 @@ Draft merge commit: `40e1bd2f7ab7` (`Merge branch 'boris/pudo_generic_materializ
 
 ## Outcome
 
-Both branches were pushed with normal merge/revert commits and no force push. Core head `76a7806e0b20` remains the exact tested 17-file tree against `main`; draft head `db746c1b24c2` remains the exact tested 23-file tree based on the core branch.
+Both branches were pushed with normal merge commits and no force push. The reviewed core PR remains open against `main`; the event work remains isolated in draft PR #126237.
