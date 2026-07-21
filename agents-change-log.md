@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-21 - Parking/PUDO PR CI Repair
+
+- Topic: Bring the split Parking/PUDO PR stack onto current main and repair failing sampling tests.
+- Labels: parking, pudo, sampling, ci, buildkite, stacked-pr.
+- Branches: `boris/pudo_generic_materialization`; `boris/pudo_generic_events`.
+- PRs: `#117075`; draft `#126237`.
+- Change type: Main merge, compatibility fix, test-fixture repair, CI verification.
+- Areas: `wayve/ai/services/sampling`; Parking/PUDO datasets; task mocks; autopublish metadata.
+- Changes:
+  - Merged current main into the core PR without rewriting history and removed the retired filtered-corpus exclusion.
+  - Merged the updated core into the draft, resolving additive dataset API, debug-tool, and autopublish conflicts.
+  - Updated partial dataset mocks for `extra_output_columns` and `all_referenced_attributes`.
+  - Passed the datasets, tasks, and debug-sampling Bazel suites and pushed both branches.
+  - Confirmed the stale GitHub gate now passes and both PRs have restarted CI.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-21-parking-pudo-ci-main-merge|2026-07-21 Parking/PUDO PR CI Repair]]
+
 ## 2026-07-20 - Split Parking/PUDO Event Materialisation PR
 
 - Topic: Preserve the reviewed core Parking/PUDO PR while moving event publication into a stacked draft.
