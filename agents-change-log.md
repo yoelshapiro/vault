@@ -13,7 +13,7 @@
   - Resolved conflicts while preserving current SILC validation, understeer LUT handling, and device-aware test fixtures.
   - Retained the branch's default gear buffers, shift-by-wire behavior control, and gear-aware waypoint processing.
   - Verified the 11-for-11 commit mapping and `git diff --check`; tests were not run because a separate unstaged wrapper edit appeared after the rebase and was left untouched.
-  - Left the rewritten branch local; the remote still requires a force-with-lease push.
+  - Force-pushed the rewritten history with `--force-with-lease`; PR #120234 now points to `e8b53a634c58`.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase|2026-07-21 Deployment Wrapper Default Gear Rebase]]
 
 ## 2026-07-21 - Parking/PUDO PR CI Repair

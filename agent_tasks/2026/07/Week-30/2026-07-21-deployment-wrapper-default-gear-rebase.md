@@ -8,7 +8,7 @@
 
 ## Outcome
 
-Rebased the branch's 11 commits onto current `origin/main` without pushing the rewritten history.
+Rebased the branch's 11 commits onto current `origin/main` and force-pushed the rewritten history with lease protection.
 
 ## Conflict resolutions
 
@@ -27,5 +27,6 @@ Rebased the branch's 11 commits onto current `origin/main` without pushing the r
 
 ## Handoff
 
-- The local branch is rebased; `origin/boris/deployment-wrapper-default-gear` still points to the pre-rebase history.
-- Publish with `git push --force-with-lease origin boris/deployment-wrapper-default-gear` when ready.
+- Local and remote `boris/deployment-wrapper-default-gear` both point to `e8b53a634c58`.
+- PR #120234 now uses the rebased history.
+- Preserve or reconcile the unstaged wrapper edit before running tests or switching branches.
