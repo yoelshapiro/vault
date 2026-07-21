@@ -11,6 +11,7 @@
 - Changes:
   - Merged current main into the core PR without rewriting history and removed the retired filtered-corpus exclusion.
   - Merged the updated core into the draft, resolving additive dataset API, debug-tool, and autopublish conflicts.
+  - Reverted a CI bot commit that reintroduced external autopublish bumps into the core PR, then merged that history into the draft without changing either tested tree.
   - Updated partial dataset mocks for `extra_output_columns` and `all_referenced_attributes`.
   - Passed the datasets, tasks, and debug-sampling Bazel suites and pushed both branches.
   - Confirmed the stale GitHub gate now passes and both PRs have restarted CI.
