@@ -15,9 +15,9 @@ Updated both Parking/PUDO branches to current `main` without rewriting history, 
 3. Core Flake8 found four event-only imports left in the narrowed PR test file. Removed them from the core branch and restored them only in the stacked event branch.
 4. Merging the updated core into the draft produced additive conflicts. Kept both `BucketedDataset.extra_output_columns` and main's `source_tables`; combined main's bucket-debug options with the event/parquet debugging additions; advanced each affected autopublish version to current main plus one.
 5. The task suite found partial `SimpleNamespace` dataset mocks missing the new interface. Added empty `extra_output_columns` values to five existing mocks and `all_referenced_attributes` to the new extra-output-column regression fixture.
-6. The CI bot then committed ten external autopublish bumps to the core branch. Reverted bot commit `39ecc50074a9` with normal commit `76a7806e0b20`, verified the core tree exactly matched tested commit `dcecb659b55a`, and merged the revert history into the draft without changing its tested tree.
+6. The checklist bot committed ten external autopublish bumps to the core branch. A normal revert proved this is policy-enforced: checklist immediately reapplied the same bumps as `3c9d58c1fbfe`. Kept that required commit so core CI can pass, merged it into the draft, and committed the draft's next versions as `09cd600121be` so the event PR still owns the subsequent publish step.
 
-Primary draft merge commit: `40e1bd2f7ab7` (`Merge branch 'boris/pudo_generic_materialization' into boris/pudo_generic_events`). The final draft head is `db746c1b24c2`; its 23-file stacked diff contains event creation, output-column propagation, Databricks publication, debug tooling, tests, and related autopublish bumps.
+Primary draft merge commit: `40e1bd2f7ab7` (`Merge branch 'boris/pudo_generic_materialization' into boris/pudo_generic_events`). The final draft head is `09cd600121be`; its 23-file stacked diff contains event creation, output-column propagation, Databricks publication, debug tooling, tests, and the next autopublish bumps.
 
 ## Validation
 
@@ -32,7 +32,8 @@ Primary draft merge commit: `40e1bd2f7ab7` (`Merge branch 'boris/pudo_generic_ma
 - Refreshed ACR authentication successfully for `wayve`, `wayvetraining`, and `wayveacrprodflyte`.
 - After pushing #117075, `compile_protos` and the other completed GitHub checks passed; Buildkite presubmit was running.
 - After pushing #126237, GitHub checks restarted and the PR remained a draft based on `boris/pudo_generic_materialization`.
+- Checklist always compares non-default branches with `main`, not the stacked PR base, and has no supported per-PR version-bump skip. Therefore core #117075 necessarily contains ten generated bumps; draft #126237 advances those same services again for its event changes.
 
 ## Outcome
 
-Both branches were pushed with normal merge/revert commits and no force push. Core head `76a7806e0b20` remains the exact tested 17-file tree against `main`; draft head `db746c1b24c2` remains the exact tested 23-file tree based on the core branch.
+Both branches were pushed with normal merge/revert commits and no force push. Core head is `3c9d58c1fbfe`: the tested 17-file source tree plus ten checklist-generated version bumps. Draft head is `09cd600121be`: the tested 23-file event tree with those services advanced to the next versions.
