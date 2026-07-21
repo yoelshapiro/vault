@@ -35,6 +35,8 @@ Primary draft merge commit: `40e1bd2f7ab7` (`Merge branch 'boris/pudo_generic_ma
 - Merged current main and generated versions locally before pushing, eliminating the bot/race dependency for the replacement CI run.
 - After pushing #126237, GitHub checks restarted and the PR remained a draft based on `boris/pudo_generic_materialization`.
 - Checklist always compares non-default branches with `main`, not the stacked PR base, and has no supported per-PR version-bump skip. Therefore core #117075 necessarily contains ten generated bumps; draft #126237 advances those same services again for its event changes.
+- Replacement Buildkite build 542435 passed all suites: catalyst, static-check, CPU, integration CPU, lint, autopublish, Black Duck, coverage, and result summary.
+- Draft #126237 passed its GitHub compile/protobuf checks and remained draft/clean. Core #117075 was CI-green but returned to `REVIEW_REQUIRED` after the new commits.
 
 ## Outcome
 
