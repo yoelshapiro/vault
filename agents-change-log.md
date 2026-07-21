@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-21 - Deployment Wrapper Default Gear Rebase
+
+- Topic: Rebase the default-gear deployment wrapper PR onto current `main`.
+- Labels: deployment-wrapper, default-gear, shift-by-wire, rebase, pr.
+- Branch: `boris/deployment-wrapper-default-gear`.
+- PR: `#120234`.
+- Change type: Git rebase, conflict resolution.
+- Areas: `wayve/ai/si`; `wayve/ai/zoo/deployment`; safety deployment wrappers.
+- Changes:
+  - Rebased all 11 branch commits onto `origin/main` at `400fe22d2faa`.
+  - Resolved conflicts while preserving current SILC validation, understeer LUT handling, and device-aware test fixtures.
+  - Retained the branch's default gear buffers, shift-by-wire behavior control, and gear-aware waypoint processing.
+  - Verified the 11-for-11 commit mapping and `git diff --check`; tests were not run because a separate unstaged wrapper edit appeared after the rebase and was left untouched.
+  - Left the rewritten branch local; the remote still requires a force-with-lease push.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase|2026-07-21 Deployment Wrapper Default Gear Rebase]]
+
 ## 2026-07-21 - Parking/PUDO PR CI Repair
 
 - Topic: Bring the split Parking/PUDO PR stack onto current main and repair failing sampling tests.
