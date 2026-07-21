@@ -29,4 +29,13 @@ Rebased the branch's 11 commits onto current `origin/main` and force-pushed the 
 
 - Local and remote `boris/deployment-wrapper-default-gear` both point to `e8b53a634c58`.
 - PR #120234 now uses the rebased history.
+
+## Parking wrapper follow-up
+
+- Changed parking waypoint enforcement to use the converted `DrivePositionV2` value and the existing `_enforce_gear_position_on_waypoints` helper.
+- Removed the now-unused `_enforce_gear_direction_on_waypoints` helper without changing the position helper's clamping implementation.
+- Updated the focused parking-wrapper regression test to cover position-based reverse, drive, and park clamping.
+
+### Verification
+
 - Preserve or reconcile the unstaged wrapper edit before running tests or switching branches.
