@@ -50,3 +50,14 @@
 - Failure: `test_subgraph_node_counts_are_stable` reported `output_adaptor` has `90` ONNX nodes, expected `89`.
 - Fixed by updating the expected `output_adaptor` node count to `90`, matching the intentional output adaptor graph change from this PR.
 - Verification: focused `test_subgraph_node_counts_are_stable` passed locally; full `//wayve/ai/inference/qualcomm/tools/partition:test_partition_integration --test_output=errors` passed locally.
+
+## Rebased Push and Remaining CI Failure
+
+- Rebased onto `origin/main` again after Buildkite build `542366` failed at trigger time due a merge conflict in `wayve/ai/zoo/deployment/deployment_wrapper.py`.
+- Resolved the conflict by preserving main’s MRM constants and keeping this PR’s enum-derived hazard index: `_INDICATOR_HAZARD_INDEX = int(IndicatorsStateV2.INDICATORS_STATE_V2_HAZARD_ON) - 1`.
+- Pushed rebased branch `boris/26-06-22-pudo-baseline` to commit `6169e57ec1f8` with `--force-with-lease`.
+- Verification after rebase: `bazel test //wayve/ai/si:test_deployment_wrapper --test_output=errors`; `bazel test //wayve/ai/inference/qualcomm/tools/partition:test_partition_integration --test_output=errors`; `bazel test //wayve/ai/zoo/st:test_st_compile --test_output=errors`; `bazel test //wayve/ai/zoo/st:test_st_compile --test_output=errors --runs_per_test=3`.
+- New Buildkite presubmit build `542368` completed with a single hard suite failure: `integration-heavy-gpu`; all other completed suites passed, while `coverage suite` remained pending after the build was already terminal failed.
+- Failing target inside `integration-heavy-gpu`: `//wayve/ai/zoo/st:test_st_compile`, with a TorchInductor/Triton CUDA device-side assert: `Assertion index out of bounds: 0 <= ... < 2` during `test_torch_compile[True-fast]`. Later parametrizations failed after the CUDA context was poisoned.
+- The ST compile target passed locally once and also passed locally with `--runs_per_test=3`; this PR does not modify `wayve/ai/zoo/st`, so current evidence points to an H100 CI flake/environment issue rather than a branch-caused regression.
+- Attempted Buildkite job retry through the API, but the available token returned `403`; manual retry is needed unless a new push is used to retrigger the pipeline.
