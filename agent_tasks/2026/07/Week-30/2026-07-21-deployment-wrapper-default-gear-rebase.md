@@ -34,8 +34,12 @@ Rebased the branch's 11 commits onto current `origin/main` and force-pushed the 
 
 - Changed parking waypoint enforcement to use the converted `DrivePositionV2` value and the existing `_enforce_gear_position_on_waypoints` helper.
 - Removed the now-unused `_enforce_gear_direction_on_waypoints` helper without changing the position helper's clamping implementation.
-- Updated the focused parking-wrapper regression test to cover position-based reverse, drive, and park clamping.
+- Moved final gear selection into `convert_si_output_to_onboard_driving_output`: it emits DRIVE by default and only reads `POLICY_GEAR_POSITION` when `use_gear_position_from_output=True`.
+- Enabled output-provided gear only for the parking wrapper and removed gear publication from `_postprocess_waypoints`.
+- Updated converter and wrapper regression coverage for default DRIVE, parking opt-in, and waypoint clamping.
 
 ### Verification
 
-- Preserve or reconcile the unstaged wrapper edit before running tests or switching branches.
+- Focused converter, waypoint-postprocessing, and parking-wrapper Bazel tests passed.
+- Deployment Ruff, Flake8, and type-check targets passed.
+- The broader deployment Python test suite passed with the known unrelated stale unsupported-control-key case excluded.

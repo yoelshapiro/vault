@@ -16,6 +16,8 @@
   - Force-pushed the rewritten history with `--force-with-lease`; PR #120234 now points to `e8b53a634c58`.
   - Followed up by routing parking waypoint clamping through the converted `DrivePositionV2` and existing position helper.
   - Removed the unused direction helper and verified the focused parking-wrapper tests.
+  - Moved final gear selection into the SI-to-onboard converter: non-parking calls force DRIVE, while parking explicitly opts into its converted gear output.
+  - Removed gear publication from waypoint postprocessing and added converter/default-drive regression coverage.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase|2026-07-21 Deployment Wrapper Default Gear Rebase]]
 
 ## 2026-07-21 - Parking/PUDO PR CI Repair
