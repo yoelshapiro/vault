@@ -1,5 +1,25 @@
 # Agents Change Log
 
+## 2026-07-21 - Deployment Wrapper Default Gear Rebase
+
+- Topic: Rebase the default-gear deployment wrapper PR onto current `main`.
+- Labels: deployment-wrapper, default-gear, shift-by-wire, rebase, pr.
+- Branch: `boris/deployment-wrapper-default-gear`.
+- PR: `#120234`.
+- Change type: Git rebase, conflict resolution.
+- Areas: `wayve/ai/si`; `wayve/ai/zoo/deployment`; safety deployment wrappers.
+- Changes:
+  - Rebased all 11 branch commits onto `origin/main` at `400fe22d2faa`.
+  - Resolved conflicts while preserving current SILC validation, understeer LUT handling, and device-aware test fixtures.
+  - Retained the branch's default gear buffers, shift-by-wire behavior control, and gear-aware waypoint processing.
+  - Verified the 11-for-11 commit mapping and `git diff --check`; tests were not run because a separate unstaged wrapper edit appeared after the rebase and was left untouched.
+  - Force-pushed the rewritten history with `--force-with-lease`; PR #120234 now points to `e8b53a634c58`.
+  - Followed up by routing parking waypoint clamping through the converted `DrivePositionV2` and existing position helper.
+  - Removed the unused direction helper and verified the focused parking-wrapper tests.
+  - Moved final gear selection into the SI-to-onboard converter: non-parking calls force DRIVE, while parking explicitly opts into its converted gear output.
+  - Removed gear publication from waypoint postprocessing and added converter/default-drive regression coverage.
+- Task note: [[agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase|2026-07-21 Deployment Wrapper Default Gear Rebase]]
+
 ## 2026-07-21 - Parking/PUDO PR CI Repair
 
 - Topic: Bring the split Parking/PUDO PR stack onto current main and repair failing sampling tests.
@@ -12,6 +32,7 @@
   - Merged current main into the core PR without rewriting history and removed the retired filtered-corpus exclusion.
   - Merged the updated core into the draft, resolving additive dataset API, debug-tool, and autopublish conflicts.
   - Confirmed checklist requires core sampling version bumps; retained the reapplied bot commit and advanced the draft versions once more so the event PR owns the next publish step.
+  - Diagnosed static-check's stale version baseline, merged latest main, ran the prescribed bump/check commands, and revalidated both dataset suites.
   - Updated partial dataset mocks for `extra_output_columns` and `all_referenced_attributes`.
   - Passed the datasets, tasks, and debug-sampling Bazel suites and pushed both branches.
   - Confirmed the stale GitHub gate now passes and both PRs have restarted CI.

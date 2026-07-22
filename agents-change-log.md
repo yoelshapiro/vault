@@ -18,6 +18,11 @@
   - Removed the unused direction helper and verified the focused parking-wrapper tests.
   - Moved final gear selection into the SI-to-onboard converter: non-parking calls force DRIVE, while parking explicitly opts into its converted gear output.
   - Removed gear publication from waypoint postprocessing and added converter/default-drive regression coverage.
+  - Added `ENABLE_SHIFT_BY_WIRE` to modern and legacy BC/RL deployment-config producers, preserving existing DILC/SILC indices.
+  - Added deploy-time compatibility for older configs by appending the shift key without reordering or duplicating existing controls.
+  - Kept shift-by-wire as a behavior-customizer no-op for non-parking wrappers; parking remains the only wrapper that consumes model-provided gear.
+  - Made the fixed-DRIVE converter fallback TorchScript-safe and verified legacy combined/offline RL compilation paths.
+  - Passed focused compatibility, resolver, converter, and behavior-customizer tests plus relevant Ruff and Flake8 targets; changes remain uncommitted.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase|2026-07-21 Deployment Wrapper Default Gear Rebase]]
 
 ## 2026-07-21 - Parking/PUDO PR CI Repair
