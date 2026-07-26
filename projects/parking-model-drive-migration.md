@@ -88,6 +88,31 @@ Turn the parking inputs on in the BC factory.
 `stopping_mode` compute already exists in `ParkingDataLoader._compute_stopping_mode` — enabling it is
 just the flag above.
 
+### Provenance & monitoring (RESOLVED approach)
+SI logged domain provenance in `add_parking_mode`: `PROVENANCE_PARKING_STAGE` (stage label),
+`PROVENANCE_CURRENT_GEAR_DIRECTION`, `PROVENANCE_NEXT_GEAR_DIRECTION` ([keys.py:345-347](wayve/ai/zoo/data/keys.py)).
+In SI these served two roles: (a) input rules auto-**exclude** `provenance_*` from the model encoder, and
+(b) offline analysis + curr/next split rules. Consumers: `lib/provenance.py`, SI
+`state_encoder_input_rules` / `curr_and_next_split_rules` / `reward_encoder_input_rules` — **not** the
+parking lifecycle dashboard.
+
+Drive-idiomatic approach — **don't blindly re-log gear/stage as provenance**:
+- The domain signals are already **tensors in the batch** (`parking_stage`, `parking_mode`,
+  `vehicle_gear_direction`, `policy_gear_direction`). Eval / offline analysis read them directly.
+- Drive model inputs are **explicit** (the adaptor list names what's consumed), so there's no need for
+  the SI "wrap as provenance so the encoder ignores it" trick — a logged tensor can't leak into the model.
+- **Training monitoring:** the parking **buckets** already encode maneuver type
+  (`dc_park`/`dc_pudo`/`dc_unpark`/`dc_unpudo`/…), so a `BucketLossTracker` over parking buckets gives
+  per-maneuver loss/counts for free (same as MRM's `bc_mrm_head`, keyed on `PROVENANCE_PIPE_NAME`). Add
+  it to both parking recipes' callbacks. For **augmentation-aware** monitoring (the stochastic
+  parked→(un)parking flip makes `parking_stage` diverge from the source bucket), track loss by
+  `parking_stage` — needs a stage-aware tracker or exposing `parking_stage` to the metrics callback.
+- **Decision (small):** replicate the SI domain-provenance tensors (`provenance_parking_stage`,
+  `provenance_current/next_gear_direction`) in the factory **only if** a concrete offline consumer needs
+  those exact keys; otherwise rely on the `parking_stage`/gear tensors + bucket/stage loss trackers.
+  Default: skip the explicit provenance tensors; add a `BucketLossTracker` (buckets) now and a
+  stage-keyed tracker if per-stage curves are wanted.
+
 ---
 
 ## Phase 2 — Data factory: augmentation ports (the bulk of the work)
@@ -207,10 +232,10 @@ explicitly (no head_key→arbiter registry), so the sites above are the complete
    root, port bucket names/weights, verify columns) — see P0.1. Not a separate workstream.
 
 ### Arbiter switching (v0, agreed)
-`ParkingArbiter` routes to the parking head when the `parking_mode` input is active **OR** gear ∈
-{PARK, REVERSE}; stateless per-step (switch-back implicit). Extend later for maneuver-lifecycle /
-latching. Open impl detail: confirm `vehicle_gear_position` (DrivePositionV2) is available to the
-arbiter at deploy for the PARK distinction (else fall back to `vehicle_gear_direction`≈NEUTRAL).
+`ParkingArbiter` routes to the parking head when the `parking_mode` input is active **OR**
+`vehicle_gear_direction ∈ {NEUTRAL(0), REVERSE(-1)}`; stateless per-step (switch-back implicit).
+Extend later for maneuver-lifecycle / latching. Gear signal RESOLVED: use `vehicle_gear_direction`
+(same as SI; there is no independent PARK signal — "parked" ≡ NEUTRAL(0) throughout the stack).
 
 ---
 ---
