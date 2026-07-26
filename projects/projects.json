@@ -1,6 +1,14 @@
 {
   "projects": [
     {
+      "name": "Parking model migration to Drive + Data Factory",
+      "slug": "parking-model-drive-migration",
+      "path": "/home/borisindelman/git/vault/projects/parking-model-drive-migration.md",
+      "status": "active",
+      "phase": "Planning",
+      "last_updated": "2026-07-26"
+    },
+    {
       "name": "HARI PUDO classifiers",
       "slug": "hari-pudo-classifiers",
       "path": "/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md",
