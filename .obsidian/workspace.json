@@ -427,24 +427,12 @@
             "id": "721d72beb79ec2cb",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "Untitled.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "file": "Excalidraw/head_options.excalidraw.md"
               },
-              "icon": "lucide-file",
-              "title": "Untitled"
+              "icon": "excalidraw-icon",
+              "title": "head_options.excalidraw"
             }
           }
         ],
@@ -622,8 +610,16 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "721d72beb79ec2cb",
+  "active": "a6cdcc3493cdeb21",
   "lastOpenFiles": [
+    "projects/parking-model-drive-migration.md",
+    "Excalidraw/head_options.excalidraw.md",
+    "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
+    "projects.md",
+    "agents-change-log.md",
+    "projects/generic-materialisation-parking-pudo-migration.md",
+    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun.md",
+    "Untitled.md",
     "agents-change-log.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-parking-pudo-ci-main-merge.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-parking-pudo-ci-main-merge.md",
@@ -633,7 +629,6 @@
     "agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage.md",
     "agent_tasks/2026/07/Week-30",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-best-model-follow-up.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-pudo-baseline-pr-comments.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-drop-vehicle-frequency-fallback.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-pr-rebase.md",
@@ -647,19 +642,12 @@
     "agent_tasks/2026/07/Week-28/2026-07-12-debug-sampling-pr-comments.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-materialisation.md",
     "agent_tasks/2026/07/Week-28/2026-07-09-copy-classifier-predictions-table.md",
-    "agent_tasks/2026/07/Week-28/2026-07-08-denis-controller-accelerate-from-stopped-eval.md",
     "agent_tasks/2026/07/Week-28",
-    "agent_tasks/2026/07/Week-27/2026-07-07-parking-unparking-mode-input-train.md",
-    "agent_tasks/2026/07/Week-27/2026-07-07-parking-reverse-unpudo-train.md",
-    "agent_tasks/2026/07/Week-27/2026-07-07-parking-reverse-unpudo-no-gear-aug-train.md",
-    "agent_tasks/2026/07/Week-27/2026-07-07-parking-no-park-mode-training.md",
-    "agent_tasks/2026/07/Week-27/2026-07-07-parking-no-unpudo-gear-change-training.md",
     "agent_tasks/2026/07/Week-1",
     "agent_tasks/2026/07/Week-27",
     "agent_tasks/2026/07",
     "html_summaries/pudo-spider.html",
     "agent_tasks/2026/06/Week-5",
-    "html_summaries/parking-vs-pudo-generic-sampler.html",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
