@@ -32,18 +32,28 @@ PARKING head key + arbiter; (5) tests.** No new model architecture is required.
 ---
 
 ## Phase 0 — Prerequisites / decisions (do first)
-- **P0.1 Data materialisation (dependency, likely separate workstream).** The factory trains from a
-  *materialised* bucket root (`materialised_buckets(..., root=<abfss>)`). The SI PUDO/unpudo/GC
-  parking buckets must be sampled + materialised through the drive sampling pipeline to a new
-  `bc/parking/...` root. Config + unit tests can land without it; real training needs it.
+- **P0.1 Data materialisation — ✅ largely DONE (not a new workstream).** The parking data already
+  exists: `parking_pudo` `BucketedDataset` in
+  [sampling/datasets/parking_pudo/default/dataset.py](wayve/ai/services/sampling/datasets/parking_pudo/default/dataset.py)
+  (`binary_version="3.0.81"`, same as drive baseline/MRM; buckets `dc_park`/`dc_pudo`/`dc_unpark`/
+  `dc_unpudo`[+forward/reverse]/`dc_pre_start_*`/`*_gear_change`/`ca_*`/`pre_ca_*`, split by country;
+  publishes as `ai_services_sampling_parking_pudo_default`). It generic-materialises to a
+  `sampling_materialised/parking_pudo/...` root (SI read `.../parking_pudo/default/dev/parking_pudo_default_raw_gear_window_...`).
+  **Remaining work is wiring, not sampling:** (1) get the current published `sampling_materialised/parking_pudo/...`
+  root + version and point the drive parking datamodule at it; (2) port the bucket **names + weights**
+  into `configs/components/data/buckets/parking.py`; (3) **verify schema/columns** — the materialised
+  output must carry what the factory tensor loaders read (gear direction, speed, indicator for
+  stopping_mode, route). Binary 3.0.81 matches drive so base driving columns line up; only re-materialise
+  if a needed column is missing. Factory detection (`parking_stage`, gear-cleanup) is computed on-the-fly
+  from raw gear+speed, so no pre-materialised parking labels are required.
 - **P0.2 ADRs.** Per repo `AGENTS.md`, architectural changes need an ADR + approval before code.
   Recommend two: (a) *new factory proto augmentations/tensors for parking*; (b) *new `PARKING` head
   key + `ParkingArbiter`*. Create with `./tools/decisions new "<title>"`.
 - **P0.3 Schema-version reconciliation.** `config/schema/autopublish.yaml` = **7.1.1** but
   `CHANGELOG.md` top = **7.2.0**. Reconcile this gap as part of the proto bump.
-- **Decisions to confirm** (see end): radar early-vs-late fusion; parking-head seed
-  (MidTrainingV1 vs BaselineRLFull); whether to emit policy-path/goal-pose tensors the BC model
-  won't consume; extend `ParkingDataLoader` vs new augmentor for parked/unparking.
+- **Decisions (all resolved — see end):** radar → early fusion; parking-head seed → MidTrainingV1;
+  policy-path/goal-pose → deferred; parking detection/data model → `parking_stage` split; data
+  materialisation → already sampled (P0.1).
 
 ---
 
@@ -116,7 +126,7 @@ tensors); gaps 69–72 also free. MINOR bump → no migration needed; update `au
 ## Phase 3 — Model config (turn on parking inputs)
 | File | Change |
 |---|---|
-| [backbone/wfm.py](wayve/ai/drive/common/configs/backbone/wfm.py) (or new `backbone/parking.py`) | Define `PARKING_BC_WFM_OVERRIDES = deepcopy(BASELINE_BC_WFM_OVERRIDES)` then: re-enable `parking_mode` adaptor (remove the `= None`), `always_dropout_parking_mode=False`; `gear_direction.always_dropout_gear_direction=False`; `stopping_mode.always_dropout_stopping_mode=False`; set `dropout_token_probability≈0.5` on each (mirrors SI `_PARKING_RELEASE_2026_5_21_INPUT_ADAPTORS`). Keep `enable_gear_direction=True` output. Build `ParkingBcWFMEarlyFusionCFG` (+ a `DeferLoad` variant for the head seed). Radar: keep drive early-fusion unless parity requires late (decision #1). |
+| [backbone/wfm.py](wayve/ai/drive/common/configs/backbone/wfm.py) (or new `backbone/parking.py`) | Define `PARKING_BC_WFM_OVERRIDES = deepcopy(BASELINE_BC_WFM_OVERRIDES)` then: re-enable `parking_mode` adaptor (remove the `= None`), `always_dropout_parking_mode=False`; `gear_direction.always_dropout_gear_direction=False`; `stopping_mode.always_dropout_stopping_mode=False`; set `dropout_token_probability≈0.5` on each (mirrors SI `_PARKING_RELEASE_2026_5_21_INPUT_ADAPTORS`). Keep `enable_gear_direction=True` output. Build `ParkingBcWFMEarlyFusionCFG` (+ a `DeferLoad` variant for the head seed). Radar: **early fusion** (drive's latest — RESOLVED); reuse the baseline early-fusion radar adaptor, do NOT replicate SI late-fusion. |
 | [components/training.py](wayve/ai/drive/bc/configs/components/training.py) | `ExperimentSpec` TypedDict: add parking knobs — `use_parking_mode`, `enable_stopping_mode`, parking-aug flags/probs, parking bucket allowlists. Auto-propagate to `MultiHeadExperimentSpec`. |
 
 ---
