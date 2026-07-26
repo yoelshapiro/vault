@@ -148,13 +148,14 @@ Run: `--config-name=parking_bc`. This is a full model, trunk trainable, seeded f
 |---|---|
 | [common/head_keys.py](wayve/ai/drive/common/head_keys.py) | Add `PARKING = "parking"`. |
 | [bc/configs/recipes/parking_head.py](wayve/ai/drive/bc/configs/recipes/parking_head.py) *(new)* | `head_recipe(baseline=DefaultExperimentSpec, head_key=HeadKeys.PARKING, seed_backbone=MidTrainingV1SeedCfg, seed_checkpoint=MID_TRAINING_V1_CHECKPOINT, datamodule=parking_datamodule, composite_submit=bc_composite_submit_cfg(HeadKeys.PARKING, arbiter=ParkingArbiterCfg), overrides={"version": ..., parking knobs})`; `store(name="parking_head")`. Mirrors [driving_head.py](wayve/ai/drive/bc/configs/recipes/driving_head.py)/[set_speed.py](wayve/ai/drive/bc/configs/recipes/set_speed.py). |
-| [zoo/st/arbiters/parking.py](wayve/ai/zoo/st/arbiters/parking.py) *(new)* + BUILD | `ParkingArbiter(Arbiter)`: `HEAD_KEYS=(DEFAULT_HEAD_KEY, "parking")`, `INPUT_KEYS=(DataKeys.PARKING_MODE, DataKeys.VEHICLE_GEAR_POSITION)`. **v0 `forward` (stateless, per-step, like `MrmArbiter`):** route to parking head (index 1) if `parking_mode` input active **OR** current gear ∈ {PARK, REVERSE}, else default (index 0). Switch-back is implicit (predicate false → default). TorchScript-safe. Template: [mrm.py](wayve/ai/zoo/st/arbiters/mrm.py). **Extend later** for maneuver-lifecycle / latching / stopping-mode. |
+| [zoo/st/arbiters/parking.py](wayve/ai/zoo/st/arbiters/parking.py) *(new)* + BUILD | `ParkingArbiter(Arbiter)`: `HEAD_KEYS=(DEFAULT_HEAD_KEY, "parking")`, `INPUT_KEYS=(DataKeys.PARKING_MODE, DataKeys.VEHICLE_GEAR_DIRECTION)`. **v0 `forward` (stateless, per-step, like `MrmArbiter`):** route to parking head (index 1) if `parking_mode` input active **OR** `vehicle_gear_direction[-1] ∈ {NEUTRAL(0), REVERSE(-1)}`, else default (index 0). Switch-back is implicit (predicate false → default). TorchScript-safe. Template: [mrm.py](wayve/ai/zoo/st/arbiters/mrm.py). **Extend later** for maneuver-lifecycle / latching / stopping-mode. |
 
-> **Gear-signal note (v0 arbiter):** "parked or reverse" needs `vehicle_gear_position` (DrivePositionV2:
-> PARK=1, REVERSE=4). The model *input* `vehicle_gear_direction` lumps P+N into NEUTRAL(0), so it can't
-> distinguish PARK from a normal neutral stop. `VehicleGearPositionLoader` exists but is **not added by
-> default** in drive/bc — the arbiter reads the runtime vehicle gear-position signal at deploy; confirm
-> that key is available to the arbiter (else fall back to `vehicle_gear_direction`, where "parked" ≈ NEUTRAL, broader).
+> **Gear-signal note (RESOLVED):** use `vehicle_gear_direction` — the same signal SI `parking.py` used
+> (`VehicleGearDirection`, R=−1/N=0/D=1), added by default in the drive factory. There is **no
+> independent PARK signal**: both `VehicleGearDirectionLoader` and `VehicleGearPositionLoader` derive
+> from the same `F.GEAR_DIRECTION` column; `gear_position` just relabels `neutral(0)→PARK(1)`. So
+> "parked" ≡ `NEUTRAL(0)` throughout the stack (SI never distinguished P from N). Arbiter: parked =
+> `NEUTRAL(0)`, reverse = `REVERSE(-1)`. No new tensor needed.
 | [drive/composite/arbiters.py](wayve/ai/drive/composite/arbiters.py) | `V4Arbiter`: add `"parking"` to `HEAD_KEYS`/`PRIORITY`, compose `self._parking = ParkingArbiter()`, add predicate in `forward` + a `routing_probe_inputs` case; extend `INPUT_KEYS`/`REQUIRED_DRIVING_CONTROL_KEYS`. |
 | [drive/composite/configs/recipes/v4_composite.py](wayve/ai/drive/composite/configs/recipes/v4_composite.py) | Add `"parking"` to `_HEADS`, `head_postprocess`, `_HEAD_CHECKPOINT_NUMS`. |
 
