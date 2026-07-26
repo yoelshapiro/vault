@@ -165,3 +165,120 @@ explicitly (no head_key→arbiter registry), so the sites above are the complete
    separate augmentors. Recommend extending the loader for detection-coupled outputs
    (parked/unparking/stop-index) and separate augmentors for the policy rewrites.
 5. **Data materialisation** ownership + timeline (P0.1).
+
+---
+---
+
+# Appendix A — MRM code guide (how the reference stack works)
+
+The MRM recipes are the closest existing analog. Understanding them is the fastest way to know what
+to build for parking.
+
+## The three MRM files — all head recipes, differing only in seed + data
+All are **head recipes** (register `store(cfg, name=...)`, run with `--config-name=<name>`). They're
+a progression:
+
+| File | `--config-name` | Seed | Data | Purpose |
+|---|---|---|---|---|
+| `recipes/mrm/mrm_head_v0.py` | `mrm_head_v0` | `BaselineRLTrunkOnlySeedCfg` (RL trunk, **fresh** output head) | baseline (5% MRM overlay) | simplest: head trains from scratch; default optimizer gives head LR 1e-4 vs trunk 1e-5 |
+| `recipes/mrm/mrm_head_v1.py` | `mrm_head_v1` | `BaselineRLFullSeedCfg` (full RL→BC **warm-start**) | baseline (5% MRM overlay) | warm-started head + NaN safeguards (head LR=1e-5, grad-clip 1.0, `use_fused_adamw=False`) |
+| `recipes/mrm/bc_mrm_head.py` | `bc_mrm_head` | `BaselineRLFullSeedCfg` | **dedicated MRM mix (18.9%)** from a materialised MRM dataset | production recipe: v1 + custom data + MRM tensor/aug overrides + bucket-loss tracker |
+
+v0/v1 don't define their own data — they inherit the baseline datamodule (already 5% MRM).
+`bc_mrm_head` has a bespoke data pipe; shared machinery lives in `recipes/mrm/bc_mrm_common.py`.
+
+## How the MRM head is defined — and why it's "the same arch as the driving head"
+There is **no MRM-specific model class or head module.** The MRM head is architecturally identical
+to the driving head — same WFM early-fusion backbone, same `BehaviorControlOutputAdaptor`. What makes
+it "the MRM head" is three non-architectural things, supplied through `head_recipe(...)`:
+
+```python
+# mrm_head_v1.py
+MrmHeadV1Cfg = head_recipe(
+    DefaultExperimentSpec,               # ← the BASELINE DRIVING spec (same arch)
+    head_key=HeadKeys.MRM,               # ← routing/dispatch tag (not architecture)
+    seed_backbone=BaselineRLFullSeedCfg, # ← which checkpoint the trunk starts from
+    training_job=MrmHeadV1LightningJobCfg,
+    overrides={"version": ..., "gradient_clip_val": 1.0, "job": ...},
+)
+```
+
+"Same arch as the driving head" is referenced by `baseline=DefaultExperimentSpec`. Inside
+`head_recipe` → `build_head_spec`, it forks the baseline spec and does `spec["model"] = seed_backbone`.
+Every seed backbone (`BaselineRLSeedCfg`, `…TrunkOnly…`, `…Full…` in `mid_training.py`) is built on the
+**same skeleton** as the driving model — `BaselineBcWFMEarlyFusionDeferLoadCFG`; only the checkpoint
+loaded differs. `head_recipe` then **freezes the trunk** (`frozen_trunk_layers=TRUNK_DEPTH`), so only
+the output head trains. The actual driving head uses the same builder:
+
+```python
+# driving_head.py
+DrivingHeadCfg = head_recipe(
+    baseline=DefaultExperimentSpec, head_key=HeadKeys.DEFAULT,
+    seed_backbone=MidTrainingV1SeedCfg, seed_checkpoint=MID_TRAINING_V1_CHECKPOINT)
+```
+
+So driving-head vs MRM-head = same `head_recipe`, same arch; they differ in `head_key` + seed + data.
+**Nuance:** `bc_mrm_head` seeds from a **Baseline RL** checkpoint; `driving_head` is the one that uses
+the genuine **mid-training-v1** checkpoint. The parking head mirrors `driving_head` (mid-training).
+
+## How MRM data is defined (bc_mrm_head)
+In `bc_mrm_common.py`: a **weighted bucket mix over a materialised dataset**, assembled into a factory
+pipe:
+- `BC_MRM_HEAD_MRM_BUCKETS` — 7 MRM buckets, relative weights scaled by
+  `BC_MRM_HEAD_MRM_TOTAL_WEIGHT = 0.189`; baseline driving buckets rescaled to fill 81.1%.
+- `bc_mrm_pipeline_config(spec, split)` → `materialised_buckets(_bc_mrm_head_buckets(), split, ROOT)`
+  → `create_pipe(..., base_config=create_bc_mrm_base_config, normalize_bucket_weights=True)`.
+- `FactoryDataModule(train_config=builds(bc_mrm_pipeline_config, spec=BC_MRM_PIPELINE_SPEC, split="train"), …)`.
+- `BC_MRM_PIPELINE_SPEC = builds(resolve_default_pipeline_spec, **{**PIPELINE_SPEC_KW, binary_version, materialisation_version})`.
+- Root: `bc/mrm/initial-release/2026-07-18-2`.
+
+Pattern = **buckets (names + weights) + a materialised root + a pipeline spec → a `FactoryDataModule`.**
+
+## MRM augmentations used (bc_mrm_head)
+Set in `create_bc_mrm_base_config(spec)` (overrides on the standard BC base config):
+- **`A.MRM_TRAJECTORY`** — the core MRM aug: overlays a target pull-over trajectory onto the policy for
+  MRM/synthetic buckets (sets trajectory-binary path + synthetic buckets).
+- **`A.VALID_PATH`** — allow short paths for the slow-lane bucket.
+- **`K.MITIGATION_REQUEST`** (tensor) — marks `forced_pull_over_buckets`; drives the mitigation-request
+  input the `MrmArbiter` routes on.
+- (+ clears `camera_time_delta.coordinate_frames`.)
+
+**Important:** the "basic gear augmentation" (`A.GEAR_PARKING`) is **NOT enabled** for MRM — nor
+anywhere in drive/bc. The proto + loader + runtime pipe all exist (built to port the SI OTF gear
+augmentation), but it's gated on `mrm_gear_parking_buckets`, which is `()` in `DefaultExperimentSpec`
+and never overridden. So it's **dormant machinery**: a proven *template* but not a live *wiring*
+example. For parking you'll both **enable** `gear_parking` and **add** the richer SI augmentations.
+
+---
+
+# Appendix B — MRM file footprint (what to mirror for parking)
+
+Split into **new MRM-dedicated files** (created fresh) vs **shared files MRM edited** (few lines added).
+Parking will be larger: 2 model recipes (WFM + mid-training) and 7 augmentations vs MRM's 1.
+
+## 1. Recipes / config (`drive/bc/configs`)
+**New:** `recipes/mrm/bc_mrm_common.py`, `bc_mrm_head.py`, `mrm_head_v0.py`, `mrm_head_v1.py`, `__init__.py`
+**Edited:** `components/data/buckets/baseline.py` (MRM buckets, `MRM_WEIGHT`), `components/data/datamodules/shared.py` (`include_mrm`, `mrm_gear_parking_buckets` in `PIPELINE_SPEC_KW`), `components/data/pipeline_defaults.py`, `components/training.py` (`ExperimentSpec.mrm_gear_parking_buckets`), `recipes/baseline_bc.py`, `configs/multi_task_api.py`, `configs/smoke/baseline_bc_smoke.py`, `components/data/README.md`
+
+## 2. Data factory — model-facing spec (`drive/bc/data/factory`)
+**Edited:** `schema.py` (`_add_mrm_pipeline_extensions`, `_add_gear_parking_augmentation`), `spec.py` (`include_mrm`, `mrm_parking_lookahead_sec`, `mrm_gear_parking_*`), `inputs.py` (`MrmSettings`, `MrmGearParkingSettings`), `constants.py` (`MRM_GEAR_PARKING_*`)
+
+## 3. Data factory core — augmentation implementation (`wayve/ai/lib/data`)
+**New:** `factory/tensors/augmentor_loaders/mrm.py` (MRM_TRAJECTORY loader), `pipes/augmentations/mrm.py` (runtime pipe), `pipes/mrm.py`, `pipes/mrm_frames.py` (trajectory helpers)
+**Edited:** `factory/tensors/__init__.py` (force-import + `__all__`), `config/schema/augmentations.proto` (`mrm_trajectory` tag 5, `gear_parking` tag 9), `config/schema/tensors/modes.proto` (`parking_mode`/`stopping_mode`), `config/schema/CHANGELOG.md`, `config/migrations.py`, `tables.py`, `pipes/source_pipes.py`, `factory/BUILD`, `factory/README.md`
+
+## 4. Model inputs/outputs (`zoo`)
+`zoo/data/keys.py` — MRM-related keys (`mitigation_request`, …). (Gear/park/stopping input adaptors + gear output head are shared, not MRM-specific.)
+
+## 5. Deployment / arbiter routing
+**New:** `zoo/st/arbiters/mrm.py` (`MrmArbiter`)
+**Edited:** `common/head_keys.py` (`HeadKeys.MRM`), `composite/arbiters.py` (`V4Arbiter` composes `MrmArbiter`), `composite/configs/recipes/v4_composite.py` (`_HEADS`/`head_postprocess`), `composite/configs/components.py`, `composite/runner.py`, `composite/wrappers.py`, `common/deployment/config.py`, `common/deployment/submit/submitter.py`, BUILD files (`zoo/st/arbiters`, `composite`, `common`)
+
+## 6. Tests
+- Factory augmentor: `lib/data/factory/test/test_mrm_augmentor.py`, `test_gear_parking_augmentor.py`, `test_valid_path_augmentor.py`
+- drive/bc: `test/test_mrm_factory_config.py`, `test/configs/recipes/test_bc_mrm_head.py`, `test/data/factory/test_schema.py`, `test_spec.py`, sample configs `v1–v4.yaml`
+- Arbiter/composite: `zoo/st/arbiters/test/test_mrm.py`, `composite/test/test_arbiters.py`, `test_composite_deploy.py`
+- Seed/deployment: `common/test/test_seed.py`, `common/test/test_deployment/`
+
+**Summary:** MRM footprint ≈ 4 new dedicated files (recipe common, augmentor loader, runtime pipe,
+arbiter) + edits across ~20 shared files.
