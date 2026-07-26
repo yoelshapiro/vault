@@ -1,8 +1,16 @@
 # Parking Model Migration — Implementation Plan (SI → drive/bc + data factory)
 
-**Scope (agreed):** BC parking model + parking head only (no diffusion output adaptor). Full
-augmentation parity with SI (incl. the diffusion/off-by-default ones). New `HeadKeys.PARKING` +
-dedicated `ParkingArbiter`.
+**Scope (agreed):** BC parking model only (no diffusion output adaptor). Full augmentation parity
+with SI (incl. the diffusion/off-by-default ones). New `HeadKeys.PARKING` + dedicated
+`ParkingArbiter`.
+
+**Two recipes (agreed):** unlike MRM (which folds into `baseline_bc` + a head only), parking gets
+**two** full recipes:
+1. **`parking_bc`** — parking model trained from a **WFM checkpoint** (trunk trainable; mirrors
+   `baseline_bc.py`). Phase 4.
+2. **`parking_head`** — parking model trained from a **mid-training checkpoint** (frozen trunk head
+   recipe; mirrors `driving_head.py` via `MidTrainingV1SeedCfg` + `MID_TRAINING_V1_CHECKPOINT`).
+   Phase 5. This resolves decision #2 → mid-training seed.
 
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
@@ -149,9 +157,8 @@ explicitly (no head_key→arbiter registry), so the sites above are the complete
 ## Open decisions to confirm
 1. **Radar fusion:** SI parking used late-fusion radar + `RadarInputAdaptorCfg`; drive baseline uses
    early-fusion radar. Keep drive early-fusion (recommended) or replicate SI late-fusion?
-2. **Parking-head seed:** `MidTrainingV1SeedCfg` + `MID_TRAINING_V1_CHECKPOINT` (matches
-   `driving_head.py`, the true "multi-driving-head from mid-train ckpt") — recommended — vs
-   `BaselineRLFullSeedCfg` (matches `bc_mrm_head.py`).
+2. **Parking-head seed:** ✅ RESOLVED — `MidTrainingV1SeedCfg` + `MID_TRAINING_V1_CHECKPOINT`
+   (matches `driving_head.py`, the true "multi-driving-head from mid-train ckpt").
 3. **Policy-path / goal-pose tensors (aug #6):** emit them now for parity/future diffusion even
    though the BC model won't consume them, or defer until the diffusion model is migrated?
 4. **Parking detection:** extend the existing `ParkingDataLoader` (add unparking/parked/goal) vs add
