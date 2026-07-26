@@ -208,6 +208,29 @@ explicitly (no head_key→arbiter registry), so the sites above are the complete
 
 ---
 
+## Readiness — resolve in a short PR1 spike (½–1 day) before mass-writing code
+All product decisions are settled; these are **factory-internals** unknowns that could reshape Phase
+1/2. None blocks starting; each has a known fallback.
+- **R-A — gear-label cleanup on model tensors (sharpest).** Cleanup needs the *dense* gear series;
+  factory augmentors rewrite *sampled* tensors. Decide the mechanism: (i) a table-column transform on
+  `F.GEAR_DIRECTION` before the gear loaders gather, (ii) apply cleanup inside the gear loaders'
+  gather, or (iii) emit new cleaned keys the model reads. Fallback for v1: clean **detection** inside
+  `ParkingDataLoader` (dense, self-contained) and land model-tensor cleaning in a follow-up.
+- **R-B — route shortening (highest effort, de-risked).** `MapRouteLoader` already builds
+  `RouteMapFetcher` ([map.py:180](wayve/ai/lib/data/factory/tensors/tensor_loaders/map.py)); confirm
+  its ctor takes the shortening flags, order `MapRouteLoader` after the parking loader (loader→loader
+  dep is supported — `mitigation.py:52` `ordering_dependency_kinds=[K.PARKING_MODE]`), and that the
+  stop-index arc-length columns are present in the materialised parking data.
+- **R-C — `parking_stage` categorical tensor + `parking_stage_flip` augmentor.** New tensor emitted by
+  `ParkingDataLoader`; an augmentor rewrites it (precedent: gear_parking rewrites `policy_gear_direction`).
+  Confirm a categorical/enum tensor is expressible in the proto tensor schema (dtype/range).
+- **R-D — materialised columns (P0.1 #3).** Verify the published `sampling_materialised/parking_pudo/...`
+  carries indicator (stopping_mode), gear, route/polyline + arc-length columns the loaders read.
+- **Small confirmations:** `head_recipe(datamodule=…, composite_submit=…)` together is supported (only
+  `training_job`+`datamodule` together raises); `stopping_mode` is wanted as a model **input** for the
+  BC parking model (user listed it — enabled in Phase 3, though SI-BC didn't use it); per-**stage**
+  loss tracker in v1 or defer (bucket tracker is v1).
+
 ## Suggested PR breakdown
 1. **PR1 — factory data layer** (Phase 1 + 2): proto arms, loaders, pipes, spec plumbing, schema
    tests. Self-contained, testable without training. Biggest PR; consider splitting 2A vs 2B.
