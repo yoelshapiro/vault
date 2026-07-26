@@ -2,7 +2,7 @@
 
 | Project                                                                                                                 | Status   | Phase         | Last updated | no  |
 | ----------------------------------------------------------------------------------------------------------------------- | -------- | ------------- | ------------ | --- |
-| [Parking model migration to Drive + Data Factory](projects/parking-model-drive-migration)                               | active   | Planning      | 2026-07-26   | no  |
+| [Parking model migration to Drive + Data Factory](projects/parking-model-drive-migration)                               | active   | PR1 (draft)   | 2026-07-26   | no  |
 | [Generic Materialisation Parking PUDO Migration](projects/generic-materialisation-parking-pudo-migration)               | active   | Planning      | 2026-04-30   | no  |
 | [Zach gear and indicator losses](projects/zach-gear-indicator-losses)                                                   | active   | Investigation | 2026-04-30   | no  |
 | [PUDO event materialization speed gear buckets](projects/pudo-event-materialization-speed-gear-buckets)                 | active   | Planning      | 2026-04-30   | no  |

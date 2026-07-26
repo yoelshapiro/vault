@@ -12,6 +12,12 @@ with SI (incl. the diffusion/off-by-default ones). New `HeadKeys.PARKING` + dedi
    recipe; mirrors `driving_head.py` via `MidTrainingV1SeedCfg` + `MID_TRAINING_V1_CHECKPOINT`).
    Phase 5. This resolves decision #2 → mid-training seed.
 
+## Status (2026-07-26)
+**PR1 (data-factory layer) in progress** — branch `boris/parking_migration/factory-data-layer`,
+draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389). First commit: ADR 001
+(`wayve/ai/lib/data/factory/.decisions/001-…md`). Spike done — all factory-internals unknowns
+resolved (see Readiness). Next: implement the PR1 checklist (see PR body).
+
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
 gear-policy output. **Almost all of those model internals already exist in `drive` and are on (or
