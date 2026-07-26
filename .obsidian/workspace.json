@@ -427,12 +427,24 @@
             "id": "721d72beb79ec2cb",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/head_options.excalidraw.md"
+                "file": "projects/parking-model-drive-migration.md",
+                "mode": "preview",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "head_options.excalidraw"
+              "icon": "lucide-file",
+              "title": "parking-model-drive-migration"
             }
           }
         ],
@@ -610,13 +622,13 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "a6cdcc3493cdeb21",
+  "active": "721d72beb79ec2cb",
   "lastOpenFiles": [
-    "projects/parking-model-drive-migration.md",
-    "Excalidraw/head_options.excalidraw.md",
-    "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
     "projects.md",
     "agents-change-log.md",
+    "Excalidraw/head_options.excalidraw.md",
+    "projects/parking-model-drive-migration.md",
+    "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun.md",
     "Untitled.md",
