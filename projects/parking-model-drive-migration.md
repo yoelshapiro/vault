@@ -117,8 +117,8 @@ tensors); gaps 69–72 also free. MINOR bump → no migration needed; update `au
 ### 2B — New-tensor producers (template: parking loader / set_speed)
 | # | SI source | Approach | Emits |
 |---|---|---|---|
-| 5 | parked→(un)parking flip `_augment_parked_mode` ([parking.py:629](wayve/ai/si/datamodules/parking.py)) | `parking_stage_flip` (tag 13) — stochastic: `read_only_fields=[]`, `augmented_fields=[parking_stage]`; with `parked_unparking_prob` rewrites `parked` → `parking`\|`unparking`. Kept OUT of the (deterministic) detection loader for reproducibility. | rewrites `parking_stage` (no `unparking_mode`) |
-| 6 | policy path / goal pose `_sample_policy_path_from_poses` ([parking.py:402](wayve/ai/si/datamodules/parking.py)) | New tensor loader(s) + `TensorRequest` arm(s) (tags 118+); `read_only_fields=[parking_stage]`. ⚠️ The **BC** model won't consume these (they're diffusion inputs); we emit them for parity/future diffusion — see decision #3. | PARKING_POSE, PARKING_GOAL_DISTANCE, ORIGINAL_PARKING_GOAL_POSE, POLICY_PATH ([keys.py:257-270](wayve/ai/zoo/data/keys.py)) |
+| 5 | parked→(un)parking flip `_augment_parked_mode` ([parking.py:629](wayve/ai/si/datamodules/parking.py)) | `parking_stage_flip` (tag 13) — stochastic: `read_only_fields=[path_pose, path_valid]`, `augmented_fields=[parking_stage]`; with `parked_unparking_prob` rewrites `parked` → `parking`\|`unparking`. Kept OUT of the (deterministic) detection loader for reproducibility. **Note:** SI gated `can_unpark` on future-path availability derived from policy_path/goal (aug #6, now deferred) — instead use `path_pose` cumulative distance for the path-length check. | rewrites `parking_stage` (no `unparking_mode`) |
+| 6 | policy path / goal pose `_sample_policy_path_from_poses` ([parking.py:402](wayve/ai/si/datamodules/parking.py)) | ⏸️ **DEFERRED (decision #3)** — these are diffusion inputs the BC model doesn't consume. Skip until the diffusion model is migrated. When added: new tensor loader(s) + `TensorRequest` arm(s) (tags 118+); `read_only_fields=[parking_stage]`. | (deferred) PARKING_POSE, PARKING_GOAL_DISTANCE, ORIGINAL_PARKING_GOAL_POSE, POLICY_PATH ([keys.py:257-270](wayve/ai/zoo/data/keys.py)) |
 | 7 | route shortening `_shorten_route_polyline_to/from_stop` ([routes.py:167](wayve/ai/lib/data/pipes/routes.py)) | (a) parking loader emits `parking_stop_route_index`/`parking_stop_route_fraction`; (b) pass `enable_route_shortening_for_parking` + jitter into `RouteMapFetcher` from [tensor_loaders/map.py](wayve/ai/lib/data/factory/tensors/tensor_loaders/map.py); **reads `parking_stage` directly** (`==parking` → shorten-to-stop, `==unparking` → shorten-from-stop) — no `unparking_mode` tensor. | route_map (shortened); stop-index tensors |
 
 ---
@@ -188,19 +188,28 @@ explicitly (no head_key→arbiter registry), so the sites above are the complete
 
 ---
 
-## Open decisions to confirm
-1. **Radar fusion:** SI parking used late-fusion radar + `RadarInputAdaptorCfg`; drive baseline uses
-   early-fusion radar. Keep drive early-fusion (recommended) or replicate SI late-fusion?
+## Decisions (all resolved)
+1. **Radar fusion:** ✅ RESOLVED — **early fusion** (drive's latest). Reuse the baseline early-fusion
+   radar adaptor; do NOT replicate SI late-fusion.
 2. **Parking-head seed:** ✅ RESOLVED — `MidTrainingV1SeedCfg` + `MID_TRAINING_V1_CHECKPOINT`
    (matches `driving_head.py`, the true "multi-driving-head from mid-train ckpt").
-3. **Policy-path / goal-pose tensors (aug #6):** emit them now for parity/future diffusion even
-   though the BC model won't consume them, or defer until the diffusion model is migrated?
+3. **Policy-path / goal-pose tensors (aug #6):** ✅ RESOLVED — **deferred**. Diffusion inputs the BC
+   model doesn't consume; add when the diffusion model is migrated. The parked→(un)parking flip (#5)
+   uses `path_pose` cumulative distance for its path-availability gate instead.
 4. **Parking detection / data model:** ✅ RESOLVED — extend `ParkingDataLoader` for deterministic
    detection (`parking_stage`, stop-index, gear-cleanup folded in) + separate augmentors for the
    stochastic flip and policy rewrites. `parking_mode` is input-only (derived `parking_stage ∈
    {parking, parked}`, provisional); `unparking_mode` dropped (route-shortening reads `parking_stage`).
    `parking_mode`→`initiate_auto_park` rename deferred to a separate refactor.
-5. **Data materialisation** ownership + timeline (P0.1).
+5. **Data materialisation:** ✅ RESOLVED — parking data already sampled/materialised via the
+   `parking_pudo` `BucketedDataset`; remaining work is wiring (point at the `sampling_materialised/parking_pudo/...`
+   root, port bucket names/weights, verify columns) — see P0.1. Not a separate workstream.
+
+### Arbiter switching (v0, agreed)
+`ParkingArbiter` routes to the parking head when the `parking_mode` input is active **OR** gear ∈
+{PARK, REVERSE}; stateless per-step (switch-back implicit). Extend later for maneuver-lifecycle /
+latching. Open impl detail: confirm `vehicle_gear_position` (DrivePositionV2) is available to the
+arbiter at deploy for the PARK distinction (else fall back to `vehicle_gear_direction`≈NEUTRAL).
 
 ---
 ---
