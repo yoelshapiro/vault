@@ -48,11 +48,27 @@ PARKING head key + arbiter; (5) tests.** No new model architecture is required.
 ---
 
 ## Phase 1 — Data factory: input tensors
+
+### Data model (RESOLVED) — split the overloaded `parking_mode`
+SI overloads `parking_mode`: `ParkingModeResult` uses parking/parked/unparking as the **stage** of the
+anchor (mutually exclusive, [parking.py:182-184](wayve/ai/si/datamodules/parking.py)), but
+`add_parking_mode` then writes the model-input key `data[PARKING_MODE] = result.parking_mode`
+([parking.py:1365](wayve/ai/si/datamodules/parking.py)). The factory loader has the same overload
+([tensor_loaders/parking.py:108](wayve/ai/lib/data/factory/tensors/tensor_loaders/parking.py)). Split them:
+- **`parking_stage` ∈ {driving, parking, parked, unparking}** — NEW categorical tensor; the detection
+  state. Drives ALL augmentations (standstill-gear, clamp, strip, route-shortening, goal-pose).
+  Formalizes SI's 3 bools + `_parking_stage_label_from_result` ([parking.py:1273](wayve/ai/si/datamodules/parking.py)).
+- **`parking_mode`** — the model INPUT only (auto-park intent = INITIATE_AUTO_PARK / `DrivingControlKey.nING`;
+  read by `ParkingModeSTAdaptor`). At train time **derived** as `parking_stage ∈ {parking, parked}`
+  (documented as provisional — may change). Keep the name `parking_mode` for now (rename to
+  `initiate_auto_park` is a deferred, separate refactor: proto MAJOR bump + checkpoint-key migration).
+- **`unparking_mode` is DROPPED** — route-shortening reads `parking_stage == unparking` directly.
+
 Turn the parking inputs on in the BC factory.
 
 | File | Change |
 |---|---|
-| [tensor_loaders/parking.py](wayve/ai/lib/data/factory/tensors/tensor_loaders/parking.py) | `ParkingDataLoader` already emits `parking_mode`+`stopping_mode`. **Reuse.** (Extend for `unparking_mode`/goal in Phase 2.) |
+| [tensor_loaders/parking.py](wayve/ai/lib/data/factory/tensors/tensor_loaders/parking.py) | Extend `ParkingDataLoader` to (a) fold gear-label cleanup in **before** detection (it overwrites `vehicle_gear_direction`/`policy_gear_direction`, keeps an `original/` snapshot; see Phase 2 #1), (b) emit **`parking_stage`** (NEW), (c) emit `parking_mode` derived from `parking_stage ∈ {parking, parked}`, (d) keep `stopping_mode`. Deterministic detection here; the stochastic parked→parking/unparking flip is a small augmentor (Phase 2 #5). |
 | [bc/data/factory/schema.py](wayve/ai/drive/bc/data/factory/schema.py) | `create_base_config`: today `parking_mode` is added only under `include_mrm` (`_add_mrm_pipeline_extensions`) and `stopping_mode` is never added. Add parking-specific gating on new flags `enable_parking_mode`/`enable_stopping_mode` so the parking model gets both independent of `include_mrm`. |
 | [bc/data/factory/spec.py](wayve/ai/drive/bc/data/factory/spec.py) | Add `enable_parking_mode`, `enable_stopping_mode` + parking-augmentation fields to `PipelineSpec`; thread through `resolve_pipeline_spec` + `resolve_default_pipeline_spec`. |
 | [bc/data/factory/inputs.py](wayve/ai/drive/bc/data/factory/inputs.py) | Add a `ParkingSettings` dataclass grouping parking knobs (buckets, probs, flags), mirroring `MrmGearParkingSettings`. |
@@ -71,7 +87,7 @@ loader + runtime `IterDataPipe`**, force-imported in
 Templates: [gear_parking.py loader](wayve/ai/lib/data/factory/tensors/augmentor_loaders/gear_parking.py)
 + [gear_parking.py pipe](wayve/ai/lib/data/pipes/augmentations/gear_parking.py) (in-place rewrite);
 [set_speed](wayve/ai/lib/data/factory/tensors/augmentor_loaders/set_speed.py) (emits new tensors).
-Ordering is by dependency: augmentors that read `parking_mode` declare it in `read_only_fields`, so
+Ordering is by dependency: augmentors that read `parking_stage` declare it in `read_only_fields`, so
 they run **after** `ParkingDataLoader` automatically.
 
 Proto free tags: `AugmentationRequest` → **10, 11, 12, 13** (avoid historical 4);
