@@ -90,24 +90,26 @@ Templates: [gear_parking.py loader](wayve/ai/lib/data/factory/tensors/augmentor_
 Ordering is by dependency: augmentors that read `parking_stage` declare it in `read_only_fields`, so
 they run **after** `ParkingDataLoader` automatically.
 
-Proto free tags: `AugmentationRequest` → **10, 11, 12, 13** (avoid historical 4);
-`TensorRequest` → **118+** (gaps 69–72 also free). MINOR bump → no migration needed; update
-`autopublish.yaml`, `CHANGELOG.md`, `config/tests/test_schema*.py`; regenerate via `make_protos.sh`.
+Proto tags to assign (avoid historical `AugmentationRequest` tag 4): `AugmentationRequest` →
+**10** standstill_gear, **11** clamp_policy_at_neutral, **12** strip_leading_standstill,
+**13** parking_stage_flip. `TensorRequest` → **118** `parking_stage` (+ 119+ for policy-path/goal
+tensors); gaps 69–72 also free. MINOR bump → no migration needed; update `autopublish.yaml`,
+`CHANGELOG.md`, `config/tests/test_schema*.py`; regenerate via `make_protos.sh`.
 
 ### 2A — In-place policy/gear rewrites (template: gear_parking)
 | # | SI source | New proto arm | Loader / pipe | `augmented_fields` |
 |---|---|---|---|---|
-| 1 | gear label cleanup `clean_parking_gear_labels` ([parking.py:594](wayve/ai/si/datamodules/parking.py)) | `gear_label_cleanup` (tag 10) — fields: reverse_max_distance_m, neutral_max_duration_sec, stop_buffer_sec, stop_speed_threshold_mps | `augmentor_loaders/gear_label_cleanup.py` + `pipes/augmentations/gear_label_cleanup.py` | vehicle_gear_direction, policy_gear_direction. **Ordering:** must precede parking detection → either a pre-detection augmentor or fold into `ParkingDataLoader` (recommend fold-in; SI does it inside detection). |
-| 2 | advanced standstill gear aug `augment_standstill_gear` ([parking.py:1161](wayve/ai/si/datamodules/parking.py)) | `standstill_gear` (tag 11) — fields: prob, use_main_augmentation | new loader + pipe | augments `vehicle_gear_direction`; `read_only_fields=[policy_gear_direction, parking_mode, unparking_mode]` |
-| 3 | clamp at first neutral `clamp_policy_at_first_neutral` ([parking.py:845](wayve/ai/si/datamodules/parking.py)) | `clamp_policy_at_neutral` (tag 12) | new loader + pipe | policy_pose, policy_waypoints, policy_curvature, policy_speed, policy_gear_direction |
-| 4 | strip leading standstill `strip_leading_standstill` ([parking.py:697](wayve/ai/si/datamodules/parking.py)) | `strip_leading_standstill` (tag 13) | new loader + pipe (may DROP sample → filter stage) | policy_* (pose/waypoints/curvature/speed/gear). SI already has a TODO to make this a standalone augmentor. |
+| 1 | gear label cleanup `clean_parking_gear_labels` ([parking.py:594](wayve/ai/si/datamodules/parking.py)) | — (NOT a separate arm) | **RESOLVED: fold into `ParkingDataLoader`** (Phase 1) — cleanup must precede detection (detection reads cleaned gear), and factory loaders run before augmentors, so it can't be a downstream peer. Overwrites `vehicle_gear_direction`/`policy_gear_direction`, keeps `original/` snapshot. | vehicle_gear_direction, policy_gear_direction |
+| 2 | advanced standstill gear aug `augment_standstill_gear` ([parking.py:1161](wayve/ai/si/datamodules/parking.py)) | `standstill_gear` (tag 10) — fields: prob, use_main_augmentation | new loader + pipe | augments `vehicle_gear_direction`; `read_only_fields=[policy_gear_direction, parking_stage]` |
+| 3 | clamp at first neutral `clamp_policy_at_first_neutral` ([parking.py:845](wayve/ai/si/datamodules/parking.py)) | `clamp_policy_at_neutral` (tag 11) | new loader + pipe; `read_only_fields=[parking_stage]` | policy_pose, policy_waypoints, policy_curvature, policy_speed, policy_gear_direction |
+| 4 | strip leading standstill `strip_leading_standstill` ([parking.py:697](wayve/ai/si/datamodules/parking.py)) | `strip_leading_standstill` (tag 12) | new loader + pipe (may DROP sample → filter stage); `read_only_fields=[parking_stage]` | policy_* (pose/waypoints/curvature/speed/gear). SI already has a TODO to make this a standalone augmentor. |
 
 ### 2B — New-tensor producers (template: parking loader / set_speed)
 | # | SI source | Approach | Emits |
 |---|---|---|---|
-| 5 | parked→unparking flip `_augment_parked_mode` ([parking.py:629](wayve/ai/si/datamodules/parking.py)) | **Extend `ParkingDataLoader`** to return the richer `ParkingModeResult` (parking/unparking/parked) behind a flag + `parked_unparking_prob` — it already computes the neutral segments. | `unparking_mode` tensor (key exists in [keys.py:256](wayve/ai/zoo/data/keys.py)) |
-| 6 | policy path / goal pose `_sample_policy_path_from_poses` ([parking.py:402](wayve/ai/si/datamodules/parking.py)) | New tensor loader(s) + `TensorRequest` arm(s) (tags 118+). ⚠️ The **BC** model won't consume these (they're diffusion inputs); we emit them for parity/future diffusion — see decision #3. | PARKING_POSE, PARKING_GOAL_DISTANCE, ORIGINAL_PARKING_GOAL_POSE, POLICY_PATH ([keys.py:257-270](wayve/ai/zoo/data/keys.py)) |
-| 7 | route shortening `_shorten_route_polyline_to/from_stop` ([routes.py:167](wayve/ai/lib/data/pipes/routes.py)) | (a) parking loader emits `parking_stop_route_index`/`parking_stop_route_fraction`; (b) pass `enable_route_shortening_for_parking` + jitter into `RouteMapFetcher` from [tensor_loaders/map.py](wayve/ai/lib/data/factory/tensors/tensor_loaders/map.py) (shorten helpers already exist in `routes.py`). | route_map (shortened); stop-index tensors |
+| 5 | parked→(un)parking flip `_augment_parked_mode` ([parking.py:629](wayve/ai/si/datamodules/parking.py)) | `parking_stage_flip` (tag 13) — stochastic: `read_only_fields=[]`, `augmented_fields=[parking_stage]`; with `parked_unparking_prob` rewrites `parked` → `parking`\|`unparking`. Kept OUT of the (deterministic) detection loader for reproducibility. | rewrites `parking_stage` (no `unparking_mode`) |
+| 6 | policy path / goal pose `_sample_policy_path_from_poses` ([parking.py:402](wayve/ai/si/datamodules/parking.py)) | New tensor loader(s) + `TensorRequest` arm(s) (tags 118+); `read_only_fields=[parking_stage]`. ⚠️ The **BC** model won't consume these (they're diffusion inputs); we emit them for parity/future diffusion — see decision #3. | PARKING_POSE, PARKING_GOAL_DISTANCE, ORIGINAL_PARKING_GOAL_POSE, POLICY_PATH ([keys.py:257-270](wayve/ai/zoo/data/keys.py)) |
+| 7 | route shortening `_shorten_route_polyline_to/from_stop` ([routes.py:167](wayve/ai/lib/data/pipes/routes.py)) | (a) parking loader emits `parking_stop_route_index`/`parking_stop_route_fraction`; (b) pass `enable_route_shortening_for_parking` + jitter into `RouteMapFetcher` from [tensor_loaders/map.py](wayve/ai/lib/data/factory/tensors/tensor_loaders/map.py); **reads `parking_stage` directly** (`==parking` → shorten-to-stop, `==unparking` → shorten-from-stop) — no `unparking_mode` tensor. | route_map (shortened); stop-index tensors |
 
 ---
 
@@ -177,9 +179,11 @@ explicitly (no head_key→arbiter registry), so the sites above are the complete
    (matches `driving_head.py`, the true "multi-driving-head from mid-train ckpt").
 3. **Policy-path / goal-pose tensors (aug #6):** emit them now for parity/future diffusion even
    though the BC model won't consume them, or defer until the diffusion model is migrated?
-4. **Parking detection:** extend the existing `ParkingDataLoader` (add unparking/parked/goal) vs add
-   separate augmentors. Recommend extending the loader for detection-coupled outputs
-   (parked/unparking/stop-index) and separate augmentors for the policy rewrites.
+4. **Parking detection / data model:** ✅ RESOLVED — extend `ParkingDataLoader` for deterministic
+   detection (`parking_stage`, stop-index, gear-cleanup folded in) + separate augmentors for the
+   stochastic flip and policy rewrites. `parking_mode` is input-only (derived `parking_stage ∈
+   {parking, parked}`, provisional); `unparking_mode` dropped (route-shortening reads `parking_stage`).
+   `parking_mode`→`initiate_auto_park` rename deferred to a separate refactor.
 5. **Data materialisation** ownership + timeline (P0.1).
 
 ---
