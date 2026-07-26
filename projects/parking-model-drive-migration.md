@@ -107,11 +107,15 @@ Drive-idiomatic approach — **don't blindly re-log gear/stage as provenance**:
   it to both parking recipes' callbacks. For **augmentation-aware** monitoring (the stochastic
   parked→(un)parking flip makes `parking_stage` diverge from the source bucket), track loss by
   `parking_stage` — needs a stage-aware tracker or exposing `parking_stage` to the metrics callback.
-- **Decision (small):** replicate the SI domain-provenance tensors (`provenance_parking_stage`,
-  `provenance_current/next_gear_direction`) in the factory **only if** a concrete offline consumer needs
-  those exact keys; otherwise rely on the `parking_stage`/gear tensors + bucket/stage loss trackers.
-  Default: skip the explicit provenance tensors; add a `BucketLossTracker` (buckets) now and a
-  stage-keyed tracker if per-stage curves are wanted.
+- **RESOLVED — DO log it (for investigation/debugging):** no code reads these actively, but they're
+  wanted for offline investigation, so emit them. Emit `parking_stage` as a first-class factory tensor
+  (needed by augmentations anyway; carried in the batch/dumps) plus the SI debug snapshots
+  `provenance_current_gear_direction` / `provenance_next_gear_direction` (origin gear + next step) as
+  lightweight provenance tensors. (`parking_stage` itself replaces `provenance_parking_stage`; keep the
+  name `parking_stage`.) These are pure logging fields — not model inputs (the adaptor list excludes them).
+- **Monitoring:** add a `BucketLossTracker` over the parking buckets to both parking recipes (per-maneuver
+  loss curves, MRM pattern). Optionally add a **stage-keyed** tracker for per-`parking_stage` loss curves
+  (see below) — decide for v1.
 
 ---
 
