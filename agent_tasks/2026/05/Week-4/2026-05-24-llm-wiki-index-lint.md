@@ -15,7 +15,7 @@ pr: none
 
 ## Goal
 
-Re-audit `/home/borisindelman/git/vault/llm_wiki` after Boris reported the index was broken.
+Re-audit `${HOME}/git/vault/llm_wiki` after Boris reported the index was broken.
 
 ## Root Cause
 

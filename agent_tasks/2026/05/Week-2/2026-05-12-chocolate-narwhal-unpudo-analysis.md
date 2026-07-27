@@ -7,7 +7,7 @@
 - Source run IDs: 5 model-episode runs from `av_model_episodes`
 - Scored runs: 3 runs with unique UNPUDO events
 - Persisted table: `parking.model_analysis`
-- Model card: `/home/borisindelman/git/vault/parking_model_analysis/models/chocolate-narwhal-adaptable.md`
+- Model card: `${HOME}/git/vault/parking_model_analysis/models/chocolate-narwhal-adaptable.md`
 
 ## Outputs
 
@@ -16,9 +16,9 @@
 - Event type: `unpudo` only
 - Overall scored success rate: `90.0% (9/10)`
 - Report cards:
-  - `/home/borisindelman/git/vault/parking_model_analysis/report_cards/2026/05/Week-3/fme20034--2026-05-11--12-00-47--gen2-av-a01190c7-c0dd-4d8c-b48d-cc015fdf9947.md`
-  - `/home/borisindelman/git/vault/parking_model_analysis/report_cards/2026/05/Week-3/fme20034--2026-05-11--12-59-22--gen2-av-74e43933-6e3b-42c8-b5ea-cc021431a02e.md`
-  - `/home/borisindelman/git/vault/parking_model_analysis/report_cards/2026/05/Week-3/fme20036--2026-05-11--13-11-47--gen2-av-26a1b5c6-1554-4a48-8fe1-553b2bce33d4.md`
+  - `${HOME}/git/vault/parking_model_analysis/report_cards/2026/05/Week-3/fme20034--2026-05-11--12-00-47--gen2-av-a01190c7-c0dd-4d8c-b48d-cc015fdf9947.md`
+  - `${HOME}/git/vault/parking_model_analysis/report_cards/2026/05/Week-3/fme20034--2026-05-11--12-59-22--gen2-av-74e43933-6e3b-42c8-b5ea-cc021431a02e.md`
+  - `${HOME}/git/vault/parking_model_analysis/report_cards/2026/05/Week-3/fme20036--2026-05-11--13-11-47--gen2-av-26a1b5c6-1554-4a48-8fe1-553b2bce33d4.md`
 
 ## Run Ledger
 

@@ -16,5 +16,5 @@
 
 ## Validation
 
-- `rg "parking-interleave-deploy|parking-console-updates" /home/borisindelman/git/ParkingSkills` returned no matches.
-- `git -C /home/borisindelman/git/ParkingSkills diff --check` passed.
+- `rg "parking-interleave-deploy|parking-console-updates" ${HOME}/git/ParkingSkills` returned no matches.
+- `git -C ${HOME}/git/ParkingSkills diff --check` passed.

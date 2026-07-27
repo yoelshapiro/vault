@@ -18,7 +18,7 @@ Boris asked to build an LLM-maintained wiki under the vault at `llm_wiki/` for a
 
 ## Work Done
 
-- Created `/home/borisindelman/git/vault/llm_wiki/`.
+- Created `${HOME}/git/vault/llm_wiki/`.
 - Added an agent operating guide in `llm_wiki/AGENTS.md`.
 - Added `index.md`, `log.md`, a raw source guide, source directories, maps, system pages, workflow pages, templates, glossary, and open questions.
 - Seeded the first codebase map from:

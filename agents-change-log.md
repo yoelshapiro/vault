@@ -9,10 +9,12 @@
 - Change type: Documentation maintenance and path validation.
 - Areas: `llm_wiki`, `${HOME}/git/ParkingSkills`, `${HOME}/git/vault`.
 - Changes:
-  - Replaced `/home/borisindelman` with `${HOME}` across eight wiki files.
+  - Replaced Boris-specific vault and ParkingSkills Git roots with `${HOME}`
+    across maintained wiki pages and historical vault notes.
   - Corrected moved ParkingSkills lifecycle paths.
   - Marked unavailable historical skills instead of retaining broken paths.
-  - Validated every remaining `${HOME}` reference for `yoelshapiro`.
+  - Validated all 27 maintained wiki `${HOME}` references for `yoelshapiro`;
+    zero paths were missing.
 - Task note: [[agent_tasks/2026/07/Week-31/2026-07-27-portable-vault-user-paths|2026-07-27 Portable Vault User Paths]]
 
 ## 2026-07-27 - Codex Vault Integration
@@ -1988,7 +1990,7 @@
 - Branch: `boris/event_creation_gear_fix` local worktree; inspected `origin/zmurez/pudo`.
 - PR: N/A.
 - Change type: Vault documentation.
-- Areas: `/home/borisindelman/git/vault/agent_tasks/2026/06/Week-1/2026-06-05-zak-pudo-bucket-reimplementation-notes.md`, `wayve/ai/experimental/configs`, `wayve/ai/experimental/samplers/sampler.py`.
+- Areas: `${HOME}/git/vault/agent_tasks/2026/06/Week-1/2026-06-05-zak-pudo-bucket-reimplementation-notes.md`, `wayve/ai/experimental/configs`, `wayve/ai/experimental/samplers/sampler.py`.
 - Changes:
   - Summarized heuristic bucket generation for DC, large-error, start, indicator, gear-change, CA, parking, PUDO, and unparking buckets.
   - Recorded active `mcv_new_phase2` weights and the `mcv_new_phase2x_wta` override that moves large-error weight into alpha3 CA buckets.
@@ -2021,7 +2023,7 @@
 - Branch: `boris/hari_pudo`; promoted PR branch `boris/event_clip_viewer`.
 - PR: `https://github.com/wayveai/WayveCode/pull/116721` (draft).
 - Change type: Local tool / viewer.
-- Areas: `/workspace/classifiers/tools/databricks_queries/unpudo_event_viewer`, `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Areas: `/workspace/classifiers/tools/databricks_queries/unpudo_event_viewer`, `/workspace/event_clip_viewer/wayve/ai/parking/tools/event_clip_viewer`, `${HOME}/git/vault/projects/hari-pudo-classifiers.md`.
 - Changes:
   - Added a Bazel-run Streamlit app for `hive_metastore.parking.pudo_unpudo_unpark_events_gear_fix`.
   - Added event-type filtering, run ID substring filtering, row limits, event selection, and metadata display.
@@ -2161,7 +2163,7 @@
 - Branch: `tomboehling/hari_pudo`.
 - PR: N/A.
 - Change type: Worktree setup / investigation note.
-- Areas: `/workspace/classifiers`, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Areas: `/workspace/classifiers`, `${HOME}/git/vault/projects/hari-pudo-classifiers.md`.
 - Changes:
   - Created `/workspace/classifiers` as a git worktree on `tomboehling/hari_pudo`.
   - Fast-forwarded the local branch to `origin/tomboehling/hari_pudo` at `09109967f05c`.
@@ -2273,7 +2275,7 @@
 - Branch: `boris/05-21-updated-pudo-config`.
 - PR: N/A.
 - Change type: Code fix / training run.
-- Areas: `/workspace/WayveCode/wayve/ai/si/models`, `/workspace/WayveCode/wayve/ai/si/configs/parking`, Surfboard job `170265`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `/workspace/WayveCode/wayve/ai/si/models`, `/workspace/WayveCode/wayve/ai/si/configs/parking`, Surfboard job `170265`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Pushed fixes for parking navigation plus indicator memory, deployment driving parameter keys, and 2026.6.21 behavior-control output heads.
   - Submitted `parking_bc_train_release_2026_6_21` with `pudo_bc_datamodule` for 80k steps.
@@ -2288,7 +2290,7 @@
 - Branch: `agents_day`.
 - PR: N/A.
 - Change type: Skill / helper script.
-- Areas: `/home/borisindelman/git/ParkingSkills/skills/eval-studio-suite-scores`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `${HOME}/git/ParkingSkills/skills/eval-studio-suite-scores`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Added a token-efficient skill for resolving model artefact IDs and fetching Eval Studio suite scores.
   - Added `scripts/get_scores.sh` to resolve executions by suite version or suite UUID and batch score lookups to match Scorecard semantics.
@@ -2317,7 +2319,7 @@
 - Branch: `boris/parking-moving-buckets-config`.
 - PR: N/A.
 - Change type: Config change.
-- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/configs/parking`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/si/configs/parking`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Created branch from `origin/guy/parking-past30-no-standstill-gear-aug`.
   - Updated `PUDO_BUCKETS_ROOT` to the `2026_05_19_20_07_34` materialization with moving UnPUDO buckets.
@@ -2346,7 +2348,7 @@
 - Branch: detached `HEAD`; source `origin/alon/unpudo_unsafe_fix`.
 - PR: N/A.
 - Change type: Notebook checkout.
-- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/parking/notebooks`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `/workspace/.codex-borisindelman/worktrees/7992/WayveCode/wayve/ai/parking/notebooks`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Checked out `wayve/ai/parking/notebooks/pudo_unpudo_materialization.ipynb` from `origin/alon/unpudo_unsafe_fix`.
   - Verified the notebook matches the source branch.
@@ -2360,7 +2362,7 @@
 - Branch: N/A.
 - PR: N/A.
 - Change type: Documentation / knowledge-base ingest.
-- Areas: `/home/borisindelman/git/vault/llm_wiki`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `${HOME}/git/vault/llm_wiki`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Added source summaries for Notion and Google Drive ingests.
   - Added system pages for parking/PUDO product, event pipeline, deployment/release, navigation conditioning, latent actions, and multi-driving heads.
@@ -2375,7 +2377,7 @@
 - Branch: N/A.
 - PR: N/A.
 - Change type: Documentation / knowledge-base maintenance.
-- Areas: `/home/borisindelman/git/vault/llm_wiki`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `${HOME}/git/vault/llm_wiki`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Added newcomer onboarding path, MLE role map, and first parking/PUDO change checklist.
   - Reworked README and index around reading paths.
@@ -2400,7 +2402,7 @@
 - Branch: `boris/parking-past30-no-standstill-gear-aug/no_behave`.
 - PR: N/A.
 - Change type: Model Catalogue / Console operation.
-- Areas: `https://console.sso.wayve.ai/model/session_2026_05_22_08_40_39_si_parking_bc_train_release_2026_5_11_no_behave_no_imem_params_80k__lavender-ferret-ubiquitous_interleave_control_v1`, `https://console.sso.wayve.ai/on-road-experiments/29332a9a-f91b-478d-83cd-e1bc58e9a2d6`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `https://console.sso.wayve.ai/model/session_2026_05_22_08_40_39_si_parking_bc_train_release_2026_5_11_no_behave_no_imem_params_80k__lavender-ferret-ubiquitous_interleave_control_v1`, `https://console.sso.wayve.ai/on-road-experiments/29332a9a-f91b-478d-83cd-e1bc58e9a2d6`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Checked out `/tmp/wayvecode-fuchsia-model-branch` to `boris/parking-past30-no-standstill-gear-aug/no_behave`.
   - Added the standard Parking/PUDO `model_change_note` to deployed model `condor-fearless-ivory`.
@@ -2414,7 +2416,7 @@
 - Branch: `/tmp/wayvecode-fuchsia-model-branch` reported `binariser-autobump-driving-3.0.62` at final status check; branch changed outside this experiment creation step.
 - PR: N/A.
 - Change type: Model Catalogue / Console operation.
-- Areas: `https://console.sso.wayve.ai/on-road-experiments/6b6dc929-76a1-48c4-a69d-7b2118d7dfbb`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `https://console.sso.wayve.ai/on-road-experiments/6b6dc929-76a1-48c4-a69d-7b2118d7dfbb`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Resolved both models' gen2 artefacts and verified `gen2_mache_alpha3` licences.
   - Reused the controller, route template, SBW-on driving feature config, tags, and theme from reference experiment `8685ed72-b127-456d-b272-7f6cf0a5dfa3`.
@@ -2462,7 +2464,7 @@
 - Branch: N/A.
 - PR: N/A.
 - Change type: Skill / documentation.
-- Areas: `/home/borisindelman/git/ParkingSkills/skills/parking-onboarding`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `${HOME}/git/ParkingSkills/skills/parking-onboarding`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Added a Mac-to-Coder bootstrap flow that avoids local Mac Git setup.
   - Added Coder workspace bring-up, GitHub auth, WayveCode verification, ParkingSkills clone/update, and Codex symlink guidance.
@@ -2476,7 +2478,7 @@
 - Branch: `main` in `/tmp/ParkingSkills-main`; source checkout remained on `agents_day` due unrelated dirty files.
 - PR: N/A.
 - Change type: Skill maintenance.
-- Areas: `/tmp/ParkingSkills-main/skills/parking-onboarding`, `/home/borisindelman/git/ParkingSkills/skills/parking-onboarding`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `/tmp/ParkingSkills-main/skills/parking-onboarding`, `${HOME}/git/ParkingSkills/skills/parking-onboarding`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Removed all `llm_wiki` references from `parking-onboarding`.
   - Copied the skill into a clean `main` worktree because the original checkout could not switch branches without overwriting unrelated local edits.
@@ -2562,7 +2564,7 @@
 - Branch: N/A.
 - PR: N/A.
 - Change type: Skill maintenance.
-- Areas: `/home/borisindelman/git/ParkingSkills/skills/parking-eval-studio-suite-scores`.
+- Areas: `${HOME}/git/ParkingSkills/skills/parking-eval-studio-suite-scores`.
 - Changes:
   - Renamed `eval-studio-suite-scores` to `parking-eval-studio-suite-scores`.
   - Baked in the Pudo-Unpudo and Alpha3 Intervention suite/version IDs.
@@ -2577,7 +2579,7 @@
 - Branch: N/A.
 - PR: N/A.
 - Change type: Documentation.
-- Areas: `/home/borisindelman/git/ParkingSkills/README.md`.
+- Areas: `${HOME}/git/ParkingSkills/README.md`.
 - Changes:
   - Added a short setup section with `git clone` and symlink commands for `~/.codex/skills` and `~/.claude/skills`.
 - Task note: [[agent_tasks/2026/05/Week-5/2026-05-26-parking-model-card-suite-scores|2026-05-26 Parking Model Card Suite Scores]]
@@ -2606,10 +2608,10 @@
 
 - Topic: Update Parking model lifecycle routing for the fixed Pudo-Unpudo Eval Studio suite/version.
 - Labels: parking, pudo, eval-studio, skill, lifecycle.
-- Branch: `main` in `/home/borisindelman/git/ParkingSkills`.
+- Branch: `main` in `${HOME}/git/ParkingSkills`.
 - PR: N/A.
 - Change type: Skill documentation / routing update.
-- Areas: `/home/borisindelman/git/ParkingSkills/skills/parking_model_lifecycle`, `/home/borisindelman/git/vault/agent_tasks`.
+- Areas: `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle`, `${HOME}/git/vault/agent_tasks`.
 - Changes:
   - Added explicit Pudo-Unpudo suite id `ea663952-b914-47a3-8cc1-729db3683dce` and version id `86b2105d-3f72-4620-b020-0b10e445798d` to lifecycle eval routing.
   - Clarified suite id versus version id in `$parking-eval-studio-suite-scores` defaults.
@@ -2681,7 +2683,7 @@
 
 - Topic: Tighten Parking/PUDO lifecycle skill instructions for training session tags and Notion notes.
 - Labels: parking, pudo, skills, notion, training.
-- Branch: `main` in `/home/borisindelman/git/ParkingSkills`.
+- Branch: `main` in `${HOME}/git/ParkingSkills`.
 - PR: N/A.
 - Change type: Skill documentation update.
 - Areas: ParkingSkills lifecycle skills.
@@ -2979,7 +2981,7 @@
 - Branch: `boris/hari_pudo`.
 - PR: N/A.
 - Change type: Code change / Flyte experiment.
-- Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`, `/workspace/classifiers/wayve/ai/datasets/flyte`, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/annotation_operations_tools/scripts/generate_run_clips_input.py`, `/workspace/classifiers/wayve/ai/datasets/flyte`, `${HOME}/git/vault/projects/hari-pudo-classifiers.md`.
 - Changes:
   - Diagnosed latest worker failures as missing camera video data (`right_backward`, `video_path=None`) rather than a Flyte/query parallelization issue.
   - Added exact-row camera `video_file_name` validation to `generate_run_clips_input.py` via `--require-camera-video-files`; kept stricter full-window validation plumbing for future use.
@@ -2994,7 +2996,7 @@
 - Branch: `boris/hari_pudo`.
 - PR: N/A.
 - Change type: Code change / image publish / workflow run.
-- Areas: `/workspace/classifiers/wayve/ai/datasets/flyte/inference_tasks/run_clips/run_clips.py`, Flyte `run_clips` workflow, `/home/borisindelman/git/vault/projects/hari-pudo-classifiers.md`.
+- Areas: `/workspace/classifiers/wayve/ai/datasets/flyte/inference_tasks/run_clips/run_clips.py`, Flyte `run_clips` workflow, `${HOME}/git/vault/projects/hari-pudo-classifiers.md`.
 - Changes:
   - Diagnosed remaining failures as full-window missing camera metadata despite valid center-row camera filenames.
   - Added guarded `drop_rows_with_missing_camera_video_files` support to filter unusable segment rows before dataloader decoding.

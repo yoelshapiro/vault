@@ -2,12 +2,13 @@
 
 ## [2026-07-27] maintenance | Portable user-home paths
 
-Replaced Boris-specific `/home/borisindelman` references with `${HOME}` across
-the agent guide, code and knowledge maps, lifecycle source summaries, parking
-system page, and model-development workflows. Validated expansion for
-`HOME=/home/yoelshapiro`; corrected the moved `parking-deploy` and
-`train-parking-model` skill paths and marked historical skills that are absent
-from the current ParkingSkills checkout.
+Replaced Boris-specific vault and ParkingSkills Git roots with `${HOME}` across
+the maintained wiki and historical vault notes. Validated 27 maintained wiki
+references for `HOME=/home/yoelshapiro` with zero missing paths; corrected the
+moved `parking-deploy` and `train-parking-model` skill paths and marked
+historical skills that are absent from the current ParkingSkills checkout.
+Unrelated historical `.codex`, `tmp`, and `Downloads` paths were intentionally
+left unchanged.
 
 ## [2026-05-24] ingest | Wayve MLE parking, navigation, latent actions, multitask heads
 

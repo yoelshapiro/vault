@@ -10,5 +10,5 @@
 - Pudo-Unpudo version id: `86b2105d-3f72-4620-b020-0b10e445798d`.
 
 ## Files
-- `/home/borisindelman/git/ParkingSkills/skills/parking_model_lifecycle/SKILL.md`.
-- `/home/borisindelman/git/ParkingSkills/skills/parking_model_lifecycle/parking-eval-studio-suite-scores/SKILL.md`.
+- `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/SKILL.md`.
+- `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/parking-eval-studio-suite-scores/SKILL.md`.

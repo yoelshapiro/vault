@@ -7,8 +7,8 @@
 - Clarified that run history, failure details, monitoring status, deploy details, and follow-ups belong in the model-card page body.
 
 ## Files
-- `/home/borisindelman/git/ParkingSkills/skills/parking_model_lifecycle/train-parking-model/SKILL.md`
-- `/home/borisindelman/git/ParkingSkills/skills/parking_model_lifecycle/parking-model-page-update/SKILL.md`
+- `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/train-parking-model/SKILL.md`
+- `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/parking-model-page-update/SKILL.md`
 
 ## Follow-up: W&B artifact-name budgeting
 - Tightened `train-parking-model` after the observed failure:

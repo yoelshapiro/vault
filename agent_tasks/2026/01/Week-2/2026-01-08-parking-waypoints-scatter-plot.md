@@ -23,10 +23,10 @@
 - /workspace/WayveCode/wayve/ai/si/visualisation/bokeh/README.md
 - /workspace/WayveCode/wayve/ai/si/visualisation/inference_model.py
 - /workspace/WayveCode/wayve/ai/si/visualisation/bokeh/plotter/input_plotter.py
-- /home/borisindelman/git/vault/projects/zak-classifiers-parking-maneuver.md
-- /home/borisindelman/git/vault/projects/projects.json
-- /home/borisindelman/git/vault/projects/projects.md
-- /home/borisindelman/git/vault/projects/active-project.txt
+- ${HOME}/git/vault/projects/zak-classifiers-parking-maneuver.md
+- ${HOME}/git/vault/projects/projects.json
+- ${HOME}/git/vault/projects/projects.md
+- ${HOME}/git/vault/projects/active-project.txt
 
 ## Notes
 - No tests run.

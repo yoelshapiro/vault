@@ -5,7 +5,7 @@
 - Branch: `agents_day`
 - PR: N/A
 - Change type: Skill / helper script
-- Areas: `/home/borisindelman/git/ParkingSkills/skills/eval-studio-suite-scores`
+- Areas: `${HOME}/git/ParkingSkills/skills/eval-studio-suite-scores`
 
 ## Summary
 

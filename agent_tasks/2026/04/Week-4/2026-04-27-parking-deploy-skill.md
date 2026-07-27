@@ -7,9 +7,9 @@
 
 ## What Changed
 - Created skill:
-  - `/home/borisindelman/git/ParkingSkills/skills/parking-deploy/SKILL.md`
+  - `${HOME}/git/ParkingSkills/skills/parking-deploy/SKILL.md`
 - Updated agent metadata:
-  - `/home/borisindelman/git/ParkingSkills/skills/parking-deploy/agents/openai.yaml`
+  - `${HOME}/git/ParkingSkills/skills/parking-deploy/agents/openai.yaml`
 - Refined the skill after creation to match the requested post-training flow exactly:
   - latest source checkpoint means max trained-model `checkpoint_num`
   - deploy is delegated to `$parking-interleave-deploy`
@@ -40,7 +40,7 @@
 - Ran the skill validator:
 
 ```bash
-python /home/borisindelman/git/ParkingSkills/skills/.system/skill-creator/scripts/quick_validate.py /home/borisindelman/git/ParkingSkills/skills/parking-deploy
+python ${HOME}/git/ParkingSkills/skills/.system/skill-creator/scripts/quick_validate.py ${HOME}/git/ParkingSkills/skills/parking-deploy
 ```
 
 - Result: `Skill is valid!`

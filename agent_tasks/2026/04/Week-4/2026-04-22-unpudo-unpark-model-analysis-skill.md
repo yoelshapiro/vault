@@ -1,14 +1,14 @@
 # UNPUDO / Unpark Model Analysis Skill
 
 - Date: `2026-04-22`
-- Skill path: `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-model-analysis`
+- Skill path: `${HOME}/git/ParkingSkills/skills/unpudo-unpark-model-analysis`
 - Discovery path: `~/.codex/skills/unpudo-unpark-model-analysis`
 
 ## What I added
 
 - Created a new Codex skill for model-level UNPUDO / unparking analysis.
 - Created the vault root folder for this workflow:
-  - `/home/borisindelman/git/vault/model_analysis`
+  - `${HOME}/git/vault/model_analysis`
 - Added:
   - `models/` for per-model cards
   - `report_cards/` for dated per-run files
@@ -16,9 +16,9 @@
 ## Storage contract
 
 - Per-model card:
-  - `/home/borisindelman/git/vault/model_analysis/models/<model-nickname>.md`
+  - `${HOME}/git/vault/model_analysis/models/<model-nickname>.md`
 - Per-run report file:
-  - `/home/borisindelman/git/vault/model_analysis/report_cards/YYYY/MM/Week-N/<sanitized-run-id>.md`
+  - `${HOME}/git/vault/model_analysis/report_cards/YYYY/MM/Week-N/<sanitized-run-id>.md`
 
 Each run file is intended to contain all relevant event cards for that run under stable headers.
 

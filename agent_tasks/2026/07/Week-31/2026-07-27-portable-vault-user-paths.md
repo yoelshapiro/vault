@@ -2,16 +2,19 @@
 
 ## Summary
 
-Replaced Boris-specific home-directory paths in `llm_wiki` with `${HOME}` and
-validated the expanded references for Yoel's VM account.
+Replaced Boris-specific vault and ParkingSkills Git-root paths across the vault
+with `${HOME}` and validated maintained wiki references for Yoel's VM account.
 
 ## Validation
 
 - `USER=yoelshapiro`
 - `HOME=/home/yoelshapiro`
-- No `/home/borisindelman` references remain under `llm_wiki`.
-- Every remaining `${HOME}` filesystem reference resolves to an existing file or
-  directory under Yoel's account.
+- No hard-coded Boris `git/vault` or `git/ParkingSkills` roots remain in vault
+  Markdown.
+- All 27 maintained `llm_wiki` `${HOME}` filesystem references resolve to
+  existing files or directories under Yoel's account.
+- Unrelated historical Boris paths under `.codex`, `tmp`, and `Downloads` remain
+  unchanged because those artifacts are not portable user-home references.
 
 ## Additional corrections
 
