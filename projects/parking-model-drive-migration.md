@@ -40,9 +40,12 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
 - ⏭️ Next: augmentor arms. **`gear_label_cleanup` DECISION (agreed):** apply cleanup **uniformly (no
   stage gate) on the parking pipeline only** (option b, parking-data-scoped; baseline untouched).
   Correction to earlier framing — cleanup is NOT a pure downstream augmentor; it belongs partly upstream:
-  - **Part 1 (detection):** fold `clean_parking_gear_labels` into `ParkingDataLoader` (dense→dense),
-    used for `parking_stage`, replacing the crude `min_parking_duration_sec` stand-in. Clean, no re-gather.
-    Fixes stage correctness (spikes / short segments / shift-to-first-stop).
+  - **Part 1 (detection): ✅ DONE — commit `45078400`.** Ported SI `clean_parking_gear_labels` into
+    `ParkingDataLoader` (dense→dense); `parking_stage` is now detected on the smoothed gear.
+    Bucket-gated: `ParkingStageRequest.gear_label_cleanup_buckets` (DATASET_BUCKET allowlist), uniform
+    within those buckets. Config threaded via `ParkingSettings`/`PipelineSpec.gear_label_cleanup_buckets`
+    (thresholds from constants); schema MINOR 7.4.0→**7.5.0**. Unit tests for the cleanup + schema config;
+    all lib-factory/config/drive-bc checks green. (min-duration filter kept as a guard for non-cleanup buckets.)
   - **Part 2 (model tensors):** a `gear_label_cleanup` augmentor that writes cleaned gear into
     `vehicle_gear_direction`/`policy_gear_direction`. Needs to re-sample cleaned dense gear at the gear
     loaders' exact indices (reuse their gather/index resolution to avoid off-by-one).
