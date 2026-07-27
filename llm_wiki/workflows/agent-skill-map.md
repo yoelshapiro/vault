@@ -23,10 +23,10 @@ Before using a skill, open its `SKILL.md` and follow the instructions there. Thi
 
 | Skill | Path | Use |
 | --- | --- | --- |
-| `model-info-finder` | `/home/borisindelman/git/ParkingSkills/skills/model-info-finder/SKILL.md` | Router for model lookup, checkpoint inspection, CI/debug, or observability tasks. |
-| `model-lookup-basic` | `/home/borisindelman/git/ParkingSkills/skills/model-lookup-basic/SKILL.md` | Basic model-catalogue lookup by nickname or author. |
-| `model-deep-summary` | `/home/borisindelman/git/ParkingSkills/skills/model-deep-summary/SKILL.md` | Expanded model summary by nickname or session ID. |
-| `model-checkpoint-inspector` | `/home/borisindelman/git/ParkingSkills/skills/model-checkpoint-inspector/SKILL.md` | Checkpoint-level data, licenses, and run history. |
+| `model-info-finder` | `${HOME}/git/ParkingSkills/skills/model-info-finder/SKILL.md` | Router for model lookup, checkpoint inspection, CI/debug, or observability tasks. |
+| `model-lookup-basic` | `${HOME}/git/ParkingSkills/skills/model-lookup-basic/SKILL.md` | Basic model-catalogue lookup by nickname or author. |
+| `model-deep-summary` | `${HOME}/git/ParkingSkills/skills/model-deep-summary/SKILL.md` | Expanded model summary by nickname or session ID. |
+| `model-checkpoint-inspector` | `${HOME}/git/ParkingSkills/skills/model-checkpoint-inspector/SKILL.md` | Checkpoint-level data, licenses, and run history. |
 | `model-trace` | `/workspace/WayveCode/.ai/skills/model-trace/SKILL.md` | Trace training lineage from WFM to BC to RL and find checkpoints. |
 | `compare-model-provenance` | `/workspace/WayveCode/.ai/skills/compare-model-provenance/SKILL.md` | Compare training data provenance and loss curves. |
 | `explain-model-diff` | `/workspace/WayveCode/.ai/skills/explain-model-diff/SKILL.md` | Run SI config diff between models and group changes by theme. |
@@ -35,7 +35,7 @@ Before using a skill, open its `SKILL.md` and follow the instructions there. Thi
 
 | Skill | Path | Use |
 | --- | --- | --- |
-| `train-parking-model` | `/home/borisindelman/git/ParkingSkills/skills/train-parking-model/SKILL.md` | Submit and monitor Parking/PUDO training runs. |
+| `train-parking-model` | `${HOME}/git/ParkingSkills/skills/train-parking-model/SKILL.md` | Submit and monitor Parking/PUDO training runs. |
 | `debug-training-job` | `/workspace/WayveCode/.ai/skills/debug-training-job/SKILL.md` | Debug failed Surfboard training jobs. |
 | `debug-training-job-v2` | `/workspace/WayveCode/.ai/skills/debug-training-job-v2/SKILL.md` | Debug a training job from a numerical Surfboard job ID. |
 | `manage-training-job` | `/workspace/WayveCode/.ai/skills/manage-training-job/SKILL.md` | Check status, queue position, and priority for training jobs. |
@@ -46,23 +46,23 @@ Before using a skill, open its `SKILL.md` and follow the instructions there. Thi
 
 | Skill | Path | Use |
 | --- | --- | --- |
-| `parking-deploy` | `/home/borisindelman/git/ParkingSkills/skills/parking-deploy/SKILL.md` | Deploy a trained Parking/PUDO model. |
-| `parking-interleave-deploy` | `/home/borisindelman/git/ParkingSkills/skills/parking-interleave-deploy/SKILL.md` | Deploy with interleave control and optional radar overlay. |
-| `parking-event-analysis` | `/home/borisindelman/git/ParkingSkills/skills/parking-event-analysis/SKILL.md` | Analyze PUDO or UNPUDO events for run IDs. |
-| `parking-event-fetcher` | `/home/borisindelman/git/ParkingSkills/skills/parking-event-fetcher/SKILL.md` | Load PUDO/UNPUDO events from parking materialization tables. |
-| `parking-event-classifier` | `/home/borisindelman/git/ParkingSkills/skills/parking-event-classifier/SKILL.md` | Classify parking events as successful or unsuccessful with evidence. |
-| `parking-destination-resolver` | `/home/borisindelman/git/ParkingSkills/skills/parking-destination-resolver/SKILL.md` | Resolve intended PUDO destination or task target. |
-| `parking-transcript-aligner` | `/home/borisindelman/git/ParkingSkills/skills/parking-transcript-aligner/SKILL.md` | Align Whisper driver transcript rows to parking-event timestamps. |
-| `parking-event-analysis-writer` | `/home/borisindelman/git/ParkingSkills/skills/parking-event-analysis-writer/SKILL.md` | Materialize enriched event-analysis rows. |
-| `unpudo-unpark-model-analysis` | `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-model-analysis/SKILL.md` | Analyze model UNPUDO/unparking events and generate report cards. |
-| `unpudo-unpark-segment-investigation` | `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/SKILL.md` | Investigate on-road UNPUDO/unparking segments. |
+| `parking-deploy` | `${HOME}/git/ParkingSkills/skills/parking-deploy/SKILL.md` | Deploy a trained Parking/PUDO model. |
+| `parking-interleave-deploy` | `${HOME}/git/ParkingSkills/skills/parking-interleave-deploy/SKILL.md` | Deploy with interleave control and optional radar overlay. |
+| `parking-event-analysis` | `${HOME}/git/ParkingSkills/skills/parking-event-analysis/SKILL.md` | Analyze PUDO or UNPUDO events for run IDs. |
+| `parking-event-fetcher` | `${HOME}/git/ParkingSkills/skills/parking-event-fetcher/SKILL.md` | Load PUDO/UNPUDO events from parking materialization tables. |
+| `parking-event-classifier` | `${HOME}/git/ParkingSkills/skills/parking-event-classifier/SKILL.md` | Classify parking events as successful or unsuccessful with evidence. |
+| `parking-destination-resolver` | `${HOME}/git/ParkingSkills/skills/parking-destination-resolver/SKILL.md` | Resolve intended PUDO destination or task target. |
+| `parking-transcript-aligner` | `${HOME}/git/ParkingSkills/skills/parking-transcript-aligner/SKILL.md` | Align Whisper driver transcript rows to parking-event timestamps. |
+| `parking-event-analysis-writer` | `${HOME}/git/ParkingSkills/skills/parking-event-analysis-writer/SKILL.md` | Materialize enriched event-analysis rows. |
+| `unpudo-unpark-model-analysis` | `${HOME}/git/ParkingSkills/skills/unpudo-unpark-model-analysis/SKILL.md` | Analyze model UNPUDO/unparking events and generate report cards. |
+| `unpudo-unpark-segment-investigation` | `${HOME}/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/SKILL.md` | Investigate on-road UNPUDO/unparking segments. |
 
 ## Evaluation, CI, and on-road
 
 | Skill | Path | Use |
 | --- | --- | --- |
-| `av-test-multi-model-stats` | `/home/borisindelman/git/ParkingSkills/skills/av-test-multi-model-stats/SKILL.md` | Run or reuse AV test evaluation for multiple models. |
-| `modelci-shadowgym-debug` | `/home/borisindelman/git/ParkingSkills/skills/modelci-shadowgym-debug/SKILL.md` | Inspect Model CI status and failed Buildkite/Shadow Gym logs. |
+| `av-test-multi-model-stats` | `${HOME}/git/ParkingSkills/skills/av-test-multi-model-stats/SKILL.md` | Run or reuse AV test evaluation for multiple models. |
+| `modelci-shadowgym-debug` | `${HOME}/git/ParkingSkills/skills/modelci-shadowgym-debug/SKILL.md` | Inspect Model CI status and failed Buildkite/Shadow Gym logs. |
 | `debug-eval-pipeline` | `/workspace/WayveCode/.ai/skills/debug-eval-pipeline/SKILL.md` | Debug Eval Studio and AV test evaluation pipeline issues. |
 | `create-evaluation-task` | `/workspace/WayveCode/.ai/skills/create-evaluation-task/SKILL.md` | Add a new foundation evaluation task on an existing datapipe. |
 | `create-on-road-experiment` | `/workspace/WayveCode/.ai/skills/create-on-road-experiment/SKILL.md` | Create on-road experiments with model interleavings. |

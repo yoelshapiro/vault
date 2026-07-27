@@ -13,7 +13,7 @@ sources:
   - user seed, 2026-05-23
   - /workspace/WayveCode/wayve/ai/si/README.md
   - /workspace/WayveCode/wayve/ai/foundation/models/world_model/AGENTS.md
-  - /home/borisindelman/git/vault/agents-change-log.md
+  - ${HOME}/git/vault/agents-change-log.md
   - [[llm_wiki/sources/2026-05-23-skill-workflows-parking-model-lifecycle|Skill Workflows - Parking Model Lifecycle]]
 ---
 

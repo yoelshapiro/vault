@@ -10,7 +10,7 @@ tags:
   - vault
   - parking
 source_type: vault
-source_ref: /home/borisindelman/git/vault/newsletters
+source_ref: ${HOME}/git/vault/newsletters
 ---
 
 # Vault Parking Newsletters
@@ -20,10 +20,10 @@ source_ref: /home/borisindelman/git/vault/newsletters
 - Source type: existing vault newsletters.
 - Retrieved: 2026-05-23.
 - Inspected files:
-  - `/home/borisindelman/git/vault/newsletters/newsletter_generic-parking-pudo-materialisation.md`
-  - `/home/borisindelman/git/vault/newsletters/newsletter_parking-stopping-mode-dilc.md`
-  - `/home/borisindelman/git/vault/newsletters/newsletter_pudo-update-january-driving-release-2026-5-4.md`
-  - `/home/borisindelman/git/vault/newsletters/newsletter_parking-maneuver-filters.md`
+  - `${HOME}/git/vault/newsletters/newsletter_generic-parking-pudo-materialisation.md`
+  - `${HOME}/git/vault/newsletters/newsletter_parking-stopping-mode-dilc.md`
+  - `${HOME}/git/vault/newsletters/newsletter_pudo-update-january-driving-release-2026-5-4.md`
+  - `${HOME}/git/vault/newsletters/newsletter_parking-maneuver-filters.md`
 
 ## Why This Matters
 

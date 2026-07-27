@@ -10,7 +10,7 @@ tags:
   - sources
 sources:
   - user seed, 2026-05-23
-  - /home/borisindelman/git/vault/agents-change-log.md
+  - ${HOME}/git/vault/agents-change-log.md
 ---
 
 # Knowledge Sources
@@ -65,7 +65,7 @@ Skills encode operational workflows that agents can reuse. They are especially v
 Relevant skill directories:
 
 - `/workspace/WayveCode/.ai/skills/`
-- `/home/borisindelman/git/ParkingSkills/skills/`
+- `${HOME}/git/ParkingSkills/skills/`
 
 See [[llm_wiki/workflows/agent-skill-map|Agent skill map]] for the current curated subset.
 
@@ -75,11 +75,11 @@ The vault already contains many task notes from prior parking work. These are us
 
 Important sources:
 
-- `/home/borisindelman/git/vault/agents-change-log.md`
-- `/home/borisindelman/git/vault/agent_tasks/`
-- `/home/borisindelman/git/vault/newsletters/`
-- `/home/borisindelman/git/vault/html_summaries/`
-- `/home/borisindelman/git/vault/parking_model_analysis/`
+- `${HOME}/git/vault/agents-change-log.md`
+- `${HOME}/git/vault/agent_tasks/`
+- `${HOME}/git/vault/newsletters/`
+- `${HOME}/git/vault/html_summaries/`
+- `${HOME}/git/vault/parking_model_analysis/`
 
 Ingest pattern:
 
