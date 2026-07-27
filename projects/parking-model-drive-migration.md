@@ -23,12 +23,16 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
   validate `enable_stopping_mode` requires it (review comment).
 - ✅ Commit `4cbc2f00`: `parking_stage` proto tensor — `ParkingStageRequest` + oneof arm (field 118),
   int8 {0=driving,1=parking,2=parked,3=unparking}; schema MINOR bump 7.1.1→**7.3.0** (reconciled with
-  CHANGELOG). Verified bazel regenerates `_pb2` (no manual `make_protos.sh`); config schema tests + ty green.
-  No loader consumes it yet.
-- ⏭️ Next (delicate): extend `ParkingDataLoader` to compute + emit `parking_stage` — 4-stage detection
-  with the **past-window** (port SI `_compute_parking_mode`→`ParkingModeResult` + `_parking_stage_label`),
-  gate the tensor in `create_base_config`, thread a past horizon into the parking pipeline spec, and port
-  SI's `test_parking_unit` cases. Then the augmentor arms, then route shortening.
+  CHANGELOG). Verified bazel regenerates `_pb2` (no manual `make_protos.sh`).
+- ✅ Commit `eb5339e6`: **`ParkingDataLoader` emits `parking_stage`** — 4-stage `_compute_parking_stage`
+  ported from SI `_compute_parking_mode` (parked > parking-forward > unparking reverse/standstill scan),
+  computed on the full **past+future** series (unparking needs the preceding segment) *before* the
+  forward-only window used by `parking_mode` (so `parking_mode` is byte-identical). Wired into
+  `create_base_config` under `enable_parking_mode` (+ frame-table lookahead), with loader validation,
+  int8 output spec (range 0..4), and `_compute_parking_stage` unit tests. Both factory test targets green.
+- ⏭️ Next: the augmentor arms (`gear_label_cleanup`, `standstill_gear`, `clamp_policy_at_neutral`,
+  `strip_leading_standstill`, `parking_stage_flip`) — each a proto arm + augmentor loader + runtime pipe
+  + tests, reading `parking_stage`. Then route shortening (heaviest).
 
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
