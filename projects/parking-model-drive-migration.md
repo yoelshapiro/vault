@@ -62,7 +62,15 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
     tests. Bucket+stage-gated, runs after `gear_label_cleanup`. Positional `[-1]`/`[1]` conventions
     (current gear = last vehicle offset 0; loss step = policy offset[1]) verified against drive's
     `uniform_past`/`uniform_future` offset construction.
-  Then `clamp_policy_at_neutral`, `strip_leading_standstill`, `parking_stage_flip`; then route shortening.
+  - **`clamp_policy_at_neutral`: ✅ DONE — `5acbd018` (schema 7.8.0).** Freezes policy trajectory at first
+    park; bucket+stage-gated; standstill orders after it.
+  - **`parking_stage_flip`: ✅ DONE — `dcb19001` (schema 7.9.0).** Stochastic PARKED → PARKING/UNPARKING;
+    unpark gated on `path_pose` arc length + no future park; clamp+standstill order after it.
+  - **`strip_leading_standstill`: ❌ DROPPED (user decision).**
+  **→ Augmentor phase COMPLETE.** Remaining data-layer work: route shortening (the heavy one —
+  `MapRouteRequest` stop-index producer + migrate `RouteMapFetcher` off `UNPARKING_MODE` to read
+  `parking_stage`). Then Phases 3–5: model config (`ParkingBcWFMEarlyFusionCFG`), `ExperimentSpec`
+  parking knobs, BC parking recipe + parking head recipe + `HeadKeys.PARKING`/`ParkingArbiter`.
   **DESIGN NOTE for the remaining 3 augmentors:** they all consume SI's shared scratch (cleaned dense
   gear + `speed_kmh` + `cumulative_dist` + the `ParkingModeResult`), computed ONCE per sample. The factory
   currently re-derives per augmentor (gear cleanup re-run, stage re-read). `clamp`/`strip` operate on the
@@ -212,7 +220,7 @@ needed; update `autopublish.yaml`, `CHANGELOG.md`, `config/tests/test_schema*.py
 ### 2B — New-tensor producers (template: parking loader / set_speed)
 | # | SI source | Approach | Emits |
 |---|---|---|---|
-| 5 | parked→(un)parking flip `_augment_parked_mode` ([parking.py:629](wayve/ai/si/datamodules/parking.py)) | `parking_stage_flip` (tag 14) — stochastic: `read_only_fields=[path_pose, path_valid]`, `augmented_fields=[parking_stage]`; with `parked_unparking_prob` rewrites `parked` → `parking`\|`unparking`. Kept OUT of the (deterministic) detection loader for reproducibility. **Note:** SI gated `can_unpark` on future-path availability derived from policy_path/goal (aug #6, now deferred) — instead use `path_pose` cumulative distance for the path-length check. | rewrites `parking_stage` (no `unparking_mode`) |
+| 5 | parked→(un)parking flip `_augment_parked_mode` ([parking.py:629](wayve/ai/si/datamodules/parking.py)) | `parking_stage_flip` (tag **13**, reclaimed strip's slot) — ✅ **DONE** (`dcb19001`; schema 7.9.0) | Stochastic: `augmented_fields=[parking_stage]`, `read_only_fields=[path_pose]` (+ optional `path_valid`); rewrites PARKED → PARKING\|UNPARKING with `parked_unparking_prob`, unpark gated on `path_pose` arc length >= `min_unparking_path_m` AND no future park (scanned on smoothed gear, cleanup thresholds mirrored). Kept OUT of the deterministic detector. `clamp`+`standstill` order after it. `path_available_m` from `path_pose` XY arc length (policy_path/goal deferred). | rewrites `parking_stage` |
 | 6 | policy path / goal pose `_sample_policy_path_from_poses` ([parking.py:402](wayve/ai/si/datamodules/parking.py)) | ⏸️ **DEFERRED (decision #3)** — these are diffusion inputs the BC model doesn't consume. Skip until the diffusion model is migrated. When added: new tensor loader(s) + `TensorRequest` arm(s) (tags 118+); `read_only_fields=[parking_stage]`. | (deferred) PARKING_POSE, PARKING_GOAL_DISTANCE, ORIGINAL_PARKING_GOAL_POSE, POLICY_PATH ([keys.py:257-270](wayve/ai/zoo/data/keys.py)) |
 | 7 | route shortening `_shorten_route_polyline_to/from_stop` ([routes.py:167](wayve/ai/lib/data/pipes/routes.py)) | (a) parking loader emits `parking_stop_route_index`/`parking_stop_route_fraction`; (b) pass `enable_route_shortening_for_parking` + jitter into `RouteMapFetcher` from [tensor_loaders/map.py](wayve/ai/lib/data/factory/tensors/tensor_loaders/map.py); **reads `parking_stage` directly** (`==parking` → shorten-to-stop, `==unparking` → shorten-from-stop) — no `unparking_mode` tensor. | route_map (shortened); stop-index tensors |
 
