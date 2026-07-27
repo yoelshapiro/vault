@@ -58,8 +58,19 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
     the SAME spec+constants as `ParkingStageRequest` (one source, can't drift — no shared proto needed).
     Alignment tests (loader-index reproduction, spike smoothing, bucket gating, policy-absent) + schema
     tests; tensor_loaders/validation/config-schema/drive-bc-data checks + `lib_no_triton_rt` all green.
-  Then `standstill_gear`, `clamp_policy_at_neutral`, `strip_leading_standstill`, `parking_stage_flip`;
-  then route shortening.
+  - **`standstill_gear`: ✅ DONE — commit `9d6e74d6` (schema 7.7.0).** Pipe + loader + spec plumbing +
+    tests. Bucket+stage-gated, runs after `gear_label_cleanup`. Positional `[-1]`/`[1]` conventions
+    (current gear = last vehicle offset 0; loss step = policy offset[1]) verified against drive's
+    `uniform_past`/`uniform_future` offset construction.
+  Then `clamp_policy_at_neutral`, `strip_leading_standstill`, `parking_stage_flip`; then route shortening.
+  **DESIGN NOTE for the remaining 3 augmentors:** they all consume SI's shared scratch (cleaned dense
+  gear + `speed_kmh` + `cumulative_dist` + the `ParkingModeResult`), computed ONCE per sample. The factory
+  currently re-derives per augmentor (gear cleanup re-run, stage re-read). `clamp`/`strip` operate on the
+  policy_* tensors relative to the first-neutral / first-moving index in the DENSE cleaned gear — so
+  consider persisting the cleaned dense gear (+ maybe origin-relative stage indices) into the table from
+  `ParkingDataLoader` (a "parking scratch" column) so all parking augmentors share one source, mirroring
+  SI's scratch table. Fork to weigh before building clamp/strip: per-augmentor re-derivation (simple, some
+  duplicated cleanup cost) vs. shared table scratch (matches SI, one source of truth, small loader change).
 
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
@@ -194,7 +205,7 @@ needed; update `autopublish.yaml`, `CHANGELOG.md`, `config/tests/test_schema*.py
 | # | SI source | New proto arm | Loader / pipe | `augmented_fields` |
 |---|---|---|---|---|
 | 1 | gear label cleanup `clean_parking_gear_labels` ([parking.py:594](wayve/ai/si/datamodules/parking.py)) | `gear_label_cleanup` (tag 10) — ✅ **DONE** (`bfef1c21`) | Augmentor re-gathers cleaned dense gear (shared `pipes/parking_gear.clean_parking_gear_labels`) at the gear loaders' exact indices (loader passes their `IndicesFromTimeDeltas` gens; pipe uses `resolve_indices`). Detection (Part 1) cleans the dense column internally in `ParkingDataLoader` (same helper). `keep_original` supported (off by default). | vehicle_gear_direction (req), policy_gear_direction (optional) |
-| 2 | advanced standstill gear aug `augment_standstill_gear` ([parking.py:1161](wayve/ai/si/datamodules/parking.py)) | `standstill_gear` (tag 11) — fields: prob, use_main_augmentation | new loader + pipe | augments `vehicle_gear_direction`; `read_only_fields=[policy_gear_direction, parking_stage]` |
+| 2 | advanced standstill gear aug `augment_standstill_gear` ([parking.py:1161](wayve/ai/si/datamodules/parking.py)) | `standstill_gear` (tag 11) — ✅ **DONE** (`9d6e74d6`) | Pipe randomises `vehicle_gear_direction[-1]` (current) at standstill for PARKING/UNPARKING samples; both modes (main {R,N,F} + target-aware switch-into/out-of-park). Bucket+stage-gated; runs AFTER `gear_label_cleanup` (`ordering_dependency_kinds`). `[-1]`/`[1]` layout verified vs drive's `uniform_past`/`uniform_future` offsets; short policy skipped. | augments `vehicle_gear_direction`; `read_only_fields=[policy_gear_direction, parking_stage]` |
 | 3 | clamp at first neutral `clamp_policy_at_first_neutral` ([parking.py:845](wayve/ai/si/datamodules/parking.py)) | `clamp_policy_at_neutral` (tag 12) | new loader + pipe; `read_only_fields=[parking_stage]` | policy_pose, policy_waypoints, policy_curvature, policy_speed, policy_gear_direction |
 | 4 | strip leading standstill `strip_leading_standstill` ([parking.py:697](wayve/ai/si/datamodules/parking.py)) | `strip_leading_standstill` (tag 13) | new loader + pipe (may DROP sample → filter stage); `read_only_fields=[parking_stage]` | policy_* (pose/waypoints/curvature/speed/gear). SI already has a TODO to make this a standalone augmentor. |
 
