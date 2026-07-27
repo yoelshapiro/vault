@@ -14,9 +14,14 @@ with SI (incl. the diffusion/off-by-default ones). New `HeadKeys.PARKING` + dedi
 
 ## Status (2026-07-26)
 **PR1 (data-factory layer) in progress** — branch `boris/parking_migration/factory-data-layer`,
-draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389). First commit: ADR 001
-(`wayve/ai/lib/data/factory/.decisions/001-…md`). Spike done — all factory-internals unknowns
-resolved (see Readiness). Next: implement the PR1 checklist (see PR body).
+draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
+- ✅ Commit 1: ADR 001 (`wayve/ai/lib/data/factory/.decisions/001-…md`), revised to address the 8 agentic-review comments.
+- ✅ Spike done — all factory-internals unknowns resolved (see Readiness).
+- ✅ Commit `cf2f6d18`: `enable_parking_mode` / `enable_stopping_mode` factory flags (no proto change;
+  defaults preserve baseline/MRM byte-identically). `//wayve/ai/drive/bc:py_checks_data` green
+  (tests + flake8 + ruff + ty).
+- ⏭️ Next: `parking_stage` tensor (`ParkingStageRequest` proto arm + extend `ParkingDataLoader`, incl.
+  the past-horizon contract), then the augmentor arms, then route shortening + proto bump/regen.
 
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
