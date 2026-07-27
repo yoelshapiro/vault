@@ -37,9 +37,19 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
   drive/bc parking path sets `lookbehind_sec=30s` (matching SI) so `parking_stage` can see the exit's
   preceding segment. frames `lazy_past`/`effective_past` unit tests + all touched lint/ty green.
   (Kept `_get_row_slice_offsets`' offsets-only return to avoid breaking its other callers/tools.)
-- ⏭️ Next: the augmentor arms (`gear_label_cleanup`, `standstill_gear`, `clamp_policy_at_neutral`,
-  `strip_leading_standstill`, `parking_stage_flip`) — each a proto arm + augmentor loader + runtime pipe
-  + tests, reading `parking_stage`. Then route shortening (heaviest).
+- ⏭️ Next: augmentor arms. **`gear_label_cleanup` DECISION (agreed):** apply cleanup **uniformly (no
+  stage gate) on the parking pipeline only** (option b, parking-data-scoped; baseline untouched).
+  Correction to earlier framing — cleanup is NOT a pure downstream augmentor; it belongs partly upstream:
+  - **Part 1 (detection):** fold `clean_parking_gear_labels` into `ParkingDataLoader` (dense→dense),
+    used for `parking_stage`, replacing the crude `min_parking_duration_sec` stand-in. Clean, no re-gather.
+    Fixes stage correctness (spikes / short segments / shift-to-first-stop).
+  - **Part 2 (model tensors):** a `gear_label_cleanup` augmentor that writes cleaned gear into
+    `vehicle_gear_direction`/`policy_gear_direction`. Needs to re-sample cleaned dense gear at the gear
+    loaders' exact indices (reuse their gather/index resolution to avoid off-by-one).
+  - OPEN: cleanup params (reverse_max_distance_m, neutral_max_duration_sec, stop_buffer_sec,
+    stop_speed_threshold_mps) → a shared `GearLabelCleanupRequest` proto read by both, vs constants.
+  Then `standstill_gear`, `clamp_policy_at_neutral`, `strip_leading_standstill`, `parking_stage_flip`;
+  then route shortening.
 
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
