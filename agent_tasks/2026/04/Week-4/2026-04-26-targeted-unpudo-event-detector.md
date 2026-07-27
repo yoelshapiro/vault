@@ -6,7 +6,7 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
 
 ## Changes
 
-- Added `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/find_model_events.py`.
+- Added `${HOME}/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/find_model_events.py`.
 - Ported the relevant event-detection notebook flow from `origin/parking/notebooks:wayve/ai/parking/notebooks/PUDO and UnPUDO Event Detection.ipynb`.
 - Added CLI filters for model nicknames, inclusive date cutoffs, optional run-id allowlist, selected event types, and optional Delta path/table output.
 - Added an early target-model run filter before reading `prod_data_pipeline.wayve_corpus.all_data`.
@@ -14,7 +14,7 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
 
 ## Verification
 
-- Ran `python -m py_compile /home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/find_model_events.py`.
+- Ran `python -m py_compile ${HOME}/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/find_model_events.py`.
 - Checked the CLI help path after deferring Spark imports; `--help` now works locally without PySpark installed.
 - Sanity-checked `sea-cucumber-spectacular-orange` for `2026-04-22`:
   - `parking.pudo_unpudo_unpark_events` has `5` UNPUDO rows from `1` run.
@@ -58,10 +58,10 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
   - `mallard-plum-mysterious`: `83` scored rows across `15` runs (`33` pass / `50` fail)
   - `insightful-magenta-porcupine`: `29` scored rows across `4` runs (`1` pass / `28` fail)
 - Regenerated model cards from durable `parking.model_analysis` rows rather than packet manifests:
-  - `/home/borisindelman/git/vault/parking_model_analysis/models/blue-panther-solid.md`
-  - `/home/borisindelman/git/vault/parking_model_analysis/models/pink-manta-ray-smooth.md`
-  - `/home/borisindelman/git/vault/parking_model_analysis/models/mallard-plum-mysterious.md`
-  - `/home/borisindelman/git/vault/parking_model_analysis/models/insightful-magenta-porcupine.md`
+  - `${HOME}/git/vault/parking_model_analysis/models/blue-panther-solid.md`
+  - `${HOME}/git/vault/parking_model_analysis/models/pink-manta-ray-smooth.md`
+  - `${HOME}/git/vault/parking_model_analysis/models/mallard-plum-mysterious.md`
+  - `${HOME}/git/vault/parking_model_analysis/models/insightful-magenta-porcupine.md`
 - Added `scripts/generate_model_cards_from_table_rows.py` to make the final card refresh independent of temporary packet cache.
 - Updated the skill instructions to document the stable four-worker, single-run-id workflow and the final table-backed model-card refresh.
 - Cleaned completed per-model packet, incremental, and staged-row temp directories for this batch.
@@ -71,7 +71,7 @@ Created a standalone PySpark detector for model-scoped PUDO / UNPUDO / unparking
 - Quantified why the dashboard query reports `81.61%` UNPUDO success for `sea-cucumber-spectacular-orange` while the model-analysis rows for the new `2026-04-23/24` cohort report `58.70%`.
 - Dashboard logic only treats disengagement flags as UNPUDO failures: `87` eligible events, `16` flagged failures.
 - Model-analysis logic also fails AV-owned attempts for behavior evidence without a source disengagement flag, including ownership ending, driver/outside-AV completion, gear/motion evidence, and route/AV timing failures.
-- Added a `Dashboard-Success / Card-Fail Disagreements` section to `/home/borisindelman/git/vault/parking_model_analysis/models/sea-cucumber-spectacular-orange.md` with links to the card-fail events that dashboard logic would count as success.
+- Added a `Dashboard-Success / Card-Fail Disagreements` section to `${HOME}/git/vault/parking_model_analysis/models/sea-cucumber-spectacular-orange.md` with links to the card-fail events that dashboard logic would count as success.
 
 ## Sea Scoring Review Corrections
 

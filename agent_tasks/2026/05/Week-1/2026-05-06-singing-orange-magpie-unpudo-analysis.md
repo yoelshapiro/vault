@@ -8,13 +8,13 @@ The model had 9 active runs across 2026-05-04 and 2026-05-05. The materialized `
 
 ## Execution
 
-- Detector source: `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/build_detector_event_sql.py`
+- Detector source: `${HOME}/git/ParkingSkills/skills/unpudo-unpark-model-analysis/scripts/build_detector_event_sql.py`
 - Candidate detector rows: 68 events across 9 runs
 - Workers: 4 incremental workers, one run at a time
 - Durable outputs:
   - `parking.model_analysis`
-  - `/home/borisindelman/git/vault/parking_model_analysis/models/singing-orange-magpie.md`
-  - 6 run report cards under `/home/borisindelman/git/vault/parking_model_analysis/report_cards/2026/05/Week-2`
+  - `${HOME}/git/vault/parking_model_analysis/models/singing-orange-magpie.md`
+  - 6 run report cards under `${HOME}/git/vault/parking_model_analysis/report_cards/2026/05/Week-2`
 
 ## Results
 

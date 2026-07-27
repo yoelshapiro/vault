@@ -8,20 +8,20 @@
 
 ## What changed
 - Flattened hierarchy in two steps:
-  - `/home/borisindelman/git/vault/codex/WayveCode` -> `/home/borisindelman/git/vault/WayveCode`
-  - `/home/borisindelman/git/vault/WayveCode/*` -> `/home/borisindelman/git/vault/*`
+  - `${HOME}/git/vault/codex/WayveCode` -> `${HOME}/git/vault/WayveCode`
+  - `${HOME}/git/vault/WayveCode/*` -> `${HOME}/git/vault/*`
 - Moved date trees:
-  - `/home/borisindelman/git/vault/WayveCode/2025` -> `/home/borisindelman/git/vault/agent_tasks/2025`
-  - `/home/borisindelman/git/vault/WayveCode/2026` -> `/home/borisindelman/git/vault/agent_tasks/2026`
+  - `${HOME}/git/vault/WayveCode/2025` -> `${HOME}/git/vault/agent_tasks/2025`
+  - `${HOME}/git/vault/WayveCode/2026` -> `${HOME}/git/vault/agent_tasks/2026`
 - Removed empty legacy folder:
-  - `/home/borisindelman/git/vault/codex`
+  - `${HOME}/git/vault/codex`
 - Removed empty intermediate folder:
-  - `/home/borisindelman/git/vault/WayveCode`
+  - `${HOME}/git/vault/WayveCode`
 - Updated references:
   - `codex/WayveCode/...` -> `...` (vault top-level paths)
   - `WayveCode/...` -> `...` (vault top-level paths)
   - `[[2025/...]]` / `[[2026/...]]` -> `[[agent_tasks/2025/...]]` / `[[agent_tasks/2026/...]]`
-  - `/home/borisindelman/git/vault/codex/WayveCode/...` and `/home/borisindelman/git/vault/WayveCode/...` -> `/home/borisindelman/git/vault/...`
+  - `${HOME}/git/vault/codex/WayveCode/...` and `${HOME}/git/vault/WayveCode/...` -> `${HOME}/git/vault/...`
   - `newsletters/newsletter_index.md` -> `newsletter_index.md` (top-level index page)
 
 ## Instruction updates
@@ -29,9 +29,9 @@
   - Vault root path now points to `~/git/vault/`.
   - Task structure now points to `agent_tasks/YYYY/MM/Week-N/`.
 - `~/.codex/skills/project-manager/SKILL.md`
-  - Storage layout paths updated to `/home/borisindelman/git/vault/...`.
+  - Storage layout paths updated to `${HOME}/git/vault/...`.
   - Continue workflow now reads `<slug>.md` (single-file project format).
 
 ## Validation
 - Verified no remaining operational `codex/WayveCode` or `/git/vault/WayveCode` references in the active vault structure docs.
-- Verified `projects/projects.json` now points to `/home/borisindelman/git/vault/projects/*.md`.
+- Verified `projects/projects.json` now points to `${HOME}/git/vault/projects/*.md`.

@@ -103,7 +103,7 @@ Use these source priorities:
 2. Notion docs supplied by Boris or found through an explicit Notion task.
 3. GitHub PRs/issues through `gh pr view/diff` and `gh api`, not browser URLs.
 4. Slack threads when Boris asks for Slack context or provides a thread/channel.
-5. Wayve skills under `/workspace/WayveCode/.ai/skills` and `/home/borisindelman/git/ParkingSkills/skills`.
+5. Wayve skills under `/workspace/WayveCode/.ai/skills` and `${HOME}/git/ParkingSkills/skills`.
 6. Existing vault task notes and newsletters.
 
 When working with code:

@@ -46,7 +46,7 @@ This validated that the prompt routing works operationally on a multi-row batch 
 
 ## Context and Orientation
 
-The existing runnable classifier lives in `wayve/ai/parking/classifiers/manual_gemini_from_run.py`. It already knows how to fetch media for one `(run_id, timestamp)` pair and how to run Gemini using different prompt variants. Databricks-backed parking analysis tables are documented in `/home/borisindelman/git/ParkingSkills/skills/databricks-parking-tables/SKILL.md`. We need to connect those two worlds by adding a batch tool that reads rows from `parking.event_analysis`, selects the correct Gemini prompt based on event semantics, and emits structured results.
+The existing runnable classifier lives in `wayve/ai/parking/classifiers/manual_gemini_from_run.py`. It already knows how to fetch media for one `(run_id, timestamp)` pair and how to run Gemini using different prompt variants. Databricks-backed parking analysis tables are documented in `${HOME}/git/ParkingSkills/skills/databricks-parking-tables/SKILL.md`. We need to connect those two worlds by adding a batch tool that reads rows from `parking.event_analysis`, selects the correct Gemini prompt based on event semantics, and emits structured results.
 
 ## Plan of Work
 

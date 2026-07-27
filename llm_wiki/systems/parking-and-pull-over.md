@@ -3,7 +3,7 @@ title: Parking and Pull-over
 type: system
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-24
+updated: 2026-07-27
 status: active
 tags:
   - llm-wiki
@@ -14,7 +14,7 @@ sources:
   - user seed, 2026-05-23
   - /workspace/WayveCode/wayve/ai/si/configs/parking/README.md
   - /workspace/WayveCode/wayve/ai/parking/README.md
-  - /home/borisindelman/git/vault/agents-change-log.md
+  - ${HOME}/git/vault/agents-change-log.md
   - [[llm_wiki/sources/2026-05-23-code-data-materialisation-and-parking|Code - Data Materialisation and Parking]]
   - [[llm_wiki/sources/2026-05-23-vault-parking-newsletters|Vault Parking Newsletters]]
   - [[llm_wiki/sources/2026-05-23-skill-workflows-parking-model-lifecycle|Skill Workflows - Parking Model Lifecycle]]
@@ -126,16 +126,16 @@ Key current caveats:
 
 High-value historical notes:
 
-- `/home/borisindelman/git/vault/agent_tasks/2026/05/Week-1/2026-05-02-parking-may01-datamodule.md`
-- `/home/borisindelman/git/vault/agent_tasks/2026/05/Week-1/2026-05-03-parking-materialization-window-cap.md`
-- `/home/borisindelman/git/vault/agent_tasks/2026/05/Week-2/2026-05-13-parking-py-gear-cleanup-deep-dive.md`
-- `/home/borisindelman/git/vault/agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check.md`
-- `/home/borisindelman/git/vault/agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison.md`
+- `${HOME}/git/vault/agent_tasks/2026/05/Week-1/2026-05-02-parking-may01-datamodule.md`
+- `${HOME}/git/vault/agent_tasks/2026/05/Week-1/2026-05-03-parking-materialization-window-cap.md`
+- `${HOME}/git/vault/agent_tasks/2026/05/Week-2/2026-05-13-parking-py-gear-cleanup-deep-dive.md`
+- `${HOME}/git/vault/agent_tasks/2026/05/Week-4/2026-05-19-pr-102690-merge-readiness-check.md`
+- `${HOME}/git/vault/agent_tasks/2026/05/Week-4/2026-05-18-parking-model-comparison.md`
 
 Existing generated artifacts:
 
-- `/home/borisindelman/git/vault/html_summaries/parking-model-comparison/`
-- `/home/borisindelman/git/vault/parking_model_analysis/`
+- `${HOME}/git/vault/html_summaries/parking-model-comparison/`
+- `${HOME}/git/vault/parking_model_analysis/`
 
 ## Pull-over Source Gap
 

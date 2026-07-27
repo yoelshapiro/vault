@@ -16,4 +16,4 @@
 
 ## Validation
 
-- `git -C /home/borisindelman/git/ParkingSkills diff --check` passed.
+- `git -C ${HOME}/git/ParkingSkills diff --check` passed.

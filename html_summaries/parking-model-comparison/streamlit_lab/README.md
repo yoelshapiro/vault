@@ -5,7 +5,7 @@ This app builds mocked table/data inputs and calls the real Boris-branch `wayve.
 Run from an environment that can import WayveCode Python dependencies:
 
 ```bash
-cd /home/borisindelman/git/vault/html_summaries/parking-model-comparison/streamlit_lab
+cd ${HOME}/git/vault/html_summaries/parking-model-comparison/streamlit_lab
 WAYVECODE_PATH=/workspace/.codex-borisindelman/worktrees/7992/WayveCode streamlit run app.py
 ```
 

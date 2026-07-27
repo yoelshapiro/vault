@@ -1,7 +1,7 @@
 # UNPUDO / Unpark Investigation Skill
 
 - Date: `2026-04-22`
-- Skill path: `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-segment-investigation`
+- Skill path: `${HOME}/git/ParkingSkills/skills/unpudo-unpark-segment-investigation`
 - Discovery path: `~/.codex/skills/unpudo-unpark-segment-investigation`
 
 ## What I added
@@ -60,7 +60,7 @@
 
 - Extended the skill so each analyzed event is also intended to be written to `parking.model_analysis`.
 - Added a shared schema file at:
-  - `/home/borisindelman/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/references/parking_model_analysis_schema.sql`
+  - `${HOME}/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/references/parking_model_analysis_schema.sql`
 - The schema is designed to be common across:
   - `park`
   - `pudo`

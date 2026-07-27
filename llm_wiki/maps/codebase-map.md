@@ -3,7 +3,7 @@ title: Codebase Map
 type: map
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-07-27
 status: active
 tags:
   - llm-wiki
@@ -25,7 +25,7 @@ This page is a living navigation map for the WayveCode areas most relevant to an
 - `/workspace/WayveCode` - main code repository.
 - `/workspace/WayveCode/AGENTS.md` - root coding-agent rules if present in a session context.
 - `/workspace/WayveCode/.ai/skills/` - Wayve skill definitions.
-- `/home/borisindelman/git/ParkingSkills/skills/` - parking-focused skill definitions.
+- `${HOME}/git/ParkingSkills/skills/` - parking-focused skill definitions.
 
 ## World model pre-training
 
@@ -117,10 +117,10 @@ Related page: [[llm_wiki/systems/deployment-and-model-catalogue|Deployment and M
 
 ## Existing vault artifacts to mine
 
-- `/home/borisindelman/git/vault/agents-change-log.md` - chronological record of previous agent work, including many parking training/deploy/eval sessions.
-- `/home/borisindelman/git/vault/agent_tasks/2026/05/` - recent detailed task notes.
-- `/home/borisindelman/git/vault/html_summaries/parking-model-comparison/` - existing interactive parking model comparison.
-- `/home/borisindelman/git/vault/parking_model_analysis/` - parking model report cards and model analyses.
+- `${HOME}/git/vault/agents-change-log.md` - chronological record of previous agent work, including many parking training/deploy/eval sessions.
+- `${HOME}/git/vault/agent_tasks/2026/05/` - recent detailed task notes.
+- `${HOME}/git/vault/html_summaries/parking-model-comparison/` - existing interactive parking model comparison.
+- `${HOME}/git/vault/parking_model_analysis/` - parking model report cards and model analyses.
 
 ## Source gaps
 

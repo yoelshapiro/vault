@@ -16,7 +16,7 @@ pr: none
 
 ## Goal
 
-Build out `/home/borisindelman/git/vault/llm_wiki` into a practical, source-backed wiki for an MLE working on Wayve end-to-end driving models, with emphasis on parking, PUDO, UNPUDO, unparking, pull-over adjacent workflows, and Codex agent operation.
+Build out `${HOME}/git/vault/llm_wiki` into a practical, source-backed wiki for an MLE working on Wayve end-to-end driving models, with emphasis on parking, PUDO, UNPUDO, unparking, pull-over adjacent workflows, and Codex agent operation.
 
 ## Sources Used
 

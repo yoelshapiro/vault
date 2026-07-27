@@ -23,8 +23,8 @@ The workflow used detector-derived event JSON and 8-way single-run workers. Each
 ## Outputs
 
 - Updated table: `parking.model_analysis`
-- Rewrote model cards under `/home/borisindelman/git/vault/parking_model_analysis/models`
-- Rewrote 12 per-run report cards under `/home/borisindelman/git/vault/parking_model_analysis/report_cards/2026/04/Week-5`
+- Rewrote model cards under `${HOME}/git/vault/parking_model_analysis/models`
+- Rewrote 12 per-run report cards under `${HOME}/git/vault/parking_model_analysis/report_cards/2026/04/Week-5`
 - Validated 115 model-card `card` links against GitHub-compatible report headings
 - Validated model/run Foxglove links use event timestamp +/- 5 minutes
 

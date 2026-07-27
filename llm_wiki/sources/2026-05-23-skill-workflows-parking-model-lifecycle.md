@@ -3,7 +3,7 @@ title: Skill Workflows - Parking Model Lifecycle
 type: source
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-07-27
 status: active
 tags:
   - llm-wiki
@@ -11,7 +11,7 @@ tags:
   - parking
   - workflow
 source_type: skill
-source_ref: /home/borisindelman/git/ParkingSkills/skills and /workspace/WayveCode/.ai/skills
+source_ref: ${HOME}/git/ParkingSkills/skills and /workspace/WayveCode/.ai/skills
 ---
 
 # Skill Workflows - Parking Model Lifecycle
@@ -21,11 +21,11 @@ source_ref: /home/borisindelman/git/ParkingSkills/skills and /workspace/WayveCod
 - Source type: local skill docs.
 - Retrieved: 2026-05-23.
 - Inspected skills:
-  - `/home/borisindelman/git/ParkingSkills/skills/train-parking-model/SKILL.md`
-  - `/home/borisindelman/git/ParkingSkills/skills/parking-deploy/SKILL.md`
-  - `/home/borisindelman/git/ParkingSkills/skills/av-test-multi-model-stats/SKILL.md`
-  - `/home/borisindelman/git/ParkingSkills/skills/model-info-finder/SKILL.md`
-  - `/home/borisindelman/git/ParkingSkills/skills/parking-event-analysis/SKILL.md`
+  - `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/train-parking-model/SKILL.md`
+  - `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/parking-deploy/SKILL.md`
+  - `${HOME}/git/ParkingSkills/skills/av-test-multi-model-stats/SKILL.md`
+  - `${HOME}/git/ParkingSkills/skills/model-info-finder/SKILL.md`
+  - `parking-event-analysis` historical skill (not present in the current ParkingSkills checkout)
   - `/workspace/WayveCode/.ai/skills/create-on-road-experiment/SKILL.md`
 
 ## Why This Matters

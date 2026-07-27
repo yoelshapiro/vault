@@ -1,5 +1,15 @@
 # LLM Wiki Log
 
+## [2026-07-27] maintenance | Portable user-home paths
+
+Replaced Boris-specific vault and ParkingSkills Git roots with `${HOME}` across
+the maintained wiki and historical vault notes. Validated 27 maintained wiki
+references for `HOME=/home/yoelshapiro` with zero missing paths; corrected the
+moved `parking-deploy` and `train-parking-model` skill paths and marked
+historical skills that are absent from the current ParkingSkills checkout.
+Unrelated historical `.codex`, `tmp`, and `Downloads` paths were intentionally
+left unchanged.
+
 ## [2026-05-24] ingest | Wayve MLE parking, navigation, latent actions, multitask heads
 
 Processed Notion and Google Drive sources for Team Parking, ML Guild, Latent Action Models, ORI Behaviour Optimisation, Navigation Instructions, Navigation Models, multiple-driving-head strategy, post-training multitask strategy, parking/PUDO product/system design, PUDO SOP, taxonomy, parking evaluation, event detection, materialization, newsletters, and release tracking.
