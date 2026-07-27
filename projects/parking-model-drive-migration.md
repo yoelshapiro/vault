@@ -30,6 +30,13 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
   forward-only window used by `parking_mode` (so `parking_mode` is byte-identical). Wired into
   `create_base_config` under `enable_parking_mode` (+ frame-table lookahead), with loader validation,
   int8 output spec (range 0..4), and `_compute_parking_stage` unit tests. Both factory test targets green.
+- ✅ Commit `ceae55e3`: **`lazy_past` best-effort backward frame-window extension** (the R-D past-window
+  gap). `frames.py` gains `lazy_past`/`lazy_past_sec` (symmetric to `lazy_future`; clamped, never drops;
+  `ORIGIN_INDEX` uses a shared `_effective_past`, so existing pipes are byte-identical);
+  `TableRequest.lookbehind_sec` (field 10, schema MINOR 7.3.0→**7.4.0**) wired through `tables.py`; the
+  drive/bc parking path sets `lookbehind_sec=30s` (matching SI) so `parking_stage` can see the exit's
+  preceding segment. frames `lazy_past`/`effective_past` unit tests + all touched lint/ty green.
+  (Kept `_get_row_slice_offsets`' offsets-only return to avoid breaking its other callers/tools.)
 - ⏭️ Next: the augmentor arms (`gear_label_cleanup`, `standstill_gear`, `clamp_policy_at_neutral`,
   `strip_leading_standstill`, `parking_stage_flip`) — each a proto arm + augmentor loader + runtime pipe
   + tests, reading `parking_stage`. Then route shortening (heaviest).
