@@ -18,10 +18,17 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
 - ✅ Commit 1: ADR 001 (`wayve/ai/lib/data/factory/.decisions/001-…md`), revised to address the 8 agentic-review comments.
 - ✅ Spike done — all factory-internals unknowns resolved (see Readiness).
 - ✅ Commit `cf2f6d18`: `enable_parking_mode` / `enable_stopping_mode` factory flags (no proto change;
-  defaults preserve baseline/MRM byte-identically). `//wayve/ai/drive/bc:py_checks_data` green
-  (tests + flake8 + ruff + ty).
-- ⏭️ Next: `parking_stage` tensor (`ParkingStageRequest` proto arm + extend `ParkingDataLoader`, incl.
-  the past-horizon contract), then the augmentor arms, then route shortening + proto bump/regen.
+  defaults preserve baseline/MRM byte-identically). `//wayve/ai/drive/bc:py_checks_data` green.
+- ✅ Commit `95a1e063` + `4b9fb01f`: gate parking inputs on `enable_parking_mode` (master switch);
+  validate `enable_stopping_mode` requires it (review comment).
+- ✅ Commit `4cbc2f00`: `parking_stage` proto tensor — `ParkingStageRequest` + oneof arm (field 118),
+  int8 {0=driving,1=parking,2=parked,3=unparking}; schema MINOR bump 7.1.1→**7.3.0** (reconciled with
+  CHANGELOG). Verified bazel regenerates `_pb2` (no manual `make_protos.sh`); config schema tests + ty green.
+  No loader consumes it yet.
+- ⏭️ Next (delicate): extend `ParkingDataLoader` to compute + emit `parking_stage` — 4-stage detection
+  with the **past-window** (port SI `_compute_parking_mode`→`ParkingModeResult` + `_parking_stage_label`),
+  gate the tensor in `create_base_config`, thread a past horizon into the parking pipeline spec, and port
+  SI's `test_parking_unit` cases. Then the augmentor arms, then route shortening.
 
 ## Strategy / thesis
 The parking model = the driving/MRM model + gear input, park-mode input, stopping-mode input, and a
