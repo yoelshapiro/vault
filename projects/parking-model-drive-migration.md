@@ -74,6 +74,11 @@ anchor (mutually exclusive, [parking.py:182-184](wayve/ai/si/datamodules/parking
 - **`parking_stage` ∈ {driving, parking, parked, unparking}** — NEW categorical tensor; the detection
   state. Drives ALL augmentations (standstill-gear, clamp, strip, route-shortening, goal-pose).
   Formalizes SI's 3 bools + `_parking_stage_label_from_result` ([parking.py:1273](wayve/ai/si/datamodules/parking.py)).
+  int8, **mapping `driving=0, parking=1, parked=2, unparking=3`**, `TensorSpec range=(0,4)` (exclusive
+  upper → values 0–3; `driving=0` = default/none). ⚠️ **Detection needs a PAST window:** current
+  `ParkingDataLoader` scans `gear[origin:end]` (forward only) → can't see the preceding neutral segment,
+  so `unparking` would be misclassified as `driving`. The parking `frame_data` table must carry a
+  **past horizon** (SI `past_sec=30`), and the loader reads `[origin-past, origin+lookahead]`.
 - **`parking_mode`** — the model INPUT only (auto-park intent = INITIATE_AUTO_PARK / `DrivingControlKey.nING`;
   read by `ParkingModeSTAdaptor`). At train time **derived** as `parking_stage ∈ {parking, parked}`
   (documented as provisional — may change). Keep the name `parking_mode` for now (rename to
