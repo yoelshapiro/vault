@@ -1,5 +1,21 @@
 # Agents Change Log
 
+## 2026-07-27 - Codex Vault Integration
+
+- Topic: Configure Codex to use the synced personal knowledge vault.
+- Labels: codex, vault, obsidian, configuration, knowledge-management.
+- Branch: n/a.
+- PR: n/a.
+- Change type: Agent configuration.
+- Areas: `/workspace/.codex`, `/home/yoelshapiro/git/vault`.
+- Changes:
+  - Added persistent global guidance for selective vault lookup and durable notes.
+  - Granted the VM vault as an additional writable root for workspace-write mode.
+  - Preserved ownership of Git synchronization with the external one-minute
+    push/pull loop.
+- Task note: [[agent_tasks/2026/07/Week-31/2026-07-27-codex-vault-integration|2026-07-27 Codex Vault Integration]]
+
+
 ## 2026-07-21 - Deployment Wrapper Default Gear Rebase
 
 - Topic: Rebase the default-gear deployment wrapper PR onto current `main`.
