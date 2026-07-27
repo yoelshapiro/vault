@@ -46,11 +46,18 @@ draft PR [#127389](https://github.com/wayveai/WayveCode/pull/127389).
     within those buckets. Config threaded via `ParkingSettings`/`PipelineSpec.gear_label_cleanup_buckets`
     (thresholds from constants); schema MINOR 7.4.0→**7.5.0**. Unit tests for the cleanup + schema config;
     all lib-factory/config/drive-bc checks green. (min-duration filter kept as a guard for non-cleanup buckets.)
-  - **Part 2 (model tensors):** a `gear_label_cleanup` augmentor that writes cleaned gear into
-    `vehicle_gear_direction`/`policy_gear_direction`. Needs to re-sample cleaned dense gear at the gear
-    loaders' exact indices (reuse their gather/index resolution to avoid off-by-one).
-  - OPEN: cleanup params (reverse_max_distance_m, neutral_max_duration_sec, stop_buffer_sec,
-    stop_speed_threshold_mps) → a shared `GearLabelCleanupRequest` proto read by both, vs constants.
+  - **Part 2 (model tensors): ✅ DONE — commit `bfef1c21`.** New `gear_label_cleanup` augmentor
+    (proto arm tag 10 + `GearLabelCleanupAugmentor` msg; schema MINOR 7.5.0→**7.6.0**) overwrites
+    `vehicle_gear_direction` (required) + `policy_gear_direction` (optional) with cleaned gear, bucket-gated
+    on `gear_label_cleanup_buckets`. Re-gather is provably index-aligned: the factory loader builds the
+    SAME `IndicesFromTimeDeltas(get_time_deltas(gear_request))` generators the gear loaders use and passes
+    them to the pipe, which re-samples the cleaned dense series via `resolve_indices` (identical to the
+    loaders' `Gatherer` path — no off-by-one). Pure cleanup helpers moved to `pipes/parking_gear.py`
+    (shared by `ParkingDataLoader` + the augmentor pipe; advances the parking.py "move to ai lib pipe"
+    TODO). Config resolved: params live on `GearLabelCleanupAugmentor` set by `create_base_config` from
+    the SAME spec+constants as `ParkingStageRequest` (one source, can't drift — no shared proto needed).
+    Alignment tests (loader-index reproduction, spike smoothing, bucket gating, policy-absent) + schema
+    tests; tensor_loaders/validation/config-schema/drive-bc-data checks + `lib_no_triton_rt` all green.
   Then `standstill_gear`, `clamp_policy_at_neutral`, `strip_leading_standstill`, `parking_stage_flip`;
   then route shortening.
 
