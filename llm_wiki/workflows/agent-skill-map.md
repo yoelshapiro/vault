@@ -3,7 +3,7 @@ title: Agent Skill Map
 type: workflow
 owner: Boris Indelman
 created: 2026-05-23
-updated: 2026-05-23
+updated: 2026-07-27
 status: active
 tags:
   - llm-wiki
@@ -35,7 +35,7 @@ Before using a skill, open its `SKILL.md` and follow the instructions there. Thi
 
 | Skill | Path | Use |
 | --- | --- | --- |
-| `train-parking-model` | `${HOME}/git/ParkingSkills/skills/train-parking-model/SKILL.md` | Submit and monitor Parking/PUDO training runs. |
+| `train-parking-model` | `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/train-parking-model/SKILL.md` | Submit and monitor Parking/PUDO training runs. |
 | `debug-training-job` | `/workspace/WayveCode/.ai/skills/debug-training-job/SKILL.md` | Debug failed Surfboard training jobs. |
 | `debug-training-job-v2` | `/workspace/WayveCode/.ai/skills/debug-training-job-v2/SKILL.md` | Debug a training job from a numerical Surfboard job ID. |
 | `manage-training-job` | `/workspace/WayveCode/.ai/skills/manage-training-job/SKILL.md` | Check status, queue position, and priority for training jobs. |
@@ -46,16 +46,16 @@ Before using a skill, open its `SKILL.md` and follow the instructions there. Thi
 
 | Skill | Path | Use |
 | --- | --- | --- |
-| `parking-deploy` | `${HOME}/git/ParkingSkills/skills/parking-deploy/SKILL.md` | Deploy a trained Parking/PUDO model. |
-| `parking-interleave-deploy` | `${HOME}/git/ParkingSkills/skills/parking-interleave-deploy/SKILL.md` | Deploy with interleave control and optional radar overlay. |
-| `parking-event-analysis` | `${HOME}/git/ParkingSkills/skills/parking-event-analysis/SKILL.md` | Analyze PUDO or UNPUDO events for run IDs. |
-| `parking-event-fetcher` | `${HOME}/git/ParkingSkills/skills/parking-event-fetcher/SKILL.md` | Load PUDO/UNPUDO events from parking materialization tables. |
-| `parking-event-classifier` | `${HOME}/git/ParkingSkills/skills/parking-event-classifier/SKILL.md` | Classify parking events as successful or unsuccessful with evidence. |
-| `parking-destination-resolver` | `${HOME}/git/ParkingSkills/skills/parking-destination-resolver/SKILL.md` | Resolve intended PUDO destination or task target. |
-| `parking-transcript-aligner` | `${HOME}/git/ParkingSkills/skills/parking-transcript-aligner/SKILL.md` | Align Whisper driver transcript rows to parking-event timestamps. |
-| `parking-event-analysis-writer` | `${HOME}/git/ParkingSkills/skills/parking-event-analysis-writer/SKILL.md` | Materialize enriched event-analysis rows. |
-| `unpudo-unpark-model-analysis` | `${HOME}/git/ParkingSkills/skills/unpudo-unpark-model-analysis/SKILL.md` | Analyze model UNPUDO/unparking events and generate report cards. |
-| `unpudo-unpark-segment-investigation` | `${HOME}/git/ParkingSkills/skills/unpudo-unpark-segment-investigation/SKILL.md` | Investigate on-road UNPUDO/unparking segments. |
+| `parking-deploy` | `${HOME}/git/ParkingSkills/skills/parking_model_lifecycle/parking-deploy/SKILL.md` | Deploy a trained Parking/PUDO model, including interleave control. |
+| `parking-interleave-deploy` | Superseded by `parking-deploy` in the current ParkingSkills checkout. | Historical specialized interleave deployment workflow. |
+| `parking-event-analysis` | Not present in the current ParkingSkills checkout. | Historical PUDO/UNPUDO event-analysis workflow. |
+| `parking-event-fetcher` | Not present in the current ParkingSkills checkout. | Historical parking-event materialization loader. |
+| `parking-event-classifier` | Not present in the current ParkingSkills checkout. | Historical evidence-based parking-event classifier. |
+| `parking-destination-resolver` | Not present in the current ParkingSkills checkout. | Historical PUDO destination resolver. |
+| `parking-transcript-aligner` | Not present in the current ParkingSkills checkout. | Historical transcript alignment workflow. |
+| `parking-event-analysis-writer` | Not present in the current ParkingSkills checkout. | Historical event-analysis materializer. |
+| `unpudo-unpark-model-analysis` | Not present in the current ParkingSkills checkout. | Historical UNPUDO/unparking model-analysis workflow. |
+| `unpudo-unpark-segment-investigation` | Not present in the current ParkingSkills checkout. | Historical UNPUDO/unparking segment investigation. |
 
 ## Evaluation, CI, and on-road
 

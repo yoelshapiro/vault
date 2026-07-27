@@ -1,5 +1,20 @@
 # Agents Change Log
 
+## 2026-07-27 - Portable Vault User Paths
+
+- Topic: Make Boris-specific vault and ParkingSkills paths user-portable.
+- Labels: codex, vault, paths, environment, portability.
+- Branch: n/a.
+- PR: n/a.
+- Change type: Documentation maintenance and path validation.
+- Areas: `llm_wiki`, `${HOME}/git/ParkingSkills`, `${HOME}/git/vault`.
+- Changes:
+  - Replaced `/home/borisindelman` with `${HOME}` across eight wiki files.
+  - Corrected moved ParkingSkills lifecycle paths.
+  - Marked unavailable historical skills instead of retaining broken paths.
+  - Validated every remaining `${HOME}` reference for `yoelshapiro`.
+- Task note: [[agent_tasks/2026/07/Week-31/2026-07-27-portable-vault-user-paths|2026-07-27 Portable Vault User Paths]]
+
 ## 2026-07-27 - Codex Vault Integration
 
 - Topic: Configure Codex to use the synced personal knowledge vault.
