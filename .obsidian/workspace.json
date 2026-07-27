@@ -458,9 +458,21 @@
               "icon": "excalidraw-icon",
               "title": "Drawing 2026-07-27 11.25.17.excalidraw"
             }
+          },
+          {
+            "id": "e70f5c7b1fde5602",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2026-07-27 12.00.12.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2026-07-27 12.00.12.excalidraw"
+            }
           }
         ],
-        "currentTab": 25
+        "currentTab": 26
       }
     ],
     "direction": "vertical"
@@ -634,10 +646,11 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "c1de2b7a6d18cb67",
+  "active": "e70f5c7b1fde5602",
   "lastOpenFiles": [
-    "projects/parking-model-drive-migration.md",
     "Excalidraw/Drawing 2026-07-27 11.25.17.excalidraw.md",
+    "Excalidraw/Drawing 2026-07-27 12.00.12.excalidraw.md",
+    "projects/parking-model-drive-migration.md",
     "projects.md",
     "agents-change-log.md",
     "Excalidraw/head_options.excalidraw.md",
@@ -665,7 +678,6 @@
     "agent_tasks/2026/07/Week-28/2026-07-12-event-table-pr-comments.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-generic-events-databricks-upload.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-debug-sampling-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-materialisation.md",
     "agent_tasks/2026/07/Week-28",
     "agent_tasks/2026/07/Week-1",
     "agent_tasks/2026/07/Week-27",
