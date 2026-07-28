@@ -87,3 +87,35 @@ bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_
 - Output:
   `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/parking/dev/p2p_park_full_20260727_rerun_2303__2026-07-27-23-19`
 
+## Anchors-Only Commit Comparison
+
+Ran the full `parking_pudo/anchors` workflow for 2026-06-01 through
+2026-06-30 from the fixed branch and from the pre-branch main commit. Images
+were built from detached worktrees and explicitly pinned using short immutable
+ACR tags because Flyte copies image tags into a Kubernetes label with a
+63-character value limit.
+
+- Fixed commit `ee659895b584`:
+  - Flyte execution: `a55622hqp282swsdrs95`
+  - Result: `SUCCEEDED` in 51m52s
+  - Get partitions: 3m07s
+  - Ray filter/bucket: 40m05s
+  - Spark balance: 5m00s
+  - Final materialisation/comparison: 3m24s
+  - The two-part P2P table
+    `inferred__scenario.embeddings_head_p2p_phase` was exercised on every
+    partition.
+  - Output:
+    `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchors_june_2026_ee659895_exact__2026-07-28-12-08`
+- Pre-branch commit `b1b5b86ffd7e`:
+  - Flyte execution: `aqmh84pgmzzr2wkrtc9r`
+  - Result: `FAILED` in 35m17s
+  - All six partitions deterministically failed with
+    `TypeError: select_allowed_run_tags() missing 1 required positional argument: 'allowed_tags'`.
+  - Flyte and Grafana showed a user-code failure with no infrastructure cause.
+  - Partial output:
+    `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchors_june_2026_b1b5b86_exact__2026-07-28-12-17`
+
+This A/B run confirms that the configured run-tag binding fix removes the
+historical runtime blocker. The fixed branch was slower during mask processing,
+as expected from the additional P2P as-of join, but it made steady progress.
