@@ -158,7 +158,8 @@ Ported only Boris's multi-source Parking BC mechanism:
   new-driving datamodule rebuild.
 
 Focused multi-source, existing parking-release resolution, Ruff, and Flake8
-checks passed. The changes remain uncommitted for review.
+checks passed. The port was committed as `ca5832ebc45a` and pushed to
+`origin/yoel/23-07-pudo-parking_w_p2p_qa`.
 
 ### New Park Materialisation Training Root
 
@@ -178,3 +179,54 @@ Exact train/validation bucket-set tests verify the park and UnPUDO families,
 their separate roots, their `park_unpark`/`pudo_unpudo` tracking groups, the
 P2P source, and the total training weight of `1.0`. The focused test, existing
 Parking 2026-05-21 config-resolution test, Ruff, and Flake8 all passed.
+
+## Training Validation Ladder
+
+Prepared to train `parking_bc_train_release_2026_5_21` on eight H100 nodes, but
+stopped before submission because the data-access canary found a real
+configuration blocker.
+
+### Stage 1: Configuration and Unit Checks
+
+- Added a Hydra-resolved regression check proving the final training mode maps:
+  - park/unpark buckets to the new P2P-filtered parking root;
+  - UnPUDO buckets to the retained `parking_pudo/default` root;
+  - standalone P2P buckets to the retained `bc/p2p` root.
+- Exact bucket-set tests, release-mode resolution, Ruff, and Flake8 passed.
+- Committed and pushed the guard as:
+  `582c4f6d6f0d Validate resolved parking bucket roots`.
+
+### Stage 2: Real Data Canaries
+
+All five representative bucket directories contained parquet manifests.
+Real decoded batches were successfully produced for:
+
+- train `dc_park_usa` from the new parking root;
+- train `dc_unpudo_usa` from the retained PUDO root;
+- validation `dc_park_usa`;
+- validation `dc_unpudo_usa`.
+
+The unmodified release mode failed to produce a P2P batch from
+`p2p_bc_park_in_usa`. It requests an 800-point path (about 200 m), while
+sampled P2P rows frequently have much shorter available paths. Fifteen
+`DistanceOutOfRangeException`s exhausted the path loader's error budget.
+
+The repository's official `parking_bc_train_p2p` recipe uses the same P2P root
+with `allow_short_path=True`. A temporary canary proved that this setting alone
+is sufficient: with the existing strict `filter_bad_paths_thresh` unchanged,
+the P2P source produced a complete 97-key batch with six-camera tensors, an
+800-point padded path, and parking/unparking labels.
+
+The minimal proposed correction is therefore:
+
+```python
+parking_bc_datamodule_cfg = BcDataModuleCfg(
+    ...
+    allow_short_path=True,
+)
+```
+
+This option is global to the datamodule and changes short-path handling for all
+Parking BC sources, not only P2P. It was not applied without explicit approval.
+The one-batch overfit, short normal run, one-node cluster canary, and full
+eight-node launch were not run. No training job was submitted.
