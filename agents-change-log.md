@@ -1,5 +1,26 @@
 # Agents Change Log
 
+## 2026-07-28 - Materialisation Skill Rename
+
+- Topic: Rename and strengthen the ParkingSkills materialisation development,
+  debugging, and monitoring workflow.
+- Labels: parking-skills, sampling, materialisation, flyte, monitoring.
+- Branch: `yoel/materialisation_debug`.
+- PR: none recorded.
+- Change type: Skill rename and workflow guardrail update.
+- Areas:
+  `${HOME}/git/ParkingSkills/skills/materialisation-dev-debug-and-monitoring`.
+- Changes:
+  - Renamed `validate-materialisation-changes` to
+    `materialisation-dev-debug-and-monitoring` across the directory, metadata,
+    helper paths, and default prompt.
+  - Made `sample` the default approved full-materialisation entrypoint.
+  - Required balancing plus every subsequent applicable step before a full
+    materialisation can be reported complete.
+  - Documented the explicit `filter_and_bucket_stage` to `balance_stage`
+    fallback for modular execution.
+- Task note: [[agent_tasks/2026/07/Week-31/2026-07-28-materialisation-skill-rename|2026-07-28 Materialisation Skill Rename]]
+
 ## 2026-07-28 - Parking/PUDO P2P Materialisation
 
 - Topic: Filter gear-derived false-positive park events with P2P predictions and

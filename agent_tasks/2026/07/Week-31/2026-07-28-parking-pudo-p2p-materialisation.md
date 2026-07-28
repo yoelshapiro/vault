@@ -167,9 +167,14 @@ Verified that the P2P-filtered parking-only run has both `train` and
 
 `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/parking/dev/p2p_park_full_20260727_rerun_2303__2026-07-27-23-19/dataset`
 
-Training configuration must treat this as a separate park source rather than
-replacing the existing PUDO root: park/unpark-named partitions use the new
-root, PUDO/UnPUDO partitions retain the old `parking_pudo/default` root, and
-the root-aware non-driving allowlist includes both plus the standalone P2P
+The training configuration now treats this as a separate park source rather
+than replacing the existing PUDO root: park/unpark-named partitions use the
+new root, PUDO/UnPUDO partitions retain the old `parking_pudo/default` root,
+and the root-aware non-driving allowlist includes both plus the standalone P2P
 training source. The output contains the expected `dc_park`, `dc_unpark`,
 gear-change, CA, and pre-CA parking buckets for both splits.
+
+Exact train/validation bucket-set tests verify the park and UnPUDO families,
+their separate roots, their `park_unpark`/`pudo_unpudo` tracking groups, the
+P2P source, and the total training weight of `1.0`. The focused test, existing
+Parking 2026-05-21 config-resolution test, Ruff, and Flake8 all passed.
