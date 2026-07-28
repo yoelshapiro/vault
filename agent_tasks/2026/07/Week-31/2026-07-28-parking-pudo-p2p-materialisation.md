@@ -217,16 +217,65 @@ is sufficient: with the existing strict `filter_bad_paths_thresh` unchanged,
 the P2P source produced a complete 97-key batch with six-camera tensors, an
 800-point padded path, and parking/unparking labels.
 
-The minimal proposed correction is therefore:
+The correction was deliberately scoped to the P2P source rather than enabling
+short paths for the complete datamodule. `OtfDrivingDataModule._initialise_pipe`
+now pads short paths when the resolved root contains
+`/sampling_materialised/bc/p2p/`; non-P2P sources retain their existing
+behavior. A parametrized test covers implicit P2P enablement, an unchanged
+non-P2P source, and the existing explicit override.
 
-```python
-parking_bc_datamodule_cfg = BcDataModuleCfg(
-    ...
-    allow_short_path=True,
-)
-```
+The real P2P canary then produced a complete 97-key batch without a temporary
+configuration override. The focused unit test, resolved configuration tests,
+Ruff, and Flake8 passed. The monolithic datamodule suite's new cases also
+passed; its remaining failures were unrelated read-only `/home/nobody` and
+external binary/SARSA fixture failures.
 
-This option is global to the datamodule and changes short-path handling for all
-Parking BC sources, not only P2P. It was not applied without explicit approval.
-The one-batch overfit, short normal run, one-node cluster canary, and full
-eight-node launch were not run. No training job was submitted.
+### Additional Baseline Defects Found by the Ladder
+
+The local training gates found three independent defects already present in
+the ported Parking release configuration:
+
+- `GearDirectionSTAdaptor` was passed the stale keyword
+  `dropout_token_probability`; corrected to `dropout_probability` and covered
+  by resolved-config assertions.
+- `ParkingDataConfig` was constructed eagerly, so Hydra `_convert_: all`
+  converted it into a dictionary before OTF setup; changed to a Hydra
+  `builds(ParkingDataConfig)` target and asserted the instantiated runtime
+  type.
+- the generated scripted Parking deployment wrapper could not see inherited
+  gear constants; `REVERSE_DRIVE_POSITION` and `NEUTRAL_DRIVE_POSITION` are
+  now redeclared alongside `PARK_DRIVE_POSITION` as `torch.jit.Final[int]`,
+  with the Parking wrapper forward-pass test exercising TorchScript.
+
+The fixes were committed and pushed through
+`f0e72c0f0d88 Make parking wrapper gear constants scriptable`.
+
+### Stage 3: One-Batch Local Overfit
+
+Passed 10/10 optimizer steps. The run resolved the intended mixed roots, read
+the P2P source using only source-specific padding, exported TorchScript at
+steps 0 and 10, saved the checkpoint, and exited successfully. The low unique
+sample warning was expected because this gate intentionally repeated one
+fixed batch.
+
+### Stage 4: Short Normal Local Run
+
+Passed 100/100 optimizer steps with four OTF data workers and real mixed
+samples. The pipeline continuously replenished data while rejecting malformed
+individual source samples as designed, saved the final checkpoint, exported
+TorchScript, and exited successfully.
+
+### Stage 5: One-Node AKS Canary
+
+Submitted a 100-step canary to one DGX-H100 node (eight GPUs), P1, with zero
+automatic restarts:
+
+- Surfboard job: `200168`
+- Job name: `indigo-proficient-bear-200168`
+- Session:
+  `session_2026_07_28_22_52_51_si_parking_bc_train_release_2026_5_21_p521canary`
+- Image:
+  `wayvetraining.azurecr.io/scaled-intelligence:f0e72c0f0d8807ce3696560d0788cdceb4fe998b`
+- Initial state: queued at position 2
+
+The full eight-node training remains gated on terminal canary success.
