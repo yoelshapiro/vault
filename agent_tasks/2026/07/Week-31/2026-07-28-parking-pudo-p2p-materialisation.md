@@ -119,3 +119,23 @@ ACR tags because Flyte copies image tags into a Kubernetes label with a
 This A/B run confirms that the configured run-tag binding fix removes the
 historical runtime blocker. The fixed branch was slower during mask processing,
 as expected from the additional P2P as-of join, but it made steady progress.
+
+### P2P-Disabled Baseline
+
+Commit `6e3ab999424d` temporarily disabled both the P2P join and confident
+`other` veto while retaining the configured run-tag binding fix.
+
+- Flyte execution: `a7s5pp2zqtlzqj5b6hkr`
+- Image digest:
+  `sampling@sha256:514d5853731da9a885307993dd36accc23ffa02289f0f6fe64d5461047ae922a`
+- Result: `SUCCEEDED` in 43m18s, 8m34s faster than the P2P-enabled run
+- Get partitions: 5m15s
+- Ray filter/bucket: 31m08s, 8m57s faster than the P2P-enabled run
+- Spark balance/materialise: 3m04s
+- Final validation/comparison: 3m32s
+- Six partitions completed with 4,874 run IDs and 246,969,445 rows in total.
+- A Grafana search across 607,637 log lines found zero occurrences of
+  `inferred__scenario.embeddings_head_p2p_phase`, confirming that the disabled
+  baseline did not read the P2P table.
+- Output:
+  `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchors_june_2026_6e3ab999_p2p_disabled__2026-07-28-13-21`
