@@ -1,5 +1,33 @@
 # Agents Change Log
 
+## 2026-07-28 - Parking/PUDO P2P Materialisation
+
+- Topic: Filter gear-derived false-positive park events with P2P predictions and
+  validate the full materialisation.
+- Labels: parking, pudo, p2p, sampling, flyte, grafana, materialisation.
+- Branch: `yoel/generic_w_p2p_qa`.
+- PR: none recorded.
+- Change type: Code fix, regression tests, validation skill, Flyte execution,
+  operational debugging.
+- Areas: `wayve/ai/services/sampling/datasets/parking_pudo`;
+  `wayve/ai/services/sampling/common/masks.py`; Parking/PUDO and safety dataset
+  tests; Flyte executions `abj9b2jsx526lznvdhsf` and
+  `amjcnj4d246qw9m9pfzk`.
+- Changes:
+  - Added an exact-run, nearest-two-sided P2P phase join with a 2-second
+    tolerance and vetoed only confident-`other` park anchors.
+  - Fixed unbound `select_allowed_run_tags` dataset configuration by using the
+    bound driving filter and added effective-callable regression tests.
+  - Added minimal resolver and real join/filter-route coverage for the two-part
+    P2P table name.
+  - Recorded a revalidated feature-specific canary run and selection criteria
+    in the materialisation validation skill.
+  - Diagnosed the first full execution as a Spark/Flyte reconciliation stall:
+    the driver succeeded while `n0` remained `RUNNING`.
+  - Relaunched and monitored Flyte plus Grafana every 10 minutes; execution
+    `amjcnj4d246qw9m9pfzk` succeeded with 309/309 partitions and zero failures.
+- Task note: [[agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation|2026-07-28 Parking/PUDO P2P Materialisation]]
+
 ## 2026-07-27 - Portable Vault User Paths
 
 - Topic: Make Boris-specific vault and ParkingSkills paths user-portable.
