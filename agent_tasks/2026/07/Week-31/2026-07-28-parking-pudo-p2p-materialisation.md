@@ -292,4 +292,8 @@ training on eight DGX-H100 nodes (64 GPUs), P1, with zero automatic restarts:
   `session_2026_07_28_23_13_21_si_parking_bc_train_release_2026_5_21_p521`
 - Image:
   `wayvetraining.azurecr.io/scaled-intelligence:f0e72c0f0d8807ce3696560d0788cdceb4fe998b`
-- Initial state: queued at position 2
+- State at handoff: `Running` from 23:18 UTC on
+  `aks-prod-training-2-swe.nd96h100c`
+- Rank 0 logs show successful resolved-root setup, OTF initialization, managed
+  identity authentication, and WFM checkpoint loading with no immediate launch
+  failure.
