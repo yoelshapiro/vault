@@ -6,13 +6,16 @@
   validate the full materialisation.
 - Labels: parking, pudo, p2p, sampling, flyte, grafana, materialisation.
 - Branch: `yoel/generic_w_p2p_qa`.
+- Follow-up branch: `yoel/23-07-pudo-parking_w_p2p_qa`, recreated from
+  `yoel/generic_w_p2p_qa` and carrying a focused Boris multi-source training
+  configuration port.
 - PR: none recorded.
 - Change type: Code fix, regression tests, validation skill, Flyte execution,
   operational debugging.
 - Areas: `wayve/ai/services/sampling/datasets/parking_pudo`;
   `wayve/ai/services/sampling/common/masks.py`; Parking/PUDO and safety dataset
-  tests; Flyte executions `abj9b2jsx526lznvdhsf` and
-  `amjcnj4d246qw9m9pfzk`.
+  tests; `wayve/ai/si/configs/parking/parking_config.py`; Flyte executions
+  `abj9b2jsx526lznvdhsf` and `amjcnj4d246qw9m9pfzk`.
 - Changes:
   - Added an exact-run, nearest-two-sided P2P phase join with a 2-second
     tolerance and vetoed only confident-`other` park anchors.
@@ -26,6 +29,9 @@
     the driver succeeded while `n0` remained `RUNNING`.
   - Relaunched and monitored Flyte plus Grafana every 10 minutes; execution
     `amjcnj4d246qw9m9pfzk` succeeded with 309/309 partitions and zero failures.
+  - Ported Boris's P2P training root and root-aware non-driving partition
+    selection onto the current P2P branch without replacing the full parking
+    configuration; added focused regression coverage.
 - Task note: [[agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation|2026-07-28 Parking/PUDO P2P Materialisation]]
 
 ## 2026-07-27 - Portable Vault User Paths

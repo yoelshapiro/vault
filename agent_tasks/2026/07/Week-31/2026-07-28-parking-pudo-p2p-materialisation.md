@@ -139,3 +139,23 @@ Commit `6e3ab999424d` temporarily disabled both the P2P join and confident
   baseline did not read the P2P table.
 - Output:
   `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/anchors/dev/anchors_june_2026_6e3ab999_p2p_disabled__2026-07-28-13-21`
+
+## Training Configuration Port
+
+Recreated `yoel/23-07-pudo-parking_w_p2p_qa` from the P2P-enabled
+`yoel/generic_w_p2p_qa` tip `ee659895b584`, instead of basing it on the much
+older `boris/23-07-pudo-parking-varient` history. This preserves the current
+sampling implementation and avoids importing hundreds of unrelated SI
+configuration changes.
+
+Ported only Boris's multi-source Parking BC mechanism:
+
+- added the P2P materialised root and six `p2p_bc_park_in/out` buckets;
+- selected non-driving partitions by membership in the configured root tuple;
+- assigned P2P data weight `0.06` and rebalanced the existing non-driving
+  groups so the complete driving/non-driving training mix remains `1.0`;
+- added a regression test proving that both PUDO and P2P roots survive the
+  new-driving datamodule rebuild.
+
+Focused multi-source, existing parking-release resolution, Ruff, and Flake8
+checks passed. The changes remain uncommitted for review.
