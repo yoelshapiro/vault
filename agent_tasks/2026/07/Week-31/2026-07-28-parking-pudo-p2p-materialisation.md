@@ -276,6 +276,20 @@ automatic restarts:
   `session_2026_07_28_22_52_51_si_parking_bc_train_release_2026_5_21_p521canary`
 - Image:
   `wayvetraining.azurecr.io/scaled-intelligence:f0e72c0f0d8807ce3696560d0788cdceb4fe998b`
-- Initial state: queued at position 2
+- Result: `Completed`, 100/100 steps
+- Runtime: 22:58–23:10 UTC
+- All eight NCCL ranks initialized and saved their compile caches.
+- Rank 0 stderr was empty; the final communicator teardown completed normally.
 
-The full eight-node training remains gated on terminal canary success.
+### Stage 6: Full Eight-Node Training
+
+After the canary passed terminally, launched the requested full release
+training on eight DGX-H100 nodes (64 GPUs), P1, with zero automatic restarts:
+
+- Surfboard job: `200175`
+- Job name: `aardvark-amaranth-luminescent-200175`
+- Session:
+  `session_2026_07_28_23_13_21_si_parking_bc_train_release_2026_5_21_p521`
+- Image:
+  `wayvetraining.azurecr.io/scaled-intelligence:f0e72c0f0d8807ce3696560d0788cdceb4fe998b`
+- Initial state: queued at position 2
