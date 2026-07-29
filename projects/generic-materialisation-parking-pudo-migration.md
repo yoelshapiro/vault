@@ -7,9 +7,9 @@
 - **Source of truth for this plan:** Notion app fetch of `📖 [Documentation] Generic Materialisation` on 2026-04-30 plus main-branch code inspection.
 
 ## Status
-- **Phase:** Initial implementation / validation.
+- **Phase:** Implementation / validation.
 - **Status:** active.
-- **Last updated:** 2026-05-01.
+- **Last updated:** 2026-07-28.
 - **Implementation:** started on `boris/generic-parking-pudo-materialisation`.
 - **Important correction:** The official Generic Materialisation framework from Notion is `wayve/ai/services/sampling`, not the older/local `wayve/ai/foundation/data/curation/materialization` path.
 
@@ -162,6 +162,30 @@
 - **2026-04-30:** Treat `wayve/ai/services/sampling` as the target generic materialisation framework.
 - **2026-04-30:** Started implementation by extending Wonjoon's existing generic parking filters rather than creating a notebook/pre-stage.
 - **2026-04-30:** Preserve legacy default behavior for existing generic parking filters. Stricter future-gear/progress behavior is enabled only through explicit event-dataset options.
+- **2026-07-28:** Reject only `park` anchors—not PUDO anchors—when the nearest
+  same-run P2P prediction within 2 seconds is `other` with score `>= 0.9`.
+- **2026-07-28:** Treat effective callable binding and execution of table
+  resolver/join routes as required local validation before remote materialisation.
+- **2026-07-28:** Monitor Flyte control-plane phase and Grafana data-plane
+  progress together; neither driver exit nor stale Flyte reason text is
+  sufficient on its own.
+
+## 2026-07-28 P2P False-Positive Filtering
+
+- Implemented on `yoel/generic_w_p2p_qa` at `ee659895b584`.
+- Added exact-run, two-sided nearest timestamp matching with a 2-second
+  tolerance against `inferred__scenario.embeddings_head_p2p_phase`.
+- Added resolver, join-route, downstream park-veto, and configured-filter
+  binding regression coverage.
+- Registered and verified a representative single-run canary with 22,101
+  confident `other` prediction frames.
+- Full rerun `amjcnj4d246qw9m9pfzk` succeeded with 309/309 partitions and wrote
+  `parking_pudo/parking/dev/p2p_park_full_20260727_rerun_2303__2026-07-27-23-19`.
+- The preceding execution `abj9b2jsx526lznvdhsf` was abandoned after its Spark
+  driver succeeded but the Spark application and Flyte `n0` remained
+  `RUNNING`, preventing `n1` from starting.
+- Detailed note:
+  [[agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation|2026-07-28 Parking/PUDO P2P Materialisation]]
 
 ## Implementation Progress
 - **Branch:** `boris/generic-parking-pudo-materialisation`.
