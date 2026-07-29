@@ -297,3 +297,56 @@ training on eight DGX-H100 nodes (64 GPUs), P1, with zero automatic restarts:
 - Rank 0 logs show successful resolved-root setup, OTF initialization, managed
   identity authentication, and WFM checkpoint loading with no immediate launch
   failure.
+
+#### Full-training failure post-mortem
+
+Job `200175` failed at step 42,656 after roughly 4 h 42 min of active training.
+The first application error occurred on global rank 22 at 03:59:57 UTC:
+
+- `VehiclePreInterventionAugementor` rejected more than its configured
+  `max_errors=15` consecutive samples. The same node logged many short-path
+  `DistanceOutOfRangeException`s immediately beforehand, alongside frequent
+  `more_than_one_intervention` rejections.
+- There is a control-flow trap in the existing augmentor: the
+  `DistanceOutOfRangeException` handler increments `consecutive_errors` and
+  then `continue`s before the max-error check. The counter can therefore grow
+  beyond 15 silently; the next `InterventionException` reaches the check and
+  raises, even though it is only the final member of the accumulated streak.
+- That raised `RuntimeError: Too many consecutive errors raised` inside
+  DataLoader worker 4.
+- The GPU-video prefetch thread propagated it as
+  `RuntimeError: Prefetch thread exited with an error`.
+- Rank 22 stopped participating in distributed collectives. The remaining
+  ranks subsequently emitted 30-minute NCCL `BROADCAST`/`ALLREDUCE` watchdog
+  timeouts around sequence 2,102,086 at 04:30 UTC. Those NCCL errors were
+  teardown fallout, not the initiating failure.
+
+The evidence points to the pre-existing generic intervention augmentation
+stream rather than the new P2P parking materialisation: the warnings are
+present from startup and reference a broad mix of historical AV/interleaved
+runs from 2021–2026. The changed parking source did resolve correctly to the
+P2P-filtered root. A 100-step, one-node canary did not exercise enough samples
+to encounter the rare 16-error streak.
+
+Recommended next action: retry once because the failing streak depends on
+randomly sampled data. If it recurs, investigate the intervention bucket's
+multi-intervention rate and make the augmentor skip malformed samples without
+terminating a long distributed run, rather than changing the P2P parking
+source.
+
+## Cursor transition
+
+Added and pushed a portable Cursor bootstrap to the personal `assets`
+repository at commit `c456d2f`:
+
+- installs all ParkingSkills globally through symlinks;
+- exposes the existing Codex prompts as Cursor commands;
+- configures the same Wayve MCP endpoints using environment-variable
+  credentials;
+- documents that WayveCode project rules, skills, hooks, `AGENTS.md`, and MCPs
+  are already generated from `.ai/` by `lnai`.
+
+The bootstrap was applied and validated on the remote VM: Cursor Agent
+discovered 17 global skills, eight commands, and 14 MCP servers. The laptop can
+apply the same setup after updating `~/git/assets` and `~/git/ParkingSkills`
+with `~/git/assets/cursor/setup.sh`.
