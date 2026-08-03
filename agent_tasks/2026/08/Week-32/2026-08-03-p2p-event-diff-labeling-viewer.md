@@ -32,6 +32,10 @@ dedicated original-versus-odometry labeling workflow on branch
 - Clear the previous clip's Leaflet map immediately on navigation and show a
   gray loading placeholder until enrichment for the current clip arrives;
   stale enrichment responses remain ignored.
+- Restored timestamp-highlight frames in both P2P layouts: original events use
+  green and modified events use purple for the same ±0.75-second point-event
+  window as the standard viewer. The frame is an absolute overlay, so it does
+  not change video layout, object-fit, or zoom.
 
 ## Verification
 
@@ -66,4 +70,5 @@ write a label for it.
 - Per-clip layout and threshold fix: `a5b98adf47b9`
 - Per-event-type task counts: `4124da2517da`
 - Stale-map loading state: `639d8a4dc517`
+- Timestamp highlight frames: `504663847048`
 - Remote: `origin/yoel/label_events_diff`
