@@ -4,475 +4,34 @@
     "type": "split",
     "children": [
       {
-        "id": "f6340695e04fb2ed",
+        "id": "213bbe3529306ac2",
         "type": "tabs",
         "children": [
           {
-            "id": "c4b8525be046546b",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/parking_model_arch.excalidraw"
-              },
-              "icon": "excalidraw-icon",
-              "title": "parking_model_arch"
-            }
-          },
-          {
-            "id": "62085bbc9588ab4c",
+            "id": "2f4de6b6d3cefd50",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "codex/WayveCode/agents-change-log.md",
+                "file": "agents-change-log.md",
                 "mode": "source",
-                "source": false
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
               },
               "icon": "lucide-file",
               "title": "agents-change-log"
-            }
-          },
-          {
-            "id": "9ad2310cbd166c33",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/agents-change-log.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "agents-change-log"
-            }
-          },
-          {
-            "id": "1cf7ceb998771d71",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/parking_model_arch.excalidraw"
-              },
-              "icon": "excalidraw-icon",
-              "title": "parking_model_arch"
-            }
-          },
-          {
-            "id": "5e8bf74501d35707",
-            "type": "leaf",
-            "state": {
-              "type": "split-diff-view",
-              "state": {
-                "aFile": "codex/WayveCode/projects.md",
-                "bFile": "codex/WayveCode/projects.md",
-                "aRef": ""
-              },
-              "icon": "diff",
-              "title": "Diff: projects"
-            }
-          },
-          {
-            "id": "de1d51cf0c87b4c0",
-            "type": "leaf",
-            "state": {
-              "type": "split-diff-view",
-              "state": {
-                "aFile": "codex/WayveCode/projects.md",
-                "bFile": "codex/WayveCode/projects.md",
-                "aRef": ""
-              },
-              "icon": "diff",
-              "title": "Diff: projects"
-            }
-          },
-          {
-            "id": "837c74f12076c2b7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/2025/12/Week-5/2025-12-30-parking-maneuver-filter-task-summary.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2025-12-30-parking-maneuver-filter-task-summary"
-            }
-          },
-          {
-            "id": "9273017eec3a283a",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/parking_model_arch.excalidraw"
-              },
-              "icon": "excalidraw-icon",
-              "title": "parking_model_arch"
-            }
-          },
-          {
-            "id": "c32d7fa98d8036f7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/2026/01/Week-4/2026-01-22-timestamp-offset-conversion.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "2026-01-22-timestamp-offset-conversion"
-            }
-          },
-          {
-            "id": "6a911d49bd957c07",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/projects.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "projects"
-            }
-          },
-          {
-            "id": "a96c13828a2426be",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/projects/zak-classifiers-parking-maneuver.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "zak-classifiers-parking-maneuver"
-            }
-          },
-          {
-            "id": "20561bae802a9484",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/projects/interleaving-models-in-parking-deployment-wrapper.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "interleaving-models-in-parking-deployment-wrapper"
-            }
-          },
-          {
-            "id": "7ad3187ea6803ff7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "codex/WayveCode/projects.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "projects"
-            }
-          },
-          {
-            "id": "286cf908be4fc203",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "projects/parking-stopping-mode-naive-heuristic.md",
-                "mode": "preview",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "parking-stopping-mode-naive-heuristic"
-            }
-          },
-          {
-            "id": "669cbd2fd3c67afc",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/model_release.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "model_release.excalidraw"
-            }
-          },
-          {
-            "id": "86a3e0933df53f5a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive"
-            }
-          },
-          {
-            "id": "8b25f0cae0957e09",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Tom Boris.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "Tom Boris"
-            }
-          },
-          {
-            "id": "17e36f20e08d0f90",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Untitled.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "Untitled"
-            }
-          },
-          {
-            "id": "117f440063e12be8",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Merge to main plan.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "Merge to main plan"
-            }
-          },
-          {
-            "id": "161469dcc0885caa",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "weekly plan.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "weekly plan"
-            }
-          },
-          {
-            "id": "c562917a9c6e4718",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "weekly plan.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "weekly plan"
-            }
-          },
-          {
-            "id": "b5bcc5c790d766a4",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "weekly plan.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "weekly plan"
-            }
-          },
-          {
-            "id": "e176dee4bd0571fb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "newsletters/newsletter_parking-stopping-mode-dilc.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "newsletter_parking-stopping-mode-dilc"
-            }
-          },
-          {
-            "id": "fc6fc3a2fef8f3d8",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "Drawing 2026-07-07 10.00.23.excalidraw"
-            }
-          },
-          {
-            "id": "721d72beb79ec2cb",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "projects/parking-model-drive-migration.md",
-                "mode": "preview",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "parking-model-drive-migration"
-            }
-          },
-          {
-            "id": "c1de2b7a6d18cb67",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/Drawing 2026-07-27 11.25.17.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "Drawing 2026-07-27 11.25.17.excalidraw"
-            }
-          },
-          {
-            "id": "e70f5c7b1fde5602",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "Excalidraw/unparking_scenarios.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "unparking_scenarios.excalidraw"
             }
           }
-        ],
-        "currentTab": 26
+        ]
       }
     ],
     "direction": "vertical"
@@ -492,7 +51,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -529,8 +90,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 481.01258087158203,
-    "collapsed": true
+    "width": 237.49609375
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -632,8 +192,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 235.328125
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -648,44 +207,46 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "e70f5c7b1fde5602",
+  "active": "2f4de6b6d3cefd50",
   "lastOpenFiles": [
+    "Untitled.md",
+    "weekly plan.md",
+    "Untitled 2.canvas",
+    "Untitled 1.canvas",
+    "Untitled.canvas",
+    "agents-change-log.md",
+    "index.md",
+    "agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation.md",
+    "agent_tasks/2026/07/Week-31/2026-07-28-materialisation-skill-rename.md",
+    "agent_tasks/2026/07/Week-31/2026-07-27-portable-vault-user-paths.md",
+    "agent_tasks/2026/07/Week-31/2026-07-27-codex-vault-integration.md",
+    "agent_tasks/2026/07/Week-31",
+    "projects/parking-stopping-mode-naive-heuristic.md",
+    "Excalidraw/model_release.excalidraw.md",
+    "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
+    "Merge to main plan.md",
+    "newsletters/newsletter_parking-stopping-mode-dilc.md",
+    "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
+    "projects/parking-model-drive-migration.md",
+    "Excalidraw/Drawing 2026-07-27 11.25.17.excalidraw.md",
+    "Excalidraw/unparking_scenarios.excalidraw.md",
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "Excalidraw/Drawing 2026-07-27 12.00.12.excalidraw.md",
-    "Excalidraw/Drawing 2026-07-27 11.25.17.excalidraw.md",
-    "projects/parking-model-drive-migration.md",
     "projects.md",
-    "agents-change-log.md",
     "Excalidraw/head_options.excalidraw.md",
-    "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun.md",
-    "Untitled.md",
     "agents-change-log.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-parking-pudo-ci-main-merge.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-parking-pudo-ci-main-merge.md",
     "agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase.md",
     "agent_tasks/2026/07/Week-30/2026-07-20-split-parking-pudo-events-pr.md",
-    "agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage.md",
     "agent_tasks/2026/07/Week-30",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-best-model-follow-up.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-pudo-baseline-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-drop-vehicle-frequency-fallback.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-pr-rebase.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-intervention-filters-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-signals-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-buckets-config-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-events-no-binary-index-run.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-upload-generic-events-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-event-table-pr-comments.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-generic-events-databricks-upload.md",
     "agent_tasks/2026/07/Week-28",
     "agent_tasks/2026/07/Week-1",
     "agent_tasks/2026/07/Week-27",
     "agent_tasks/2026/07",
-    "html_summaries/pudo-spider.html",
-    "agent_tasks/2026/06/Week-5",
     "Pasted Image 20260111140517_906.png",
     "Pasted Image 20260122232147_461.png",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Stacked_logo_White.svg",
@@ -695,7 +256,6 @@
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Icon_only_White.svg",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Icon_only_Navy.svg",
     "Wayve_logo_Package/DIGITAL/PNG/Wayve_Stacked_logo_White.png",
-    "Wayve_logo_Package/DIGITAL/PNG/Wayve_Stacked_logo_Navy.png",
-    "Untitled.canvas"
+    "Wayve_logo_Package/DIGITAL/PNG/Wayve_Stacked_logo_Navy.png"
   ]
 }
