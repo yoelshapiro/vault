@@ -134,6 +134,22 @@ the clip edges; step and categorical signals use last-value hold. Playhead
 readouts interpolate or hold per signal and avoid redundant DOM writes, so
 mixed null rows no longer make values alternate between numbers and blanks.
 
+## Telemetry/map/route toggle coupling
+
+The P2P telemetry toggle is currently coupled to the complete enrichment
+request. Every enable or disable change aborts the browser request and starts
+another request containing navigation, event distance, active-route lookup,
+two native 512x512 route-raster renders, and optionally telemetry. Disabling
+telemetry removes only the telemetry windows; it still repeats all map and
+route work. Browser cancellation does not guarantee cancellation of SQL that
+is already running server-side, so rapid toggles can leave overlapping work.
+
+Map and route controls themselves only hide/show existing DOM, but their data
+and route rasters are fetched and rendered even when hidden. A robust fix
+should split or independently gate telemetry, map, and route enrichment, cache
+the non-telemetry result per clip, and avoid rebuilding map/routes when only
+telemetry visibility changes.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
