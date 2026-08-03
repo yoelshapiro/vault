@@ -49,6 +49,9 @@ dedicated original-versus-odometry labeling workflow on branch
   precision-aware polylines, and display each route independently with a green
   or purple title. At medium widths the event-location map moves above the two
   side-by-side route viewers; on narrow screens all three Leaflet panels stack.
+- Added a `Show routes` switch above the route pair. Its state is retained
+  across clip navigation, hides or restores both route canvases together, and
+  refits both Leaflet maps when they become visible again.
 
 ## Verification
 
@@ -154,4 +157,5 @@ mismatches afterward.
 - Clip loading lifecycle and resizable counts: `3bbdf46a0f71`
 - P2P route viewer: `9f14f9b1b394`
 - Split P2P route viewers: `648e7e159721`
+- P2P route visibility control: `860d0996f221`
 - Remote: `origin/yoel/label_events_diff`
