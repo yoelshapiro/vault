@@ -43,15 +43,16 @@ dedicated original-versus-odometry labeling workflow on branch
 - Added camera-specific media error displays after one retry. P2P cameras now
   warm serially, while eager loading and prefetch behavior in other modes is
   unchanged.
-- Added separate original and modified route viewers beside the event-location
-  map. They load the latest route state at each timestamp from
-  `prod_data_pipeline.inferred__state.route_events`, decode the table's
-  precision-aware polylines, and display each route independently with a green
-  or purple title. At medium widths the event-location map moves above the two
-  side-by-side route viewers; on narrow screens all three Leaflet panels stack.
+- Added separate original and modified model-input route viewers beside the
+  event-location map. They load the latest route state at each timestamp from
+  `prod_data_pipeline.inferred__state.route_events`, combine it with that
+  timestamp's pose, and render the production `si_medium` route-map raster:
+  black background, blue streets, green near route, and red far route. The
+  raster is 512x512 with the model preset's 50 m behind / 2 km ahead route
+  window. At medium widths the event-location map moves above the two
+  side-by-side rasters; on narrow screens all three panels stack.
 - Added a `Show routes` switch above the route pair. Its state is retained
-  across clip navigation, hides or restores both route canvases together, and
-  refits both Leaflet maps when they become visible again.
+  across clip navigation and hides or restores both route rasters together.
 
 ## Verification
 
@@ -59,8 +60,11 @@ dedicated original-versus-odometry labeling workflow on branch
 - `//wayve/ai/parking/tools/event_clip_viewer:py_checks`
 - Live viewer served on port `3001` with Leaflet assets and the updated P2P
   configuration.
-- Live route-enrichment smoke test returned two event positions plus original
-  and modified routes with 2,370 decoded points each.
+- Live route-enrichment smoke test returned independent original and modified
+  512x512 `si_medium` PNG rasters. Pixel inspection confirmed the blue street
+  layer and green route overlay for the tested `park_in_start` pair. The native
+  mapper requires decoded lakehouse `(lat, lon)` points to be reordered to
+  `(lon, lat)`; otherwise the route is silently rendered off-canvas.
 
 ## Clip-loading diagnosis
 
@@ -158,4 +162,5 @@ mismatches afterward.
 - P2P route viewer: `9f14f9b1b394`
 - Split P2P route viewers: `648e7e159721`
 - P2P route visibility control: `860d0996f221`
+- P2P model-input route rasters: `8360ed1ddf0e`
 - Remote: `origin/yoel/label_events_diff`
