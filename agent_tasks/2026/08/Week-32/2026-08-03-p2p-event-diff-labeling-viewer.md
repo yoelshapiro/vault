@@ -72,6 +72,12 @@ dedicated original-versus-odometry labeling workflow on branch
   layer and green route overlay for the tested `park_in_start` pair. The native
   mapper requires decoded lakehouse `(lat, lon)` points to be reordered to
   `(lon, lat)`; otherwise the route is silently rendered off-canvas.
+- A long synthetic route through the native mapper confirmed that the same
+  raster can contain all expected layers: 574 red far-route pixels, 302 green
+  near-route pixels, and 14,844 blue street pixels. Short parking routes may
+  correctly contain green but no red when less than 350 m remains. The unit
+  test locks the 50 m behind / 2 km ahead window, route colors, coordinate
+  ordering, and lossless red/green PNG encoding.
 
 ## Clip-loading diagnosis
 
@@ -181,4 +187,5 @@ mismatches afterward.
 - Collapsible location-map column: `d8873aa8550c`
 - Collapsible telemetry with request gating: `892bed7fcc15`
 - Stable per-signal telemetry interpolation: `9b38b67fd0ed`
+- P2P route-raster contract test: `d17a588d278c`
 - Remote: `origin/yoel/label_events_diff`
