@@ -9,7 +9,16 @@ personal and project context.
 
 - VM working copy: `/home/yoelshapiro/git/vault`
 - Mac mirror: `/Users/yoel.shapiro/Work/vault`
-- Synchronization: external push/pull loop running every minute
+- Synchronization: cron-driven push/pull loop running every minute
+
+## VM synchronization
+
+- Sync tooling: `/home/yoelshapiro/git/assets/git_sync/`
+- User crontab entry:
+  `* * * * * /home/yoelshapiro/git/assets/git_sync/git-sync-cron.sh /home/yoelshapiro/git/vault >/dev/null 2>&1`
+- Service: `cron.service`, enabled and active.
+- Restored and verified on 2026-08-03; the first run committed, merged, pushed,
+  and left local `main` aligned with `origin/main`.
 
 ## Codex configuration
 
