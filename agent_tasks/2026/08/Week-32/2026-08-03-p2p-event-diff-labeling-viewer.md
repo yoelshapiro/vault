@@ -74,6 +74,14 @@ browser requests and media sources are aborted, and P2P camera cuts are queued
 instead of being started concurrently. A Databricks query already executing
 server-side may still run to completion after its HTTP client disconnects.
 
+Follow-up diagnosis found that the one-retry error policy can produce false
+"media unavailable" results for `front_forward`: the browser may receive a
+temporary media error while a cold cut is being generated, and the 900 ms
+retry is too early. One affected 49.75-second front-camera cut was verified
+immediately afterward as a healthy 13.1 MB MP4 (HTTP 206 in about 0.33 seconds).
+Treat this message as transient unless a later direct check also fails; use a
+longer/backoff retry policy before declaring a camera unavailable.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
