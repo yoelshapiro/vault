@@ -45,7 +45,7 @@ dedicated original-versus-odometry labeling workflow on branch
   unchanged.
 - Added separate original and modified route viewers beside the event-location
   map. They load the latest route state at each timestamp from
-  `prod_data_pipeline.inferred__state.route_events`, decodes the table's
+  `prod_data_pipeline.inferred__state.route_events`, decode the table's
   precision-aware polylines, and display each route independently with a green
   or purple title. At medium widths the event-location map moves above the two
   side-by-side route viewers; on narrow screens all three Leaflet panels stack.
