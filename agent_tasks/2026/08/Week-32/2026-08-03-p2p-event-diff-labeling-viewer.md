@@ -82,6 +82,17 @@ immediately afterward as a healthy 13.1 MB MP4 (HTTP 206 in about 0.33 seconds).
 Treat this message as transient unless a later direct check also fails; use a
 longer/backoff retry policy before declaring a camera unavailable.
 
+## Missing speed-line diagnosis
+
+The telemetry API unions corpus samples with raw-gear-only samples. The speed
+SVG renderer currently treats every null speed on a gear-only row as a break
+in the line instead of ignoring that unrelated row. In one affected clip, the
+response contained 996 valid speed samples (0.0--30.06 km/h) and 2,487
+gear-only rows, but zero consecutive speed rows in the combined stream. The
+renderer therefore emitted isolated SVG move commands with no visible line
+segments. This is not primarily a y-axis-range issue; the speed line should be
+built from non-null speed samples independently of the gear rows.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
