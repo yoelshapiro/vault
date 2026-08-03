@@ -29,6 +29,9 @@ dedicated original-versus-odometry labeling workflow on branch
   suffix and refresh after table validation and successful label writes.
 - Replaced screen-positioned map overlays with Leaflet geographic markers so
   the green and purple locations track pan and zoom correctly.
+- Clear the previous clip's Leaflet map immediately on navigation and show a
+  gray loading placeholder until enrichment for the current clip arrives;
+  stale enrichment responses remain ignored.
 
 ## Verification
 
@@ -62,4 +65,5 @@ write a label for it.
 - Map marker fix: `cb9bc55ad7c0`
 - Per-clip layout and threshold fix: `a5b98adf47b9`
 - Per-event-type task counts: `4124da2517da`
+- Stale-map loading state: `639d8a4dc517`
 - Remote: `origin/yoel/label_events_diff`
