@@ -93,6 +93,14 @@ renderer therefore emitted isolated SVG move commands with no visible line
 segments. This is not primarily a y-axis-range issue; the speed line should be
 built from non-null speed samples independently of the gear rows.
 
+The plotted AV-active, indicator, and gear step traces do not have the same
+breakage: their renderer skips null rows while retaining the previous point.
+The shared playhead readout does have a related bug, because it selects one
+nearest row for every signal. When that row is gear-only, speed, AV, and
+indicator can show `-` despite nearby valid corpus samples (and the converse
+can affect gear). Each readout should find its nearest non-null sample for its
+own field.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
