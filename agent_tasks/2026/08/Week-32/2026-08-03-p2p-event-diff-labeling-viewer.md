@@ -53,6 +53,9 @@ dedicated original-versus-odometry labeling workflow on branch
   side-by-side rasters; on narrow screens all three panels stack.
 - Added a `Show routes` switch above the route pair. Its state is retained
   across clip navigation and hides or restores both route rasters together.
+- Replaced the latitude/longitude text above the event-location map with a
+  persisted `Show map` switch. Re-enabling it invalidates and refits Leaflet so
+  both source markers remain correctly positioned.
 
 ## Verification
 
@@ -164,4 +167,5 @@ mismatches afterward.
 - P2P route visibility control: `860d0996f221`
 - P2P model-input route rasters: `8360ed1ddf0e`
 - Uncropped square route-raster layout: `341db3ecc23d`
+- P2P map visibility control: `019fa899549f`
 - Remote: `origin/yoel/label_events_diff`
