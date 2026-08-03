@@ -3867,6 +3867,8 @@
     remain anchored while panning and zooming.
   - Made shared clips match telemetry width and made every clip load poll the
     current shared/split threshold from the left panel.
+  - Recorded the deliberate five-event labeling schema: `park_out_start` is a
+    newer post-Jack special case that remains viewable but non-labelable.
   - Passed the viewer static, Python, lint, and type-check targets and published
     commits `d478a81dc555`, `cb9bc55ad7c0`, and `a5b98adf47b9`.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-03-p2p-event-diff-labeling-viewer|2026-08-03 P2P Event Diff Labeling Viewer]]

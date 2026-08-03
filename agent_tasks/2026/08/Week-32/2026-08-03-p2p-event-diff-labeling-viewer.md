@@ -34,6 +34,23 @@ dedicated original-versus-odometry labeling workflow on branch
 - Live viewer served on port `3001` with Leaflet assets and the updated P2P
   configuration.
 
+## Labelable event-type decision
+
+The result table intentionally supports exactly these five stored event types:
+
+- `anchor_park_out` (the viewer/source event is named `park_out_anchor`)
+- `park_out_stop`
+- `p2p_nav_start`
+- `park_in_start`
+- `park_in_stop`
+
+`park_out_start` is a special case introduced after Jack's original P2P
+workflow. It may remain available for viewing and comparison, but it must not
+be labelable or written to the P2P result table unless this decision is
+explicitly revisited. If `park_out_start` appears during label lookup, skip it
+without treating the event data as invalid; continue to reject any attempt to
+write a label for it.
+
 ## Git
 
 - Worktree: `/tmp/WayveCode-yoel-label_events_diff`
