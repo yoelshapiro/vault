@@ -209,8 +209,13 @@
   },
   "active": "2f4de6b6d3cefd50",
   "lastOpenFiles": [
-    "index.md",
+    "Untitled.md",
+    "weekly plan.md",
+    "Untitled 2.canvas",
+    "Untitled 1.canvas",
+    "Untitled.canvas",
     "agents-change-log.md",
+    "index.md",
     "agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation.md",
     "agent_tasks/2026/07/Week-31/2026-07-28-materialisation-skill-rename.md",
     "agent_tasks/2026/07/Week-31/2026-07-27-portable-vault-user-paths.md",
@@ -219,9 +224,7 @@
     "projects/parking-stopping-mode-naive-heuristic.md",
     "Excalidraw/model_release.excalidraw.md",
     "agent_tasks/2026/03/Week-3/2026-03-21-parking-training-pudo-vs-route-augmentations-deep-dive.md",
-    "Untitled.md",
     "Merge to main plan.md",
-    "weekly plan.md",
     "newsletters/newsletter_parking-stopping-mode-dilc.md",
     "Excalidraw/Drawing 2026-07-07 10.00.23.excalidraw.md",
     "projects/parking-model-drive-migration.md",
@@ -239,7 +242,6 @@
     "agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase.md",
     "agent_tasks/2026/07/Week-30/2026-07-20-split-parking-pudo-events-pr.md",
-    "agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage.md",
     "agent_tasks/2026/07/Week-30",
     "agent_tasks/2026/07/Week-28",
     "agent_tasks/2026/07/Week-1",
@@ -254,7 +256,6 @@
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Icon_only_White.svg",
     "Wayve_logo_Package/DIGITAL/SVG/Wayve_Icon_only_Navy.svg",
     "Wayve_logo_Package/DIGITAL/PNG/Wayve_Stacked_logo_White.png",
-    "Wayve_logo_Package/DIGITAL/PNG/Wayve_Stacked_logo_Navy.png",
-    "Untitled.canvas"
+    "Wayve_logo_Package/DIGITAL/PNG/Wayve_Stacked_logo_Navy.png"
   ]
 }
