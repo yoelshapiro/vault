@@ -11,10 +11,24 @@
             "id": "2f4de6b6d3cefd50",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "agents-change-log.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "agents-change-log"
             }
           }
         ]
@@ -76,7 +90,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 481.01258087158203
+    "width": 237.49609375
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -178,7 +192,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 370.16796875
+    "width": 235.328125
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -193,9 +207,10 @@
       "obsidian-excalidraw-plugin:New drawing": false
     }
   },
-  "active": "a6cdcc3493cdeb21",
+  "active": "2f4de6b6d3cefd50",
   "lastOpenFiles": [
     "index.md",
+    "agents-change-log.md",
     "agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation.md",
     "agent_tasks/2026/07/Week-31/2026-07-28-materialisation-skill-rename.md",
     "agent_tasks/2026/07/Week-31/2026-07-27-portable-vault-user-paths.md",
@@ -215,7 +230,6 @@
     "Excalidraw/parking_model_arch.excalidraw.excalidraw",
     "Excalidraw/Drawing 2026-07-27 12.00.12.excalidraw.md",
     "projects.md",
-    "agents-change-log.md",
     "Excalidraw/head_options.excalidraw.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
     "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun.md",
