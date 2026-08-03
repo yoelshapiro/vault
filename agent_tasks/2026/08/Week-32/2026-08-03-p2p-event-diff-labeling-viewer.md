@@ -53,6 +53,10 @@ dedicated original-versus-odometry labeling workflow on branch
   side-by-side rasters; on narrow screens all three panels stack.
 - Added a `Show routes` switch above the route pair. Its state is retained
   across clip navigation and hides or restores both route rasters together.
+- Added an in-raster route-color legend driven by actual pixel counts. Green
+  means the next 350 m of route and red means route beyond 350 m; if a color is
+  absent, the legend says so. This preserves the exact model-input image while
+  making short-route cases (green present, red absent) unambiguous.
 - Replaced the latitude/longitude text above the event-location map with a
   persisted `Show map` switch. Re-enabling it invalidates and refits Leaflet so
   both source markers remain correctly positioned.
@@ -78,6 +82,11 @@ dedicated original-versus-odometry labeling workflow on branch
   correctly contain green but no red when less than 350 m remains. The unit
   test locks the 50 m behind / 2 km ahead window, route colors, coordinate
   ordering, and lossless red/green PNG encoding.
+- Commit `972f2aa391dd` adds a hermetic native-mapper test using repository map
+  tiles and asserts both near-green and far-red overlays for a sufficiently
+  long route. A live default `park_in_start` event was 4--6 m from its decoded
+  route and produced 39--46 green pixels but no red pixels because less than
+  350 m remained; this was expected model behavior, not a coordinate failure.
 
 ## Clip-loading diagnosis
 
@@ -240,4 +249,5 @@ clips keep the original `Telemetry` header unchanged.
 - Responsive map/route visibility layout: `b1296cb3b54d`
 - Dual-viewer telemetry source title: `f08a07e6a993`
 - Refresh Leaflet after route-column resize: `385734649796`
+- Clarify route-raster color visibility: `972f2aa391dd`
 - Remote: `origin/yoel/label_events_diff`
