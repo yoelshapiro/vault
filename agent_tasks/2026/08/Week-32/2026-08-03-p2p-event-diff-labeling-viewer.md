@@ -69,7 +69,10 @@ follow-up query confirmed that no `anchor_park_out` rows remained.
 The labeling-table country-code column is `iso_country_code`. On 2026-08-03,
 the active `P2P_Odometry` Delta table enabled name-based column mapping and
 renamed the erroneous `country_iso_code` column in place. All 31 rows were
-preserved; country-code values were null both before and after the rename.
+preserved. The 31 initially null values were then backfilled by joining
+`run_id` to `prod_user.p2p.events_w_gear_corrections_22k`. Every run resolved
+to exactly one non-null country code; verification found zero nulls and zero
+mismatches afterward.
 
 ## Git
 
