@@ -200,6 +200,12 @@ both are disabled, the normal two-column partition is retained so both
 controls remain visible. This behavior is covered by the served-asset layout
 contract test in commit `b1296cb3b54d`.
 
+Leaflet must be explicitly notified when collapsing routes expands the map
+column; changing only the CSS grid leaves its tile canvas at the old width and
+produces a blank area on the right. Commit `385734649796` invalidates the map
+size after the route layout settles, without panning or changing zoom/center.
+Reopening a hidden map retains the existing bounds-refit behavior.
+
 For a dual video viewer, the main telemetry charts cover only the modified
 timestamp's clip window; the separate raw gear/P2P tracks may still exist per
 original and modified window. Commit `f08a07e6a993` labels the main chart
@@ -233,4 +239,5 @@ clips keep the original `Telemetry` header unchanged.
 - P2P label endpoint failure coverage: `3c5ed32f3568`
 - Responsive map/route visibility layout: `b1296cb3b54d`
 - Dual-viewer telemetry source title: `f08a07e6a993`
+- Refresh Leaflet after route-column resize: `385734649796`
 - Remote: `origin/yoel/label_events_diff`
