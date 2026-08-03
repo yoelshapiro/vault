@@ -26,7 +26,8 @@ dedicated original-versus-odometry labeling workflow on branch
   original timestamp, odometry timestamp, and normalized event type.
 - Added task-wide labeled-row counts for all five supported event types at the
   bottom of the right panel. Counts are scoped to the selected result-table
-  suffix and refresh after table validation and successful label writes.
+  suffix and refresh after table validation and successful label writes. The
+  section's top edge is draggable, and its height is persisted in the browser.
 - Replaced screen-positioned map overlays with Leaflet geographic markers so
   the green and purple locations track pan and zoom correctly.
 - Clear the previous clip's Leaflet map immediately on navigation and show a
@@ -36,6 +37,12 @@ dedicated original-versus-odometry labeling workflow on branch
   green and modified events use purple for the same ±0.75-second point-event
   window as the standard viewer. The frame is an absolute overlay, so it does
   not change video layout, object-fit, or zoom.
+- Abort superseded telemetry requests in every viewer mode and the combined
+  P2P enrichment request when navigating to another clip. Removed video
+  elements also release their source to stop stale media downloads.
+- Added camera-specific media error displays after one retry. P2P cameras now
+  warm serially, while eager loading and prefetch behavior in other modes is
+  unchanged.
 
 ## Verification
 
@@ -61,9 +68,11 @@ media-generation latency and two viewer lifecycle issues:
   requests continuing for roughly 30--80 seconds, adding avoidable contention.
 
 Video elements are created before enrichment starts, so enrichment is not a
-direct prerequisite for playback. Recommended follow-up is to surface camera
-load errors, abort old media/enrichment work on navigation, and avoid eagerly
-preloading every selected camera when long shared windows are used.
+direct prerequisite for playback. Commit `3bbdf46a0f71` implemented the
+recommended viewer-side follow-up: camera errors are surfaced, superseded
+browser requests and media sources are aborted, and P2P camera cuts are queued
+instead of being started concurrently. A Databricks query already executing
+server-side may still run to completion after its HTTP client disconnects.
 
 ## Labelable event-type decision
 
@@ -107,4 +116,5 @@ mismatches afterward.
 - Timestamp highlight frames: `504663847048`
 - Corrected `park_out_anchor` label schema: `53dc4cdb03d3`
 - Corrected `iso_country_code` label schema: `ec91438a8bbb`
+- Clip loading lifecycle and resizable counts: `3bbdf46a0f71`
 - Remote: `origin/yoel/label_events_diff`
