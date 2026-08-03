@@ -163,4 +163,5 @@ mismatches afterward.
 - Split P2P route viewers: `648e7e159721`
 - P2P route visibility control: `860d0996f221`
 - P2P model-input route rasters: `8360ed1ddf0e`
+- Uncropped square route-raster layout: `341db3ecc23d`
 - Remote: `origin/yoel/label_events_diff`
