@@ -164,6 +164,19 @@ preserved. The 31 initially null values were then backfilled by joining
 to exactly one non-null country code; verification found zero nulls and zero
 mismatches afterward.
 
+## Coverage verification
+
+Commit `3c5ed32f3568` added request-level tests for validation and unexpected
+backend failures across the P2P label-table check, lookup, counts, and sync
+endpoints. The viewer suite passes with 153 tests, and targeted coverage of
+`app.py` is 93%; all P2P labeling endpoint branches are covered.
+
+The repository coverage config excludes `/tmp/**/*`, so coverage runs from the
+feature worktree need `--cov-config=/dev/null` (or a non-`/tmp` checkout) for a
+meaningful targeted report. The repository-wide local patch-coverage helper
+also queried unrelated Bazel targets and was blocked locally by missing
+Artifactory/ACR credentials; this did not affect the scoped viewer tests.
+
 ## Git
 
 - Worktree: `/tmp/WayveCode-yoel-label_events_diff`
@@ -188,4 +201,5 @@ mismatches afterward.
 - Collapsible telemetry with request gating: `892bed7fcc15`
 - Stable per-signal telemetry interpolation: `9b38b67fd0ed`
 - P2P route-raster contract test: `d17a588d278c`
+- P2P label endpoint failure coverage: `3c5ed32f3568`
 - Remote: `origin/yoel/label_events_diff`
