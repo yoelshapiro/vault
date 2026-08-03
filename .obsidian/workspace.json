@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agents-change-log.md",
+                "file": "agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "agents-change-log"
+              "title": "2026-08-03-fast-geofencing-plan"
             }
           },
           {
@@ -232,7 +232,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 341.5703125
+    "width": 477.6171875
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -248,12 +248,12 @@
       "terminal:Open terminal": false
     }
   },
-  "active": "a6cdcc3493cdeb21",
+  "active": "2f4de6b6d3cefd50",
   "lastOpenFiles": [
+    "agents-change-log.md",
     "agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan.md",
     "agent_tasks/2026/08/Week-32",
     "agent_tasks/2026/08",
-    "agents-change-log.md",
     "Untitled.md",
     "weekly plan.md",
     "Untitled 2.canvas",
