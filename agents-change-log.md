@@ -3829,3 +3829,18 @@
   - Updated `EXPECTED_NODE_COUNTS["output_adaptor"]` from `89` to `90` after the PR intentionally changed the output adaptor ONNX graph.
   - Verified the focused and full `test_partition_integration` Bazel target locally.
 - Task note: [[agent_tasks/2026/07/Week-30/2026-07-20-parking-pudo-ci-triage|2026-07-20 Parking/PUDO CI Triage]]
+
+## 2026-08-03 - Fast Country-Aware Geofencing
+
+- Topic: Add a country-indexed fast path for Spark and pandas geofencing.
+- Labels: data, lakehouse, geofencing, performance, tests.
+- Branch: `yoel/fast_geofencing`.
+- PR: n/a.
+- Change type: Code change and tests.
+- Areas: `wayve/services/data/pipelines/geofences.py`, `wayve/services/data/lakehouse/transforms/common/geofilters.py`.
+- Changes:
+  - Added `custom_polygons_by_country` while preserving the flat `custom_polygons` compatibility API.
+  - Added scalar ISO-3 country defaults and country-plus-selection narrowing to Spark and pandas geofilters.
+  - Added exact flat/nested registry parity, compatibility, validation, and behavior tests.
+  - Verified all feature tests plus focused lint/type targets; recorded the `/tmp` worktree coverage-wrapper limitation.
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan|2026-08-03 Fast Country-Aware Geofencing Plan]]
