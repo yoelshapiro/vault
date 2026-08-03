@@ -30,7 +30,7 @@ Likely test/build files:
 
 ## Proposed API contract
 
-Treat `country_iso_code` as a scalar ISO-3 string such as `GBR`, `USA`, `DEU`,
+Treat `iso_country_code` as a scalar ISO-3 string such as `GBR`, `USA`, `DEU`,
 or `JPN`. Country selection happens before the pandas UDF is constructed, so
 the UDF captures and checks a smaller polygon collection.
 
@@ -50,8 +50,8 @@ Additional semantics:
   still fail. When a valid name belongs to another country, remove it when
   intersecting with the requested country.
 - Keep existing positional parameters in place and append
-  `country_iso_code: str | None = None` to avoid breaking callers.
-- For `is_in_any_polygon`, `country_iso_code` supplies the registered country
+  `iso_country_code: str | None = None` to avoid breaking callers.
+- For `is_in_any_polygon`, `iso_country_code` supplies the registered country
   polygons when `polygons is None`. If explicit arbitrary Shapely polygons are
   supplied, they are already the narrower caller-owned set; do not silently
   discard them by attempting coordinate equality against the registry.
@@ -92,14 +92,14 @@ than ad-hoc spellings, and add the corresponding Bazel dependency if needed.
    - For named geofences, resolve the chosen names with the existing
      `geofences_to_polygons()` helper.
    - For polygon calls with `polygons is None`, resolve all names from
-     `custom_polygons_by_country[country_iso_code]` and convert them with the
+     `custom_polygons_by_country[iso_country_code]` and convert them with the
      same helper.
    - Materialize iterables once so generators are not consumed by validation
      and then unexpectedly empty during execution.
 
 3. **Expose the fast path without breaking callers**
    - Extend `is_in_any_geofence()` and `is_in_any_polygon()` with the trailing
-     optional `country_iso_code` parameter.
+     optional `iso_country_code` parameter.
    - Extend the pandas equivalents if country-default selection is intended on
      both execution paths; keep Spark and pandas resolution semantics identical.
    - Keep `geofence_polygons()` as a compatibility wrapper and forward the new
@@ -152,7 +152,7 @@ than ad-hoc spellings, and add the corresponding Bazel dependency if needed.
 ## Acceptance criteria
 
 - Existing geofence callers and tests pass unchanged when no country is given.
-- A caller can pass `country_iso_code` with `None` for names/polygons and search
+- A caller can pass `iso_country_code` with `None` for names/polygons and search
   all registered geofences in that country.
 - An explicit selection plus country searches only the requested country-local
   subset.
@@ -174,7 +174,7 @@ Implemented on branch `yoel/fast_geofencing` in worktree
 
 - Added `custom_polygons_by_country` for `GBR`, `USA`, `DEU`, and `JPN`, built
   from the existing flat polygon objects.
-- Added the scalar `country_iso_code` fast path to Spark and pandas geofence and
+- Added the scalar `iso_country_code` fast path to Spark and pandas geofence and
   polygon filters while preserving existing positional calls.
 - Enforced that names/polygons may be `None` only when a country is supplied;
   explicit empty selections continue to match nothing.
@@ -226,3 +226,9 @@ dangling-symlink checks. The PR description was updated with these results.
 Global lint-coverage, version-bump, and testcontainers helpers were unavailable
 because of VM configuration (`/cache/disk/disk`, missing `CODER_PATH`, and a
 missing static-check module), not feature failures.
+
+On 2026-08-03, renamed the public and internal country parameter from the
+mistyped `country_iso_code` to `iso_country_code` throughout the implementation,
+tests, diagnostics, and PR description. Commit `e3e01e73239b` was pushed after
+both focused Bazel unit targets, six Ruff/Flake8/type targets, and Python format
+checks passed.
