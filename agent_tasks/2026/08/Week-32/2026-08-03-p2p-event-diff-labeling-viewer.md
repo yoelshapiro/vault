@@ -200,6 +200,12 @@ both are disabled, the normal two-column partition is retained so both
 controls remain visible. This behavior is covered by the served-asset layout
 contract test in commit `b1296cb3b54d`.
 
+For a dual video viewer, the main telemetry charts cover only the modified
+timestamp's clip window; the separate raw gear/P2P tracks may still exist per
+original and modified window. Commit `f08a07e6a993` labels the main chart
+header `Telemetry · modified timestamp` for dual viewers. Shared single-viewer
+clips keep the original `Telemetry` header unchanged.
+
 ## Git
 
 - Worktree: `/tmp/WayveCode-yoel-label_events_diff`
@@ -226,4 +232,5 @@ contract test in commit `b1296cb3b54d`.
 - P2P route-raster contract test: `d17a588d278c`
 - P2P label endpoint failure coverage: `3c5ed32f3568`
 - Responsive map/route visibility layout: `b1296cb3b54d`
+- Dual-viewer telemetry source title: `f08a07e6a993`
 - Remote: `origin/yoel/label_events_diff`
