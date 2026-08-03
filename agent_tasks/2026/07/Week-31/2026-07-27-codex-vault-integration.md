@@ -22,9 +22,18 @@ personal and project context.
 
 ## Codex configuration
 
-- Added global guidance at `/workspace/.codex/AGENTS.md`.
+- The canonical, Git-synced global guidance is `codex/AGENTS.md` in this vault.
+- VM desktop sessions load it through `/workspace/.codex/AGENTS.md`.
+- Other VM Codex entry points load it through
+  `/home/yoelshapiro/.codex/AGENTS.md`.
+- Mac sessions should link `~/.codex/AGENTS.md` to
+  `/Users/yoel.shapiro/Work/vault/codex/AGENTS.md` once the synced file arrives.
 - Added `/home/yoelshapiro/git/vault` to
   `sandbox_workspace_write.writable_roots` in `/workspace/.codex/config.toml`.
+
+On 2026-08-03, the VM home link was found to point at the misspelled and
+unrelated `~/git/assests/codex/AGENTS.md`. The policy was moved into this vault
+and both VM Codex homes were repointed to the canonical synced file.
 
 ## Operating policy
 

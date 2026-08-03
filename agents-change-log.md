@@ -85,6 +85,10 @@
   - Granted the VM vault as an additional writable root for workspace-write mode.
   - Preserved ownership of Git synchronization with the external one-minute
     push/pull loop.
+  - On 2026-08-03, moved the canonical guidance into the Git-synced vault and
+    repointed both VM Codex homes after finding a broken, misspelled home link.
+  - Documented the corresponding one-time Mac link so local and VM sessions use
+    the same policy file.
 - Task note: [[agent_tasks/2026/07/Week-31/2026-07-27-codex-vault-integration|2026-07-27 Codex Vault Integration]]
 
 

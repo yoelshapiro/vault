@@ -209,3 +209,11 @@ in Germany. It should remain under `DEU`; moving it to `ISR` would make the
 country index disagree with the stored polygon. The apparent issue is likely a
 name collision with Segula/Sgula in Israel rather than the SEGULA Technologies
 test center represented by this geofence.
+
+The audit is now enforced by a unit test in commit `afb66722c8ff`. For every
+polygon component in `custom_polygons_by_country`, the test computes a Shapely
+representative point and resolves it through the repository's canonical
+worldwide country lookup, failing with the geofence name, declared country,
+resolved country, and coordinates on any mismatch. Pipelines unit, Ruff,
+Flake8, type, BUILD-format, and Python-format checks passed, as did the focused
+common geofilter regression suite. PR: `wayveai/WayveCode#129077`.
