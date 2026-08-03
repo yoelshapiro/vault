@@ -177,6 +177,13 @@ meaningful targeted report. The repository-wide local patch-coverage helper
 also queried unrelated Bazel targets and was blocked locally by missing
 Artifactory/ACR credentials; this did not affect the scoped viewer tests.
 
+The map-and-route row now reallocates width when exactly one viewer type is
+disabled: routes expand when the location map is hidden, and the map expands
+when routes are hidden. The collapsed side retains a narrow toggle gutter. If
+both are disabled, the normal two-column partition is retained so both
+controls remain visible. This behavior is covered by the served-asset layout
+contract test in commit `b1296cb3b54d`.
+
 ## Git
 
 - Worktree: `/tmp/WayveCode-yoel-label_events_diff`
@@ -202,4 +209,5 @@ Artifactory/ACR credentials; this did not affect the scoped viewer tests.
 - Stable per-signal telemetry interpolation: `9b38b67fd0ed`
 - P2P route-raster contract test: `d17a588d278c`
 - P2P label endpoint failure coverage: `3c5ed32f3568`
+- Responsive map/route visibility layout: `b1296cb3b54d`
 - Remote: `origin/yoel/label_events_diff`
