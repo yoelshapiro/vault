@@ -3865,6 +3865,8 @@
     resizable viewer layout and source-color legend behavior.
   - Added a single map with green and purple geographic Leaflet markers that
     remain anchored while panning and zooming.
+  - Made shared clips match telemetry width and made every clip load poll the
+    current shared/split threshold from the left panel.
   - Passed the viewer static, Python, lint, and type-check targets and published
-    commits `d478a81dc555` and `cb9bc55ad7c0`.
+    commits `d478a81dc555`, `cb9bc55ad7c0`, and `a5b98adf47b9`.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-03-p2p-event-diff-labeling-viewer|2026-08-03 P2P Event Diff Labeling Viewer]]

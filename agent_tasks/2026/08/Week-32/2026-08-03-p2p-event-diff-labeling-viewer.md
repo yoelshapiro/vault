@@ -13,6 +13,10 @@ dedicated original-versus-odometry labeling workflow on branch
 - Added `prod_user.p2p.events_w_gear_corrections_22k` as the default Original
   table.
 - Exposed the shared-player timestamp threshold in the left panel.
+- Re-evaluate that threshold from the current left-panel field whenever a clip
+  loads, so navigation immediately uses the latest shared/split choice.
+- Make a shared video span the full content width to match telemetry while
+  preserving the side-by-side layout for split clips.
 - Kept one source-colored legend above the clip grid and one map for both event
   locations.
 - Added suffix-based result tables under
@@ -36,4 +40,5 @@ dedicated original-versus-odometry labeling workflow on branch
 - Branch: `yoel/label_events_diff`
 - Main workflow commit: `d478a81dc555`
 - Map marker fix: `cb9bc55ad7c0`
+- Per-clip layout and threshold fix: `a5b98adf47b9`
 - Remote: `origin/yoel/label_events_diff`
