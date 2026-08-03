@@ -168,4 +168,5 @@ mismatches afterward.
 - P2P model-input route rasters: `8360ed1ddf0e`
 - Uncropped square route-raster layout: `341db3ecc23d`
 - P2P map visibility control: `019fa899549f`
+- Aligned map and route graphic canvases: `d3fe1505df8a`
 - Remote: `origin/yoel/label_events_diff`
