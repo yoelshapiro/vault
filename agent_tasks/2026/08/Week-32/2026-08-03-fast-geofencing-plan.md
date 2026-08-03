@@ -191,3 +191,21 @@ Implemented on branch `yoel/fast_geofencing` in worktree
   collected no data in the `/tmp` worktree and therefore reported 0% coverage.
 - A focused geofilter rerun with coverage disabled passed.
 - `git diff --check` passed.
+
+## Country-assignment audit
+
+Audited all 38 entries on 2026-08-03 against the coordinates stored under
+`wayve/core/data/geofences/`:
+
+- `GBR`: 23 polygons; all coordinates are in the UK.
+- `USA`: 5 polygons; all coordinates are in California.
+- `DEU`: 5 polygons; all coordinates are in Germany.
+- `JPN`: 5 polygons; all coordinates are in Japan.
+
+No misclassified polygon was found. In particular,
+`test_track_segula_technologies.json` spans approximately 8.903-8.935 E and
+49.983-50.001 N, matching SEGULA Technologies' Rodgau-Dudenhofen test center
+in Germany. It should remain under `DEU`; moving it to `ISR` would make the
+country index disagree with the stored polygon. The apparent issue is likely a
+name collision with Segula/Sgula in Israel rather than the SEGULA Technologies
+test center represented by this geofence.
