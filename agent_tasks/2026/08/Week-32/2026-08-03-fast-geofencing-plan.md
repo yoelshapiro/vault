@@ -217,3 +217,12 @@ worldwide country lookup, failing with the geofence name, declared country,
 resolved country, and coordinates on any mismatch. Pipelines unit, Ruff,
 Flake8, type, BUILD-format, and Python-format checks passed, as did the focused
 common geofilter regression suite. PR: `wayveai/WayveCode#129077`.
+
+On 2026-08-03, merged `origin/main` at `eb7bb7f39226` into the feature branch
+as commit `7a6bbb4b0c32` and pushed it. Post-merge uncached validation passed:
+12/12 geofilter-related cases and 2/2 pipeline registry/country cases (all 12
+new cases passed), plus Ruff, Flake8, type, Python-format, BUILD-format, and
+dangling-symlink checks. The PR description was updated with these results.
+Global lint-coverage, version-bump, and testcontainers helpers were unavailable
+because of VM configuration (`/cache/disk/disk`, missing `CODER_PATH`, and a
+missing static-check module), not feature failures.
