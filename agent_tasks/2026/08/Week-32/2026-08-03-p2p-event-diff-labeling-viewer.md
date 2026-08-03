@@ -106,9 +106,9 @@ longer/backoff retry policy before declaring a camera unavailable.
 
 ## Missing speed-line diagnosis
 
-The telemetry API unions corpus samples with raw-gear-only samples. The speed
-SVG renderer currently treats every null speed on a gear-only row as a break
-in the line instead of ignoring that unrelated row. In one affected clip, the
+The telemetry API unions corpus samples with raw-gear-only samples. The old
+speed SVG renderer treated every null speed on a gear-only row as a break in
+the line instead of ignoring that unrelated row. In one affected clip, the
 response contained 996 valid speed samples (0.0--30.06 km/h) and 2,487
 gear-only rows, but zero consecutive speed rows in the combined stream. The
 renderer therefore emitted isolated SVG move commands with no visible line
@@ -118,10 +118,15 @@ built from non-null speed samples independently of the gear rows.
 The plotted AV-active, indicator, and gear step traces do not have the same
 breakage: their renderer skips null rows while retaining the previous point.
 The shared playhead readout does have a related bug, because it selects one
-nearest row for every signal. When that row is gear-only, speed, AV, and
-indicator can show `-` despite nearby valid corpus samples (and the converse
-can affect gear). Each readout should find its nearest non-null sample for its
-own field.
+nearest row for every signal. When that row was gear-only, speed, AV, and
+indicator could show `-` despite nearby valid corpus samples (and the converse
+could affect gear).
+
+Commit `9b38b67fd0ed` resolved both problems. Each chart now builds from its own
+sorted non-null samples. Speed is linearly connected/interpolated and held at
+the clip edges; step and categorical signals use last-value hold. Playhead
+readouts interpolate or hold per signal and avoid redundant DOM writes, so
+mixed null rows no longer make values alternate between numbers and blanks.
 
 ## Labelable event-type decision
 
@@ -175,4 +180,5 @@ mismatches afterward.
 - Aligned map and route graphic canvases: `d3fe1505df8a`
 - Collapsible location-map column: `d8873aa8550c`
 - Collapsible telemetry with request gating: `892bed7fcc15`
+- Stable per-signal telemetry interpolation: `9b38b67fd0ed`
 - Remote: `origin/yoel/label_events_diff`
