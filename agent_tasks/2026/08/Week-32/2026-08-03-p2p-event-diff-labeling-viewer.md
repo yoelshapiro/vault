@@ -43,11 +43,12 @@ dedicated original-versus-odometry labeling workflow on branch
 - Added camera-specific media error displays after one retry. P2P cameras now
   warm serially, while eager loading and prefetch behavior in other modes is
   unchanged.
-- Added a route viewer immediately to the right of the event-location map. It
-  loads the latest route state at each original/modified timestamp from
+- Added separate original and modified route viewers beside the event-location
+  map. They load the latest route state at each timestamp from
   `prod_data_pipeline.inferred__state.route_events`, decodes the table's
-  precision-aware polylines, and overlays original in green and modified in
-  purple. On narrow screens the two Leaflet panels stack.
+  precision-aware polylines, and display each route independently with a green
+  or purple title. At medium widths the event-location map moves above the two
+  side-by-side route viewers; on narrow screens all three Leaflet panels stack.
 
 ## Verification
 
@@ -152,4 +153,5 @@ mismatches afterward.
 - Corrected `iso_country_code` label schema: `ec91438a8bbb`
 - Clip loading lifecycle and resizable counts: `3bbdf46a0f71`
 - P2P route viewer: `9f14f9b1b394`
+- Split P2P route viewers: `648e7e159721`
 - Remote: `origin/yoel/label_events_diff`
