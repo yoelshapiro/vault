@@ -169,4 +169,5 @@ mismatches afterward.
 - Uncropped square route-raster layout: `341db3ecc23d`
 - P2P map visibility control: `019fa899549f`
 - Aligned map and route graphic canvases: `d3fe1505df8a`
+- Collapsible location-map column: `d8873aa8550c`
 - Remote: `origin/yoel/label_events_diff`
