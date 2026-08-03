@@ -43,6 +43,11 @@ dedicated original-versus-odometry labeling workflow on branch
 - Added camera-specific media error displays after one retry. P2P cameras now
   warm serially, while eager loading and prefetch behavior in other modes is
   unchanged.
+- Added a route viewer immediately to the right of the event-location map. It
+  loads the latest route state at each original/modified timestamp from
+  `prod_data_pipeline.inferred__state.route_events`, decodes the table's
+  precision-aware polylines, and overlays original in green and modified in
+  purple. On narrow screens the two Leaflet panels stack.
 
 ## Verification
 
@@ -50,6 +55,8 @@ dedicated original-versus-odometry labeling workflow on branch
 - `//wayve/ai/parking/tools/event_clip_viewer:py_checks`
 - Live viewer served on port `3001` with Leaflet assets and the updated P2P
   configuration.
+- Live route-enrichment smoke test returned two event positions plus original
+  and modified routes with 2,370 decoded points each.
 
 ## Clip-loading diagnosis
 
@@ -144,4 +151,5 @@ mismatches afterward.
 - Corrected `park_out_anchor` label schema: `53dc4cdb03d3`
 - Corrected `iso_country_code` label schema: `ec91438a8bbb`
 - Clip loading lifecycle and resizable counts: `3bbdf46a0f71`
+- P2P route viewer: `9f14f9b1b394`
 - Remote: `origin/yoel/label_events_diff`
