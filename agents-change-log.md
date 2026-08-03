@@ -3848,3 +3848,23 @@
   - Added exact flat/nested registry parity, compatibility, validation, and behavior tests.
   - Verified all feature tests plus focused lint/type targets; recorded the `/tmp` worktree coverage-wrapper limitation.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan|2026-08-03 Fast Country-Aware Geofencing Plan]]
+
+## 2026-08-03 - P2P Event Diff Labeling Viewer
+
+- Topic: Add a dedicated original-versus-odometry labeling workflow to the P2P
+  event diff viewer.
+- Labels: parking, p2p, labeling, event-viewer, databricks, leaflet.
+- Branch: `yoel/label_events_diff`.
+- PR: n/a.
+- Change type: Viewer workflow, persistence API, map interaction fix, tests.
+- Areas: `wayve/ai/parking/tools/event_clip_viewer`.
+- Changes:
+  - Added P2P-specific table suffix validation and `orig`/`odo`/`undecided`
+    labeling backed by idempotent Delta merges.
+  - Persisted mode defaults, exposed the shared/split threshold, and improved
+    resizable viewer layout and source-color legend behavior.
+  - Added a single map with green and purple geographic Leaflet markers that
+    remain anchored while panning and zooming.
+  - Passed the viewer static, Python, lint, and type-check targets and published
+    commits `d478a81dc555` and `cb9bc55ad7c0`.
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-03-p2p-event-diff-labeling-viewer|2026-08-03 P2P Event Diff Labeling Viewer]]
