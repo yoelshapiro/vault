@@ -56,6 +56,10 @@ dedicated original-versus-odometry labeling workflow on branch
 - Replaced the latitude/longitude text above the event-location map with a
   persisted `Show map` switch. Re-enabling it invalidates and refits Leaflet so
   both source markers remain correctly positioned.
+- Added an Event-info-style disclosure control for the P2P telemetry panel.
+  Its state is persisted; while collapsed, standard signal requests are
+  aborted and P2P enrichment is sent without telemetry windows, avoiding both
+  telemetry-loading paths until the panel is expanded again.
 
 ## Verification
 
@@ -170,4 +174,5 @@ mismatches afterward.
 - P2P map visibility control: `019fa899549f`
 - Aligned map and route graphic canvases: `d3fe1505df8a`
 - Collapsible location-map column: `d8873aa8550c`
+- Collapsible telemetry with request gating: `892bed7fcc15`
 - Remote: `origin/yoel/label_events_diff`
