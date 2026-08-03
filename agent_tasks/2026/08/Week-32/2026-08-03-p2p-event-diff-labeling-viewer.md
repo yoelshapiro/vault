@@ -66,6 +66,11 @@ The earlier stored name `anchor_park_out` was corrected to
 `prod_annotations.registry.parking_labels_P2P_Odometry` were migrated; a
 follow-up query confirmed that no `anchor_park_out` rows remained.
 
+The labeling-table country-code column is `iso_country_code`. On 2026-08-03,
+the active `P2P_Odometry` Delta table enabled name-based column mapping and
+renamed the erroneous `country_iso_code` column in place. All 31 rows were
+preserved; country-code values were null both before and after the rename.
+
 ## Git
 
 - Worktree: `/tmp/WayveCode-yoel-label_events_diff`
@@ -77,4 +82,5 @@ follow-up query confirmed that no `anchor_park_out` rows remained.
 - Stale-map loading state: `639d8a4dc517`
 - Timestamp highlight frames: `504663847048`
 - Corrected `park_out_anchor` label schema: `53dc4cdb03d3`
+- Corrected `iso_country_code` label schema: `ec91438a8bbb`
 - Remote: `origin/yoel/label_events_diff`
