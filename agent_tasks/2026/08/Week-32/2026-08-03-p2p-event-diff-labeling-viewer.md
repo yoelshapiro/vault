@@ -24,6 +24,9 @@ dedicated original-versus-odometry labeling workflow on branch
   idempotent merge APIs.
 - Added the fixed P2P label values `orig`, `odo`, and `undecided`, keyed by run,
   original timestamp, odometry timestamp, and normalized event type.
+- Added task-wide labeled-row counts for all five supported event types at the
+  bottom of the right panel. Counts are scoped to the selected result-table
+  suffix and refresh after table validation and successful label writes.
 - Replaced screen-positioned map overlays with Leaflet geographic markers so
   the green and purple locations track pan and zoom correctly.
 
@@ -58,4 +61,5 @@ write a label for it.
 - Main workflow commit: `d478a81dc555`
 - Map marker fix: `cb9bc55ad7c0`
 - Per-clip layout and threshold fix: `a5b98adf47b9`
+- Per-event-type task counts: `4124da2517da`
 - Remote: `origin/yoel/label_events_diff`
