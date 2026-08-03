@@ -48,7 +48,7 @@ dedicated original-versus-odometry labeling workflow on branch
 
 The result table intentionally supports exactly these five stored event types:
 
-- `anchor_park_out` (the viewer/source event is named `park_out_anchor`)
+- `park_out_anchor`
 - `park_out_stop`
 - `p2p_nav_start`
 - `park_in_start`
@@ -61,6 +61,11 @@ explicitly revisited. If `park_out_start` appears during label lookup, skip it
 without treating the event data as invalid; continue to reject any attempt to
 write a label for it.
 
+The earlier stored name `anchor_park_out` was corrected to
+`park_out_anchor`. On 2026-08-03, all 19 existing affected rows in
+`prod_annotations.registry.parking_labels_P2P_Odometry` were migrated; a
+follow-up query confirmed that no `anchor_park_out` rows remained.
+
 ## Git
 
 - Worktree: `/tmp/WayveCode-yoel-label_events_diff`
@@ -71,4 +76,5 @@ write a label for it.
 - Per-event-type task counts: `4124da2517da`
 - Stale-map loading state: `639d8a4dc517`
 - Timestamp highlight frames: `504663847048`
+- Corrected `park_out_anchor` label schema: `53dc4cdb03d3`
 - Remote: `origin/yoel/label_events_diff`
