@@ -44,6 +44,27 @@ dedicated original-versus-odometry labeling workflow on branch
 - Live viewer served on port `3001` with Leaflet assets and the updated P2P
   configuration.
 
+## Clip-loading diagnosis
+
+On 2026-08-03, a slow current shared clip was traced to a combination of
+media-generation latency and two viewer lifecycle issues:
+
+- The shared window was about 42.4 seconds because it covered both event
+  timestamps plus padding. Exact media-handler range requests for cold camera
+  cuts took about 29.6 and 30.4 seconds to return their first byte; warmed cuts
+  returned in about 0.33 seconds.
+- The `back_backward` cut returned HTTP 404. The viewer only clears its loading
+  state on `canplay` and has no video `error` handler, so an unavailable camera
+  appears to load forever.
+- Clip navigation invalidates stale enrichment responses in the browser but
+  does not cancel their requests. Live logs showed overlapping enrichment SQL
+  requests continuing for roughly 30--80 seconds, adding avoidable contention.
+
+Video elements are created before enrichment starts, so enrichment is not a
+direct prerequisite for playback. Recommended follow-up is to surface camera
+load errors, abort old media/enrichment work on navigation, and avoid eagerly
+preloading every selected camera when long shared windows are used.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
