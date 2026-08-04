@@ -232,3 +232,37 @@ mistyped `country_iso_code` to `iso_country_code` throughout the implementation,
 tests, diagnostics, and PR description. Commit `e3e01e73239b` was pushed after
 both focused Bazel unit targets, six Ruff/Flake8/type targets, and Python format
 checks passed.
+
+## Review feedback plan (2026-08-04)
+
+PR review identified four unresolved issues in `geofilters.py`:
+
+1. The materialisation caller has row-level country metadata, while the new API
+   accepts only a driver-side scalar and is not wired into production.
+2. The pandas empty-result path loses a non-default input index.
+3. An empty Spark candidate set still constructs and evaluates a pandas UDF.
+4. A valid ISO country with no registered custom polygons is treated as an
+   invalid country.
+
+Recommended implementation:
+
+- Keep the scalar ISO-code path and additionally accept a Spark country
+  `Column` for named-geofence filtering.
+- Implement row-wise dispatch inside one pandas UDF: split each Arrow batch by
+  country, run point-in-polygon only with that country's narrowed candidates,
+  and scatter results back into batch order. Avoid separate UDFs under Spark
+  `when` branches because Python UDF extraction can evaluate those branches
+  eagerly.
+- Resolve `StaticScenerySchema.iso_country_code` in the corpus conditions
+  wrapper so dataset materialisation automatically uses the row-level path.
+- Preserve legacy coordinate behavior for rows with missing country metadata by
+  falling back to the explicit global candidate set; reject malformed non-null
+  codes. Recognised `CountryCode` values with no candidates return `false`.
+- Return `lit(False)` before UDF construction whenever scalar or row-wise
+  candidate resolution is globally empty.
+- Preserve `input_dataframe.index` when pandas filtering returns an all-false
+  result.
+- Add mixed-country Spark coverage, valid-country-without-polygons coverage,
+  malformed-code coverage, empty-candidate short-circuit coverage, null-country
+  fallback coverage, and non-default pandas-index coverage. Re-run the common,
+  corpus, and pipelines Bazel tests plus Ruff, Flake8, type, and format checks.
