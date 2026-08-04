@@ -287,3 +287,16 @@ Implemented and pushed as commit `277a8c7d1c64` on 2026-08-04:
   missing testcontainers static-check module).
 - Replied to all four PR review conversations with the commit and verification
   details. Per request, none of the conversations was resolved.
+
+### VM helper remediation (2026-08-04)
+
+- Configured login shells to discover the Coder CLI and export `CODER_PATH`,
+  allowing `make check-versions-bumped` to pass in a fresh login shell.
+- Created the CI-configured Bazel cache path `/cache/disk/disk` and assigned
+  `/cache/disk` to the workspace user, unblocking repository helpers that use
+  `--config=ci`.
+- Confirmed `make check-testcontainers-depends` is stale on `main`: its Python
+  module was removed upstream and replaced by the maintained
+  `//build_support/suites/static_checks:integration_test_tagging` target.
+- Kept the fast-geofencing feature worktree clean while validating these VM
+  and repository-helper issues.
