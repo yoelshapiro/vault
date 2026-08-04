@@ -414,3 +414,19 @@ Focused common country tests, the dataset-materialisation compatibility test,
 pipelines geofence tests, all nine Ruff/Flake8/`ty` targets, formatting, and
 `git diff --check` passed. The commit was pushed and PR #129077's description
 was updated with the documentation and verification results.
+
+### Self-contained registry test follow-up (2026-08-04)
+
+Anner De Jong correctly noted that importing
+`wayve.ai.zoo.data.geo.get_country_code` made the geofence unit test a
+cross-package integration test and required an unusual AI visibility exception.
+Commit `3172968ffc57` replaces the geographic lookup with an explicit contract
+mapping every exported geofence constant to its expected ISO country. It still
+guards all assignments, including `TEST_TRACK_SEGULA_TECHNOLOGIES` under
+`DEU`, while testing only the geofence registry itself.
+
+Removed the `wayve.ai.zoo.data:geo` and Shapely test dependencies and completely
+reverted the AI BUILD visibility change. The final GitHub PR file list no longer
+contains `wayve/ai/zoo/data/BUILD`. Both registry tests, pipelines Ruff,
+Flake8, `ty`, buildifier, and `git diff --check` passed. The PR description was
+updated to remove the obsolete worldwide-country-lookup claim.
