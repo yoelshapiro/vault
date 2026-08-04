@@ -266,11 +266,11 @@ P2P video sizing is now manual and stable against label-panel resizing. Commit
 viewer blocks, persists its pixel value, and locks camera viewports to 16:9.
 The selected size only contracts when the available browser width requires it.
 
-For a dual video viewer, the main telemetry charts cover only the modified
-timestamp's clip window; the separate raw gear/P2P tracks may still exist per
-original and modified window. Commit `f08a07e6a993` labels the main chart
-header `Telemetry · modified timestamp` for dual viewers. Shared single-viewer
-clips keep the original `Telemetry` header unchanged.
+Commit `f08a07e6a993` originally made the modified-only telemetry source
+explicit for dual video clips. This was superseded by commit `a88e6c2eb4bc`:
+dual P2P clips now show two chart panels side by side, original on the left in
+green and modified on the right in purple, each querying and tracking its own
+timestamp window. Shared single-viewer clips retain one `Telemetry` panel.
 
 ## Git
 
@@ -304,4 +304,5 @@ clips keep the original `Telemetry` header unchanged.
 - PR review fixes and DOM interaction coverage: `a7cb2e9e5bf2`
 - Guard stale label-sync completions: `722e81402903`
 - Manual aspect-locked P2P video sizing: `0e0eba39239c`
+- Side-by-side original/modified P2P telemetry: `a88e6c2eb4bc`
 - Remote: `origin/yoel/label_events_diff`
