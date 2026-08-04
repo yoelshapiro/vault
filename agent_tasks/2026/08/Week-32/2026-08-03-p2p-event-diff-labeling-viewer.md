@@ -201,6 +201,13 @@ earliest selected timestamp minus 15 minutes through the latest timestamp plus
 15 minutes, limited naturally by available data. The live path query completed
 in 3.91 seconds and returned valid coordinates; cached repeats avoid SQL.
 
+On 2026-08-04, the fixed 15-minute path window became an editable extension in
+seconds beside the `Path` control. It defaults to 900 seconds, accepts 0--86400,
+participates in request validation and the cache key, and changing it reloads
+only the optional path overlay. Route raster containment was also hardened:
+each image is absolutely centered with a 6 px safety inset, so intrinsic grid
+sizing or panel-width changes cannot crop the bottom or another image edge.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
