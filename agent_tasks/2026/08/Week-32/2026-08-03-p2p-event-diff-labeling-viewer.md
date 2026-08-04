@@ -175,6 +175,23 @@ immutable per-clip navigation/routes/rasters, and removing duplicate telemetry
 work. Add per-stage timing logs before considering connection pooling or
 parallel SQL execution, since parallelism may increase warehouse contention.
 
+Implemented on 2026-08-04 (pending commit at the time of this note). Context,
+route rasters, and P2P-only gear/prediction tracks now use independent API
+requests and immutable per-clip JSON caches. Route requests are not started
+while routes are collapsed, telemetry toggles no longer restart map/route
+work, simultaneous context consumers are coalesced, and the P2P telemetry SQL
+no longer duplicates the speed scan already performed by `/api/signals`.
+Per-stage timing logs were added. Live validation on one `park_in_start` pair
+measured 9.38 seconds for the first context/map response, 0.1 ms for the cached
+repeat, 2.55 seconds for route SQL plus both rasters (109.5 ms raster work), and
+17.24 seconds for P2P telemetry, which no longer blocks either viewer.
+
+The map also has a separate, off-by-default `Path` control. Enabling it lazily
+loads a cached one-Hz vehicle trajectory from navigation data, spanning the
+earliest selected timestamp minus 15 minutes through the latest timestamp plus
+15 minutes, limited naturally by available data. The live path query completed
+in 3.91 seconds and returned valid coordinates; cached repeats avoid SQL.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
