@@ -458,3 +458,110 @@ target did not reach execution because Bazel exhausted the shared workspace
 filesystem while extracting its CUDA dependency; the registry test file itself
 was unchanged in this follow-up. The test-only commit was replayed cleanly on
 top of the latest `main` merge and pushed to PR #129077.
+
+### Additional geofence inventory and possible consolidation (2026-08-04)
+
+Follow-up target: around 2026-08-11, consider contacting the original
+contributors to ask whether the additional GeoJSON geofences should be
+consolidated into the central country-aware implementation in
+`wayve/services/data/pipelines/geofences.py`. Confirm current ownership and
+intent first: some files are operational robot data-collection/Map Override
+assets, temporary roadshow privacy exclusions, validation boundaries, or
+historical branch experiments and may deliberately not belong in the dataset
+filter registry.
+
+#### Findings on `main`
+
+`wayve/core/data/geofences/` contains 67 GeoJSON assets, while 38 are registered
+in `custom_polygons`. The following 29 assets are present on `main` but are not
+registered centrally:
+
+- Ilia Medianikov (`4b6151aaa386`):
+  `asda_gillingham_pier_superstore`, `asda_leeds_homeshopping_centre`,
+  `asda_milton_keynes_supercentre`, `asda_old_kent_road_superstore`,
+  `asda_patchway_supercentre`, `asda_slough_superstore`, and
+  `asda_swansea_superstore`. These appear to be robot data-collection
+  exclusions around ASDA operational/customer sites.
+- Egor Tkachenko (`0d3373a58452`): `germany_boblingen_mb_rnd`, apparently a
+  collection/privacy boundary around Mercedes' private R&D facility.
+- Anthony Wang (`9d26482127b1`): `hoffice` and `polo_club`, legacy
+  `data_pipeline_geofence` assets. Constants exist in `geofences.py`, but the
+  assets are not in `custom_polygons`; their exact current purpose is
+  undocumented.
+- Julien Maffre (`cb6f51c52916`, `20d299667232`):
+  `millbrook_proving_grounds_offload` and `test_track_mira`. Millbrook's
+  metadata explicitly says it prevents collection during offload; MIRA appears
+  to separate private test-track activity from ordinary road data.
+- Oren Gur Arie / `oren-wayve` (`2204587e1f39`, `42dcb94b2b8f`,
+  `8e651e3fbe49`, `888e5768ad5b`): `road_show_italy_house_1`,
+  `road_show_italy_house_2`, `road_trip_edinburgh_house_1`,
+  `road_trip_edinburgh_house_2`, `road_trip_edinburgh_house_3`,
+  `road_trip_inverness_station_1`, `road_trip_inverness_station_2`, and
+  `road_trip_paris_house_1` through `_3`. These appear to be temporary
+  accommodation/base privacy exclusions and charging-station exclusions.
+- Brodie Clark (`abb8dabf9a68`): `road_trip_chicago_house_1` and `_2`, likely
+  temporary accommodation privacy exclusions.
+- Matt Christiansen (`37dbb5f9162b`): `road_trip_seattle_house_1` through `_3`
+  and `road_trip_vancouver_house_1` and `_2`. Their metadata identifies them as
+  temporary road-trip data-collection geofences.
+
+Common relevant files on `main` are
+`wayve/core/data/geofences/BUILD`, `wayve/core/data/geofences/README.md`, and
+the individual JSON files above. The robot UUID configuration
+`infrastructure/robot/config/shared/wayve-interfaces-protobuf-GeofenceCheckerConfig_with_geofencing.json`
+currently references Böblingen, Millbrook, both Chicago houses, all three Paris
+houses, all three Seattle houses, and MIRA. Apart from their constants in
+`geofences.py`, `hoffice` and `polo_club` are not active in `custom_polygons`.
+The remaining assets have no current direct filename or UUID reference outside
+their JSON asset.
+
+#### Branch-only assets
+
+- Adam Abdulhamid, `origin/adam/us_validation_zone`, commit `9080088dbdb8`:
+  `generalisation_test_zone_cupertino`, a US validation/generalisation zone.
+- Antony Waldock,
+  `origin/antony-waldock/story/DT-1824/filter-the-ipace-runs-with-incorrect-gps-but-geofencing-the-operational-area`,
+  commit `f11bbdda579f`: `great_britain`, an operating-area boundary for
+  rejecting implausible iPace GPS data.
+- Piyush Khanna, `origin/piyush/no-train-evals-peninsula-sf`, commit
+  `69a533245e37`: `peninsula_san_francisco` and
+  `south_bay_santa_cruz_east_bay`, apparently geographic train/evaluation
+  partitions.
+- Matt Christiansen, `origin/release/huevos/2.0.188`, commit `6345a5413a94`:
+  `road_show_detroit_1`, `road_show_detroit_2`, and `road_show_italy_1`,
+  temporary roadshow data-collection/privacy exclusions.
+
+#### Proposed addressees
+
+- Ilia Medianikov
+- Egor Tkachenko
+- Anthony Wang
+- Julien Maffre
+- Oren Gur Arie
+- Brodie Clark
+- Matt Christiansen
+- Adam Abdulhamid
+- Antony Waldock
+- Piyush Khanna
+
+#### Prepared outreach message
+
+> Hi all — I found several geofence GeoJSON assets that you originally added
+> under `wayve/core/data/geofences/`, but which are not represented in the
+> central dataset geofence registry in
+> `wayve/services/data/pipelines/geofences.py`. We have recently added a
+> country-aware registry and fast path there, and I would like to check whether
+> it now makes sense to consolidate any of these assets into that implementation.
+>
+> Before proposing a code change, could you confirm whether your geofences are
+> still active and what contract they are intended to serve: robot
+> data-collection/Map Override suppression, dataset filtering, privacy,
+> validation/evaluation partitioning, or something else? Some look deliberately
+> temporary or operational, so they may be better left outside the dataset
+> registry or retired rather than consolidated.
+>
+> If consolidation is appropriate, I propose registering the durable assets by
+> ISO country, preserving their existing names and polygons, adding registry
+> parity/country-assignment coverage, and documenting which subsystem owns each
+> geofence. I can prepare a small follow-up PR once we agree on the intended
+> scope. Thanks!
