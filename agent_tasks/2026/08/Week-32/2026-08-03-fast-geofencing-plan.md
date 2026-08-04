@@ -298,5 +298,9 @@ Implemented and pushed as commit `277a8c7d1c64` on 2026-08-04:
 - Confirmed `make check-testcontainers-depends` is stale on `main`: its Python
   module was removed upstream and replaced by the maintained
   `//build_support/suites/static_checks:integration_test_tagging` target.
+- The cache-backed checks now start correctly, but full-repository Bazel
+  queries stop on missing private `valeo-artifactory` credentials (and also
+  report missing ACR credentials). Completing the Valeo login requires a
+  manually generated identity reference token from the Artifactory profile.
 - Kept the fast-geofencing feature worktree clean while validating these VM
   and repository-helper issues.
