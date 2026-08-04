@@ -337,3 +337,40 @@ Mitigation plan:
 The temporary probes were removed after validation; the feature worktree was
 left clean. No new review conversations were replied to or resolved because
 both concerns are valid and require changes.
+
+### Second review feedback implementation result
+
+Implemented and pushed as commit `457e062f8ac2` on 2026-08-04:
+
+- Restored the public corpus condition helper's country-independent behavior.
+- Dataset materialisation now inspects the actual DataFrame schema and uses the
+  country-aware path only when a country column exists; older tables and
+  projections without it retain global-geofence behavior.
+- Added schema-aware confidence-level coalescing for latitude, longitude, and
+  country so higher-priority null columns still fall through to populated
+  lower-priority values.
+- Row-wise null and unknown/legacy country values fall back to global candidate
+  polygons. Unknown non-null values emit a `warn_once` event per Python worker
+  process rather than aborting executor tasks.
+- A registered country narrowed to no requested names returns no match without
+  a misleading warning. A valid ISO country with no registered polygons emits
+  the informative no-polygons warning and returns no match. Scalar invalid
+  country-code validation remains strict.
+- An independent subagent reviewed both the mitigation plan and the final
+  seven-file diff. Its initial edge-case findings were incorporated; its final
+  pass found no actionable issue.
+
+Verification:
+
+- Full common, corpus, and dataset-materialisation unit suites passed.
+- The pipelines suite passed through the local patch-coverage runner.
+- Relevant downstream canary
+  `//wayve/services/data/lakehouse/jobs/cpu/filtered_corpus:py_test` passed.
+- Patch coverage against `origin/main` at `a7cc14097fee` was **99.11%**
+  (**111/112** changed executable lines), above the 80% threshold.
+- Ruff, Flake8, and `ty` passed for pipelines, common, corpus, and dataset
+  materialisation (12 static targets total); formatting and `git diff --check`
+  also passed.
+- PR #129077's description was updated. Both new reviewer conversations were
+  answered with `[Agent generated]:` replies and deliberately left unresolved.
+- The pushed PR head is `457e062f8ac273af0481e8d9b1c3192b3a7568d3`.
