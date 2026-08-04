@@ -374,3 +374,28 @@ Verification:
 - PR #129077's description was updated. Both new reviewer conversations were
   answered with `[Agent generated]:` replies and deliberately left unresolved.
 - The pushed PR head is `457e062f8ac273af0481e8d9b1c3192b3a7568d3`.
+
+### Full review-thread re-audit (2026-08-04)
+
+Rechecked all six unresolved review threads against the final implementation.
+Each concern is resolved by current behavior and has direct regression
+coverage. One earlier reply is stale in implementation detail: it says the
+corpus condition supplies the country column, but the safer final design
+restores that public helper and performs schema-aware wiring only inside
+`DatasetGenerator`. The PR description now calls this out explicitly.
+
+Added commit `146c92f633ad` to strengthen the empty-candidate regression: it
+now proves both that `sf.lit(False)` is returned and that `sf.pandas_udf` is not
+constructed. Six focused common regressions passed, including row-wise
+dispatch, index preservation, valid/unregistered and malformed country codes,
+legacy/null fallback, and the no-UDF short circuit. The focused
+dataset-materialisation canary also passed for present and absent country
+columns, confidence-level coalescing, null metadata, and a legacy value. Ruff,
+Flake8, `ty`, and `git diff --check` passed after the test change.
+
+The PR description includes a concern-to-test matrix and the design tradeoffs:
+the current materialisation-owned resolver is the smallest compatibility-safe
+approach; moving coalescing into the shared corpus accessor would expand API
+and ownership scope; a native Spark spatial index/join may be better long term
+but needs a separate benchmarked architectural change. `warn_once` remains
+process-local to each Python worker rather than globally once per Spark job.
