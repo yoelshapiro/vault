@@ -255,6 +255,12 @@ suffix changes, reloads the generic label schema after leaving P2P mode, and
 makes browser preference storage best-effort so restricted `localStorage` does
 not block viewer startup.
 
+A subsequent bot review found the equivalent race in label writes: an
+old-table sync completion could clear a new-table dirty flag. Commit
+`722e81402903` guards sync responses by source and suffix and clears a dirty key
+only if its submitted label object is still current. A DOM regression test
+covers switching suffixes and editing the same pair before the old sync returns.
+
 For a dual video viewer, the main telemetry charts cover only the modified
 timestamp's clip window; the separate raw gear/P2P tracks may still exist per
 original and modified window. Commit `f08a07e6a993` labels the main chart
@@ -291,4 +297,5 @@ clips keep the original `Telemetry` header unchanged.
 - Refresh Leaflet after route-column resize: `385734649796`
 - Clarify route-raster color visibility: `972f2aa391dd`
 - PR review fixes and DOM interaction coverage: `a7cb2e9e5bf2`
+- Guard stale label-sync completions: `722e81402903`
 - Remote: `origin/yoel/label_events_diff`
