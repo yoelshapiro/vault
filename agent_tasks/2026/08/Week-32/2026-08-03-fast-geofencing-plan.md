@@ -399,3 +399,18 @@ approach; moving coalescing into the shared corpus accessor would expand API
 and ownership scope; a native Spark spatial index/join may be better long term
 but needs a separate benchmarked architectural change. `warn_once` remains
 process-local to each Python worker rather than globally once per Spark job.
+
+### Documentation pass (2026-08-04)
+
+Commit `8bdc4e5cdb26` documents every helper introduced by the PR, including
+the nested Arrow-batch evaluator. The docstrings explain the high-level intent:
+country metadata is a candidate-set index, row dispatch stays inside one pandas
+UDF, materialisation resolves only columns present in the actual DataFrame, and
+missing or legacy row metadata retains global fallback behavior. The modified
+public filter docstrings and the country registry comment now describe the same
+performance and compatibility contract.
+
+Focused common country tests, the dataset-materialisation compatibility test,
+pipelines geofence tests, all nine Ruff/Flake8/`ty` targets, formatting, and
+`git diff --check` passed. The commit was pushed and PR #129077's description
+was updated with the documentation and verification results.
