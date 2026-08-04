@@ -175,7 +175,7 @@ immutable per-clip navigation/routes/rasters, and removing duplicate telemetry
 work. Add per-stage timing logs before considering connection pooling or
 parallel SQL execution, since parallelism may increase warehouse contention.
 
-Implemented on 2026-08-04 (pending commit at the time of this note). Context,
+Implemented and published in commit `fa60f9beba94` on 2026-08-04. Context,
 route rasters, and P2P-only gear/prediction tracks now use independent API
 requests and immutable per-clip JSON caches. Route requests are not started
 while routes are collapsed, telemetry toggles no longer restart map/route
