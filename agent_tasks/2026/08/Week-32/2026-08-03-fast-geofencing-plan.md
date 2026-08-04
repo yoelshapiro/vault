@@ -430,3 +430,12 @@ reverted the AI BUILD visibility change. The final GitHub PR file list no longer
 contains `wayve/ai/zoo/data/BUILD`. Both registry tests, pipelines Ruff,
 Flake8, `ty`, buildifier, and `git diff --check` passed. The PR description was
 updated to remove the obsolete worldwide-country-lookup claim.
+
+Follow-up commit `00ec1e6d40b0` removes the brittle exhaustive expected-country
+dictionary. The stable registry test now checks three meaningful invariants:
+the nested keys equal the flat registry keys, every geofence is assigned
+exactly once, and flattening preserves the polygon values. A separate targeted
+regression keeps `TEST_TRACK_SEGULA_TECHNOLOGIES` pinned to `DEU`. Adding a new
+geofence requires no test update when it is added correctly to both registries.
+Both focused tests and pipelines Ruff, Flake8, `ty`, and `git diff --check`
+passed; the PR description was updated accordingly.
