@@ -238,6 +238,16 @@ preserved. The 31 initially null values were then backfilled by joining
 to exactly one non-null country code; verification found zero nulls and zero
 mismatches afterward.
 
+On 2026-08-04, 169 newer rows across 160 runs were found with null country
+codes. Root cause: the event-list SQL projected `iso_country_code` only when a
+country filter was active, so ordinary unfiltered labeling sent null. All 169
+runs resolved unambiguously against
+`prod_user.p2p.events_w_gear_corrections_22k` and were repaired with a
+null-only MERGE. Verification found 199/199 labeled rows with valid uppercase
+three-letter codes. Commit `16162ade4224` projects country independently of
+filtering (including modified-only fallback) and rejects future P2P label
+writes when the code is missing.
+
 ## Coverage verification
 
 Commit `3c5ed32f3568` added request-level tests for validation and unexpected
