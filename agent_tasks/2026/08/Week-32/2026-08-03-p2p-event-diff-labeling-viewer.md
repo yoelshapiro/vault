@@ -261,6 +261,11 @@ old-table sync completion could clear a new-table dirty flag. Commit
 only if its submitted label object is still current. A DOM regression test
 covers switching suffixes and editing the same pair before the old sync returns.
 
+P2P video sizing is now manual and stable against label-panel resizing. Commit
+`0e0eba39239c` adds one shared horizontal width slider for original/modified
+viewer blocks, persists its pixel value, and locks camera viewports to 16:9.
+The selected size only contracts when the available browser width requires it.
+
 For a dual video viewer, the main telemetry charts cover only the modified
 timestamp's clip window; the separate raw gear/P2P tracks may still exist per
 original and modified window. Commit `f08a07e6a993` labels the main chart
@@ -298,4 +303,5 @@ clips keep the original `Telemetry` header unchanged.
 - Clarify route-raster color visibility: `972f2aa391dd`
 - PR review fixes and DOM interaction coverage: `a7cb2e9e5bf2`
 - Guard stale label-sync completions: `722e81402903`
+- Manual aspect-locked P2P video sizing: `0e0eba39239c`
 - Remote: `origin/yoel/label_events_diff`
