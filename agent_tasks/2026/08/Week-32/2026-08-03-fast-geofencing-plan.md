@@ -439,3 +439,22 @@ regression keeps `TEST_TRACK_SEGULA_TECHNOLOGIES` pinned to `DEU`. Adding a new
 geofence requires no test update when it is added correctly to both registries.
 Both focused tests and pipelines Ruff, Flake8, `ty`, and `git diff --check`
 passed; the PR description was updated accordingly.
+
+### Test resilience follow-up (2026-08-04)
+
+Commit `68bb1f1aa385` hardens the PR tests against unrelated future changes.
+The pandas geofilter tests now use a small synthetic country registry instead
+of depending on mutable London and Mountain View polygon geometry. Warning
+tests retain the structured event, country, once-only, and informative-message
+contracts without pinning full prose or call order. The scalar empty-country
+intersection regression now proves that a false Spark literal is returned
+without constructing the point-in-polygon UDF. The materialisation regression
+pins the single exclusion geofence it intends to exercise and reports retained
+and filtered set differences on failure.
+
+The focused common geofilter suite and focused dataset-materialisation test
+passed, as did Ruff and Flake8 for both packages. The pipelines test and lint
+target did not reach execution because Bazel exhausted the shared workspace
+filesystem while extracting its CUDA dependency; the registry test file itself
+was unchanged in this follow-up. The test-only commit was replayed cleanly on
+top of the latest `main` merge and pushed to PR #129077.
