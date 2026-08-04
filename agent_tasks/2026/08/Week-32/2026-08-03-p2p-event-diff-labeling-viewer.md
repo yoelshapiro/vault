@@ -248,6 +248,13 @@ produces a blank area on the right. Commit `385734649796` invalidates the map
 size after the route layout settles, without panning or changing zoom/center.
 Reopening a hidden map retains the existing bounds-refit behavior.
 
+PR review follow-up added a DOM interaction test for the map/route controls,
+including the remaining-viewer layout classes and Leaflet resize notification.
+It also prevents label lookup/count responses from crossing P2P output-table
+suffix changes, reloads the generic label schema after leaving P2P mode, and
+makes browser preference storage best-effort so restricted `localStorage` does
+not block viewer startup.
+
 For a dual video viewer, the main telemetry charts cover only the modified
 timestamp's clip window; the separate raw gear/P2P tracks may still exist per
 original and modified window. Commit `f08a07e6a993` labels the main chart
