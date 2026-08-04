@@ -304,3 +304,36 @@ Implemented and pushed as commit `277a8c7d1c64` on 2026-08-04:
   manually generated identity reference token from the Artifactory profile.
 - Kept the fast-geofencing feature worktree clean while validating these VM
   and repository-helper issues.
+
+### Second review feedback analysis (2026-08-04)
+
+Two new review concerns were both reproduced with focused Spark regression
+probes:
+
+- A DataFrame containing coordinates but no ISO-country column fails analysis
+  with `UNRESOLVED_COLUMN`, because the corpus condition resolves the country
+  field against the canonical table schema rather than the actual DataFrame.
+- A row containing an unknown non-null country value raises `ValueError` inside
+  the pandas UDF, surfaces as a Spark `PythonException`, and aborts the job.
+
+Mitigation plan:
+
+1. Restore the existing corpus condition helper's legacy, country-independent
+   expression so projected DataFrames and alternate/old tables remain safe.
+2. Activate country narrowing only in materialisation call sites that already
+   own the input DataFrame: resolve the country field against `df.columns`, use
+   the row-wise fast path when present, and fall back to the legacy global
+   polygon set when absent. Keep existing public APIs unchanged.
+3. In the row-wise UDF, reserve strict validation for caller-provided scalar
+   country codes. Treat unknown/legacy row values like missing metadata: emit
+   one structured warning and evaluate those rows against the explicit global
+   fallback polygons, preventing executor failure while preserving previous
+   matching semantics.
+4. Add regression coverage for a DataFrame without the country column, mixed
+   valid/null/unknown row values, fallback matching for unknown values, and the
+   continued scalar-code validation contract. Run full common, corpus, and
+   materialisation-focused Bazel test targets plus static checks.
+
+The temporary probes were removed after validation; the feature worktree was
+left clean. No new review conversations were replied to or resolved because
+both concerns are valid and require changes.
