@@ -53,10 +53,19 @@ dedicated original-versus-odometry labeling workflow on branch
   side-by-side rasters; on narrow screens all three panels stack.
 - Added a `Show routes` switch above the route pair. Its state is retained
   across clip navigation and hides or restores both route rasters together.
-- Added an in-raster route-color legend driven by actual pixel counts. Green
-  means the next 350 m of route and red means route beyond 350 m; if a color is
-  absent, the legend says so. This preserves the exact model-input image while
-  making short-route cases (green present, red absent) unambiguous.
+- Added an in-raster route-color legend driven by actual pixel counts. The
+  native model raster does not encode past versus future by color: its window
+  starts 50 m behind the projected vehicle pose, green covers the first 350 m
+  of that window (approximately 50 m behind plus 300 m ahead), and red covers
+  the farther-ahead remainder. If a color is absent, the legend says so. This
+  preserves the exact model-input image without implying a false red-past /
+  green-future split.
+- Route-raster timing is aligned explicitly. The video event marker uses the
+  exact selected event timestamp; both the Leaflet marker and raster pose use
+  the same nearest navigation sample; the route polyline is the latest route
+  plan at or before the event. The raster legend reports the navigation offset
+  and route-plan age, since the map pose is normally closer to event/video time
+  than an older route plan.
 - Replaced the latitude/longitude text above the event-location map with a
   persisted `Show map` switch. Re-enabling it invalidates and refits Leaflet so
   both source markers remain correctly positioned.
