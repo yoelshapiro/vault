@@ -159,6 +159,22 @@ should split or independently gate telemetry, map, and route enrichment, cache
 the non-telemetry result per clip, and avoid rebuilding map/routes when only
 telemetry visibility changes.
 
+On 2026-08-04, live server timings confirmed this is the main source of the
+visible delay: `/api/p2p_diff/enrichment` took about 59 seconds, from 05:39:49
+to 05:40:48. The final Databricks SQL session alone occupied about 26 seconds
+immediately before the response. `load_pair_enrichment` runs navigation,
+distance, active-route, and telemetry queries sequentially and only then
+renders both route rasters; the browser does not render either the map or the
+routes until that complete response arrives. Standard `/api/signals` and label
+requests also open additional Databricks sessions during clip startup. This
+confirms that the delay is dominated by coupled SQL work, especially telemetry,
+rather than Leaflet or browser image drawing.
+
+Prioritize splitting and visibility-gating the enrichment paths, caching
+immutable per-clip navigation/routes/rasters, and removing duplicate telemetry
+work. Add per-stage timing logs before considering connection pooling or
+parallel SQL execution, since parallelism may increase warehouse contention.
+
 ## Labelable event-type decision
 
 The result table intentionally supports exactly these five stored event types:
