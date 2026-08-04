@@ -290,4 +290,5 @@ clips keep the original `Telemetry` header unchanged.
 - Dual-viewer telemetry source title: `f08a07e6a993`
 - Refresh Leaflet after route-column resize: `385734649796`
 - Clarify route-raster color visibility: `972f2aa391dd`
+- PR review fixes and DOM interaction coverage: `a7cb2e9e5bf2`
 - Remote: `origin/yoel/label_events_diff`
