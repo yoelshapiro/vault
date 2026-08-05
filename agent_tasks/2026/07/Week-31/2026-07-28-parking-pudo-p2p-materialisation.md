@@ -350,3 +350,20 @@ The bootstrap was applied and validated on the remote VM: Cursor Agent
 discovered 17 global skills, eight commands, and 14 MCP servers. The laptop can
 apply the same setup after updating `~/git/assets` and `~/git/ParkingSkills`
 with `~/git/assets/cursor/setup.sh`.
+
+## Standalone Event Backfill PR
+
+- Branch: `yoel/p2p_event_backfill`
+- PR: `wayveai/WayveCode#129802`
+- Latest validation commit: `24a19f7275d4`
+- Default output:
+  `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/default/dev/p2p_events_backfill`
+- A complete-day canary for 2026-07-27 passed 406/406 unique output runs in
+  about 4m16s, including 110s of odometry and a 4.7s atomic Delta write. It had
+  exact date coverage, zero invalid clusters/orderings, and zero null countries.
+- The routine validation ladder is one complete day. Use one complete week only
+  for material performance changes or the pre-backfill scale gate.
+- If the daily gate fails, add a deterministic 10-run diagnostic smoke tier
+  biased toward known edge cases; do not treat 10 runs as a replacement for the
+  full-day correctness gate. The known P2P false-positive canary run already
+  recorded above is one candidate for that set.
