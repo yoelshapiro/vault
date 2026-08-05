@@ -30,7 +30,7 @@
 - Follow-up branch: `yoel/23-07-pudo-parking_w_p2p_qa`, recreated from
   `yoel/generic_w_p2p_qa` and carrying a focused Boris multi-source training
   configuration port.
-- PR: none recorded.
+- PR: [wayveai/WayveCode#129778](https://github.com/wayveai/WayveCode/pull/129778)
 - Change type: Code fix, regression tests, validation skill, Flyte execution,
   operational debugging.
 - Areas: `wayve/ai/services/sampling/datasets/parking_pudo`;
@@ -53,6 +53,11 @@
   - Ported Boris's P2P training root and root-aware non-driving partition
     selection onto the current P2P branch without replacing the full parking
     configuration; added focused regression coverage.
+  - Follow-up: documented the odometry-corrected P2P canary contract. Mache is
+    a Gen2 model subset; run selection must also satisfy environment, country,
+    event-window, source-frame, and family-specific filter prerequisites.
+    Replaced the street candidate with one that has a valid P2P window and
+    recorded a two-run street/outdoor/indicator recipe.
 - Task note: [[agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation|2026-07-28 Parking/PUDO P2P Materialisation]]
 
 ## 2026-07-27 - Portable Vault User Paths
