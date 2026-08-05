@@ -355,7 +355,7 @@ with `~/git/assets/cursor/setup.sh`.
 
 - Branch: `yoel/p2p_event_backfill`
 - PR: `wayveai/WayveCode#129802`
-- Latest validation commit: `24a19f7275d4`
+- Latest validation merge commit: `d3691e94085f`
 - Default output:
   `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/default/dev/p2p_events_backfill`
 - A complete-day canary for 2026-07-27 passed 406/406 unique output runs in
@@ -367,3 +367,7 @@ with `~/git/assets/cursor/setup.sh`.
   biased toward known edge cases; do not treat 10 runs as a replacement for the
   full-day correctness gate. The known P2P false-positive canary run already
   recorded above is one candidate for that set.
+- Final audit added schema-safe Delta overwrite support and reports the count of
+  rows with all six event timestamps. Notebook parity, scoped Bazel checks,
+  formatting, Ruff, Flake8, and ty passed; GitHub had no unresolved inline
+  review threads at the audit point.
