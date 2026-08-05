@@ -371,3 +371,5 @@ with `~/git/assets/cursor/setup.sh`.
   rows with all six event timestamps. Notebook parity, scoped Bazel checks,
   formatting, Ruff, Flake8, and ty passed; GitHub had no unresolved inline
   review threads at the audit point.
+- Cleaned all five historical validation prefixes after approval: 69 live blobs
+  were deleted, and each prefix was verified at zero remaining blobs.
