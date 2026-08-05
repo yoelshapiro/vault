@@ -250,6 +250,7 @@
   },
   "active": "421689602b4afc34",
   "lastOpenFiles": [
+    "agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary.md",
     "agent_tasks/2026/08/Week-32/2026-08-03-p2p-event-diff-labeling-viewer.md",
     "codex/AGENTS.md",
     "codex",
@@ -283,7 +284,6 @@
     "projects.md",
     "Excalidraw/head_options.excalidraw.md",
     "projects/generic-materialisation-parking-pudo-migration.md",
-    "agent_tasks/2026/07/Week-28/2026-07-12-parking-pudo-ci-rerun.md",
     "agents-change-log.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-parking-pudo-ci-main-merge.md.orig",
     "agent_tasks/2026/07/Week-30/2026-07-21-deployment-wrapper-default-gear-rebase.md.orig",
