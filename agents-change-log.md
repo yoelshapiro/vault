@@ -3883,3 +3883,14 @@
 - Result: 3,026 unique valid runs for 2026-07-27 through 2026-08-02, written to ABFSS Delta and independently read back.
 - Optimizations: exact-timestamp metadata lookup, static date pruning, native SQL geofencing; route stage reduced from >207s incomplete to 48.0s and gear from 145.5s to 39.1s.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary|2026-08-05 P2P Event Backfill Canary]]
+
+## 2026-08-05 - P2P Event Backfill Canary
+
+- Topic: Convert P2P notebook event detection into a standalone SQL-first materialisation and run a one-week canary.
+- Labels: parking, p2p, materialisation, databricks-sql, delta, performance.
+- Branch: `yoel/p2p_event_backfill`.
+- Change type: New materialisation workflow, tests, performance validation.
+- Areas: `wayve/ai/parking/materialisation`.
+- Result: 3,026 unique valid runs for 2026-07-27 through 2026-08-02, written to ABFSS Delta and independently read back.
+- Optimizations: exact-timestamp metadata lookup, static date pruning, native SQL geofencing; route stage reduced from >207s incomplete to 48.0s and gear from 145.5s to 39.1s.
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary|2026-08-05 P2P Event Backfill Canary]]
