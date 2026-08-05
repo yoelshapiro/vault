@@ -351,6 +351,39 @@ discovered 17 global skills, eight commands, and 14 MCP servers. The laptop can
 apply the same setup after updating `~/git/assets` and `~/git/ParkingSkills`
 with `~/git/assets/cursor/setup.sh`.
 
+## Odometry-corrected P2P materialisation follow-up
+
+- PR: [wayveai/WayveCode#129778](https://github.com/wayveai/WayveCode/pull/129778)
+- `select_platform_mache` is a Gen2 vehicle-model filter, not a separate
+  top-level platform. The original two canary runs are both Gen2 Mache runs, so
+  changing only `platforms=["gen2"]` does not improve their coverage.
+- The original GBR street run had a null `p2p_nav_start`. Its 2,082
+  street-environment frames were therefore removed by
+  `select_timestamp_within_p2p_final_30k_window`, and the missing street
+  artifact was expected. It validated neither street bucket output nor the
+  relaxed street behavior.
+- Select functional canary runs from the complete filter prerequisites:
+  platform and vehicle model, environment, country, non-null event bounds, the
+  strict 2–120 second P2P window, source frames inside that window, and any
+  family-specific condition such as indicator-on.
+- The durable two-run functional recipe uses `platforms=["gen2"]` with:
+  - GBR street/driveway:
+    `fme20032/2026-05-25--07-49-40--gen2-av-0e5089a4-aad2-4c0e-8283-83618819e543`
+    (Gen2 Mache Alpha3, 50.35-second window, 1,006 source frames);
+  - USA outdoor carpark:
+    `fme10012/2025-05-19--20-13-40--gen2-av-8f17b961-94ff-4b0e-a9e2-e10393404523`
+    (Gen2 Mache, 104.25-second window, 2,084 source frames, including 1,494
+    indicator-on frames).
+- Keep the direct Delta query as a data-contract preflight only. Require
+  non-empty street, outdoor, and outdoor+indicator-on artifacts from the
+  functional canary. The full `sample` materialisation is the final validation
+  across the configured countries, runs, and platforms.
+- Canary `agm22b248tb6cx9jp68r` succeeded in 1h19m10s (Spark 11m22s, Ray
+  1h07m47s). Right-sized canary `atwgn2j9vzndhv4dtwvp` started at
+  2026-08-05 23:09:07 UTC and remained running when this note was updated.
+  Full execution `atljv9wrlr7ghrn6mb4l` started at
+  2026-08-05 22:36:50 UTC and also remained running.
+
 ## Standalone Event Backfill PR
 
 - Branch: `yoel/p2p_event_backfill`
