@@ -403,6 +403,9 @@ with `~/git/assets/cursor/setup.sh`.
   materialisation defect.
 - Next step: one fresh full `sample` run from commit `5824c0f56904` with
   `--compute_distributions false`, same comparison path, and a new job name.
+- Submitted [execution `agc9nggsrp7vqvgnx2hk`](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/agc9nggsrp7vqvgnx2hk)
+  at 2026-08-06 07:52 UTC as job `yoel-p2p-odo-full-20260806-0748` on image
+  `sampling@sha256:6f71f3e92394e4fd3da1f5a3f3e0483c92fe94ce122ba257b4f87db387a801f9`.
 
 ## Standalone Event Backfill PR
 
