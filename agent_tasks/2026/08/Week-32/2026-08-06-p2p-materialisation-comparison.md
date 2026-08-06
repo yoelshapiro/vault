@@ -170,12 +170,12 @@ Also absent from **new** `summary.yaml`: all six JPN per-country buckets above p
 
 | # | Path |
 |---|---|
-| 1 | `abfss://datasets@…/bc/p2p/dev/p2p__2026-06-18-14-55/summary.yaml` |
-| 2 | `abfss://datasets@…/bc/p2p/dev/p2p__2026-06-18-14-55/dataset/dataset_split=train/summary.yaml` |
-| 3 | `abfss://datasets@…/bc/p2p/dev/p2p__2026-06-18-14-55/dataset/dataset_split=validation/summary.yaml` |
-| 4 | `abfss://datasets@…/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/summary.yaml` |
-| 5 | `abfss://datasets@…/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/buckets/dataset_split=train/summary.yaml` |
-| 6 | `abfss://datasets@…/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/buckets/dataset_split=validation/summary.yaml` |
+| 1 | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/bc/p2p/dev/p2p__2026-06-18-14-55/summary.yaml` |
+| 2 | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/bc/p2p/dev/p2p__2026-06-18-14-55/dataset/dataset_split=train/summary.yaml` |
+| 3 | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/bc/p2p/dev/p2p__2026-06-18-14-55/dataset/dataset_split=validation/summary.yaml` |
+| 4 | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/summary.yaml` |
+| 5 | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/buckets/dataset_split=train/summary.yaml` |
+| 6 | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/buckets/dataset_split=validation/summary.yaml` |
 
 Paths confirmed **not present** (attempted): old `buckets/dataset_split=*/summary.yaml`; new `dataset/dataset_split=*/summary.yaml`.
 
