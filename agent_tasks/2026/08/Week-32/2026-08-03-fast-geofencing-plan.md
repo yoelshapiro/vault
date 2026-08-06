@@ -565,3 +565,20 @@ their JSON asset.
 > parity/country-assignment coverage, and documenting which subsystem owns each
 > geofence. I can prepare a small follow-up PR once we agree on the intended
 > scope. Thanks!
+
+### Final non-blocking review follow-up (2026-08-06)
+
+Alex Anastasiou approved the PR and left three non-blocking comments. Commit
+`3d71fb344f77` added the suggested pandas empty-polygon short circuit, preserving
+the input index and avoiding coordinate extraction and NumPy polygon evaluation,
+plus a regression proving the evaluator is not called. It also renamed the
+inline row-dispatch test to accurately describe its behavior. The private
+schema-aware corpus-column resolver remains deliberately scoped to dataset
+materialisation; consolidation into the shared accessor remains follow-up work
+because it would expand production API and ownership scope.
+
+All 71 tests in the common transform target passed with coverage, along with
+Ruff, Flake8, `ty`, and `git diff --check`. The commit was pushed to PR #129077,
+all three new conversations received `[Agent generated]:` replies, and every PR
+review conversation is resolved. The post-push CI run was pending at the time
+of this update, with no failing checks reported.
