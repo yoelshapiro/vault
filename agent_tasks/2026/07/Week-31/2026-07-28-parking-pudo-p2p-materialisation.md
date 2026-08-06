@@ -378,11 +378,23 @@ with `~/git/assets/cursor/setup.sh`.
   non-empty street, outdoor, and outdoor+indicator-on artifacts from the
   functional canary. The full `sample` materialisation is the final validation
   across the configured countries, runs, and platforms.
-- Canary `agm22b248tb6cx9jp68r` succeeded in 1h19m10s (Spark 11m22s, Ray
-  1h07m47s). Right-sized canary `atwgn2j9vzndhv4dtwvp` started at
-  2026-08-05 23:09:07 UTC and remained running when this note was updated.
-  Full execution `atljv9wrlr7ghrn6mb4l` started at
-  2026-08-05 22:36:50 UTC and also remained running.
+- Commit `c43305dd6fb8` added the isolated right-sized canary configuration.
+  It ran image
+  `sampling:yoelshapir-tmp-build-b7776154bead-yoel-p2p_odo_materialize-59cd7`
+  at digest
+  `sha256:40cf7ae1108dc2ed6a4abce313a1134bbafc92f723032a788b9f04a581e04c5b`.
+- Right-sized execution `atwgn2j9vzndhv4dtwvp` succeeded in 41m49s
+  (Spark 17m52s, Ray 23m56s). Baseline execution
+  `agm22b248tb6cx9jp68r` succeeded in 79m10s (Spark 11m22s, Ray 1h07m47s).
+  Right-sizing was 47% faster overall and 65% faster in Ray, but missed the
+  20–30 minute total target.
+- Both timing executions used the original two-run pair. They establish the
+  resource and execution-path improvement, not street coverage: the original
+  street run's null `p2p_nav_start` prevents street bucket output. Use the
+  replacement GBR street and USA outdoor/indicator pair above for future
+  functional canaries.
+- Full execution `atljv9wrlr7ghrn6mb4l` started at
+  2026-08-05 22:36:50 UTC and remained running when this note was updated.
 
 ## Standalone Event Backfill PR
 
