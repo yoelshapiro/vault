@@ -170,6 +170,74 @@
   progress together; neither driver exit nor stale Flyte reason text is
   sufficient on its own.
 
+## Remote Canary / Smoke Validation Know-How
+
+This operational guidance lives in the vault rather than the reusable
+materialisation skill.
+
+### When it is useful
+
+- Use a production-shaped remote canary after local unit/static checks when a
+  change affects external table reads, decorated joins, workflow
+  serialization, partitioning, or Ray execution.
+- A local synthetic join test remains the primary regression test. The canary
+  checks the remote data and orchestration boundaries; it does not replace
+  unit coverage.
+- Skip the canary only as an explicit risk decision. Do not silently broaden a
+  missing representative run into a full date-range job.
+
+### Selecting and revalidating a run
+
+- Treat saved run IDs as candidates, not fixtures. Before reuse, prove that
+  the run is still inside the registered dataset's date/platform scope and
+  still exercises the changed behavior.
+- For P2P false-positive filtering:
+  - Dataset: `parking_pudo/parking`
+  - Platform: `gen2`
+  - Candidate:
+    `fme10010/2026-06-07--22-04-42--gen2-av-c1c185e6-31f7-42dd-8ef1-0a02779e53d0`
+  - Historical evidence from 2026-07-27: 22,101 rows labelled `other` with
+    score `>= 0.9`. This count must be revalidated before another run.
+
+```sql
+SELECT
+  run_id,
+  run_date_iso,
+  COUNT(*) AS confident_other_frames
+FROM prod_data_pipeline.inferred__scenario.embeddings_head_p2p_phase
+WHERE _pipeline__vehicle_platform_id = 'gen2'
+  AND run_id = 'fme10010/2026-06-07--22-04-42--gen2-av-c1c185e6-31f7-42dd-8ef1-0a02779e53d0'
+  AND max_label_name = 'other'
+  AND max_value >= 0.9
+GROUP BY run_id, run_date_iso
+```
+
+### Submission
+
+1. Publish a fresh test image from the exact locally validated commit.
+2. Confirm the exact `DATASET_STORE` key and workflow CLI flags.
+3. Use a unique job name and output path.
+4. Submit only the filter/bucket stage for the representative run:
+
+```bash
+bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_stage \
+  --dataset_name parking_pudo/parking \
+  --job_name <unique-job-name> \
+  --run_ids_filter '["<run-id>"]' \
+  --platforms '["gen2"]'
+```
+
+### Evidence and stop rules
+
+- Wait for terminal status; submission alone is not success.
+- Record the exact image digest, execution URL, run ID, output path, and
+  terminal node states.
+- Inspect both Flyte control-plane state and Grafana/Loki application logs.
+- On failure, report the earliest causal application or infrastructure error.
+  Treat teardown messages such as `Loop is not running` as secondary when
+  they occur after the real failure.
+- Never reuse an output path that can short-circuit work.
+
 ## 2026-07-28 P2P False-Positive Filtering
 
 - Implemented on `yoel/generic_w_p2p_qa` at `ee659895b584`.
