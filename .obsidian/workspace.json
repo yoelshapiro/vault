@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison.md",
+                "file": "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison-run2.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "2026-08-06-p2p-materialisation-comparison"
+              "title": "2026-08-06-p2p-materialisation-comparison-run2"
             }
           },
           {
@@ -250,9 +250,9 @@
   },
   "active": "2f4de6b6d3cefd50",
   "lastOpenFiles": [
+    "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison.md",
     "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison-run2.md",
     "agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan.md",
-    "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison.md",
     "agent_tasks/2026/08/Week-32/2026-08-06-p2p-root-validation-ladder.md",
     "index.md",
     "agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary.md",
