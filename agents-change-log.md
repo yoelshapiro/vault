@@ -58,6 +58,10 @@
     event-window, source-frame, and family-specific filter prerequisites.
     Replaced the street candidate with one that has a valid P2P window and
     recorded a two-run street/outdoor/indicator recipe.
+  - Right-sized execution `atwgn2j9vzndhv4dtwvp` succeeded in 41m49s
+    (Spark 17m52s, Ray 23m56s), 47% faster overall and 65% faster in Ray than
+    baseline `agm22b248tb6cx9jp68r` at 79m10s. Both timing runs used the old
+    pair and establish resource performance, not street bucket coverage.
 - Task note: [[agent_tasks/2026/07/Week-31/2026-07-28-parking-pudo-p2p-materialisation|2026-07-28 Parking/PUDO P2P Materialisation]]
 
 ## 2026-07-27 - Portable Vault User Paths
