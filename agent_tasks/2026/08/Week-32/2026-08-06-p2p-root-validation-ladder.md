@@ -149,7 +149,18 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 | 4 SI config | **PASS** | `PARKING_P2P_DATA_ROOT_05_08_26` → valid `/dataset` root; all 12 `BucketCfg.path` targets exist |
 | 5 Dataloader smoke | **SKIPPED** | Waived (ACR auth unavailable) |
 | 6 PR gates | PENDING | After full parking materialisation |
-| Full parking mat | **LAUNCHED** | `parking_pudo/parking` with FP filter — see execution link below |
+| Full parking mat | **LAUNCHED** | `parking_pudo/parking` FP filter — [Flyte execution aw8kb7z22p8n8w2f4wfx](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/aw8kb7z22p8n8w2f4wfx) |
+
+### Full parking materialisation launch
+
+| Field | Value |
+|---|---|
+| Dataset | `parking_pudo/parking` |
+| Job name | `yoel-p2p-fp-park-full-20260806-1055` |
+| Branch | `yoel/materialization_fp_filter_and_p2p_update` |
+| Image | `sampling@sha256:003a93e76f61bccc6956d8296df31a28b6ecc53710d1b4aca0a45a8c39f64d3b` |
+| Flyte URL | https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/aw8kb7z22p8n8w2f4wfx |
+| Submitted | 2026-08-06 ~10:55 UTC |
 
 ### SI bucket train sample counts (new run)
 
