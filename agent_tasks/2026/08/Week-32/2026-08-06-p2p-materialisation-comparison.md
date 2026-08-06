@@ -106,45 +106,45 @@ Bucket mapping: `_uk`→GBR, `_usa`→USA, `_deu`→DEU, `_jpn`→JPN, `_global`
 
 ### Old-only buckets (JPN — absent from new `summary.yaml`)
 
-| Bucket | Old train | Old val | Old total |
-|---|---:|---:|---:|
-| p2p_bc_indoor_jpn | 27,661 | 6,096 | 33,757 |
-| p2p_bc_outdoor_indicator_on_jpn | 24,388 | 3,281 | 27,669 |
-| p2p_bc_outdoor_jpn | 116,565 | 14,779 | 131,344 |
-| p2p_bc_park_in_jpn | 242,493 | 24,595 | 267,088 |
-| p2p_bc_park_out_jpn | 278,167 | 26,823 | 304,990 |
-| **JPN subtotal** | **689,274** | **75,574** | **764,848** |
+| Bucket                          |   Old train |    Old val |   Old total |
+| ------------------------------- | ----------: | ---------: | ----------: |
+| p2p_bc_indoor_jpn               |      27,661 |      6,096 |      33,757 |
+| p2p_bc_outdoor_indicator_on_jpn |      24,388 |      3,281 |      27,669 |
+| p2p_bc_outdoor_jpn              |     116,565 |     14,779 |     131,344 |
+| p2p_bc_park_in_jpn              |     242,493 |     24,595 |     267,088 |
+| p2p_bc_park_out_jpn             |     278,167 |     26,823 |     304,990 |
+| **JPN subtotal**                | **689,274** | **75,574** | **764,848** |
 
 ### New-only buckets (street + aggregate partitions — absent from old `summary.yaml`)
 
-| Bucket | New train | New val | New total |
-|---|---:|---:|---:|
-| p2p_bc_indoor *(aggregate)* | 307,136 | 83,635 | 390,771 |
-| p2p_bc_park_in *(aggregate)* | 3,722,335 | 851,508 | 4,573,843 |
-| p2p_bc_park_out *(aggregate)* | 2,869,663 | 539,353 | 3,409,016 |
-| p2p_bc_street *(aggregate)* | 2,217,477 | 678,951 | 2,896,428 |
-| p2p_bc_street_deu | 257,898 | 25,190 | 283,088 |
-| p2p_bc_street_global | 118,910 | 11,000 | 129,910 |
-| p2p_bc_street_uk | 1,182,086 | 594,764 | 1,776,850 |
-| p2p_bc_street_usa | 777,493 | 58,997 | 836,490 |
-| **New-only subtotal** | **11,452,998** | **2,843,398** | **14,296,396** |
+| Bucket                        |      New train |       New val |      New total |
+| ----------------------------- | -------------: | ------------: | -------------: |
+| p2p_bc_indoor *(aggregate)*   |        307,136 |        83,635 |        390,771 |
+| p2p_bc_park_in *(aggregate)*  |      3,722,335 |       851,508 |      4,573,843 |
+| p2p_bc_park_out *(aggregate)* |      2,869,663 |       539,353 |      3,409,016 |
+| p2p_bc_street *(aggregate)*   |      2,217,477 |       678,951 |      2,896,428 |
+| p2p_bc_street_deu             |        257,898 |        25,190 |        283,088 |
+| p2p_bc_street_global          |        118,910 |        11,000 |        129,910 |
+| p2p_bc_street_uk              |      1,182,086 |       594,764 |      1,776,850 |
+| p2p_bc_street_usa             |        777,493 |        58,997 |        836,490 |
+| **New-only subtotal**         | **11,452,998** | **2,843,398** | **14,296,396** |
 
 ### Buckets with no entry in old `summary.yaml`
 
 These bucket definitions exist in `dataset.py` but had **zero samples** (no row in `bucket_stats` / `splits`) in the old materialisation:
 
-| Bucket | Notes |
-|---|---|
-| `p2p_bc_outdoor` | Aggregate outdoor — logically empty (sequential country filters) |
-| `p2p_bc_indoor` | Aggregate indoor — not materialised in old run |
-| `p2p_bc_street` | Street environment — **new run only** |
-| `p2p_bc_street_uk` | Street environment — **new run only** |
-| `p2p_bc_street_usa` | Street environment — **new run only** |
-| `p2p_bc_street_deu` | Street environment — **new run only** |
-| `p2p_bc_street_jpn` | Street environment — empty in both runs |
-| `p2p_bc_street_global` | Street environment — **new run only** |
-| `p2p_bc_park_in` | Aggregate park-in — not materialised in old run |
-| `p2p_bc_park_out` | Aggregate park-out — not materialised in old run |
+| Bucket                 | Notes                                                            |
+| ---------------------- | ---------------------------------------------------------------- |
+| `p2p_bc_outdoor`       | Aggregate outdoor — logically empty (sequential country filters) |
+| `p2p_bc_indoor`        | Aggregate indoor — not materialised in old run                   |
+| `p2p_bc_street`        | Street environment — **new run only**                            |
+| `p2p_bc_street_uk`     | Street environment — **new run only**                            |
+| `p2p_bc_street_usa`    | Street environment — **new run only**                            |
+| `p2p_bc_street_deu`    | Street environment — **new run only**                            |
+| `p2p_bc_street_jpn`    | Street environment — empty in both runs                          |
+| `p2p_bc_street_global` | Street environment — **new run only**                            |
+| `p2p_bc_park_in`       | Aggregate park-in — not materialised in old run                  |
+| `p2p_bc_park_out`      | Aggregate park-out — not materialised in old run                 |
 
 Also absent from **new** `summary.yaml`: all six JPN per-country buckets above plus `p2p_bc_outdoor`, `p2p_bc_outdoor_indicator_on_jpn`, `p2p_bc_street_jpn` (upstream source table has 0 JPN rows).
 
