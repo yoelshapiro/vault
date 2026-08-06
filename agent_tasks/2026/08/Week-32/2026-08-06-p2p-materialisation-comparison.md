@@ -57,9 +57,14 @@ Bucket mapping: `_uk`→GBR, `_usa`→USA, `_deu`→DEU, `_jpn`→JPN, `_global`
 
 ---
 
-## Per-bucket comparison
+## Per-bucket comparison (from summary.yaml)
 
-> **Data source:** exclusively `summary.yaml` files from the materialisation run roots (no Databricks, no parquet reads, no dataset scanning). Metrics are **sample-row counts** (`num_samples`) as recorded in YAML — **not** distinct `run_id` counts. Do not sum sample rows across buckets for run totals (runs can appear in multiple buckets).
+**Methodology:** All figures in this section are derived **solely** from `summary.yaml` files at the two materialisation run roots below — no Databricks queries, no parquet scanning, no other APIs.
+
+- **Old run root:** `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/bc/p2p/dev/p2p__2026-06-18-14-55/`
+- **New run root:** `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/p2p/dev/yoel-p2p-odo-full-20260805-2235__2026-08-05-23-54/`
+
+Metrics are **sample-row counts** (`num_samples`) as recorded in YAML — **not** distinct `run_id` counts. Do not sum sample rows across buckets for run totals (runs can appear in multiple buckets).
 
 ### `summary.yaml` layout discovered
 
@@ -69,7 +74,17 @@ Bucket mapping: `_uk`→GBR, `_usa`→USA, `_deu`→DEU, `_jpn`→JPN, `_global`
 | `{root}/buckets/dataset_split={split}/summary.yaml` | ❌ not found | ✅ `bucket_stats` list | Cross-check only (matches new root `splits`) |
 | `{root}/dataset/dataset_split={split}/summary.yaml` | ✅ `bucket_stats` list | ❌ not found | Old: per-bucket counts |
 
-**New run has no `dataset/` split summaries** (balance stage wrote measured counts to root `summary.yaml` only). **Old run has no `buckets/` split summaries** (Ray-stage artifacts not retained or not written for that run).
+**New run has no `dataset/` split summaries** (balance stage wrote measured counts to root `summary.yaml` only). **Old run has no `buckets/` split summaries** (Ray-stage artifacts not retained or not written for that run). Cross-check: new `buckets/dataset_split=*/summary.yaml` `bucket_stats` match root `splits.*.buckets` exactly (0 mismatches on train and validation).
+
+### Run provenance (from root `summary.yaml`)
+
+| Field | Old | New |
+|---|---|---|
+| `start_date` | 2019-10-28 | 2019-10-28 |
+| `end_date` | 2026-02-14 | 2026-06-07 |
+| `base_table` | *(not in root)* | `wayve_corpus.all_data` |
+| `binary.version` | 3.0.58 | 3.0.68 |
+| `created_at` *(split summaries)* | 2026-06-18T15:21:17 | 2026-08-06T00:38:00 |
 
 ### Split totals (sample rows from `summary.yaml`)
 
@@ -81,28 +96,31 @@ Bucket mapping: `_uk`→GBR, `_usa`→USA, `_deu`→DEU, `_jpn`→JPN, `_global`
 
 ### Comparable buckets (present in both runs)
 
+Sorted by Δ total (new − old), descending.
+
 | Bucket                             | Old train | Old val | Old total | New train | New val | New total |  Δ total |
 | ---------------------------------- | --------: | ------: | --------: | --------: | ------: | --------: | -------: |
-| p2p_bc_indoor_deu                  |    40,123 |   8,948 |    49,071 |    49,363 |   5,576 |    54,939 |   +5,868 |
-| p2p_bc_indoor_global               |    50,421 |   2,673 |    53,094 |    44,984 |   4,338 |    49,322 |   −3,772 |
-| p2p_bc_indoor_uk                   |   161,356 |  72,679 |   234,035 |   129,200 |  63,250 |   192,450 |  −41,585 |
-| p2p_bc_indoor_usa                  |   105,087 |  15,501 |   120,588 |   128,573 |  14,809 |   143,382 |  +22,794 |
-| p2p_bc_outdoor_deu                 |   429,848 |  50,322 |   480,170 |   699,406 |  79,473 |   778,879 | +298,709 |
-| p2p_bc_outdoor_global              |   327,490 |  21,169 |   348,659 |   274,111 |  22,746 |   296,857 |  −51,802 |
-| p2p_bc_outdoor_indicator_on_deu    |    59,272 |   5,619 |    64,891 |   110,670 |  11,542 |   122,212 |  +57,321 |
-| p2p_bc_outdoor_indicator_on_global |    47,657 |   2,404 |    50,061 |    51,515 |   3,068 |    54,583 |   +4,522 |
-| p2p_bc_outdoor_indicator_on_uk     |   136,635 |  27,211 |   163,846 |   203,257 |  35,427 |   238,684 |  +74,838 |
-| p2p_bc_outdoor_indicator_on_usa    |   144,798 |  13,102 |   157,900 |   217,654 |  23,405 |   241,059 |  +83,159 |
-| p2p_bc_outdoor_uk                  |   561,625 | 142,168 |   703,793 |   836,013 | 204,627 | 1,040,640 | +336,847 |
-| p2p_bc_outdoor_usa                 |   740,591 |  53,300 |   793,891 | 1,149,926 | 108,601 | 1,258,527 | +464,636 |
-| p2p_bc_park_in_deu                 |   497,071 |  58,169 |   555,240 |   810,628 |  84,126 |   894,754 | +339,514 |
-| p2p_bc_park_in_global              |   269,196 |  23,206 |   292,402 |   328,692 |  29,796 |   358,488 |  +66,086 |
 | p2p_bc_park_in_uk                  |   989,445 | 432,432 | 1,421,877 | 1,500,280 | 638,521 | 2,138,801 | +716,924 |
 | p2p_bc_park_in_usa                 |   786,304 |  58,271 |   844,575 | 1,411,427 | 128,861 | 1,540,288 | +695,713 |
-| p2p_bc_park_out_deu                |   707,742 |  92,393 |   800,135 |   892,705 | 101,317 |   994,022 | +193,887 |
-| p2p_bc_park_out_global             |   293,695 |  21,792 |   315,487 |   267,970 |  23,933 |   291,903 |  −23,584 |
-| p2p_bc_park_out_uk                 |   812,232 | 359,259 | 1,171,491 |   959,902 | 351,863 | 1,311,765 | +140,274 |
+| p2p_bc_outdoor_usa                 |   740,591 |  53,300 |   793,891 | 1,149,926 | 108,601 | 1,258,527 | +464,636 |
+| p2p_bc_park_in_deu                 |   497,071 |  58,169 |   555,240 |   810,628 |  84,126 |   894,754 | +339,514 |
+| p2p_bc_outdoor_uk                  |   561,625 | 142,168 |   703,793 |   836,013 | 204,627 | 1,040,640 | +336,847 |
 | p2p_bc_park_out_usa                |   725,384 |  62,181 |   787,565 | 1,017,056 |  86,173 | 1,103,229 | +315,664 |
+| p2p_bc_outdoor_deu                 |   429,848 |  50,322 |   480,170 |   699,406 |  79,473 |   778,879 | +298,709 |
+| p2p_bc_park_out_deu                |   707,742 |  92,393 |   800,135 |   892,705 | 101,317 |   994,022 | +193,887 |
+| p2p_bc_park_out_uk                 |   812,232 | 359,259 | 1,171,491 |   959,902 | 351,863 | 1,311,765 | +140,274 |
+| p2p_bc_outdoor_indicator_on_usa    |   144,798 |  13,102 |   157,900 |   217,654 |  23,405 |   241,059 |  +83,159 |
+| p2p_bc_outdoor_indicator_on_uk     |   136,635 |  27,211 |   163,846 |   203,257 |  35,427 |   238,684 |  +74,838 |
+| p2p_bc_park_in_global              |   269,196 |  23,206 |   292,402 |   328,692 |  29,796 |   358,488 |  +66,086 |
+| p2p_bc_outdoor_indicator_on_deu    |    59,272 |   5,619 |    64,891 |   110,670 |  11,542 |   122,212 |  +57,321 |
+| p2p_bc_outdoor_global              |   327,490 |  21,169 |   348,659 |   274,111 |  22,746 |   296,857 |  −51,802 |
+| p2p_bc_indoor_uk                   |   161,356 |  72,679 |   234,035 |   129,200 |  63,250 |   192,450 |  −41,585 |
+| p2p_bc_park_out_global             |   293,695 |  21,792 |   315,487 |   267,970 |  23,933 |   291,903 |  −23,584 |
+| p2p_bc_indoor_usa                  |   105,087 |  15,501 |   120,588 |   128,573 |  14,809 |   143,382 |  +22,794 |
+| p2p_bc_indoor_deu                  |    40,123 |   8,948 |    49,071 |    49,363 |   5,576 |    54,939 |   +5,868 |
+| p2p_bc_outdoor_indicator_on_global |    47,657 |   2,404 |    50,061 |    51,515 |   3,068 |    54,583 |   +4,522 |
+| p2p_bc_indoor_global               |    50,421 |   2,673 |    53,094 |    44,984 |   4,338 |    49,322 |   −3,772 |
+| **Comparable subtotal (20 buckets)** | **6,719,497** | **1,689,274** | **8,408,771** | **10,697,386** | **2,407,398** | **13,104,784** | **+4,696,013** |
 
 ### Old-only buckets (JPN — absent from new `summary.yaml`)
 
