@@ -393,8 +393,16 @@ with `~/git/assets/cursor/setup.sh`.
   street run's null `p2p_nav_start` prevents street bucket output. Use the
   replacement GBR street and USA outdoor/indicator pair above for future
   functional canaries.
-- Full execution `atljv9wrlr7ghrn6mb4l` started at
-  2026-08-05 22:36:50 UTC and remained running when this note was updated.
+- Full execution `atljv9wrlr7ghrn6mb4l` (`yoel-p2p-odo-full-20260805-2235`)
+  completed core materialisation and comparison, then failed only on optional
+  distribution preflight because `parking_pudo/p2p` has no
+  `datamodule_config.yaml`. Do not promote that output: it predates outdoor
+  country-filter fix `5824c0f56904`.
+- Zero JPN rows/buckets in `prod_user.p2p.events_w_odometry_corrections_22k`
+  is intentional upstream (Japan excluded before table generation), not a
+  materialisation defect.
+- Next step: one fresh full `sample` run from commit `5824c0f56904` with
+  `--compute_distributions false`, same comparison path, and a new job name.
 
 ## Standalone Event Backfill PR
 
