@@ -1,5 +1,14 @@
 # Agents Change Log
 
+## 2026-08-06 - P2P Root Validation Ladder
+
+- Topic: Validate odometry-corrected P2P materialisation root and gate full
+  parking FP-filter materialisation.
+- Labels: parking, p2p, sampling, materialisation, validation-ladder.
+- Branch: `yoel/materialization_fp_filter_and_p2p_update`.
+- PR: [#129730](https://github.com/wayveai/WayveCode/pull/129730).
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-06-p2p-root-validation-ladder|2026-08-06 P2P Root Validation Ladder]]
+
 ## 2026-07-28 - Materialisation Skill Rename
 
 - Topic: Rename and strengthen the ParkingSkills materialisation development,
