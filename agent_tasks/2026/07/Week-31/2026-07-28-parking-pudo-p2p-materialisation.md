@@ -354,58 +354,53 @@ with `~/git/assets/cursor/setup.sh`.
 ## Odometry-corrected P2P materialisation follow-up
 
 - PR: [wayveai/WayveCode#129778](https://github.com/wayveai/WayveCode/pull/129778)
-- `select_platform_mache` is a Gen2 vehicle-model filter, not a separate
-  top-level platform. The original two canary runs are both Gen2 Mache runs, so
-  changing only `platforms=["gen2"]` does not improve their coverage.
-- The original GBR street run had a null `p2p_nav_start`. Its 2,082
-  street-environment frames were therefore removed by
-  `select_timestamp_within_p2p_final_30k_window`, and the missing street
-  artifact was expected. It validated neither street bucket output nor the
-  relaxed street behavior.
-- Select functional canary runs from the complete filter prerequisites:
-  platform and vehicle model, environment, country, non-null event bounds, the
+
+### Validation outcome
+
+- Full run 2,
+  [execution `atn5dj6fxxgzvqkw2bsr`](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/atn5dj6fxxgzvqkw2bsr),
+  succeeded. Its `summary.yaml` comparison shows more data in the buckets
+  overall than the prior materialisation.
+- The preceding event-table investigation showed improved event-time accuracy
+  from the odometry corrections.
+- Apparent differences around the park-in boundary are expected: the new
+  materialisation deliberately removes the redundant eight-second pre-park-in
+  margin.
+- Zero JPN rows/buckets in
+  `prod_user.p2p.events_w_odometry_corrections_22k` is intentional upstream
+  (Japan was excluded before table generation), not a materialisation defect.
+- Detailed run-2 counts and paths are in
+  [[../../08/Week-32/2026-08-06-p2p-materialisation-comparison-run2|P2P materialisation comparison — run 2]].
+
+### Canary and smoke-test lessons
+
+- Do not add a dedicated fixed one-worker canary configuration to the sampling
+  production code. The filter-and-bucket parent task reserves at least 16 GiB
+  and synchronously submits a nested batch task requiring another reservation.
+  With one worker and no task capacity on the head, the child can be
+  unschedulable while the parent holds the worker, causing a deadlock.
+- A short execution reaching a terminal state is not sufficient evidence of
+  functional coverage. The original GBR street candidate had a null
+  `p2p_nav_start`, so the final-30k-window filter removed its street frames; it
+  did not validate street output or the relaxed boundary behavior.
+- Keep one-off validation knowledge here rather than adding reusable workflow,
+  resource, or worker-memory override code. Use the existing production
+  materialisation path for final validation.
+- A direct Delta query is only a data-contract preflight. Before a targeted
+  check, verify vehicle model, environment, country, non-null event bounds, the
   strict 2–120 second P2P window, source frames inside that window, and any
   family-specific condition such as indicator-on.
-- The durable two-run functional recipe uses `platforms=["gen2"]` with:
+- Useful coverage candidates discovered during the investigation:
   - GBR street/driveway:
     `fme20032/2026-05-25--07-49-40--gen2-av-0e5089a4-aad2-4c0e-8283-83618819e543`
-    (Gen2 Mache Alpha3, 50.35-second window, 1,006 source frames);
+    (Gen2 Mache Alpha3, 50.35-second window, 1,006 source frames).
   - USA outdoor carpark:
     `fme10012/2025-05-19--20-13-40--gen2-av-8f17b961-94ff-4b0e-a9e2-e10393404523`
     (Gen2 Mache, 104.25-second window, 2,084 source frames, including 1,494
     indicator-on frames).
-- Keep the direct Delta query as a data-contract preflight only. Require
-  non-empty street, outdoor, and outdoor+indicator-on artifacts from the
-  functional canary. The full `sample` materialisation is the final validation
-  across the configured countries, runs, and platforms.
-- Commit `c43305dd6fb8` added the isolated right-sized canary configuration.
-  It ran image
-  `sampling:yoelshapir-tmp-build-b7776154bead-yoel-p2p_odo_materialize-59cd7`
-  at digest
-  `sha256:40cf7ae1108dc2ed6a4abce313a1134bbafc92f723032a788b9f04a581e04c5b`.
-- Right-sized execution `atwgn2j9vzndhv4dtwvp` succeeded in 41m49s
-  (Spark 17m52s, Ray 23m56s). Baseline execution
-  `agm22b248tb6cx9jp68r` succeeded in 79m10s (Spark 11m22s, Ray 1h07m47s).
-  Right-sizing was 47% faster overall and 65% faster in Ray, but missed the
-  20–30 minute total target.
-- Both timing executions used the original two-run pair. They establish the
-  resource and execution-path improvement, not street coverage: the original
-  street run's null `p2p_nav_start` prevents street bucket output. Use the
-  replacement GBR street and USA outdoor/indicator pair above for future
-  functional canaries.
-- Full execution `atljv9wrlr7ghrn6mb4l` (`yoel-p2p-odo-full-20260805-2235`)
-  completed core materialisation and comparison, then failed only on optional
-  distribution preflight because `parking_pudo/p2p` has no
-  `datamodule_config.yaml`. Do not promote that output: it predates outdoor
-  country-filter fix `5824c0f56904`.
-- Zero JPN rows/buckets in `prod_user.p2p.events_w_odometry_corrections_22k`
-  is intentional upstream (Japan excluded before table generation), not a
-  materialisation defect.
-- Next step: one fresh full `sample` run from commit `5824c0f56904` with
-  `--compute_distributions false`, same comparison path, and a new job name.
-- Submitted [execution `agc9nggsrp7vqvgnx2hk`](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/agc9nggsrp7vqvgnx2hk)
-  at 2026-08-06 07:52 UTC as job `yoel-p2p-odo-full-20260806-0748` on image
-  `sampling@sha256:6f71f3e92394e4fd3da1f5a3f3e0483c92fe94ce122ba257b4f87db387a801f9`.
+- The full `sample` materialisation remains the final evidence across configured
+  countries, runs, and platforms; require non-empty targeted artifacts before
+  interpreting any narrower diagnostic run.
 
 ## Standalone Event Backfill PR
 
