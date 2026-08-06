@@ -597,3 +597,16 @@ now passes (2 tests), together with pipelines Ruff, Flake8, `ty`, and
 `git diff --check`. The fix was pushed to PR #129077 and triggered presubmit
 build `559073`; the replacement CI run was pending with no failures at the time
 of this update.
+
+### Developer registry documentation (2026-08-06)
+
+Commit `a487843058ed` updates `wayve/core/data/geofences/README.md` with the
+country-aware registry contract and maintenance workflow. It distinguishes
+GeoJSON/Map Override assets from dataset-filter geofences, explains the flat
+compatibility registry, the exactly-once country assignment, and the derived
+country registry, documents scalar and row-level fallback behavior, and gives
+the steps and Bazel target for adding a geofence safely. A comment beside
+`_GEOFENCE_NAMES_BY_COUNTRY` points developers and agents to the guide.
+
+Pipelines tests, Ruff, Flake8, `ty`, and `git diff --check` passed, and the
+documentation commit was pushed to PR #129077.
