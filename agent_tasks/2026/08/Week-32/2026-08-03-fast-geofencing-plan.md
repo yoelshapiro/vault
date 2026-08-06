@@ -582,3 +582,18 @@ Ruff, Flake8, `ty`, and `git diff --check`. The commit was pushed to PR #129077,
 all three new conversations received `[Agent generated]:` replies, and every PR
 review conversation is resolved. The post-push CI run was pending at the time
 of this update, with no failing checks reported.
+
+### Bay Area registry parity CI fix (2026-08-06)
+
+After merging current `main`, CPU presubmit build `558904` failed
+`//wayve/services/data/pipelines:py_test`. Main had added
+`south_bay_santa_cruz_east_bay` and `peninsula_san_francisco` to the flat
+`custom_polygons` registry, and the PR's parity regression correctly detected
+that neither new California geofence had been assigned in
+`custom_polygons_by_country`.
+
+Commit `f41f0eef5a23` assigns both geofences to `USA`. The exact failed target
+now passes (2 tests), together with pipelines Ruff, Flake8, `ty`, and
+`git diff --check`. The fix was pushed to PR #129077 and triggered presubmit
+build `559073`; the replacement CI run was pending with no failures at the time
+of this update.
