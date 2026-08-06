@@ -130,7 +130,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 339.44921875
+    "width": 401.4734535217285
   },
   "right": {
     "id": "2fc1190a7c137808",
@@ -232,7 +232,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 477.6171875
+    "width": 353.4295654296875
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -248,11 +248,12 @@
       "terminal:Open terminal": false
     }
   },
-  "active": "421689602b4afc34",
+  "active": "2f4de6b6d3cefd50",
   "lastOpenFiles": [
+    "agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan.md",
+    "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison.md",
     "agent_tasks/2026/08/Week-32/2026-08-06-p2p-root-validation-ladder.md",
     "index.md",
-    "agent_tasks/2026/08/Week-32/2026-08-06-p2p-materialisation-comparison.md",
     "agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary.md",
     "agent_tasks/2026/08/Week-32/2026-08-03-p2p-event-diff-labeling-viewer.md",
     "codex/AGENTS.md",
@@ -260,7 +261,6 @@
     "todo-list.md",
     "agents-change-log.md",
     "Merge to main plan.md",
-    "agent_tasks/2026/08/Week-32/2026-08-03-fast-geofencing-plan.md",
     "agent_tasks/2026/08/Week-32",
     "agent_tasks/2026/08",
     "Untitled.md",
