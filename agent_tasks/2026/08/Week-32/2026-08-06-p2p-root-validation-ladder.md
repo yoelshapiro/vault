@@ -142,11 +142,37 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 
 | Stage | Result | Notes |
 |---|---|---|
-| 0 Preconditions | PASS | `buckets/`, `dataset/`, `comparison/`, `masks/` present; root `summary.yaml` exists |
-| 1 Layout/buckets | PASS | All 12 SI buckets under `dataset/dataset_split=train/` have parquet files |
-| 2 Summary compare | IN PROGRESS | Train buckets summary compared vs baseline; outdoor increases expected |
-| 3 Parquet spot-check | IN PROGRESS | |
-| 4 SI config | IN PROGRESS | |
-| 5 Dataloader smoke | SKIPPED | Waived pending ACR auth |
-| 6 PR gates | PENDING | |
-| Full parking mat | PENDING | Gated on ladder completion |
+| 0 Preconditions | **PASS** | `buckets/`, `dataset/`, `comparison/`, `masks/` present; root `summary.yaml` exists |
+| 1 Layout/buckets | **PASS** | All 12 SI buckets under `dataset/dataset_split=train/` have ≥1 parquet file |
+| 2 Summary compare | **PASS** | Compare via `buckets/dataset_split=train/summary.yaml` vs baseline; all SI buckets non-zero; outdoor/street increases expected |
+| 3 Parquet spot-check | **PASS** | `p2p_bc_outdoor_uk` readable: 836,013 rows; `run_id` present |
+| 4 SI config | **PASS** | `PARKING_P2P_DATA_ROOT_05_08_26` → valid `/dataset` root; all 12 `BucketCfg.path` targets exist |
+| 5 Dataloader smoke | **SKIPPED** | Waived (ACR auth unavailable) |
+| 6 PR gates | PENDING | After full parking materialisation |
+| Full parking mat | **LAUNCHED** | `parking_pudo/parking` with FP filter — see execution link below |
+
+### SI bucket train sample counts (new run)
+
+| Bucket | Samples |
+|---|---:|
+| `p2p_bc_outdoor_uk` | 836,013 |
+| `p2p_bc_outdoor_usa` | 1,149,926 |
+| `p2p_bc_outdoor_deu` | 699,406 |
+| `p2p_bc_indoor_uk` | 129,200 |
+| `p2p_bc_indoor_usa` | 128,573 |
+| `p2p_bc_indoor_deu` | 49,363 |
+| `p2p_bc_park_in_uk` | 1,500,280 |
+| `p2p_bc_park_in_usa` | 1,411,427 |
+| `p2p_bc_park_in_deu` | 810,628 |
+| `p2p_bc_park_out_uk` | 959,902 |
+| `p2p_bc_park_out_usa` | 1,017,056 |
+| `p2p_bc_park_out_deu` | 892,705 |
+
+### Summary compare notes
+
+- Use **`buckets/dataset_split=<split>/summary.yaml`** for the new run (not
+  `dataset/dataset_split=.../summary.yaml`).
+- Baseline control path remains
+  `bc/p2p/dev/p2p__2026-06-18-14-55/dataset/dataset_split=<split>/summary.yaml`.
+- Schema differences (filter names, corpus exclusions) are expected; focus on
+  SI bucket non-zero counts and directional outdoor/street increases.
