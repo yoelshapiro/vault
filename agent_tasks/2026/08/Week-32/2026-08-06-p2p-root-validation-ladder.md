@@ -97,10 +97,29 @@ bazel test //wayve/ai/si:py_checks --test_arg="-k=test_parking_release_2026_5_21
 
 **Pass:** config imports; all 12 `BucketCfg.path` values resolve to existing ADLS paths.
 
-## Stage 5 — Dataloader smoke (optional)
+## Stage 5 — Single-run filter-and-bucket canary
 
-Load one batch per bucket family from `PARKING_P2P_DATA_ROOT` via parking P2P
-datamodule. Waivable if ACR auth unavailable.
+Run the production `parking_pudo/parking` filter graph against one known run
+before another full materialisation:
+
+```bash
+RUN_ID='fme10010/2026-06-07--22-04-42--gen2-av-c1c185e6-31f7-42dd-8ef1-0a02779e53d0'
+bazel run //wayve/ai/services/sampling:workflow -- remote run filter_and_bucket_stage \
+  --dataset_name parking_pudo/parking \
+  --job_name yoel-p2p-fp-park-canary-$(date +%Y%m%d-%H%M) \
+  --run_ids_filter "[\"${RUN_ID}\"]" \
+  --platforms '["gen2"]'
+```
+
+This canary must use a fresh image from the exact locally validated commit. It
+executes every configured filter with the runtime dataframe argument, so it
+would catch unbound filter parameters such as the 2026-08-07
+`select_allowed_run_tags(..., allowed_tags)` failure. The candidate run also
+historically had 22,101 confident P2P `other` frames; revalidate that source
+evidence before relying on it for P2P behavior.
+
+**Pass:** Flyte reaches terminal `SUCCEEDED`, filter-and-bucket output is
+written to a new path, and no configured callable raises during mask creation.
 
 ## Stage 6 — PR gates
 
@@ -110,7 +129,7 @@ datamodule. Waivable if ACR auth unavailable.
 
 ## Post-ladder: full parking materialisation
 
-If Stages 0–4 pass (Stage 5 waivable), launch on branch
+If Stages 0–5 pass, launch on branch
 `yoel/materialization_fp_filter_and_p2p_update`:
 
 ```bash
@@ -134,7 +153,7 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 
 - Halt at first failed stage
 - Do not resolve review thread until Stages 1–4 pass
-- Do not launch full parking materialisation until ladder passes
+- Do not launch full parking materialisation until the Stage 5 canary passes
 
 ## Results
 
@@ -147,7 +166,7 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 | 2 Summary compare | **PASS** | Compare via `buckets/dataset_split=train/summary.yaml` vs baseline; all SI buckets non-zero; outdoor/street increases expected |
 | 3 Parquet spot-check | **PASS** | `p2p_bc_outdoor_uk` readable: 836,013 rows; `run_id` present |
 | 4 SI config | **PASS** | `PARKING_P2P_DATA_ROOT_05_08_26` → valid `/dataset` root; all 12 `BucketCfg.path` targets exist |
-| 5 Dataloader smoke | **SKIPPED** | Waived (ACR auth unavailable) |
+| 5 Single-run canary | **PENDING RERUN** | Required after the 2026-08-07 unbound run-tag filter failure |
 | 6 PR gates | PENDING | After full parking materialisation |
 | Full parking mat | **LAUNCHED** | `parking_pudo/parking` FP filter — [Flyte execution aw8kb7z22p8n8w2f4wfx](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/aw8kb7z22p8n8w2f4wfx) |
 
