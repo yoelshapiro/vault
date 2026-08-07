@@ -116,3 +116,13 @@ Focused local Bazel coverage passed all eight test targets but independently
 measured approximately 70.38% patch coverage, confirming that the new
 orchestration/table-writer paths need more unit coverage. No fix was applied
 during the investigation.
+
+The CI fix was subsequently applied and pushed as rebased commit
+`6a3207ad74b6`. The formatter bot had independently pushed the required import
+formatting after merging current `main`; the local coverage commit was rebased
+on top without overwriting those remote changes. Added hermetic tests cover
+configuration, CLI parsing, chunked catalog/Delta writes, input identity/date
+guards, and output identity/schema guards. Full `//tools:preflight` passed,
+including 81.40% authoritative patch coverage (429/527; 80% required), all
+affected unit tests, lint/type checks, formatting, PR quality, and secret scan.
+PR CI build 560161 was pending after push.
