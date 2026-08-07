@@ -3900,3 +3900,14 @@
 - Areas: `wayve/ai/parking/materialisation`.
 - Result: PR #129802; 15,846/15,846 valid rows in the monthly scale canary, with bounded weekly odometry and all test artifacts cleaned afterward.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary|2026-08-05 P2P Event Backfill Validation and PR]]
+
+## 2026-08-07 - P2P Attribute Repair
+
+- Topic: Infer and add six missing parking attributes to the existing P2P event backfill without rerunning event detection or correction stages.
+- Labels: parking, p2p, materialisation, databricks, delta, embeddings, raw-gear.
+- Branch: `yoel/p2p_event_backfill`.
+- PR: `#129802`.
+- Change type: One-time repair binary, tests, staged production data repair.
+- Areas: `wayve/ai/parking/materialisation`, `sampling_materialised/parking_pudo/default/dev/p2p_events_backfill`.
+- Result: Production Delta version 1 contains 143,093 validated unique rows and six added attribute columns; version 0 remains available for rollback and all temporary ladder paths were deleted.
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary|2026-08-05 P2P Event Backfill Validation and PR]]

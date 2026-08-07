@@ -51,5 +51,43 @@ date bounds and repeatable ISO alpha-3 country filters are available.
 The ladder found correction-induced row loss, an unbounded UDF OOM, and a
 partial initial-timestamp fallback. Each was fixed and covered by regression
 tests. All canary SQL tables and Delta paths were deleted after inspection and
-their absence was verified. The default unfiltered production backfill was not
-executed.
+their absence was verified. The default unfiltered production backfill had not
+been executed at the time of this initial validation; it was materialised later
+and repaired as recorded below.
+
+## 2026-08-07 attribute repair
+
+Added the six missing parking-attribute columns to the existing 143,093-row
+production Delta output without rerunning event detection or any correction
+stage:
+
+- `park_out_environment` / `park_in_environment`
+- `park_out_geometry` / `park_in_geometry`
+- `park_out_orientation` / `park_in_orientation`
+
+The repair uses phase-v2 timestamps, WFM session `raven-salmon-hydraulic`, the
+three immutable WFM-only attribute heads from historical build 1.0, and raw
+Gen2 gear telemetry for parallel park-in orientation. Raw `PARK` and `NEUTRAL`
+remain distinct and neither contributes a forward/reverse vote.
+
+Validation results:
+
+- Local pytest, Ruff, Flake8, ty, existing materialisation checks, formatting,
+  and `git diff --check` passed.
+- Ten-run smoke: 98/98 frame embeddings available; all structural invariants
+  passed.
+- One-day canary (2026-02-16): 499/499 rows, 4,819/4,819 frame embeddings, and
+  all historical differences explained by corrected timestamps or raw gear.
+- Full staging: 143,093 unique rows, all 27 existing columns value-equivalent,
+  exactly six added strings, and zero frame/embedding loss in every chunk.
+- Raw-gear audit: zero mismatches across 43,559 parallel park-ins; 80 had no
+  forward/reverse vote and therefore a null orientation.
+- Historical overlap: 41,241 rows. All differences were explained by corrected
+  events, the raw-gear override, phase-frame provenance, or one persisted
+  historical intermediate anomaly that fresh deterministic inference did not
+  reproduce.
+
+Production promotion succeeded from validated staging as Delta version 1 on
+2026-08-07. Version 0 remains readable for rollback. The post-promotion Delta
+and Spark read-back matched staging exactly at 143,093 rows. Temporary smoke,
+canary, and staging Delta directories were deleted after successful validation.
