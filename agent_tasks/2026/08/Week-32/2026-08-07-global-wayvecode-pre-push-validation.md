@@ -18,6 +18,10 @@ committed branch state immediately before it is published.
 - Global dispatchers for the other standard Git hook names forward arguments
   and stdin to executable repository-local hooks. This preserves WayveCode's
   merge-base maintenance hooks and any hooks added by other repositories.
+- WayveCode repository hooks are authoritative and execute before any global
+  validation. The lifecycle dispatcher explicitly identifies the delegated
+  `merge_base_update.sh` responsibility so WayveCode's Bazel hook validation
+  recognizes the global `core.hooksPath` setup as compliant.
 - Non-WayveCode repositories pass through after their local hook.
 
 ## WayveCode checks
@@ -46,6 +50,11 @@ after fast-forwarding to remote commit `ecc2e242eebb`:
 - Version-bump and dangling-symlink checks passed.
 - Scoped lint coverage passed.
 - Eight materialisation lint, Ruff, Flake8, type, and unit-test targets passed.
+
+After syncing to `a18037b37d58`, the dispatcher compatibility was revalidated:
+the Wayve merge-base hook contract passed, all five Python files in PR #129802
+were unchanged by Wayve isort and Black, the BUILD file passed Buildifier, and
+all eight affected materialisation lint, type, and test targets passed.
 
 The full local CI runner is not used by the hook because current `main` has two
 local-only blockers:
