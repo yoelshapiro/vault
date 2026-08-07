@@ -104,3 +104,15 @@ Parallel park-out orientation remains null and parallel park-in orientation is
 derived from raw gear telemetry. Focused Bazel unit, lint, and type checks all
 passed (8/8). No smoke/canary/full-run harness was added to repository code,
 and no new full materialisation was launched for this integration.
+
+### PR 129802 CI investigation
+
+After commit `7c2bb8cdf3c9`, GitHub Actions passed but Buildkite presubmit
+reported two deterministic branch issues. Local `//tools:preflight
+--fast-only` reproduced the static-check failure: `p2p_event_backfill.py` has
+two import-order/format differences detected by `make py-format-check`.
+Coveralls reported 69.45% patch coverage, below the repository's 80% gate.
+Focused local Bazel coverage passed all eight test targets but independently
+measured approximately 70.38% patch coverage, confirming that the new
+orchestration/table-writer paths need more unit coverage. No fix was applied
+during the investigation.
