@@ -159,6 +159,26 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 
 *(Updated by agent run on 2026-08-06)*
 
+### 2026-08-07 HEAD revalidation
+
+PR #129730 was revalidated at commit `ad08a3a4b9354e938c6a703a7247289a43fa8d2b`
+without adding validation-only code to the PR branch. Extra validation ran from
+detached worktree `/tmp/WayveCode-materialization-fp-validation`.
+
+| Gate | Result | Evidence |
+|---|---|---|
+| PR CI | **PASS** | All reported GitHub checks passed on repeated samples |
+| P2P-focused tests | **PASS** | 10/10 selected tests passed; filtered invocation only tripped the expected aggregate coverage threshold |
+| Owning sampling checks | **PASS** | `//wayve/ai/services/sampling:test_datasets`: 2,261 tests plus Ruff, Flake8, and type checks |
+| SI config resolution | **PASS** | Exact split target `//wayve/ai/si:test_config_py_test_test_configs_utils_parking_release_2026_5_21_config_resolves` |
+| Published validation image | **PASS** | `sampling@sha256:259a140627e8d2e219e5e2a03d2dc256fbd61f73ec2eff2e679eaac76c888813` |
+| Single-run canary | **PASS** | [as8h4zwrqclkcfxzrgf6](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/as8h4zwrqclkcfxzrgf6) succeeded in 21m28s; Spark and Ray nodes both succeeded |
+
+The canary used dataset `parking_pudo/parking`, platform `gen2`, and run
+`fme10010/2026-06-07--22-04-42--gen2-av-c1c185e6-31f7-42dd-8ef1-0a02779e53d0`.
+Grafana MCP was unavailable in the workspace, so this revalidation has a Loki
+data-plane monitoring gap; Flyte control-plane state showed no failed nodes.
+
 | Stage | Result | Notes |
 |---|---|---|
 | 0 Preconditions | **PASS** | `buckets/`, `dataset/`, `comparison/`, `masks/` present; root `summary.yaml` exists |
