@@ -14,8 +14,8 @@
   - Set a global `core.hooksPath` shared by command-line Git, Codex, and Cursor.
   - Added a WayveCode-aware pre-push dispatcher with check-only formatting,
     scoped lint coverage, and affected-package Bazel lint/type/unit tests.
-  - Preserved executable repository-local pre-push hooks and skipped non-WayveCode
-    repositories.
+  - Preserved executable repository-local hooks through global dispatchers and
+    skipped validation for non-WayveCode repositories.
   - Avoided the local Catalyst and repository-wide lint-coverage paths because
     they currently require Buildkite agent and unrelated Valeo credentials.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-07-global-wayvecode-pre-push-validation|2026-08-07 Global WayveCode Pre-Push Validation]]

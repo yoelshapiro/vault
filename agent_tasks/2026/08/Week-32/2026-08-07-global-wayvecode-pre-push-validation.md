@@ -15,6 +15,9 @@ committed branch state immediately before it is published.
   `git config --global core.hooksPath /home/yoelshapiro/.config/git/hooks`
 - The hook invokes an executable repository-local `.git/hooks/pre-push` first,
   if one exists, so the global dispatcher does not discard repository policy.
+- Global dispatchers for the other standard Git hook names forward arguments
+  and stdin to executable repository-local hooks. This preserves WayveCode's
+  merge-base maintenance hooks and any hooks added by other repositories.
 - Non-WayveCode repositories pass through after their local hook.
 
 ## WayveCode checks
