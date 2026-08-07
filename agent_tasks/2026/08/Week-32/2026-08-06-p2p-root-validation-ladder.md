@@ -166,7 +166,7 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 | 2 Summary compare | **PASS** | Compare via `buckets/dataset_split=train/summary.yaml` vs baseline; all SI buckets non-zero; outdoor/street increases expected |
 | 3 Parquet spot-check | **PASS** | `p2p_bc_outdoor_uk` readable: 836,013 rows; `run_id` present |
 | 4 SI config | **PASS** | `PARKING_P2P_DATA_ROOT_05_08_26` → valid `/dataset` root; all 12 `BucketCfg.path` targets exist |
-| 5 Single-run canary | **PENDING RERUN** | Required after the 2026-08-07 unbound run-tag filter failure |
+| 5 Single-run canary | **PASS** | [adsw5n7jkd72kgfgghpt](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/adsw5n7jkd72kgfgghpt) succeeded with image `sampling@sha256:0e8a5feef69106e8cdd180a177c7dc3f6d85e6312deed647c6a83d7395eb32e8` |
 | 6 PR gates | PENDING | After full parking materialisation |
 | Full parking mat | **LAUNCHED** | `parking_pudo/parking` FP filter — [Flyte execution aw8kb7z22p8n8w2f4wfx](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/aw8kb7z22p8n8w2f4wfx) |
 
