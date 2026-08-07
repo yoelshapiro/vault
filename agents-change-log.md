@@ -3931,3 +3931,13 @@
 - Areas: `wayve/ai/parking/materialisation`, `sampling_materialised/parking_pudo/default/dev/p2p_events_backfill`.
 - Result: Production Delta version 1 contains 143,093 validated unique rows and six added attribute columns; version 0 remains available for rollback and all temporary ladder paths were deleted.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-05-p2p-event-backfill-canary|2026-08-05 P2P Event Backfill Validation and PR]]
+
+## 2026-08-07 - P2P Materialisation PR Audit
+
+- Topic: Audit PR #129778 for scope minimality and shared sampling safety.
+- Labels: parking, p2p, materialisation, code-review, sampling.
+- Branch: `yoel/p2p_odo_materialize`.
+- PR: `#129778`.
+- Change type: Read-only review.
+- Result: Found a blocking unintended behavior change: all six park-in buckets lose the prior 8-second pre-start margin. Existing callers of `get_dataset_from_store` remain safe when the new argument is omitted, but its P2P-specific generic plumbing is non-minimal.
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-07-p2p-materialisation-pr-audit|2026-08-07 P2P Materialisation PR Audit]]
