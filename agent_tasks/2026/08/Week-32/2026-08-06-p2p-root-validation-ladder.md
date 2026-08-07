@@ -168,7 +168,19 @@ veto on DC/gear-change park/unpark buckets; CA/intervention excluded).
 | 4 SI config | **PASS** | `PARKING_P2P_DATA_ROOT_05_08_26` → valid `/dataset` root; all 12 `BucketCfg.path` targets exist |
 | 5 Single-run canary | **PASS** | [adsw5n7jkd72kgfgghpt](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/adsw5n7jkd72kgfgghpt) succeeded with image `sampling@sha256:0e8a5feef69106e8cdd180a177c7dc3f6d85e6312deed647c6a83d7395eb32e8` |
 | 6 PR gates | PENDING | After full parking materialisation |
-| Full parking mat | **LAUNCHED** | `parking_pudo/parking` FP filter — [Flyte execution aw8kb7z22p8n8w2f4wfx](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/aw8kb7z22p8n8w2f4wfx) |
+| Full parking mat | **RELAUNCHED** | Fixed rerun: [Flyte execution awgcb99lsh4v6nfg6z55](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awgcb99lsh4v6nfg6z55) |
+
+### 2026-08-07 fixed rerun
+
+| Field | Value |
+|---|---|
+| Dataset | `parking_pudo/parking` |
+| Job name | `yoel-p2p-fp-park-full-20260807-1012` |
+| Commit | `11ca1c61e6cb4e83db56a7803ab6931850aa11da` |
+| Image | `sampling@sha256:0e8a5feef69106e8cdd180a177c7dc3f6d85e6312deed647c6a83d7395eb32e8` |
+| Canary | [adsw5n7jkd72kgfgghpt](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/adsw5n7jkd72kgfgghpt) — `SUCCEEDED` |
+| Flyte URL | https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/awgcb99lsh4v6nfg6z55 |
+| Submitted | 2026-08-07 10:13 UTC |
 
 ### Full parking materialisation launch
 
