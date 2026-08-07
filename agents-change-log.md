@@ -1,5 +1,25 @@
 # Agents Change Log
 
+## 2026-08-07 - Global WayveCode Pre-Push Validation
+
+- Topic: Enforce scoped formatting, lint, type, static, and unit checks before
+  pushes from Codex, Cursor, and normal Git clients.
+- Labels: codex, cursor, git-hooks, pre-push, ci, developer-workflow.
+- Branch: n/a; validated on `yoel/p2p_event_backfill`.
+- PR: [#129802](https://github.com/wayveai/WayveCode/pull/129802).
+- Change type: Global user Git configuration and durable workflow policy.
+- Areas: `/home/yoelshapiro/.config/git/hooks/pre-push`;
+  `~/.gitconfig`.
+- Changes:
+  - Set a global `core.hooksPath` shared by command-line Git, Codex, and Cursor.
+  - Added a WayveCode-aware pre-push dispatcher with check-only formatting,
+    scoped lint coverage, and affected-package Bazel lint/type/unit tests.
+  - Preserved executable repository-local pre-push hooks and skipped non-WayveCode
+    repositories.
+  - Avoided the local Catalyst and repository-wide lint-coverage paths because
+    they currently require Buildkite agent and unrelated Valeo credentials.
+- Task note: [[agent_tasks/2026/08/Week-32/2026-08-07-global-wayvecode-pre-push-validation|2026-08-07 Global WayveCode Pre-Push Validation]]
+
 ## 2026-08-06 - P2P Root Validation Ladder
 
 - Topic: Validate odometry-corrected P2P materialisation root and gate full
