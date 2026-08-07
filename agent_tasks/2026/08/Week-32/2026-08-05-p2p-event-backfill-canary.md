@@ -91,3 +91,16 @@ Production promotion succeeded from validated staging as Delta version 1 on
 2026-08-07. Version 0 remains readable for rollback. The post-promotion Delta
 and Spark read-back matched staging exactly at 143,093 rows. Temporary smoke,
 canary, and staging Delta directories were deleted after successful validation.
+
+## 2026-08-07 standard-run integration
+
+Integrated the same attribute inference into the normal `p2p_event_backfill`
+execution path after event/road/gear/odometry correction and before the final
+Delta write. The corrected event table is passed to a reusable Spark Connect
+attribute stage, whose run-scoped catalog output is validated before promotion
+to the configured final path. The WFM session, three immutable model hashes,
+and date chunk size are CLI-configurable; defaults match the validated repair.
+Parallel park-out orientation remains null and parallel park-in orientation is
+derived from raw gear telemetry. Focused Bazel unit, lint, and type checks all
+passed (8/8). No smoke/canary/full-run harness was added to repository code,
+and no new full materialisation was launched for this integration.
