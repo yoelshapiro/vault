@@ -3939,5 +3939,5 @@
 - Branch: `yoel/p2p_odo_materialize`.
 - PR: `#129778`.
 - Change type: Read-only review.
-- Result: Found a blocking unintended behavior change: all six park-in buckets lose the prior 8-second pre-start margin. Existing callers of `get_dataset_from_store` remain safe when the new argument is omitted, but its P2P-specific generic plumbing is non-minimal.
+- Result: Confirmed the 0-second park-in margin is intentional and covered by the adapted test. Existing callers of `get_dataset_from_store` remain safe when the new argument is omitted; the remaining minimisation question is whether the typed P2P input justifies duplicating the existing generic JSON override path.
 - Task note: [[agent_tasks/2026/08/Week-32/2026-08-07-p2p-materialisation-pr-audit|2026-08-07 P2P Materialisation PR Audit]]
