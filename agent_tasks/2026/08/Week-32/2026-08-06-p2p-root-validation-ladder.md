@@ -179,6 +179,32 @@ The canary used dataset `parking_pudo/parking`, platform `gen2`, and run
 Grafana MCP was unavailable in the workspace, so this revalidation has a Loki
 data-plane monitoring gap; Flyte control-plane state showed no failed nodes.
 
+### 2026-08-08 full materialisation at validated HEAD
+
+The full applicable workflow completed at the same validated commit and image.
+The first execution, [abmwdcqcgxfbvd2tznkh](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/abmwdcqcgxfbvd2tznkh),
+successfully generated and balanced the dataset but failed in the optional
+distribution branch because `parking_pudo/parking` has no datamodule config.
+It was relaunched with the workflow's explicit `--no-compute-distributions`
+option and a fresh output path.
+
+| Field | Value |
+|---|---|
+| Result | **SUCCEEDED**; no failed Flyte nodes |
+| Execution | [amrkm699pwmlxtkpp556](https://flyte.data.wayve.ai/console/projects/ai-services-sampling/domains/production/executions/amrkm699pwmlxtkpp556) |
+| Dataset | `parking_pudo/parking` |
+| Job name | `yoel-p2p-fp-park-full-20260808-0652` |
+| Commit | `ad08a3a4b9354e938c6a703a7247289a43fa8d2b` |
+| Image | `sampling@sha256:259a140627e8d2e219e5e2a03d2dc256fbd61f73ec2eff2e679eaac76c888813` |
+| Runtime | 55m46s (`2026-08-08T06:59:02Z`–`07:54:49Z`) |
+| Output | `abfss://datasets@wayveproddatasetflat.dfs.core.windows.net/sampling_materialised/parking_pudo/parking/dev/yoel-p2p-fp-park-full-20260808-0652__2026-08-08-07-02` |
+
+Ray filtering/bucketing, Spark balancing, and every comparison subnode
+succeeded. An ADLS audit confirmed parquet files under both `buckets/` and the
+balanced `dataset/` output. PR #129730 CI remained green after completion.
+Grafana MCP was still unavailable, so Loki data-plane log inspection remains
+the only monitoring gap.
+
 | Stage | Result | Notes |
 |---|---|---|
 | 0 Preconditions | **PASS** | `buckets/`, `dataset/`, `comparison/`, `masks/` present; root `summary.yaml` exists |
